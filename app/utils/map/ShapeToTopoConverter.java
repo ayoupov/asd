@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class ShapeToTopoConverter
 {
-    private static final String PATH_TO_OUT = "./src/main/resources/map/";
+    private static final String PATH_TO_OUT = "./res/gis/topo/";
     private static final String PATH_TO_IN = "./res/gis/";
 
     private static final Map<String, String> FILES_TO_PROCESS = new HashMap<>();
@@ -44,7 +44,7 @@ public class ShapeToTopoConverter
                 name,
                 1000,
                 4,
-                true);
+                false);
     }
 
     private static String toTopo(String fname)
