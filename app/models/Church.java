@@ -7,6 +7,7 @@ package models;
  * Time: 1:04
  */
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import models.address.Address;
@@ -43,7 +44,8 @@ import java.util.Set;
                         @Parameter(name="ignoreCase", value="true")
                 })
         })
-@JsonIgnoreProperties(ignoreUnknown = true)
+// todo: ensure availability of objects via search
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // dirty hack to avoid serialization of proxies
 public class Church
 {
     @Id
