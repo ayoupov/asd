@@ -1,5 +1,6 @@
 package models.address;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -9,7 +10,7 @@ import models.internal.GeographyManager;
 import org.hibernate.annotations.Type;
 import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
+import utils.serialize.PointConverter;
 
 import javax.persistence.*;
 
@@ -28,6 +29,7 @@ public class Address
     private Long id;
 
     @Type(type = "org.hibernate.spatial.GeometryType")
+    @JsonSerialize(using = PointConverter.class)
     protected Geometry geometry;
 
     @Analyzer(definition = "polish_def_analyzer")

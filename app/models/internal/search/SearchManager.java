@@ -52,4 +52,24 @@ public class SearchManager
         out.println("total: " + result.size());
         tr.commit();
     }
+
+    public static List<Church> searchChurches(String q)
+    {
+        Session session = getSession();
+        Transaction tr = session.beginTransaction();
+        FullTextSession fullTextSession = Search.getFullTextSession(session);
+        QueryBuilder queryBuilder = fullTextSession.getSearchFactory()
+                .buildQueryBuilder()
+                .forEntity( Church.class )
+                .get();
+        Query luceneQuery = queryBuilder.keyword().onFields("name", "address.unfolded").matching(q).createQuery();
+        List<Church> result = fullTextSession.createFullTextQuery(luceneQuery).list();
+//        for (Object o : result) {
+//            String pysch = "res: " + o;
+//            out.println(pysch);
+//        }
+//        out.println("total: " + result.size());
+        tr.commit();
+        return result;
+    }
 }

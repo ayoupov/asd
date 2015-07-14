@@ -7,6 +7,8 @@ package models;
  * Time: 1:04
  */
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import models.address.Address;
 import models.internal.UserManager;
 import models.user.User;
@@ -41,6 +43,7 @@ import java.util.Set;
                         @Parameter(name="ignoreCase", value="true")
                 })
         })
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Church
 {
     @Id
@@ -65,7 +68,8 @@ public class Church
 
     @IndexedEmbedded
     @Analyzer(definition = "polish_def_analyzer")
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
     public Set<Synonym> synonyms;
 
     @IndexedEmbedded
@@ -73,13 +77,13 @@ public class Church
     @OneToOne
     public Address address;
 
-    @OneToMany(cascade = CascadeType.MERGE)
+    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     public Set<Architect> architects;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public Set<Image> images;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public Set<MediaContent> media;
 
     @OneToOne
