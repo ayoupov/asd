@@ -1,0 +1,55 @@
+package models.internal.search;
+
+import models.Church;
+import org.apache.lucene.search.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.search.FullTextSession;
+import org.hibernate.search.Search;
+import org.hibernate.search.query.dsl.QueryBuilder;
+
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+
+import static utils.HibernateUtils.getSession;
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: ayoupov
+ * Date: 08.07.2015
+ * Time: 23:34
+ */
+public class SearchManager
+{
+
+    public static void reindex() throws InterruptedException
+    {
+        Session session = getSession();
+        FullTextSession fullTextSession = Search.getFullTextSession(session);
+        fullTextSession.createIndexer().startAndWait();
+        System.out.println(fullTextSession.getSearchFactory().getStatistics().indexedEntitiesCount().toString());
+    }
+
+    public static void main(String[] args) throws InterruptedException, UnsupportedEncodingException
+    {
+//        reindex();
+        PrintStream out = new PrintStream(System.out, true, "UTF-8");
+        String searchedFor = "meczennika";
+        Session session = getSession();
+        Transaction tr = session.beginTransaction();
+        FullTextSession fullTextSession = Search.getFullTextSession(session);
+        QueryBuilder queryBuilder = fullTextSession.getSearchFactory()
+                .buildQueryBuilder()
+                .forEntity( Church.class )
+                .get();
+        Query luceneQuery = queryBuilder.keyword().onFields("name", "address.unfolded").matching(searchedFor).createQuery();
+        List result = fullTextSession.createFullTextQuery(luceneQuery).list();
+        for (Object o : result) {
+            String pysch = "res: " + o;
+            out.println(pysch);
+        }
+        out.println("total: " + result.size());
+        tr.commit();
+    }
+}
