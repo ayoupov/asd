@@ -12,7 +12,10 @@ GET         /church/:id           controllers.Churches.byId(id: String)
 
 # secure, role must be >= User
 
-POST        /search/:q            controllers.Search.byText(q: String)
+POST        /search/churches/:q   controllers.Search.churchesByNameAndAddress(q: String)
+POST        /search/articles/:q   controllers.Search.articlesByContent(q: String)
+POST        /search/stories/:q    controllers.Search.storiesByContent(q: String)
+
 GET         /image                controllers.Images.upload
 #GET         /image/:id            controllers.Images.get(id: Long)
 

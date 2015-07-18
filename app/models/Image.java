@@ -25,8 +25,8 @@ public class Image
 
     public String path;
 
-    @ManyToOne
-    @Column(name = "uploaded_by")
+    @OneToOne
+    @JoinColumn(name = "uploaded_by")
     public User uploadedBy;
 
     @Column(name = "uploaded_ts")
