@@ -24,7 +24,7 @@ public class ShapeToTopoConverter
     static {
         FILES_TO_PROCESS.put("dekanaty.shp", "Dekanaty");
         FILES_TO_PROCESS.put("diecezje.shp", "Diecezje");
-        FILES_TO_PROCESS.put("diecezje_metropolie_cleaned.shp", "Metropolia");
+        FILES_TO_PROCESS.put("metropolie.shp", "Metropolia");
     }
 
     public static void main(String[] args) throws IOException
@@ -42,8 +42,10 @@ public class ShapeToTopoConverter
                 CRS,
                 toTopo(fname),
                 name,
-                1000,
-                4,
+//                1000,
+//                4,
+                0,
+                0,
                 false);
     }
 

@@ -7,7 +7,6 @@ package models;
  * Time: 1:04
  */
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import models.address.Address;
@@ -18,6 +17,8 @@ import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
 import org.apache.lucene.analysis.core.StopFilterFactory;
 import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilterFactory;
 import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
+import org.apache.lucene.analysis.stempel.StempelFilter;
+import org.apache.lucene.analysis.stempel.StempelPolishStemFilterFactory;
 import org.hibernate.search.annotations.*;
 import org.hibernate.search.annotations.Parameter;
 
@@ -27,7 +28,7 @@ import java.util.Set;
 
 @Entity
 @Indexed
-@AnalyzerDef(name="polish_def_analyzer",
+@AnalyzerDef(name = "polish_def_analyzer",
         charFilters = {
                 @CharFilterDef(factory = MappingCharFilterFactory.class, params = {
                         @Parameter(name = "mapping",
@@ -39,10 +40,12 @@ import java.util.Set;
                 @TokenFilterDef(factory = ASCIIFoldingFilterFactory.class),
                 @TokenFilterDef(factory = LowerCaseFilterFactory.class),
                 @TokenFilterDef(factory = StopFilterFactory.class, params = {
-                        @Parameter(name="words",
-                                value= "models/internal/search/church_stoplist.properties" ),
-                        @Parameter(name="ignoreCase", value="true")
-                })
+                        @Parameter(name = "words",
+                                value = "models/internal/search/church_stoplist.properties"),
+                        @Parameter(name = "ignoreCase", value = "true")
+                }),
+                @TokenFilterDef(factory = StempelPolishStemFilterFactory.class)
+
         })
 // todo: ensure availability of objects via search
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // dirty hack to avoid serialization of proxies

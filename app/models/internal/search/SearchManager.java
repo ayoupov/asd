@@ -33,7 +33,7 @@ public class SearchManager
 
     public static void main(String[] args) throws InterruptedException, UnsupportedEncodingException
     {
-//        reindex();
+        reindex();
         PrintStream out = new PrintStream(System.out, true, "UTF-8");
         String searchedFor = "meczennika";
         Session session = getSession();

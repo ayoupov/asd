@@ -28,4 +28,10 @@ public class UserManager
         }
         return user;
     }
+
+    public static User getByName(String username)
+    {
+        User user = (User) get(User.class, username);
+        return user;
+    }
 }

@@ -1,9 +1,12 @@
 package models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import models.user.User;
+
+import javax.persistence.*;
+import java.io.File;
+import java.util.Date;
+
+import static utils.HibernateUtils.save;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,6 +25,13 @@ public class Image
 
     public String path;
 
+    @ManyToOne
+    @Column(name = "uploaded_by")
+    public User uploadedBy;
+
+    @Column(name = "uploaded_ts")
+    public Date uploadedTS;
+
     public Image(String description, String path)
     {
         this.description = description;
@@ -30,6 +40,20 @@ public class Image
 
     public Image()
     {
-//        System.out.println("Image: No args constructor called!");
+    }
+
+    public Image(String filename, File file, User user)
+    {
+        String path = "/public/images/" + filename;
+        file.renameTo(new File(path));
+        uploadedBy = user;
+        uploadedTS = new Date();
+        description = "uploaded by " + user + " at " + uploadedTS;
+        save(this);
+    }
+
+    public Long getId()
+    {
+        return id;
     }
 }
