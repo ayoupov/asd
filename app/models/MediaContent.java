@@ -28,6 +28,8 @@ public class MediaContent
     public String lead;
     @Field
     public String caption;
+    @Field
+    public Boolean starred;
 
     @OneToMany
     public Set<Image> images;

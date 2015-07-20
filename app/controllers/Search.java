@@ -35,11 +35,12 @@ public class Search extends Controller
         }
     }
 
-    public static Result mediaContentByText(String q, MediaContentType type)
+    public static Result mediaContentByText(String q, String type)
     {
         ObjectNode result = Json.newObject();
         result.put("q", q);
-        List<MediaContent> content = SearchManager.searchMediaContent(q, type);
+        MediaContentType ctype = "story".equals(type) ? MediaContentType.Story : MediaContentType.Article;
+        List<MediaContent> content = SearchManager.searchMediaContent(q, ctype);
         if (content == null || content.size() == 0) {
             return notFound(result);
         }
