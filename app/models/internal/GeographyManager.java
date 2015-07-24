@@ -1,13 +1,20 @@
 package models.internal;
 
+import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 import models.address.Address;
 import models.address.Geometrified;
 import models.address.Parish;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.opengis.filter.spatial.BBOX;
 import utils.map.GeocodeUtils;
+import utils.map.TileBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static utils.HibernateUtils.getSession;
 
@@ -84,6 +91,27 @@ public class GeographyManager
                 .uniqueResult();
         transaction.commit();
         return obj;
+    }
+
+    public static List<Geometrified> findByBBox(Class clazz, TileBuilder.BoundingBox box)
+    {
+        List<Geometrified> res = new ArrayList<>();
+        Session session = getSession();
+        Transaction transaction = session.beginTransaction();
+
+        Envelope envelope = new Envelope(box.east, box.west, box.north, box.south);
+        Query query = getSession()
+                .createQuery("select g from " + clazz.getSimpleName() + " g");
+        query.setCacheable(true);
+        List<Geometrified> list = query.list();
+        for(Geometrified geo : list)
+        {
+            Geometry geometry = geo.getGeometry();
+            if (geometry.getEnvelopeInternal().intersects(envelope))
+                res.add(geo);
+        }
+        transaction.commit();
+        return res;
     }
 
 }

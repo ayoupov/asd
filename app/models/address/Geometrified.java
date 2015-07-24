@@ -1,5 +1,7 @@
 package models.address;
 
+import com.vividsolutions.jts.geom.Geometry;
+
 /**
  * Created with IntelliJ IDEA.
  * User: ayoupov
@@ -8,4 +10,5 @@ package models.address;
  */
 public interface Geometrified
 {
+    public Geometry getGeometry();
 }
