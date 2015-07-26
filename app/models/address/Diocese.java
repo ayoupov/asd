@@ -1,6 +1,8 @@
 package models.address;
 
 import com.vividsolutions.jts.geom.Geometry;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Entity;
@@ -14,6 +16,7 @@ import javax.persistence.OneToOne;
  * Time: 18:27
  */
 @Entity
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Diocese implements Geometrified
 {
 

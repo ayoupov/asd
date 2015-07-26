@@ -1,6 +1,7 @@
 package models.address;
 
 import com.vividsolutions.jts.geom.Geometry;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import javax.persistence.Id;
  * Time: 13:02
  */
 @Entity
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Metropolie implements Geometrified
 {
     @Id

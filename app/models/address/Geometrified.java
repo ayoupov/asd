@@ -11,4 +11,6 @@ import com.vividsolutions.jts.geom.Geometry;
 public interface Geometrified
 {
     public Geometry getGeometry();
+
+    public String getName();
 }

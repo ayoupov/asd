@@ -21,12 +21,12 @@ public class Disseminator
     public static void main(String[] args) throws IOException
     {
         seedUsers();
-//        MetropolieProcessor mp = new MetropolieProcessor();
-//        seedGeography("d:/prog/asd-hib/res/gis/diecezje_metropolie_cleaned", mp);
-//        DioceseProcessor dp = new DioceseProcessor();
-//        seedGeography("d:/prog/asd-hib/res/gis/diecezje", dp);
-//        DekanatProcessor dekp = new DekanatProcessor();
-//        seedGeography("d:/prog/asd-hib/res/gis/dekanaty", dekp);
+        MetropolieProcessor mp = new MetropolieProcessor();
+        seedGeography("d:/prog/asd/res/gis/cleaned/metropolies_wgs84", mp);
+        DioceseProcessor dp = new DioceseProcessor();
+        seedGeography("d:/prog/asd/res/gis/cleaned/diecezje_wgs84", dp);
+        DekanatProcessor dekp = new DekanatProcessor();
+        seedGeography("d:/prog/asd/res/gis/cleaned/dekanaty_wgs84", dekp);
         seedChurches("res/data/churches.csv");
     }
 
