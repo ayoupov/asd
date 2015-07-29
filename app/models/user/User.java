@@ -1,5 +1,7 @@
 package models.user;
 
+import org.hibernate.annotations.Table;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.io.Serializable;
@@ -10,7 +12,7 @@ import java.io.Serializable;
  * Date: 03.07.2015
  * Time: 23:50
  */
-@Entity
+@Entity(name="Users")
 public class User
 {
     @Id

@@ -85,28 +85,35 @@ public class KMLParser
         final Kml kml = Kml.unmarshal(new File(path));
         final Document document = (Document) kml.getFeature();
         List<Feature> features = document.getFeature(); // got folders here
-        for (Feature f : features)
-        {
+        int noids = 0, badgeom = 0;
+        for (Feature f : features) {
             List<Feature> churches = ((Folder) f).getFeature(); // churches under f folder
-            for (Feature c : churches)
-            {
+            for (Feature c : churches) {
                 Placemark churchPlacemark = (Placemark) c;
                 String id = churchPlacemark.getDescription();
-                if (id == null)
-                {
+                if (id == null) {
                     id = "";
-                    System.out.println(churchPlacemark.getName() + " has no id!");
-                }
-                id = new String(id.getBytes(), "UTF-8");
+//                    System.out.println(churchPlacemark.getName() + " has no id!");
+                    noids++;
+                } else
+                    id = new String(id.getBytes(), "UTF-8");
                 String name = new String(churchPlacemark.getName().getBytes(), "UTF-8");
                 Church church = new Church(name, id);
-                Point churchPoint = (Point) (churchPlacemark.getGeometry());
-                List<Coordinate> coords = churchPoint.getCoordinates();
-                double lat = coords.get(0).getLatitude();
-                double lng = coords.get(0).getLongitude();
-                res.put(church, new Coordinates(lat, lng));
+                boolean good;
+                Geometry geometry = churchPlacemark.getGeometry();
+                good = geometry instanceof Point;
+                if (good) {
+                    Point churchPoint = (Point) (geometry);
+                    List<Coordinate> coords = churchPoint.getCoordinates();
+                    double lat = coords.get(0).getLatitude();
+                    double lng = coords.get(0).getLongitude();
+                    res.put(church, new Coordinates(lat, lng));
+                } else
+                    badgeom++;
             }
         }
+        System.out.println(noids + " features have no ids!");
+        System.out.println(badgeom + " features have bad geometry!");
         return res;
     }
 

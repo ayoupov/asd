@@ -22,5 +22,7 @@ GET         /image                             controllers.Images.upload
 GET         /admin/reindex                     controllers.Admin.reindex
 GET         /admin/retile                      controllers.Tiles.rebuild
 GET         /admin/seed                        controllers.Tiles.seed
+GET         /admin/sieve                       controllers.Admin.sieve
+GET         /admin/parse                       controllers.Admin.parse
 
 GET         /tiles/:layer/:z/:x/:y.:ext        controllers.Tiles.tile(layer: String, z: Integer, x: Integer, y: Integer, ext: String)
