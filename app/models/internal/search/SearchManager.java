@@ -86,7 +86,10 @@ public class SearchManager
                 .buildQueryBuilder()
                 .forEntity( MediaContent.class )
                 .get();
-        Query luceneQuery = queryBuilder.keyword().onFields("text", "lead", "caption").matching(q).createQuery();
+        Query luceneQuery = queryBuilder.bool()
+                .must(queryBuilder.keyword().onField("contentType").matching(type).createQuery())
+                .must(queryBuilder.keyword().onFields("text", "lead", "caption").matching(q).createQuery())
+                .createQuery();
         FullTextQuery query = fullTextSession.createFullTextQuery(luceneQuery);
         query.setMaxResults(10);
         List<MediaContent> result = query.list();

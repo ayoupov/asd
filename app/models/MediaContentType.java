@@ -9,5 +9,14 @@ package models;
 public enum MediaContentType
 {
     Article,
-    Story
+    Story;
+
+    public static MediaContentType fromString(String ctype)
+    {
+        if ("article".equalsIgnoreCase(ctype))
+            return Article;
+        if ("story".equalsIgnoreCase(ctype))
+            return Story;
+        return null;
+    }
 }

@@ -21,7 +21,7 @@ public class MediaContent
     @Id
     public Long id;
 
-    public MediaContentType type;
+    public MediaContentType contentType;
     @Field
     public String text;
     @Field

@@ -39,7 +39,9 @@ public class Search extends Controller
     {
         ObjectNode result = Json.newObject();
         result.put("q", q);
-        MediaContentType ctype = "story".equals(type) ? MediaContentType.Story : MediaContentType.Article;
+        MediaContentType ctype = MediaContentType.fromString(type);
+        if (ctype == null)
+            return notFound(type);
         List<MediaContent> content = SearchManager.searchMediaContent(q, ctype);
         if (content == null || content.size() == 0) {
             return notFound(result);
