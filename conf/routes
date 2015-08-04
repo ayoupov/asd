@@ -9,6 +9,7 @@ GET         /                                  controllers.Application.index
 GET         /assets/*file                      controllers.Assets.at(path="/public", file)
 
 GET         /church/:id                        controllers.Churches.byId(id: String)
+GET         /content/:ctype/:id               controllers.MediaContents.byTypeAndId(ctype:MediaContentType, id: Long)
 
 # secure, role must be >= User
 
@@ -24,5 +25,6 @@ GET         /admin/retile                      controllers.Tiles.rebuild
 GET         /admin/seed                        controllers.Tiles.seed
 GET         /admin/sieve                       controllers.Admin.sieve
 GET         /admin/parse                       controllers.Admin.parse
+GET         /admin/snapshotify                 controllers.Admin.snapshotify
 
 GET         /tiles/:layer/:z/:x/:y.:ext        controllers.Tiles.tile(layer: String, z: Integer, x: Integer, y: Integer, ext: String)

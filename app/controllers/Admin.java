@@ -6,6 +6,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import utils.map.BadIdsSieve;
 import utils.map.Processor;
+import utils.map.Snapshoter;
 
 import java.io.IOException;
 
@@ -34,5 +35,11 @@ public class Admin extends Controller
     {
         Processor.main(new String[]{"d:/prog/asd/res/doc.kml"});
         return ok("parsed");
+    }
+
+    public static Result snapshotify() throws IOException, InterruptedException
+    {
+        Snapshoter.snap("d:/prog/asd/res/doc.kml", "d:/prog/asd/res/snapshots");
+        return ok("snapshots in progress");
     }
 }

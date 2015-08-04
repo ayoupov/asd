@@ -65,7 +65,7 @@ public class BadIdsSieve
         writer.close();
     }
 
-    private static String beautify(String s)
+    public static String beautify(String s)
     {
         return s.replaceAll("[-–_]", "-");
     }

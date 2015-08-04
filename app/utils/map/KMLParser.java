@@ -98,6 +98,7 @@ public class KMLParser
                 } else
                     id = new String(id.getBytes(), "UTF-8");
                 String name = new String(churchPlacemark.getName().getBytes(), "UTF-8");
+                name = name.replaceAll("\n", "");
                 Church church = new Church(name, id);
                 boolean good;
                 Geometry geometry = churchPlacemark.getGeometry();

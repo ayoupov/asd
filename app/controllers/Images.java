@@ -1,15 +1,12 @@
 package controllers;
 
 import models.Image;
-import models.internal.ImageManager;
 import models.internal.UserManager;
 import models.user.User;
-import play.api.mvc.Security;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
-import play.mvc.With;
 
 import static play.data.Form.form;
 
@@ -38,7 +35,8 @@ public class Images extends Controller
 //        }
 //    }
 
-    public static Result upload() {
+    public static Result upload()
+    {
         Form<UploadImageForm> form = form(UploadImageForm.class).bindFromRequest();
         User user = UserManager.getAutoUser();
 

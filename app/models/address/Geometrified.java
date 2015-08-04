@@ -10,7 +10,7 @@ import com.vividsolutions.jts.geom.Geometry;
  */
 public interface Geometrified
 {
-    public Geometry getGeometry();
+    Geometry getGeometry();
 
-    public String getName();
+    String getName();
 }
