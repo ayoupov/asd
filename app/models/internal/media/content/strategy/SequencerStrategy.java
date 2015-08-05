@@ -21,5 +21,5 @@ public abstract class SequencerStrategy
 
     public abstract int getMax();
 
-    public abstract MediaContent get();
+    public abstract MediaContent next();
 }

@@ -1,14 +1,22 @@
 package controllers;
 
-import play.*;
-import play.mvc.*;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import play.libs.Json;
+import play.mvc.Controller;
+import play.mvc.Result;
+import views.html.index;
 
-import views.html.*;
+public class Application extends Controller
+{
 
-public class Application extends Controller {
-
-    public static Result index() {
+    public static Result index()
+    {
         return ok(index.render("Your new application is ready."));
     }
 
+    public static Result settings()
+    {
+        ObjectNode result = Json.newObject();
+
+    }
 }

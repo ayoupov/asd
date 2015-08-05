@@ -33,7 +33,9 @@ public class GeographyManager
     public static Address check(Geometry geometry)
     {
         Session session = getSession();
-        Transaction transaction = session.beginTransaction();
+        Transaction transaction = session.getTransaction();
+        if (transaction == null || transaction.wasCommitted())
+            transaction = session.beginTransaction();
         Address address = (Address) session.createQuery("select a from Address a " +
                 "where ST_Contains(ST_Buffer(:g, :t), a.geometry) = 1")
                 .setParameter("g", geometry).setParameter("t", TOLERANCE).uniqueResult();

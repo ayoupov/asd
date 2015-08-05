@@ -6,6 +6,7 @@ import models.internal.media.content.strategy.SequencerStrategy;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import utils.HibernateUtils;
 
 import static utils.HibernateUtils.getSession;
 
@@ -32,11 +33,11 @@ public class StarredArticleStrategy extends SequencerStrategy
         return max.intValue();
     }
 
-    public MediaContent get()
+    public MediaContent next()
     {
         if (idIterator.hasNext()) {
             Long id = idIterator.next();
-            return (MediaContent) getSession().get(MediaContent.class, id);
+            return (MediaContent) HibernateUtils.get(MediaContent.class, id);
         } else return null;
     }
 
@@ -46,9 +47,10 @@ public class StarredArticleStrategy extends SequencerStrategy
         Transaction tx = session.beginTransaction();
 
         Query query = session
-                .createQuery("select mc.id from MediaContent mc where mc.contentType = :ct order by RAND(), mc.starred desc")
+                .createQuery("select mc.id from MediaContent mc where mc.contentType = :ct  and mc.approvedDT is not null order by mc.starred desc, RAND()")
                 .setParameter("ct", MediaContentType.Article);
         ids.addAll(query.list());
         tx.commit();
+        idIterator = ids.iterator();
     }
 }

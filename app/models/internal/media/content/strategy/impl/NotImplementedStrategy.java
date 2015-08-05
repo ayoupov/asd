@@ -18,7 +18,7 @@ public class NotImplementedStrategy extends SequencerStrategy
     }
 
     @Override
-    public MediaContent get()
+    public MediaContent next()
     {
         return null;
     }

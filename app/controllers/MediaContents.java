@@ -45,30 +45,27 @@ public class MediaContents extends Controller
         MediaContentType type = MediaContentType.fromString(ctype);
         if (type == null)
             return badRequest("Trying to get content with type : " + ctype);
-        Sequencer mcs = getFromCache(session().getOrDefault("mcs_starred_key", "none"));
-        String seqKey;
+        String seqKey = session().get("mcs_starred_key");
+        System.out.println("seqKey = " + seqKey);
+        Sequencer mcs = null;
+        if (seqKey != null)
+            mcs = (Sequencer) Cache.get(seqKey);
         if (mcs == null) {
             seqKey = UUID.randomUUID().toString();
-
             mcs = new Sequencer(seqKey, type, SequencerStrategyMode.Starred);
-
         } else
-            seqKey = mcs.getKey();
+            System.out.println("Found sequencer! seq_key: " + seqKey);
         List<MediaContent> contents = mcs.get(quantity);
-        storeToCache(seqKey, mcs);
+        Cache.set(seqKey, mcs);
         ObjectNode result = Json.newObject();
         result.put("left", mcs.left());
         result.put("contents", Json.toJson(contents));
+        session("mcs_starred_key", seqKey);
         return ok(result);
     }
 
-    private static void storeToCache(String seqKey, Sequencer mcs)
+    public static Result byTypeAndIds(String ctype, String ids)
     {
-        Cache.set("mcs_starred_key", mcs);
-    }
-
-    private static Sequencer getFromCache(String seqKey)
-    {
-        return (Sequencer) Cache.get(seqKey);
+        return play.mvc.Results.TODO;
     }
 }

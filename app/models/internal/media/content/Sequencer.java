@@ -49,7 +49,7 @@ public class Sequencer
         List<MediaContent> lmc = new ArrayList<>();
         for (int i = 0; i < quantity; i++,index++)
         {
-            MediaContent mc = mcss.get();
+            MediaContent mc = mcss.next();
             lmc.add(mc);
         }
         return lmc;

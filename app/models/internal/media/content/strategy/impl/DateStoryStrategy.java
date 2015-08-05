@@ -20,10 +20,11 @@ public class DateStoryStrategy extends StoryStrategy
         Session session = getSession();
         Transaction tx = session.beginTransaction();
         Query query = session
-                .createQuery("select mc.id from MediaContent mc where mc.contentType = :ct order by RAND(), mc.approvedDT desc")
+                .createQuery("select mc.id from MediaContent mc where mc.contentType = :ct  and mc.approvedDT is not null order by mc.approvedDT desc")
                 .setParameter("ct", MediaContentType.Story);
         ids.addAll(query.list());
         tx.commit();
+        idIterator = ids.iterator();
     }
 
 }

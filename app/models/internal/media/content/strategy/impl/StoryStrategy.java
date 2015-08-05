@@ -5,6 +5,7 @@ import models.MediaContentType;
 import models.internal.media.content.strategy.SequencerStrategy;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import utils.HibernateUtils;
 
 import static utils.HibernateUtils.getSession;
 
@@ -31,11 +32,11 @@ public abstract class StoryStrategy extends SequencerStrategy
         return max.intValue();
     }
 
-    public MediaContent get()
+    public MediaContent next()
     {
         if (idIterator.hasNext()) {
             Long id = idIterator.next();
-            return (MediaContent) getSession().get(MediaContent.class, id);
+            return (MediaContent) HibernateUtils.get(MediaContent.class, id);
         } else return null;
     }
 }

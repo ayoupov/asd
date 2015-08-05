@@ -1,12 +1,12 @@
 package models;
 
 import models.user.User;
+import models.user.UserRole;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,6 +19,7 @@ import java.util.Set;
 public class MediaContent
 {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
 
     public MediaContentType contentType;
@@ -27,12 +28,9 @@ public class MediaContent
     @Field
     public String lead;
     @Field
-    public String caption;
+    public String title;
     @Field
     public Boolean starred;
-
-    @OneToMany
-    public Set<Image> images;
 
     @Column(name = "added_dt")
     public Date addedDT;
@@ -47,4 +45,24 @@ public class MediaContent
     @OneToOne
     @JoinColumn(name = "approved_by")
     public User approvedBy;
+
+    public MediaContent(MediaContentType contentType, String text, String lead, String title, Boolean starred, User addedBy)
+    {
+        this.contentType = contentType;
+        this.text = text;
+        this.lead = lead;
+        this.title = title;
+        this.starred = starred;
+        this.addedBy = addedBy;
+        this.addedDT = new Date();
+        if (addedBy != null && (addedBy.role == UserRole.Administrator || addedBy.role == UserRole.Moderator))
+        {
+            approvedBy = addedBy;
+            approvedDT = addedDT;
+        }
+    }
+
+    public MediaContent()
+    {
+    }
 }
