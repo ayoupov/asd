@@ -11,11 +11,11 @@ GET         /assets/*file                      controllers.Assets.at(path="/publ
 GET         /tiles/:layer/:z/:x/:y.:ext        controllers.Tiles.tile(layer: String, z: Integer, x: Integer, y: Integer, ext: String)
 
 GET         /church/:id                        controllers.Churches.byId(id: String)
-GET         /content/settings                  controllers.Application.settings
+GET         /content/summary                   controllers.Application.summary
 GET         /content/article/:id               controllers.MediaContents.byTypeAndId(ctype: String = "article", id: Long)
 GET         /content/story/:id                 controllers.MediaContents.byTypeAndId(ctype: String = "story", id: Long)
 GET         /content/articles/:ids             controllers.MediaContents.byTypeAndIds(ctype: String = "article", ids: String)
-GET         /content/stories/:ids             controllers.MediaContents.byTypeAndIds(ctype: String = "story", ids: String)
+GET         /content/stories/:ids              controllers.MediaContents.byTypeAndIds(ctype: String = "story", ids: String)
 
 
 POST        /search/churches/:q                controllers.Search.churchesByNameAndAddress(q: String)

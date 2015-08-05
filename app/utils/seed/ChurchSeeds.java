@@ -18,6 +18,9 @@ import static utils.HibernateUtils.saveOrUpdate;
  */
 public class ChurchSeeds
 {
+    private final static boolean debug = false;
+//    private final static boolean debug = true;
+
     public static void seedChurches(String path) throws IOException
     {
         String line;
@@ -25,7 +28,7 @@ public class ChurchSeeds
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"))) {
 
             int i = 0; // line num
-            while ((line = br.readLine()) != null) {
+            while ((line = br.readLine()) != null && (!debug || i < 10)) {
                 try {
                     i++;
                     if (i == 1)

@@ -1,10 +1,17 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import models.MediaContentType;
+import models.internal.ContentManager;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
+
+import java.util.List;
+
+import static utils.HibernateUtils.beginTransaction;
+import static utils.HibernateUtils.commitTransaction;
 
 public class Application extends Controller
 {
@@ -14,9 +21,23 @@ public class Application extends Controller
         return ok(index.render("Your new application is ready."));
     }
 
-    public static Result settings()
+    public static Result summary()
     {
+        beginTransaction();
         ObjectNode result = Json.newObject();
-
+        // stories and articles
+        // stories ids, sorted by starred
+        // stories starred quantity
+        // but! stories are to be also sorted by date
+        // articles ids, sorted by starred
+        // articles starred quantity
+        List articleSummary = ContentManager.getSummary(MediaContentType.Article);
+        List storySummary = ContentManager.getSummary(MediaContentType.Story);
+        long churchCount = ContentManager.getChurchCount();
+        result.put("articles", Json.toJson(articleSummary));
+        result.put("stories", Json.toJson(storySummary));
+        result.put("churches", churchCount);
+        commitTransaction();
+        return ok(result);
     }
 }

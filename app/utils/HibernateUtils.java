@@ -1,5 +1,8 @@
 package utils;
 
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.vividsolutions.jts.geom.Coordinate;
 import models.address.Diocese;
 import models.address.Geometrified;
@@ -14,6 +17,8 @@ import org.hibernate.service.ServiceRegistry;
 import org.reflections.Reflections;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Set;
 
 /**
@@ -47,37 +52,56 @@ public class HibernateUtils
 
     public static Session getSession() throws HibernateException
     {
-        return ourSessionFactory.getCurrentSession();
+        Session session = ourSessionFactory.getCurrentSession();
+        // get method which invoked getSession()
+
+        return session;
     }
 
     public static Serializable save(Object object)
     {
-        Transaction transaction = getSession().beginTransaction();
-        Serializable res = getSession().save(object);
-        transaction.commit();
+        Session session = getSession();
+//        Transaction transaction = session.beginTransaction();
+        Serializable res = session.save(object);
+//        transaction.commit();
         return res;
     }
 
     public static void saveOrUpdate(Object object)
     {
-        Transaction transaction = getSession().beginTransaction();
-        getSession().saveOrUpdate(object);
-        transaction.commit();
+        Session session = getSession();
+//        Transaction transaction = session.beginTransaction();
+        session.saveOrUpdate(object);
+//        transaction.commit();
     }
 
     public static Object load(Class<?> clazz, Serializable id)
     {
-        Transaction transaction = getSession().beginTransaction();
+//        Transaction transaction = getSession().beginTransaction();
         Object obj = getSession().load(clazz, id);
-        transaction.commit();
+//        transaction.commit();
         return obj;
     }
 
     public static Object get(Class<?> clazz, Serializable id)
     {
-        Transaction transaction = getSession().beginTransaction();
+//        Transaction transaction = getSession().beginTransaction();
         Object obj = getSession().get(clazz, id);
-        transaction.commit();
+//        transaction.commit();
         return obj;
+    }
+
+    public static void beginTransaction()
+    {
+        Session session = getSession();
+//        Transaction transaction = threadTransactions.get(Thread.currentThread());
+        Transaction transaction = session.getTransaction();
+        if (transaction == null || !transaction.isActive())
+            transaction = session.beginTransaction();
+    }
+
+    public static void commitTransaction()
+    {
+        getSession().getTransaction().commit();
     }
 }
