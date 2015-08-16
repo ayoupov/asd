@@ -10,7 +10,7 @@
     margin-top: 60px !important;
 }
 
-#articles tr, #stories tr
+#articles tr, #stories tr, #churches tr
 {
     cursor: pointer;
 }

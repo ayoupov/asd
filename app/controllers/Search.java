@@ -12,6 +12,9 @@ import play.mvc.*;
 
 import java.util.List;
 
+import static utils.HibernateUtils.beginTransaction;
+import static utils.HibernateUtils.commitTransaction;
+
 /**
  * Created with IntelliJ IDEA.
  * User: ayoupov
@@ -22,9 +25,11 @@ public class Search extends Controller
 {
     public static Result churchesByNameAndAddress(String q)
     {
+        beginTransaction();
         ObjectNode result = Json.newObject();
         result.put("q", q);
         List<Church> churches = SearchManager.searchChurches(q);
+        commitTransaction();
         if (churches == null || churches.size() == 0) {
             return notFound(result);
         }
@@ -37,12 +42,14 @@ public class Search extends Controller
 
     public static Result mediaContentByText(String q, String type)
     {
+        beginTransaction();
         ObjectNode result = Json.newObject();
         result.put("q", q);
         MediaContentType ctype = MediaContentType.fromString(type);
         if (ctype == null)
             return notFound(type);
         List<MediaContent> content = SearchManager.searchMediaContent(q, ctype);
+        commitTransaction();
         if (content == null || content.size() == 0) {
             return notFound(result);
         }

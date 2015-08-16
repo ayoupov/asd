@@ -20,6 +20,7 @@ GET         /content/churches/revisions/:id    controllers.Churches.revsById(id:
 
 
 POST        /search/churches/:q                controllers.Search.churchesByNameAndAddress(q: String)
+GET         /search/churches/:q                controllers.Search.churchesByNameAndAddress(q: String)
 POST        /search/:stype/:q                  controllers.Search.mediaContentByText(q: String, stype: String)
 
 # secure, role must be >= User

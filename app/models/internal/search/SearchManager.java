@@ -60,7 +60,6 @@ public class SearchManager
     public static List<Church> searchChurches(String q)
     {
         Session session = getSession();
-        Transaction tr = session.beginTransaction();
         FullTextSession fullTextSession = Search.getFullTextSession(session);
         QueryBuilder queryBuilder = fullTextSession.getSearchFactory()
                 .buildQueryBuilder()
@@ -71,7 +70,6 @@ public class SearchManager
         FullTextQuery query = fullTextSession.createFullTextQuery(luceneQuery);
         query.setMaxResults(10);
         List<Church> result = query.list();
-        tr.commit();
         return result;
     }
 
@@ -80,7 +78,6 @@ public class SearchManager
     public static List<MediaContent> searchMediaContent(String q, MediaContentType type)
     {
         Session session = getSession();
-        Transaction tr = session.beginTransaction();
         FullTextSession fullTextSession = Search.getFullTextSession(session);
         QueryBuilder queryBuilder = fullTextSession.getSearchFactory()
                 .buildQueryBuilder()
@@ -93,7 +90,6 @@ public class SearchManager
         FullTextQuery query = fullTextSession.createFullTextQuery(luceneQuery);
         query.setMaxResults(10);
         List<MediaContent> result = query.list();
-        tr.commit();
         return result;
     }
 }
