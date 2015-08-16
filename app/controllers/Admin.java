@@ -4,6 +4,7 @@ import models.internal.search.SearchManager;
 
 import play.mvc.Controller;
 import play.mvc.Result;
+import utils.map.AdditiveProcessor;
 import utils.map.BadIdsSieve;
 import utils.map.Processor;
 import utils.map.Snapshoter;
@@ -39,7 +40,14 @@ public class Admin extends Controller
 
     public static Result snapshotify() throws IOException, InterruptedException
     {
-        Snapshoter.snap("d:/prog/asd/res/doc.kml", "d:/prog/asd/res/snapshots");
+//        Snapshoter.snap("d:/prog/asd/res/doc.kml", "d:/prog/asd/res/snapshots");
+        Snapshoter.snap("d:/prog/asd/res/doc.kml", "C:\\Users\\ayoupov\\Google Диск\\snapshots");
         return ok("snapshots in progress");
+    }
+
+    public static Result parseAdd() throws IOException, InterruptedException
+    {
+        AdditiveProcessor.main(new String[]{"d:/prog/asd/res/data/churches.csv"});
+        return ok("parsed additionally");
     }
 }

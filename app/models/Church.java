@@ -53,7 +53,12 @@ import java.util.Set;
 public class Church
 {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public Long id;
+
     public String extID;
+
+    public int version;
 
     @Field
     @Analyzer(definition = "polish_def_analyzer")
@@ -129,6 +134,7 @@ public class Church
         this.enabled = true;
         this.addedBy = addedBy;
         this.addedDT = new Date();
+        this.version = 0;
     }
 
     public Church()

@@ -1,9 +1,15 @@
 package controllers;
 
 import models.Church;
+import models.internal.ContentManager;
+import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 
+import java.util.List;
+
+import static utils.HibernateUtils.beginTransaction;
+import static utils.HibernateUtils.commitTransaction;
 import static utils.HibernateUtils.get;
 
 /**
@@ -17,11 +23,20 @@ public class Churches extends Controller
 
     public static Result byId(String id)
     {
-        Church church = (Church) get(Church.class, id);
+        beginTransaction();
+        Church church = ContentManager.getChurch(id);
+        commitTransaction();
         if (church != null)
-            return ok("Got request " + request() + "!" + "Found: " + church);
+            return ok(Json.toJson(church));
         else
             return notFound(String.format("Church with id {%s}", id));
     }
 
+    public static Result revsById(String id)
+    {
+        beginTransaction();
+        List<Church> versions = ContentManager.getChurchVersions(id);
+        commitTransaction();
+        return ok(Json.toJson(versions));
+    }
 }

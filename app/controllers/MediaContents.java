@@ -9,6 +9,10 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 
+import java.util.List;
+
+import static utils.HibernateUtils.beginTransaction;
+import static utils.HibernateUtils.commitTransaction;
 import static utils.HibernateUtils.get;
 
 /**
@@ -22,14 +26,16 @@ public class MediaContents extends Controller
 
     public static Result byTypeAndId(String ctype, Long id)
     {
+        beginTransaction();
         MediaContentType type = MediaContentType.fromString(ctype);
         if (type == null)
             return badRequest("Trying to get content with type : " + ctype);
         MediaContent content = (MediaContent) get(MediaContent.class, id);
+        commitTransaction();
         if (content != null) {
             if (!content.contentType.equals(type))
                 return badRequest("Wrong content type: " + type);
-            return ok("Got request " + request() + "!" + "Found: " + content);
+            return ok(Json.toJson(content));
         } else
             return notFound(String.format("MediaContent with id {%s}", id));
     }
@@ -64,8 +70,11 @@ public class MediaContents extends Controller
     {
         ObjectNode result = Json.newObject();
         MediaContentType mct = MediaContentType.fromString(ctype);
-        // todo: ^^^????
-        result.put(ctype, Json.toJson(ContentManager.getByIds(ids)));
+        beginTransaction();
+        List<MediaContent> contents = ContentManager.getByIds(ids);
+        result.put("data", Json.toJson(contents));
+        result.put("success", true);
+        commitTransaction();
         return ok(result);
     }
 }

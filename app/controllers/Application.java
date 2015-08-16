@@ -33,10 +33,13 @@ public class Application extends Controller
         // articles starred quantity
         List articleSummary = ContentManager.getSummary(MediaContentType.Article);
         List storySummary = ContentManager.getSummary(MediaContentType.Story);
-        long churchCount = ContentManager.getChurchCount();
-        result.put("articles", Json.toJson(articleSummary));
-        result.put("stories", Json.toJson(storySummary));
-        result.put("churches", churchCount);
+//        long churchCount = ContentManager.getChurchCount();
+        ObjectNode dataNode = Json.newObject();
+        dataNode.put("articles", Json.toJson(articleSummary));
+        dataNode.put("stories", Json.toJson(storySummary));
+        result.put("data", dataNode);
+//        result.put("churches", churchCount);
+        result.put("success", true);
         commitTransaction();
         return ok(result);
     }

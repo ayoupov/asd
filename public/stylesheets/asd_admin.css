@@ -1,0 +1,21 @@
+.left-admin-menu
+{
+    position: fixed;
+    left:0;
+    top: 36%;
+}
+
+.skipped-top
+{
+    margin-top: 60px !important;
+}
+
+#articles tr, #stories tr
+{
+    cursor: pointer;
+}
+
+body
+{
+    height: auto;
+}
