@@ -23,6 +23,11 @@ public class ChurchSeeds
 
     public static void seedChurches(String path) throws IOException
     {
+        seedChurches(path, null);
+    }
+
+    public static void seedChurches(String path, String onlyOneID) throws IOException
+    {
         String line;
         int success = 0, failed = 0;
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"))) {
@@ -42,6 +47,8 @@ public class ChurchSeeds
                         System.out.println("line = " + line);
                         failed++;
                     }
+                    if (onlyOneID != null && !extId.equals(onlyOneID))
+                        continue;
                     String unfolded = (!"".equals(split[5])) ? unwrap(split[5]) : null;
                     Address address = new Address(Double.parseDouble(unwrap(split[3])),
                             Double.parseDouble(unwrap(split[4])),

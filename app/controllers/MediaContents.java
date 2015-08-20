@@ -8,6 +8,7 @@ import models.internal.RequestException;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import views.html.mediacontent;
 
 import java.util.List;
 
@@ -35,7 +36,8 @@ public class MediaContents extends Controller
         if (content != null) {
             if (!content.contentType.equals(type))
                 return badRequest("Wrong content type: " + type);
-            return ok(Json.toJson(content));
+//            return ok(Json.toJson(content));
+            return ok(mediacontent.render(content));
         } else
             return notFound(String.format("MediaContent with id {%s}", id));
     }

@@ -94,4 +94,15 @@ public class Diocese implements Geometrified
     {
         this.archidiocese = archidiocese;
     }
+
+    @Override
+    public String toString()
+    {
+        return "Diocese{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", metropolie=" + metropolie +
+                ", archidiocese=" + archidiocese +
+                '}';
+    }
 }

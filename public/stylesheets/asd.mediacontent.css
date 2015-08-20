@@ -1,0 +1,696 @@
+.menu input.prompt {
+    font-family: "Helvetica", "Helvetica Neue Light", sans-serif !important;
+    /*font-size: 18pt !important;*/
+    font-weight: bold;
+    border: none;
+    border-radius: 0 !important;
+    padding-left: 0;
+    padding-bottom: 1em !important;
+    width: 248px;
+    height: 42px;
+}
+
+.prompt-wrapper {
+    margin-right: 24px !important;
+    border-bottom: solid 5px black !important;
+}
+
+#menu.menu a {
+    font-family: "Helvetica", "Helvetica Neue Light", sans-serif !important;
+    font-size: 18pt !important;
+    font-weight: bold !important;
+}
+
+#menu.menu.content-menu {
+    left: 0;
+    top: 0;
+    width: 100%;
+}
+
+/* width of 960 + 20 of margin */
+.media-container {
+    width: 980px;
+    max-width: 980px;
+    margin: auto;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.social-links {
+    bottom: 10px;
+    position: fixed;
+    z-index: 100;
+}
+
+.both-container {
+    width: 980px;
+    max-width: 980px;
+    margin: auto;
+    text-align: center;
+    vertical-align: middle;
+    z-index: 10;
+}
+
+.left-container {
+    float: left;
+    width: 216px;
+    background-color: #f2f2f2;
+    height: 100%;
+    z-index: 20;
+}
+
+.right-container {
+    float: right;
+    width: 735px;
+    padding-top: 10px;
+    background-color: #e8e8e8;
+    z-index: 20;
+}
+
+.cleared {
+    clear: both;
+}
+
+.thumb {
+    width: 225px;
+    height: 330px;
+    background-color: white;
+    /* gutter */
+    margin: 10px;
+    padding: 0;
+    cursor: pointer;
+}
+
+.story:not(.center-more) {
+    border: 5px solid #5a38db;
+}
+
+.article:not(.center-more):not(.hovered) {
+    border: 5px solid #d0b165;
+}
+
+.thumb .image:not(.ui) {
+    height: 42%;
+    overflow-y: hidden;
+}
+
+.story .content, .article .content {
+    height: 58%;
+}
+
+.story .content .header, .article .content .header {
+    font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 8pt;
+    text-align: center;
+    background-color: white;
+    padding: 1em;
+    /*height: 30%;*/
+}
+
+.story .content .description, .article .content .description {
+    font-family: Georgia, sans-serif;
+    font-size: 8pt;
+    text-align: center;
+    background-color: white;
+    padding-bottom: 0.5em;
+    /*height: 70%;*/
+}
+
+.ui.sticky {
+    width: 470px;
+    height: 322px;
+    text-align: center;
+    vertical-align: middle;
+    position: absolute;
+    /* absolute parent settings */
+    /*right: 10px;*/
+    /*bottom: 10px;*/
+    right: 0;
+    bottom: 0;
+    line-height: normal;
+}
+
+.grayish {
+    background-color: #e8e8e8;
+}
+
+.white-bordered {
+    border: solid white 5px;
+}
+
+.grayish-bordered {
+    border: solid #e8e8e8 5px;
+}
+
+.white {
+    background-color: white;
+}
+
+.center-more {
+    vertical-align: middle;
+    text-align: center;
+}
+
+.more-wrapper {
+    position: relative;
+    height: 246px;
+    width: 150px;
+    display: inline-block;
+    top: 50%;
+    left: 58px;
+    transform: translate(-40%, -50%);
+}
+
+.more {
+    position: relative;
+    display: inline-block;
+    top: 50%;
+    left: 17%;
+    transform: translate(-50%, -50%);
+    font-size: 12pt;
+    font-family: Georgia, sans-serif;
+    font-style: italic;
+}
+
+.shameful-underline {
+    width: 25%;
+    height: 5px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hover-content:not(.shameful-underline) {
+    height: 100%;
+}
+
+.hover-content.shameful-underline {
+    margin-top: -5px;
+}
+
+.hover-content .back-image {
+    /*opacity: 0.3;*/
+    overflow: hidden;
+    background-size: cover;
+    background: no-repeat center;
+    width: 100%;
+    height: 100%;
+}
+
+.hover-content .more-button {
+    height: 47px;
+    line-height: 34px;
+    width: 150px;
+    border: solid white 5px;
+    top: 223px;
+    position: absolute;
+    left: 40px;
+    bottom: 0;
+    color: white;
+    font-style: italic;
+    font-family: Georgia, sans-serif;
+}
+
+.hover-content .cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(208, 177, 101, 0.81);
+}
+
+.hover-content .hover-icon {
+    position: absolute;
+    top: 75px;
+    left: 80px;
+}
+
+.credits-container {
+    width: 460px;
+    max-width: 460px;
+    margin: auto;
+    vertical-align: top;
+}
+
+#slide4 {
+    font-family: "Helvetica", "Helvetica Neue Light", sans-serif !important;
+    font-size: 15px;
+    font-weight: 100;
+    color: white;
+}
+
+#slide4 h3 {
+    font-family: "Helvetica", "Helvetica Neue Light", sans-serif !important;
+    font-size: 48pt;
+}
+
+#slide4 .role {
+    font-weight: bold;
+}
+
+#slide4 .column {
+}
+
+#slide4 .column.role {
+    float: left;
+    width: 50%;
+}
+
+#slide4 .column:not(.role) {
+    float: right;
+    width: 50%;
+}
+
+#slide4 .row::after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+#slide4 p, .row {
+    padding-bottom: 20px;
+    /*margin-bottom: 20px;*/
+}
+
+/* 30 top + 20 from previous row*/
+#slide4 .row.last {
+    padding-top: 30px;
+    display: block;
+    padding-bottom: 50px;
+}
+
+.social {
+    color: #866bed;
+    font-weight: bold;
+}
+
+#stories-by-date .item {
+    height: 104px;
+    line-height: 1.2em;
+    background-color: #f2f2f2;
+    border: none;
+    text-align: left;
+}
+
+#stories-by-date .item .asd-content {
+    float: right;
+    width: 80%;
+}
+
+#stories-by-date .item .asd-header {
+    font-family: Helvetica, sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 8pt;
+    padding: 1em;
+}
+
+#stories-by-date .item .asd-date {
+    font-family: Helvetica, sans-serif;
+    font-size: 8pt;
+    color: #b5b5b5;
+    padding: 0 1em 1em;
+}
+
+#stories-by-date .asd-menu-arrow {
+    float: left;
+    width: 20%;
+    padding: 1em;
+}
+
+#stories-by-date .item.active {
+    background-color: white;
+}
+
+#stories-by-date .item .asd-item-wrap {
+    padding-top: 0.5em;
+}
+
+#story-controls {
+    vertical-align: middle;
+}
+
+#story-controls div {
+    width: 50%;
+    height: 76px;
+    top: 50%;
+}
+
+#story-controls .story-control-left {
+    float: left;
+    border-right: 1px solid #f2f2f2;
+    background: #f9f9f9 url(../images/story_control_down.png) no-repeat center center;
+    /*height:200px;*/
+    /*width:200px;*/
+}
+
+#story-controls .story-control-right {
+    border-left: 1px solid #f2f2f2;
+    float: right;
+    background: #f9f9f9 url(../images/story_control_up.png) no-repeat center center;
+}
+
+.social-wrapper {
+    margin-left: 10px !important;
+}
+
+.social-tw {
+    float: left;
+    cursor: pointer;
+}
+
+.fb-like {
+    margin-right: 10px;
+}
+
+.social-fb {
+    margin-left: 10px;
+    float: right;
+    cursor: pointer;
+}
+
+.close-button {
+    background: url(../images/close_button.png) center center no-repeat;
+    width: 34px;
+    height: 34px;
+}
+
+#passportmenu-top .item, #passportmenu-bottom .item {
+    height: 40px;
+}
+
+#passportmenu-bottom {
+    bottom: 0;
+    border-top: 2px solid rgba(34, 36, 38, .15);
+    border-bottom: 2px solid transparent !important;
+    margin: 0 !important;
+}
+
+#passportmenu-top {
+    top: 0;
+}
+
+.alarm-sign {
+    height: 34px;
+    width: 34px;
+    background: black url(../images/alarm_sign.png) center center no-repeat;
+    float: left;
+    margin-right: 10px;
+}
+
+.passport-edit-text {
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: #d1d1d1;
+    font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
+    font-weight: bold;
+    font-size: 18px;
+    margin-top: 7px;
+    padding-left: 44px;
+}
+
+.passport-edit-button {
+    position: absolute;
+    z-index: 50;
+    /*min-width:300px;*/
+    margin-top: -38px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.passport-title {
+    font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
+    font-size: 32px;
+    font-weight: bold;
+    height: 100px;
+    width: 100%;
+    text-align: center;
+    vertical-align: middle;
+    padding-top: 32px;
+}
+
+.passport-image-wrapper {
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.passport-image-wrapper::after {
+    clear: both;
+}
+
+.passport-main-image {
+    width: 80vw;
+    max-width: 885px;
+    max-height: 100%;
+    /*float: left;*/
+}
+
+.passport-image-gallery {
+    width: 20vw;
+    /*float: right;*/
+}
+
+.passport-data-wrapper {
+    width: 100%;
+    font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
+}
+
+td.passport-field {
+    background-color: #e8e8e8;
+    color: #949494;
+    width: 37%;
+    text-align: right;
+    text-transform: uppercase;
+    font-size: 9pt;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    padding-right: 18px;
+    letter-spacing: 1px;
+}
+
+td.passport-value {
+    background-color: #f2f2f2;
+    width: 37%;
+    text-align: left;
+    font-size: 14px;
+    padding-bottom: 11px;
+    padding-top: 9px;
+    padding-left: 18px;
+}
+
+td.passport-data-filler {
+    width: 26%;
+    background-color: #f2f2f2;
+}
+
+.passport-edit-value {
+    color: #9d9c9c;
+}
+
+.church-has-stories {
+    height: 100px;
+    text-align: center;
+}
+
+.church-has-stories h1 {
+    padding-top: 32px;
+    font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
+    font-size: 24px;
+}
+
+.add-story-wrapper-outer {
+    height: 128px;
+    padding-top: 24px;
+}
+
+.add-story-wrapper {
+    text-align: center;
+    border: 5px #e1e1e1 solid;
+    height: 55px;
+    width: 460px;
+    margin-left: auto;
+    margin-right: auto;
+    cursor: pointer;
+}
+
+.add-story-button {
+    color: #5a38db;
+    text-transform: uppercase;
+    font-size: 18px;
+    font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
+    font-weight: bold;
+    margin-top: 14px;
+}
+
+.add-story-plus {
+    background: transparent url(../images/add_story_plus.png) center center no-repeat;
+    width: 34px;
+    height: 34px;
+    float: left;
+    margin-top: -8px;
+}
+
+.add-story-inner {
+    width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.content-cover-image {
+    height: 500px;
+    max-height: 500px;
+    /*max-width: 960px;*/
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 60px;
+    background: url(../images/church_passport.png);
+    background-size: cover;
+}
+
+.content-title {
+    position: absolute;
+    color: white;
+    top: 480px;
+    font-size: 31pt;
+    font-weight: bold;
+}
+
+.content-header.menu {
+    background-color : #ececec !important;
+    border: none !important;
+    height: 34px !important;
+    margin-top: 0 !important;
+}
+
+.content-header-date {
+    margin-left: 12.5%;
+    margin-right: 4.6875%;
+    color: #b5b5b5 !important;
+    font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
+    font-size: 8pt;
+}
+
+.content-header-authors {
+    font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
+    font-size: 8pt;
+    text-transform: uppercase !important;
+}
+
+/*.content-header-authors-divider*/
+/*{*/
+    /*height: 2px;*/
+    /*width: 2px;*/
+    /*background-color: #7b5fe4 !important;*/
+    /*padding: 0 !important;*/
+/*}*/
+
+.content-lead-wrapper {
+    width: 36%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.content-lead {
+    float: right;
+    color: #d0b165;
+    font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 11pt;
+    /*width: 80%;*/
+    line-height: 1.7em;
+    letter-spacing: 0.3px;
+}
+
+.content-main p {
+    font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
+    font-size: 11pt;
+}
+
+.content-main {
+    /*width: 50%;*/
+    margin-left: 22%;
+    margin-right: 32%;
+    min-width: 585px;
+}
+
+div.content-padder {
+    margin-bottom: 50px;
+    margin-top: 50px;
+    background-color: #ececec;
+    height: 3px;
+    width: 100%;
+}
+
+.content-main h2 {
+    font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
+}
+
+.content-note {
+    font-family: Georgia, serif !important;
+    font-size: 26pt !important;
+    font-style: italic;
+    color: #a0a0a0;
+    text-align: center;
+}
+
+.content-quote
+{
+    text-align: left;
+    float: right;
+    width: 80%;
+    line-height: 1.1em;
+    margin-bottom: 1em;
+}
+
+div.content-quote-wrapper
+{
+    width: 100%;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+div.content-quote-symbol {
+    font-family: Georgia, serif !important;
+    font-size: 78pt !important;
+    font-style: italic;
+    color: #d0b165;
+    margin-top: -18px;
+    letter-spacing: -6px;
+    margin-right: 20px;
+    float: right;
+}
+
+.content-underline {
+    width: 56px;
+    margin-bottom: 50px;
+    margin-top: 25px !important;
+    height: 5px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+div.full-width {
+    width: 100vw;
+    margin-left: -23vw;
+}
+
+.content-shifted {
+    margin-left: 23vw;
+    width: 50%;
+}
+
+.content-afterwords {
+    padding-top: 20px !important;
+    padding-bottom: 20px !important;
+    color: #a8a8a8 !important;
+    line-height: 1.6em;
+}
+
+.content-grey {
+    background-color: #f7f8f8;
+}

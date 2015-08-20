@@ -2,12 +2,9 @@ package models.internal;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
-import models.address.Address;
-import models.address.Geometrified;
-import models.address.Parish;
+import models.address.*;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import utils.map.GeocodeUtils;
 
 import java.util.ArrayList;
@@ -29,23 +26,16 @@ public class GeographyManager
     public static Address check(Geometry geometry)
     {
         Session session = getSession();
-//        Transaction transaction = null;
-//        if (session.isOpen())
-//            transaction = session.getTransaction();
-//        if (transaction == null || !transaction.isActive())
-//            transaction = session.beginTransaction();
-//        System.out.println("transaction = " + transaction + " {" + ((transaction != null) ? transaction.getLocalStatus() : "") + "}");
         Address address = (Address) session.createQuery("select a from Address a " +
                 "where ST_Contains(ST_Buffer(:g, :t), a.geometry) = 1")
                 .setParameter("g", geometry).setParameter("t", TOLERANCE).uniqueResult();
-//        transaction.commit();
         return address;
     }
 
     public static Address add(Point point, String unfolded)
     {
         // 1. reverse geocode -> unfolded
-        // 2. find belonging parish
+        // 2. find belonging dekanat
         // 3. store in geocache
 
         Address result = new Address();
@@ -54,30 +44,76 @@ public class GeographyManager
             result.setUnfolded(GeocodeUtils.getAddress(point));
         else
             result.setUnfolded(unfolded);
-        result.setParish(findParish(point));
+        List<Dekanat> dekanats = findDekanats(point);
+        if (dekanats.size() > 1) {
+            System.out.println(String.format("Alarma! : %s {%s} is in %d dekanats! ",
+                    unfolded, point.toString(), dekanats.size()));
+            for (Dekanat d : dekanats)
+            {
+                System.out.println("d = " + d);
+            }
+        }
+        result.setDekanat(dekanats.get(0));
         return result;
     }
 
-    private static Parish findParish(Point point)
+    public static Dekanat findDekanat(Point point)
     {
         Session session = getSession();
-//        Transaction transaction = session.beginTransaction();
-        Parish parish = (Parish) session.createQuery("select p from Parish p where ST_contains(p.geometry, :p) = 1")
+        Dekanat dekanat = (Dekanat) session.createQuery("select d from Dekanat d where ST_contains(d.geometry, :p) = 1")
                 .setParameter("p", point).uniqueResult();
-//        transaction.commit();
-        return parish;
+        return dekanat;
     }
 
-    public static int getChurchesInParish(Parish parish)
+    public static List<Dekanat> findDekanats(Point point)
     {
-        if (parish == null)
+        Session session = getSession();
+        List<Dekanat> dekanats = session.createQuery("select d from Dekanat d where ST_contains(d.geometry, :p) = 1")
+                .setParameter("p", point).list();
+        return dekanats;
+    }
+
+    public static int getChurchesInDekanat(Dekanat dekanat)
+    {
+        if (dekanat == null)
             return 0;
         Session session = getSession();
-//        Transaction transaction = session.beginTransaction();
 
-        Long count = (Long) session.createQuery("select count(*) from Parish p, Church c " +
-                "where ST_contains(p.geometry, c.address.geometry) = 1 and c.address.parish = p").uniqueResult();
-//        transaction.commit();
+        Long count = (Long) session.createQuery("select count(*) from Dekanat d, Church c " +
+                "where ST_contains(d.geometry, c.address.geometry) = 1 and c.address.dekanat = d")
+                .setCacheable(true)
+                .uniqueResult();
+        if (count == null)
+            return 0;
+        return count.intValue();
+    }
+
+    public static int getChurchesInDiocese(Diocese diocese)
+    {
+        if (diocese == null)
+            return 0;
+        Session session = getSession();
+
+        Long count = (Long) session.createQuery("select count(*) from Diocese d, Church c " +
+                "where ST_contains(d.geometry, c.address.geometry) = 1")
+                .setCacheable(true)
+                .uniqueResult();
+        if (count == null)
+            return 0;
+        return count.intValue();
+    }
+
+    public static int getChurchesInMetropolies(Geometrified metropolie)
+    {
+        if (metropolie == null)
+            return 0;
+        Session session = getSession();
+
+        Long count = (Long) session.createQuery("select count(c.id) from Metropolie m, Church c " +
+                "where ST_contains(m.geometry, c.address.geometry) = 1 and m.id = :mid")
+                .setParameter("mid", ((Metropolie) metropolie).getId())
+                .setCacheable(true)
+                .uniqueResult();
         if (count == null)
             return 0;
         return count.intValue();
@@ -86,27 +122,19 @@ public class GeographyManager
     public static Object findByPoint(Class<? extends Geometrified> clazz, Point point)
     {
         Session session = getSession();
-//        Transaction transaction = session.beginTransaction();
 
-        Object obj = getSession()
+        Object obj = session
                 .createQuery("select g from " + clazz.getSimpleName() + " g where ST_contains(g.geometry, :p) = 1")
                 .setParameter("p", point)
                 .uniqueResult();
-//        transaction.commit();
         return obj;
     }
 
-    public static List<Geometrified> findByBBox(Class clazz, Geometry against)
+    public static List<Geometrified> findByBBox(Class<? extends Geometrified> clazz, Geometry against)
     {
+
         List<Geometrified> res = new ArrayList<>();
-        Session session = getSession();
-//        Transaction transaction = session.beginTransaction();
-
-        Query query = getSession()
-                .createQuery("select g from " + clazz.getSimpleName() + " g");
-        query.setCacheable(true);
-        List<Geometrified> list = query.list();
-
+        List<Geometrified> list = getGeometrifiedList(clazz);
         Geometry checkEnv = null;
 
         for (Geometrified geo : list) {
@@ -120,8 +148,17 @@ public class GeographyManager
             if (against.intersects(geometry))
                 res.add(geo);
         }
-//        transaction.commit();
         return res;
     }
 
+    public static List<Geometrified> getGeometrifiedList(Class<? extends Geometrified> clazz)
+    {
+        Session session = getSession();
+
+        Query query = session
+                .createQuery("select g from " + clazz.getSimpleName() + " g");
+        query.setCacheable(true);
+        List<Geometrified> list = query.list();
+        return list;
+    }
 }

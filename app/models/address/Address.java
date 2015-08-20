@@ -25,7 +25,7 @@ import javax.persistence.*;
 public class Address
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Type(type = "org.hibernate.spatial.GeometryType")
@@ -34,7 +34,7 @@ public class Address
 
     @Analyzer(definition = "polish_def_analyzer")
     @OneToOne
-    private Parish parish;
+    private Dekanat dekanat;
 
     @Field
     private String unfolded;
@@ -59,14 +59,14 @@ public class Address
         this.geometry = geometry;
     }
 
-    public Parish getParish()
+    public Dekanat getDekanat()
     {
-        return parish;
+        return dekanat;
     }
 
-    public void setParish(Parish parish)
+    public void setDekanat(Dekanat dekanat)
     {
-        this.parish = parish;
+        this.dekanat = dekanat;
     }
 
     public String getUnfolded()
@@ -81,13 +81,13 @@ public class Address
 
     public Address(Double lat, Double lng)
     {
-        this(lat,lng, null);
+        this(lat, lng, null);
     }
 
     public Address(Double lat, Double lng, String unfolded)
     {
         Point point = new Point(new CoordinateArraySequence
-                (new Coordinate[]{new Coordinate(lat, lng)}), new GeometryFactory());
+                (new Coordinate[]{new Coordinate(lng, lat)}), new GeometryFactory());
         Geometry geom = point; // todo: change to envelope?
         Address checked = GeographyManager.check(geom);
         if (checked == null) {
@@ -96,7 +96,7 @@ public class Address
         }
         this.geometry = checked.geometry;
         this.unfolded = checked.unfolded;
-        this.parish = checked.parish;
+        this.dekanat = checked.dekanat;
     }
 
     public Address()
@@ -107,19 +107,12 @@ public class Address
     public String constructChurchId()
     {
         String dioId = "";
-        long parishId = 0;
-        if (parish != null) {
-            parishId = parish.getId();
-            Dekanat dekanat = parish.getDekanat();
-            if (dekanat != null) {
-                Diocese diocese = dekanat.getDiocese();
-                if (diocese != null) {
-                    dioId = diocese.getId();
-                } else dioId = "XX";
-            }
-        }
-        int getParishCount = GeographyManager.getChurchesInParish(parish);
-        return dioId + "-" + String.format("%03d", parishId) + "-" + String.format("%03d", getParishCount + 1);
+        Diocese diocese = dekanat.getDiocese();
+        if (diocese != null) {
+            dioId = diocese.getId();
+        } else dioId = "??";
+        int getDekanatCount = GeographyManager.getChurchesInDekanat(dekanat);
+        return dioId + "-" + String.format("%03d", dekanat.getId()) + "-" + String.format("%03d", getDekanatCount + 1);
     }
 
     @Override

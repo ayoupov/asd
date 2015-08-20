@@ -1,15 +1,32 @@
 package controllers;
 
+import models.Church;
+import models.MediaContent;
+import models.MediaContentType;
+import models.internal.ContentManager;
 import models.internal.search.SearchManager;
 
+import models.internal.search.filters.*;
+import models.user.User;
+import play.cache.Cache;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.twirl.api.Html;
 import utils.map.AdditiveProcessor;
 import utils.map.BadIdsSieve;
 import utils.map.Processor;
 import utils.map.Snapshoter;
+import views.html.admin;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static utils.HibernateUtils.beginTransaction;
+import static utils.HibernateUtils.commitTransaction;
+
+import scala.collection.JavaConverters;
 
 /**
  * Created with IntelliJ IDEA.
@@ -49,5 +66,27 @@ public class Admin extends Controller
     {
         AdditiveProcessor.main(new String[]{"d:/prog/asd/res/data/churches.csv"});
         return ok("parsed additionally");
+    }
+
+    public static Result index()
+    {
+        beginTransaction();
+        UserFilter userFilter = new UserFilter(request());
+        ArticleFilter articleFilter = new ArticleFilter(request());
+        StoryFilter storyFilter = new StoryFilter(request());
+        ChurchFilter churchFilter = new ChurchFilter(request());
+        List<User> users = ContentManager.getUsers(userFilter);
+        List<MediaContent> articles = ContentManager.getMediaContent(articleFilter, MediaContentType.Article);
+        List<MediaContent> stories = ContentManager.getMediaContent(storyFilter, MediaContentType.Story);
+        List<Church> churches = ContentManager.getChurches(churchFilter);
+        Map<String, Integer> issues = new HashMap<>();
+        issues.put("users", ContentManager.getUserIssuesCount());
+        issues.put("articles", ContentManager.getArticleIssuesCount());
+        issues.put("stories", ContentManager.getStoryIssuesCount());
+        issues.put("churches", ContentManager.getChurchIssuesCount());
+
+        Html content = admin.render(users, articles, stories, churches, issues);
+        commitTransaction();
+        return ok(content);
     }
 }

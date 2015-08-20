@@ -3,6 +3,7 @@
     position: fixed;
     left:0;
     top: 36%;
+    z-index:1000;
 }
 
 .skipped-top

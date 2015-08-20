@@ -6,6 +6,8 @@ import models.internal.ContentManager;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.twirl.api.Html;
+import utils.ServerProperties;
 import views.html.index;
 
 import java.util.List;
@@ -18,8 +20,14 @@ public class Application extends Controller
 
     public static Result index()
     {
-        return ok(index.render("Your new application is ready."));
+        beginTransaction();
+        // add other static data
+        long churchCount = ContentManager.getChurchCount();
+        commitTransaction();
+        Html content = index.render(churchCount);
+        return ok(content);
     }
+
 
     public static Result summary()
     {

@@ -1,16 +1,26 @@
-@(title: String)(content: Html)
+@import utils.ServerProperties
+@(churchCount: Long)
 
 <!DOCTYPE html>
 
-<html>
+<html lang="pl">
     <head>
-        <title>@title</title>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+        <meta charset="UTF-8">
+        <title>Architektura Siódmego Dnia</title>
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
-        <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
+            @parts.commonhead()
+            @parts.maphead()
+            @parts.indexhead()
+            @parts.metas()
     </head>
     <body>
-        @staticmenu
-        @content
+        <div class="wrapper">
+            @staticmenu()
+            @sociallinks()
+            @parts.mainslide1(churchCount)
+            @parts.mainslide2()
+            @parts.mainslide3()
+            @parts.mainslide4(ServerProperties.getValue("facebook.url"))
+        </div>
     </body>
 </html>

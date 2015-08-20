@@ -1,7 +1,22 @@
 @()
-<header>
-    <img src="@routes.Assets.at("images/logo.png")">
-</header>
-<footer>
-    <ul><li>tweet</li><li>fb</li></ul>
-</footer>
+<nav id="menu" class="ui fixed secondary pointing menu blurred">
+    <div class="left item logo-wrapper">
+        <div class="logo-wrapper-more item">
+            <a id="logo" class="logo"><img src="@routes.Assets.at("images/logo.png")" class="ui image"></a>
+        </div>
+    </div>
+
+    <div id="links" class="center aligned item">
+        <a class="active golden item" href="#slide1">mapa</a>
+        <a class="golden item" href="#slide2">kontekst</a>
+        <a class="golden item" href="#slide3">wspomnienia</a>
+    </div>
+
+    <div class="right item">
+        <div class="ui input prompt-wrapper item">
+            <input class="prompt" type="text" placeholder="szukaj">
+
+            <div class="search-icon"><img class="ui image" src="@routes.Assets.at("images/search-icon.png")"></div>
+        </div>
+    </div>
+</nav>

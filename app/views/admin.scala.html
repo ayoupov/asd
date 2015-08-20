@@ -1,0 +1,98 @@
+@import scala.collection.JavaConverters._
+@import models.user.User
+
+@(users: java.util.List[User], articles: java.util.List[MediaContent], stories: java.util.List[MediaContent], churches: java.util.List[Church], count: java.util.Map[String, Integer])
+
+@counters() = @{
+    count.asScala.toMap
+}
+@totalIssues() = @{
+    val ac : Integer = counters.getOrElse("articles", 0)
+    val sc : Integer = counters.getOrElse("stories", 0)
+    val cc : Integer = counters.getOrElse("churches", 0)
+    ac + sc + cc
+}
+<!DOCTYPE html>
+<html lang="pl">
+    <head>
+        <meta charset="UTF-8">
+        <title>Architektura Siódmego Dnia, Admin interface</title>
+        <link rel="stylesheet" type="text/css" class="ui" href="//oss.maxcdn.com/semantic-ui/2.0.4/semantic.min.css">
+        <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/asd.index.css")">
+        <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/asd.mediacontent.css")">
+        <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/asd.admin.css")">
+        <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/raptor-front-end.shrunk.min.css")">
+        <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")"></script>
+        <script src="//oss.maxcdn.com/semantic-ui/2.0.4/semantic.min.js"></script>
+            <!-- ui -->
+        <script src="@routes.Assets.at("javascripts/asd.api.js")"></script>
+        <script src="@routes.Assets.at("javascripts/asd.admin.js")"></script>
+        <script src="@routes.Assets.at("javascripts/isotope.pkgd.2.2.1.min.js")"></script>
+        <script src="@routes.Assets.at("javascripts/raptor.min.js")"></script>
+            <!--<script src="javascripts/raptor.shrunk.min.js"></script>-->
+    </head>
+    <body>
+        <div class="wrapper">
+            <nav id="menu" class="ui fixed secondary pointing menu blurred">
+                <div class="left item logo-wrapper">
+                    <div class="logo-wrapper-more item">
+                        <a id="logo" class="logo"><img src="@routes.Assets.at("images/logo.png")" class="ui image"></a>
+                    </div>
+                </div>
+
+                <div id="links" class="center aligned item">
+                    <a class="active golden item" href="#">admin interface</a>
+                </div>
+            </nav>
+            <div class="ui left rail">
+                <div class="ui vertical menu left-admin-menu">
+                    <a class="item page-changer" href="#stats">
+                        <b>Stats</b>
+                    </a>
+                    <a class="item page-changer" href="#users">
+                        <b>Users</b>
+
+                        <div id="user_reqs" class="ui label">@counters.getOrElse("users", 0)</div>
+                    </a>
+
+                    <div class="ui item">
+                        <b>Content</b>
+
+                        <div class="ui label">@totalIssues()</div>
+                        <div class="menu">
+                            <a class="item page-changer" href="#articles">Articles
+                                <div id="articles_reqs" class="ui right label">@counters.getOrElse("articles", 0)</div>
+                            </a>
+                            <a class="item page-changer" href="#stories">Stories
+                                <div id="stories_reqs" class="ui right label">@counters.getOrElse("stories", 0)</div>
+                            </a>
+                            <a class="item page-changer" href="#churches">Churches
+                                <div id="churches_reqs" class="ui right label">@counters.getOrElse("churches", 0)</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui grid skipped-top">
+                <div class="four column row">
+                    <div class="column"></div>
+                    <div class="eight wide column" id="main-admin-content">
+                        <div id="stats" class="admin-page">Do we really need it?</div>
+                        @parts.admin.users(users.asScala.toList)
+                        @parts.admin.articles(articles.asScala.toList)
+                        @parts.admin.stories(stories.asScala.toList)
+                        @parts.admin.churches(churches.asScala.toList)
+                        <div id="editor-wrapper">
+                            <div id="editor">
+                            </div>
+                            <div id="revisions" class="ui-hidden"></div>
+                            <input id="saveArticleButton" type="button" value="Save" class="ui button ui-hidden">
+                            <input id="saveStoryButton" type="button" value="Save" class="ui button ui-hidden">
+                        </div>
+                    </div>
+                    <div class="column"></div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

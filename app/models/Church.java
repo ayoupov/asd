@@ -156,4 +156,174 @@ public class Church
                 ", address=" + address +
                 '}';
     }
+
+    public Long getId()
+    {
+        return id;
+    }
+
+    public void setId(Long id)
+    {
+        this.id = id;
+    }
+
+    public String getExtID()
+    {
+        return extID;
+    }
+
+    public void setExtID(String extID)
+    {
+        this.extID = extID;
+    }
+
+    public int getVersion()
+    {
+        return version;
+    }
+
+    public void setVersion(int version)
+    {
+        this.version = version;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    public boolean isWorking()
+    {
+        return working;
+    }
+
+    public void setWorking(boolean working)
+    {
+        this.working = working;
+    }
+
+    public boolean isEnabled()
+    {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled)
+    {
+        this.enabled = enabled;
+    }
+
+    public Integer getConstructionStart()
+    {
+        return constructionStart;
+    }
+
+    public void setConstructionStart(Integer constructionStart)
+    {
+        this.constructionStart = constructionStart;
+    }
+
+    public Integer getConstructionEnd()
+    {
+        return constructionEnd;
+    }
+
+    public void setConstructionEnd(Integer constructionEnd)
+    {
+        this.constructionEnd = constructionEnd;
+    }
+
+    public Set<Synonym> getSynonyms()
+    {
+        return synonyms;
+    }
+
+    public void setSynonyms(Set<Synonym> synonyms)
+    {
+        this.synonyms = synonyms;
+    }
+
+    public Address getAddress()
+    {
+        return address;
+    }
+
+    public void setAddress(Address address)
+    {
+        this.address = address;
+    }
+
+    public Set<Architect> getArchitects()
+    {
+        return architects;
+    }
+
+    public void setArchitects(Set<Architect> architects)
+    {
+        this.architects = architects;
+    }
+
+    public Set<Image> getImages()
+    {
+        return images;
+    }
+
+    public void setImages(Set<Image> images)
+    {
+        this.images = images;
+    }
+
+    public Set<MediaContent> getMedia()
+    {
+        return media;
+    }
+
+    public void setMedia(Set<MediaContent> media)
+    {
+        this.media = media;
+    }
+
+    public User getAddedBy()
+    {
+        return addedBy;
+    }
+
+    public void setAddedBy(User addedBy)
+    {
+        this.addedBy = addedBy;
+    }
+
+    public Date getAddedDT()
+    {
+        return addedDT;
+    }
+
+    public void setAddedDT(Date addedDT)
+    {
+        this.addedDT = addedDT;
+    }
+
+    public User getApprovedBy()
+    {
+        return approvedBy;
+    }
+
+    public void setApprovedBy(User approvedBy)
+    {
+        this.approvedBy = approvedBy;
+    }
+
+    public Date getApprovedDT()
+    {
+        return approvedDT;
+    }
+
+    public void setApprovedDT(Date approvedDT)
+    {
+        this.approvedDT = approvedDT;
+    }
 }

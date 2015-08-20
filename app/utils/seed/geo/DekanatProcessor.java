@@ -25,6 +25,8 @@ public class DekanatProcessor implements ShapeProcessor
         Geometry geometry = ((Geometry) (feature).getDefaultGeometry());
         String name = feature.getAttribute("jpt_nazwa_").toString();
         Diocese diocese = findDiocese(geometry);
+        if (diocese == null && "Dekanat Morski".equalsIgnoreCase(name))
+            diocese = (Diocese) HibernateUtils.get(Diocese.class, "GG"); // gdanska diecezje (centroid fails)
         Dekanat dekanat = new Dekanat(diocese, name, geometry);
         HibernateUtils.saveOrUpdate(dekanat);
         return true;

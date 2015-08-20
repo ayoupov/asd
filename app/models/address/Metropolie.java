@@ -65,4 +65,13 @@ public class Metropolie implements Geometrified
     {
         this.id = id;
     }
+
+    @Override
+    public String toString()
+    {
+        return "Metropolie{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

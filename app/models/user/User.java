@@ -39,4 +39,47 @@ public class User
     {
         this.id = id;
     }
+
+    public String getId()
+    {
+        return id;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    public UserRole getRole()
+    {
+        return role;
+    }
+
+    public void setRole(UserRole role)
+    {
+        this.role = role;
+    }
+
+    public UserStatus getStatus()
+    {
+        return status;
+    }
+
+    public void setStatus(UserStatus status)
+    {
+        this.status = status;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "User{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }

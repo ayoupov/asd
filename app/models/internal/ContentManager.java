@@ -3,7 +3,12 @@ package models.internal;
 import models.Church;
 import models.MediaContent;
 import models.MediaContentType;
+import models.internal.search.filters.ChurchFilter;
+import models.internal.search.filters.QueryFilter;
+import models.internal.search.filters.UserFilter;
+import models.user.User;
 import org.apache.commons.lang3.tuple.Pair;
+import org.hibernate.Query;
 import org.hibernate.Session;
 
 import java.util.ArrayList;
@@ -105,5 +110,135 @@ public class ContentManager
                         "order by c.version asc"
         ).setParameter("id", id).list();
         return churches;
+    }
+
+    public static List<Church> getChurches()
+    {
+        Session session = getSession();
+        List<Church> churches = session.createQuery(
+                "select distinct c1 " +
+                        "from Church c1, Church c2 " +
+                        "where " +
+                        "c1.extID = c2.extID and " +
+                        "c1.version >= c2.version and " +
+                        "c1.approvedDT is not null " +
+                        "order by c1.version desc, c1.extID").list();
+        return churches;
+    }
+
+    public static List<Church> getChurches(ChurchFilter filter)
+    {
+        Session session = getSession();
+        Query query = session.createQuery(
+                "select distinct c " +
+                        "from Church c where " +
+                        "c.name like :fname " +
+                        "order by c.version desc, c.approvedDT")
+                .setParameter("fname", "%" + filter.getNameFilter() + "%")
+                .setMaxResults(filter.getMaxResults())
+                .setFirstResult(filter.getPage() * filter.getMaxResults());
+        System.out.println("query = " + query + " : " + filter);
+        List<Church> churches = query.list();
+        return churches;
+    }
+
+    public static Long articlesByUser(User user)
+    {
+        return contentByUser(user, MediaContentType.Article);
+    }
+
+    public static Long storiesByUser(User user)
+    {
+        return contentByUser(user, MediaContentType.Story);
+    }
+
+    private static Long contentByUser(User user, MediaContentType mct)
+    {
+        Session session = getSession();
+        Long count = (Long) session.createQuery("select count(*) from MediaContent mc " +
+                "where mc.contentType = :mct and mc.addedBy = :u").
+                setParameter("mct", mct).setParameter("u", user).uniqueResult();
+        return count;
+    }
+
+    public static Long churchesByUser(User user)
+    {
+        Session session = getSession();
+        Long count = (Long) session.createQuery("select count(*) from Church c " +
+                "where c.addedBy = :u").setParameter("u", user).uniqueResult();
+        return count;
+    }
+
+    public static List<User> getUsers(UserFilter filter)
+    {
+        Session session = getSession();
+        List<User> users = session.createQuery(
+                "select distinct u " +
+                        "from Users u where " +
+                        "u.name like :fname " +
+                        "order by u.id")
+                .setParameter("fname", "%" + filter.getNameFilter() + "%")
+                .setMaxResults(filter.getMaxResults())
+                .setFirstResult(filter.getPage() * filter.getMaxResults())
+                .list();
+        return users;
+    }
+
+    public static List<MediaContent> getMediaContent(QueryFilter filter, MediaContentType mct)
+    {
+        Session session = getSession();
+        List<MediaContent> content = session.createQuery(
+                "select distinct mc " +
+                        "from MediaContent mc where " +
+                        "mc.title like :fname and mc.contentType = :mct " +
+                        "order by mc.approvedDT")
+                .setParameter("fname", "%" + filter.getNameFilter() + "%")
+                .setParameter("mct", mct)
+                .setMaxResults(filter.getMaxResults())
+                .setFirstResult(filter.getPage() * filter.getMaxResults())
+                .list();
+        return content;
+    }
+
+    public static Integer getUserIssuesCount()
+    {
+        Session session = getSession();
+        Long res = (Long) session.createQuery(
+                "select count(*) " +
+                        "from Users u ")
+                .uniqueResult();
+        return res.intValue();
+    }
+
+    public static Integer getArticleIssuesCount()
+    {
+        Session session = getSession();
+        Long res = (Long) session.createQuery(
+                "select count(*) " +
+                        "from MediaContent mc where mc.contentType = :mct and mc.approvedDT is null ")
+                .setParameter("mct", MediaContentType.Article)
+                .uniqueResult();
+        return res.intValue();
+    }
+
+    public static Integer getStoryIssuesCount()
+    {
+        Session session = getSession();
+        Long res = (Long) session.createQuery(
+                "select count(*) " +
+                        "from MediaContent mc where mc.contentType = :mct and mc.approvedDT is null ")
+                .setParameter("mct", MediaContentType.Story)
+                .uniqueResult();
+        return res.intValue();
+    }
+
+    public static Integer getChurchIssuesCount()
+    {
+        Session session = getSession();
+        Long res = (Long) session.createQuery(
+                "select count(*) " +
+                        "from Church c where c.approvedDT is null ")
+                .uniqueResult();
+        return res.intValue();
     }
 }

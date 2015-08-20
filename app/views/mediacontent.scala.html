@@ -1,0 +1,43 @@
+@import utils.web.RenderUtils
+@(content : MediaContent)
+
+<!DOCTYPE html>
+<html lang="pl">
+    <head>
+        <meta charset="UTF-8">
+            @parts.commonhead()
+            @parts.contenthead()
+            @parts.metas()
+    </head>
+    <body>
+        @parts.likesInit()
+        <div class="wrapper">
+            @staticmenu()
+            @sociallinks()
+
+            <div class="content-cover-image">
+                <!-- add cover image somehow to background -->
+                <div class="content-title">
+                    @content.title
+                </div>
+            </div>
+            <div class="content-header ui borderless menu">
+                <div class="content-header-date item">@RenderUtils.contentDateToString(content.approvedDT)</div>
+                <div class="content-header-authors item">Izabela Cichońska</div>
+                    <!--<div class="content-header-authors-divider item"> </div>-->
+                <div class="content-header-authors item">Kuba Snopek</div>
+                <div class="content-header-social-wrapper right aligned item">
+                    @parts.likes(content.contentType.toString.toLowerCase, content.id)
+                </div>
+            </div>
+            <div class="content-lead-wrapper">
+                <div class="content-lead">@content.lead</div>
+            </div>
+            <div class="cleared content-padder"></div>
+            <div class="content-main">
+
+
+            </div>
+        </div>
+    </body>
+</html>

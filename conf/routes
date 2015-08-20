@@ -3,37 +3,43 @@
 # ~~~~
 
 # Home page
-GET         /                                  controllers.Application.index
+GET         /                                      controllers.Application.index
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                      controllers.Assets.at(path="/public", file)
+GET         /assets/*file                          controllers.Assets.at(path="/public", file)
 
-GET         /tiles/:layer/:z/:x/:y.:ext        controllers.Tiles.tile(layer: String, z: Integer, x: Integer, y: Integer, ext: String)
+GET         /tiles/:layer/:z/:x/:y.:ext            controllers.Tiles.tile(layer: String, z: Integer, x: Integer, y: Integer, ext: String)
 
-GET         /content/church/:id                controllers.Churches.byId(id: String)
-GET         /content/summary                   controllers.Application.summary
-GET         /content/article/:id               controllers.MediaContents.byTypeAndId(ctype: String = "article", id: Long)
-GET         /content/story/:id                 controllers.MediaContents.byTypeAndId(ctype: String = "story", id: Long)
-GET         /content/articles/:ids             controllers.MediaContents.byTypeAndIds(ctype: String = "article", ids: String)
-GET         /content/stories/:ids              controllers.MediaContents.byTypeAndIds(ctype: String = "story", ids: String)
-GET         /content/churches/revisions/:id    controllers.Churches.revsById(id: String)
+GET         /content/church/:id                    controllers.Churches.byId(id: String)
+GET         /content/summary                       controllers.Application.summary
+GET         /content/article/:id                   controllers.MediaContents.byTypeAndId(ctype: String = "article", id: Long)
+GET         /content/story/:id                     controllers.MediaContents.byTypeAndId(ctype: String = "story", id: Long)
+GET         /content/articles/:ids                 controllers.MediaContents.byTypeAndIds(ctype: String = "article", ids: String)
+GET         /content/stories/:ids                  controllers.MediaContents.byTypeAndIds(ctype: String = "story", ids: String)
+GET         /content/churches/revisions/:id        controllers.Churches.revsById(id: String)
 
 
-POST        /search/churches/:q                controllers.Search.churchesByNameAndAddress(q: String)
-GET         /search/churches/:q                controllers.Search.churchesByNameAndAddress(q: String)
-POST        /search/:stype/:q                  controllers.Search.mediaContentByText(q: String, stype: String)
+POST        /search/churches/:q                    controllers.Search.churchesByNameAndAddress(q: String)
+GET         /search/churches/:q                    controllers.Search.churchesByNameAndAddress(q: String)
+POST        /search/:stype/:q                      controllers.Search.mediaContentByText(q: String, stype: String)
+GET         /search/:stype/:q                      controllers.Search.mediaContentByText(q: String, stype: String)
 
 # secure, role must be >= User
 
-GET         /image                             controllers.Images.upload
+GET         /image                                 controllers.Images.upload
 #GET         /image/:id            controllers.Images.get(id: Long)
 
 # secure, role must be >= Moderator
-GET         /admin/reindex                     controllers.Admin.reindex
-GET         /admin/retile                      controllers.Tiles.rebuild
-GET         /admin/seed                        controllers.Tiles.seed
-GET         /admin/sieve                       controllers.Admin.sieve
-GET         /admin/parse                       controllers.Admin.parse
-GET         /admin/parse_add                   controllers.Admin.parseAdd
-GET         /admin/snapshotify                 controllers.Admin.snapshotify
+GET         /admin/reindex                         controllers.Admin.reindex
+GET         /admin/retile                          controllers.Tiles.rebuild
+GET         /admin/seed                            controllers.Tiles.seed
+GET         /admin/sieve                           controllers.Admin.sieve
+GET         /admin/parse                           controllers.Admin.parse
+GET         /admin/parse_add                       controllers.Admin.parseAdd
+GET         /admin/snapshotify                     controllers.Admin.snapshotify
+GET         /admin/                                controllers.Admin.index
+GET         /admin                                 controllers.Admin.index
+
+GET         /stats/count                           controllers.Stats.count
+GET         /stats/test                            controllers.Stats.test
 
