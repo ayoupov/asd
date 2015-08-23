@@ -1,5 +1,6 @@
 package models.address;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -34,6 +35,7 @@ public class Address
 
     @Analyzer(definition = "polish_def_analyzer")
     @OneToOne
+    @JsonIgnore
     private Dekanat dekanat;
 
     @Field

@@ -16,11 +16,7 @@ public class QueryFilter
 
     public QueryFilter(Http.Request request)
     {
-        page = safeInt(request.getQueryString("page"), 0);
-        maxResults = safeInt(request.getQueryString("max"), pageSize);
-        nameFilter = request.getQueryString("like");
-        if (nameFilter == null)
-            nameFilter = "";
+        apply(request);
     }
 
     private int safeInt(String s, int def)
@@ -72,5 +68,14 @@ public class QueryFilter
                 ", maxResults=" + maxResults +
                 ", page=" + page +
                 '}';
+    }
+
+    public void apply(Http.Request request)
+    {
+        page = safeInt(request.getQueryString("page"), 0);
+        maxResults = safeInt(request.getQueryString("max"), pageSize);
+        nameFilter = request.getQueryString("like");
+        if (nameFilter == null)
+            nameFilter = "";
     }
 }

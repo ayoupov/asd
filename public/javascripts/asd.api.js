@@ -88,16 +88,19 @@ var applySummary = function (response) {
 
 function getNext(key, q) {
     var res = [];
+    var pushed = 0;
     for (var i = 0; i < q; i++) {
         if (contentLeft(key) > 0) {
             var id = contentCache[key].ids[contentCache[key].idx + i];
-            if (typeof id !== "undefined")
+            if (typeof id !== "undefined") {
                 res.push(id[0]);
+                pushed++;
+            }
         }
         else
             break;
     }
-    contentCache[key].idx += q;
+    contentCache[key].idx += Math.min(q, pushed);
     console.log(res.join(','));
     return res.join(",");
 }
@@ -121,7 +124,8 @@ function starsort(arr) {
 
 function populateArticles(data) {
     var lastItem = null;
-    $articles.isotope('remove', $("#more-articles-thumb"));
+    $articles.isotope('remove', $(".extra-articles"));
+    //$("#more-articles-thumb").hide();
     $(data.data).each(function (a, item) {
         var cover = item.cover;
         var hover = item.hover;
@@ -159,14 +163,19 @@ function populateArticles(data) {
         $articles.isotope('appended', $item);
         lastItem = $item;
     });
-    var $more = $("<div/>").attr('id', 'more-articles-thumb').addClass('article thumb center-more grayish').append(
-        $('<div/>').addClass('more-wrapper white-bordered').append(
-            $('<div/>').addClass('more').html('Więcej ' + contentLeft('sa'))
-        )
-    );
-
-    $more.insertAfter(lastItem);
-    $articles.isotope('appended', $more);
+    var whatsleft = contentLeft('sa');
+    //console.log('whatsleft: '  + whatsleft);
+    if (whatsleft > 0) {
+        var $more = $("<div/>").attr('id', 'more-articles-thumb').addClass('extra-articles article thumb center-more grayish').append(
+            $('<div/>').addClass('more-wrapper white-bordered').append(
+                $('<div/>').addClass('more').html('Więcej ' + whatsleft)
+            )
+        );
+        $more.insertAfter(lastItem);
+        $articles.isotope('appended', $more);
+        //console.log('appended more');
+        appendArticleApi();
+    }
     $articles.isotope();
 
     $('.hover-content').hide();
@@ -186,11 +195,14 @@ function populateArticles(data) {
             hoverContent.hide();
         }
     });
+}
 
-    $("#more-articles-thumb").api(
+function appendArticleApi(when) {
+    var $more = $(".extra-articles");
+    $more.api(
         {
             action: 'get articles',
-            on: 'click',
+            on: typeof when !== 'undefined' ? when : 'click',
             urlData: {
                 ids: function () {
                     return getNext("sa", articlesRequested)
@@ -199,23 +211,108 @@ function populateArticles(data) {
             onSuccess: populateArticles
         }
     );
-
 }
 
 function populateStories(data) {
+    var lastItem = null;
+    $stories.isotope('remove', $(".extra-stories"));
     $(data.data).each(function (a, item) {
         var cover = item.cover;
         var title = item.title;
         var lead = item.lead;
-        console.log(item + " : " + cover + ", " + title + ", " + lead);
+        var id = item.id;
+        var $item = $("<div/>").addClass('story thumb').attr('id', 'story_' + id)
+            .append(
+            $("<div/>").addClass('image').append(
+                $("<img/>").addClass('ui image').attr("src", cover)
+            ))
+            .append(
+            $("<div/>").addClass('content').append(
+                $("<div/>").addClass('header').html(title)
+            ).append(
+                $("<div/>").addClass('description').html(lead)
+            )
+        ).append(
+            $("<div/>").addClass('golden shameful-underline')
+        );
+
+        $stories.append($item);
+        $stories.isotope('appended', $item);
+        lastItem = $item;
     });
+
+    var whatsleft = contentLeft('ss');
+    if (whatsleft > 0) {
+        var $more = $("<div/>").attr('id', 'more-stories-thumb').addClass('extra-stories story thumb center-more white').append(
+            $('<div/>').addClass('more-wrapper grayish-bordered').append(
+                $('<div/>').addClass('more').html('Więcej ' + whatsleft)
+            )
+        );
+        $more.insertAfter(lastItem);
+        $stories.isotope('appended', $more);
+        appendStoryApi();
+    }
+    $stories.isotope();
+}
+
+function appendStoryApi(when) {
+    var $more = $(".extra-stories");
+    $more.api(
+        {
+            action: 'get stories',
+            on: typeof when !== 'undefined' ? when : 'click',
+            urlData: {
+                ids: function () {
+                    return getNext("ss", storiesRequested)
+                }
+            },
+            onSuccess: populateStories
+        }
+    );
+}
+
+function appendDateStoryApi(when) {
+    //var $more = $(".extra-stories");
+    //$more.api(
+    //    {
+    //        action: 'get stories',
+    //        on: typeof when !== 'undefined' ? when : 'click',
+    //        urlData: {
+    //            ids: function () {
+    //                return getNext("ss", storiesRequested)
+    //            }
+    //        },
+    //        onSuccess: populateStories
+    //    }
+    //);
 }
 
 function populateDateStories(data) {
     $(data.data).each(function (a, item) {
         var title = item.title;
         var dt = new Date(item.approvedDT);
-        console.log(item + " : " + dt + ", " + title);
+        var dtStr = ((dt.getDay() < 10) ? '0' : '') + dt.getDay() +
+            '/' +
+            ((dt.getMonth() < 10) ? '0' : '') + dt.getMonth() + '/' + dt.getUTCFullYear() % 100;
+        var $item = $("<div/>").addClass('item')
+            .append(
+            $("<div/>").addClass('asd-item-wrap')
+                .append(
+                $("<div/>").addClass('asd-menu-arrow')
+                    .append(
+                    $("<img>").attr('src', '/assets/images/arrow_selector_menu_golden.png'))
+            ))
+            .append(
+            $("<div/>").addClass('asd-content')
+                .append(
+                $("<div/>").addClass('asd-header').html(title)
+            )
+                .append(
+                $("<div/>").addClass('asd-date').html(dtStr)
+            )
+        );
+
+        $dateStories.append($item);
     });
 }
 

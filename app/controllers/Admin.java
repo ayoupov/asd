@@ -4,6 +4,7 @@ import models.Church;
 import models.MediaContent;
 import models.MediaContentType;
 import models.internal.ContentManager;
+import models.internal.SessionCache;
 import models.internal.search.SearchManager;
 
 import models.internal.search.filters.*;
@@ -71,14 +72,40 @@ public class Admin extends Controller
     public static Result index()
     {
         beginTransaction();
-        UserFilter userFilter = new UserFilter(request());
-        ArticleFilter articleFilter = new ArticleFilter(request());
-        StoryFilter storyFilter = new StoryFilter(request());
-        ChurchFilter churchFilter = new ChurchFilter(request());
+        
+        UserFilter userFilter = (UserFilter) SessionCache.get(session(), "userFilter");
+        if (userFilter == null)
+            userFilter = new UserFilter(request());
+        else 
+            userFilter.apply(request());
+        SessionCache.put(session(), "userFilter", userFilter);
+        
+        ArticleFilter articleFilter = (ArticleFilter) SessionCache.get(session(), "articleFilter");
+        if (articleFilter == null)
+            articleFilter = new ArticleFilter(request());
+        else 
+            articleFilter.apply(request());
+        SessionCache.put(session(), "articleFilter", articleFilter);
+        
+        StoryFilter storyFilter = (StoryFilter) SessionCache.get(session(), "storyFilter");
+        if (storyFilter == null)
+            storyFilter = new StoryFilter(request());
+        else 
+            storyFilter.apply(request());
+        SessionCache.put(session(), "storyFilter", storyFilter);
+        
+        ChurchFilter churchFilter = (ChurchFilter) SessionCache.get(session(), "churchFilter");
+        if (churchFilter == null)
+            churchFilter = new ChurchFilter(request());
+        else 
+            churchFilter.apply(request());
+        SessionCache.put(session(), "churchFilter", churchFilter);
+        
         List<User> users = ContentManager.getUsers(userFilter);
         List<MediaContent> articles = ContentManager.getMediaContent(articleFilter, MediaContentType.Article);
         List<MediaContent> stories = ContentManager.getMediaContent(storyFilter, MediaContentType.Story);
         List<Church> churches = ContentManager.getChurches(churchFilter);
+
         Map<String, Integer> issues = new HashMap<>();
         issues.put("users", ContentManager.getUserIssuesCount());
         issues.put("articles", ContentManager.getArticleIssuesCount());
