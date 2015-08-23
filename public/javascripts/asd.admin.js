@@ -52,9 +52,17 @@ var raptorSettings = {
 };
 
 var articleDefaultSettings = {
-    //bind: {
-    //    'cancel' :
-    //}
+    plugins :
+    {
+        fileManager: {
+            uriPublic: '/assets/uploads/',
+            uriAction: '/upload/'
+            //uriIcon: '/file-manager/icon/'
+        }
+    }
+};
+
+var storyDefaultSettings = {
 };
 
 
@@ -121,18 +129,20 @@ var articleEditClick = function () {
         $articleEditor.api({on: 'now', action: "get json article", urlData: {id: id}, onSuccess: fillArticle});
     else
         fillArticle(null);
-
 };
 
 var storyEditClick = function () {
     var id = getId($(this));
-    $storyEditor.empty();
-    $storyEditor.show();
-    if (id == 0) {
-        $storyEditor.append(newStoryTemplate());
-    } else {
+    $storyWrapper.empty();
+    $storyForm = newStoryForm();
+    $storyForm.appendTo($storyWrapper);
+    $storyWrapper.append($("<div>Story text:</div>"))
+    $storyEditor = $('<div id="stories" class="editor-content story-editor content-main">').appendTo($storyWrapper);
+    $storyEditor.append(newStoryTemplate());
+    if (id != 0)
         $storyEditor.api({on: 'now', action: "get json story", urlData: {id: id}, onSuccess: fillStory});
-    }
+    else
+        fillStory(null);
 };
 
 function fillInRevs(id) {
@@ -185,34 +195,46 @@ function newStoryForm() {
     return $("<form class='story-form ui form' method='post'>" +
         "<label for='title'>Title</label><input id='title' placeholder='Title' name='title'/>" +
         "<label for='lead'>Lead</label><textarea id='lead' placeholder='Lead' name='lead'/>" +
-        "<label for='approvedDT'>Publish on</label><input type='date' name='approvedDT' id='approvedDT'>" +
-        "<label for='author'>Author</label><select id='author' name='authors'>" +
-        "</select>" +
+        "<label for='author'>Author</label><input type='text' id='author' name='authors' disabled/>" +
         "</form>");
 }
 
 function fillArticle(data) {
     $admpages.hide();
     if (data) {
-        $("#text", $articleEditor).html(data.text);
-        $("#title", $articleWrapper).val(data.title);
-        $("#lead", $articleWrapper).html(data.lead);
-        $("#approvedDT", $articleWrapper).val(data.approvedDT);
-        $("#authors", $articleWrapper).html(data.authors);
-        $("#id", $articleWrapper).val(data.id);
+        $articleEditor.html(data.text);
+        $("#title", $articleForm).val(data.title);
+        $("#lead", $articleForm).html(data.lead);
+        $("#approvedDT", $articleForm).val(data.approvedDT);
+        $("#authors", $articleForm).html(data.authors);    // todo: come on!
+        $("#id", $articleForm).val(data.id);
     }
     var articleSettings = raptorSettings;
     $.extend(articleSettings, articleDefaultSettings);
     $articleEditor.raptor(articleSettings);
     $articleEditor.ready(function () {
         $articleEditor.raptor('enableEditing');
-        //$articleEditor.enableEditing();
     });
     $articleWrapper.show();
     $articleEditor.show();
 }
 function fillStory(data) {
-    $storyEditor.html(data.text);
+    $admpages.hide();
+    if (data) {
+        $storyEditor.html(data.text);
+        $("#title", $storyForm).val(data.title);
+        $("#lead", $storyForm).html(data.lead);
+        $("#id", $storyForm).val(data.id);
+        $("#author", $storyForm).val(data.addedBy.name);
+    }
+    var storySettings = raptorSettings;
+    $.extend(storySettings, storyDefaultSettings);
+    $storyEditor.raptor(storySettings);
+    $storyEditor.ready(function () {
+        $storyEditor.raptor('enableEditing');
+    });
+    $storyWrapper.show();
+    $storyEditor.show();
 }
 
 function fillRevisions(data) {
