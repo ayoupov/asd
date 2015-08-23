@@ -10,13 +10,18 @@ import play.mvc.Http;
  */
 public class QueryFilter
 {
-    protected String nameFilter;
+    protected String nameFilter = "";
 
-    protected int maxResults, page, pageSize = 20;
+    protected int maxResults = 20, page = 0;
 
     public QueryFilter(Http.Request request)
     {
-        apply(request);
+        apply(request, null);
+    }
+
+    public QueryFilter(Http.Request request, String entity)
+    {
+        apply(request, entity);
     }
 
     private int safeInt(String s, int def)
@@ -70,12 +75,15 @@ public class QueryFilter
                 '}';
     }
 
-    public void apply(Http.Request request)
+    public void apply(Http.Request request, String entityName)
     {
-        page = safeInt(request.getQueryString("page"), 0);
-        maxResults = safeInt(request.getQueryString("max"), pageSize);
-        nameFilter = request.getQueryString("like");
-        if (nameFilter == null)
-            nameFilter = "";
+        boolean unnamed = (entityName == null || "".equals(entityName));
+
+        String prefix = unnamed ? "" : (entityName + "_");
+        page = safeInt(request.getQueryString(prefix + "page"), page);
+        maxResults = safeInt(request.getQueryString(prefix + "max"), maxResults);
+        String likeString = request.getQueryString(prefix + "like");
+        if (likeString != null)
+            nameFilter = likeString;
     }
 }

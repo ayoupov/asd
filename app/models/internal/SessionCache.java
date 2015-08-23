@@ -1,6 +1,5 @@
 package models.internal;
 
-import models.internal.search.filters.ArticleFilter;
 import play.cache.Cache;
 import play.mvc.Http;
 
@@ -33,11 +32,13 @@ public class SessionCache
     public static void put(Http.Session session, String key, Object o)
     {
         String uuid = session.get("uuid");
+        System.out.println("put: uuid = " + uuid);
         if (uuid == null) {
             uuid = java.util.UUID.randomUUID().toString();
             session.put("uuid", uuid);
         }
 
         Cache.set(uuid + key, o);
+        System.out.println("put : uuid + key, o : " + (uuid + key) + ":" +  o);
     }
 }

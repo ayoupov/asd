@@ -27,6 +27,11 @@ public class MediaContents extends Controller
 
     public static Result byTypeAndId(String ctype, Long id)
     {
+        return byTypeAndId(ctype, id, "html");
+    }
+
+    public static Result byTypeAndId(String ctype, Long id, String ext)
+    {
         beginTransaction();
         MediaContentType type = MediaContentType.fromString(ctype);
         if (type == null)
@@ -36,8 +41,10 @@ public class MediaContents extends Controller
         if (content != null) {
             if (!content.contentType.equals(type))
                 return badRequest("Wrong content type: " + type);
-//            return ok(Json.toJson(content));
-            return ok(mediacontent.render(content));
+            if ("json".equals(ext))
+                return ok(Json.toJson(content));
+            else
+                return ok(mediacontent.render(content));
         } else
             return notFound(String.format("MediaContent with id {%s}", id));
     }

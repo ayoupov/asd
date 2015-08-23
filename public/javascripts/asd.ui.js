@@ -192,7 +192,7 @@ var isotopeThumbs = function () {
             itemSelector: '.article',
             layoutMode: 'fitRows'
         });
-    $("#slide3").find(".right-container").isotope(
+    $stories.isotope(
         {
             itemSelector: '.story',
             layoutMode: 'fitRows'

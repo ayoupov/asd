@@ -12,6 +12,6 @@ public class UserFilter extends QueryFilter
 {
     public UserFilter(Http.Request request)
     {
-        super(request);
+        super(request, "users");
     }
 }

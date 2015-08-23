@@ -10,12 +10,16 @@ GET         /assets/*file                          controllers.Assets.at(path="/
 
 GET         /tiles/:layer/:z/:x/:y.:ext            controllers.Tiles.tile(layer: String, z: Integer, x: Integer, y: Integer, ext: String)
 
-GET         /content/church/:id                    controllers.Churches.byId(id: String)
+GET         /church/:id                            controllers.Churches.byId(id: String)
+# use html or none to get rendered page, json -- to simple data
+GET         /article/:id.:ext                      controllers.MediaContents.byTypeAndId(ctype: String = "article", id: Long, ext: String )
+GET         /story/:id.:ext                        controllers.MediaContents.byTypeAndId(ctype: String = "story", id: Long, ext: String)
+GET         /article/:id                      controllers.MediaContents.byTypeAndId(ctype: String = "article", id: Long, ext: String = "html" )
+GET         /story/:id                        controllers.MediaContents.byTypeAndId(ctype: String = "story", id: Long, ext: String = "html")
+GET         /articles/:ids                 controllers.MediaContents.byTypeAndIds(ctype: String = "article", ids: String)
+GET         /stories/:ids                  controllers.MediaContents.byTypeAndIds(ctype: String = "story", ids: String)
+
 GET         /content/summary                       controllers.Application.summary
-GET         /content/article/:id                   controllers.MediaContents.byTypeAndId(ctype: String = "article", id: Long)
-GET         /content/story/:id                     controllers.MediaContents.byTypeAndId(ctype: String = "story", id: Long)
-GET         /content/articles/:ids                 controllers.MediaContents.byTypeAndIds(ctype: String = "article", ids: String)
-GET         /content/stories/:ids                  controllers.MediaContents.byTypeAndIds(ctype: String = "story", ids: String)
 GET         /content/churches/revisions/:id        controllers.Churches.revsById(id: String)
 
 

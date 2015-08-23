@@ -23,9 +23,9 @@
             </div>
             <div class="content-header ui borderless menu">
                 <div class="content-header-date item">@RenderUtils.contentDateToString(content.approvedDT)</div>
-                <div class="content-header-authors item">Izabela Cichońska</div>
-                    <!--<div class="content-header-authors-divider item"> </div>-->
-                <div class="content-header-authors item">Kuba Snopek</div>
+                @for(author <- content.authors) {
+                <div class="content-header-authors item">@author.name</div>
+                }
                 <div class="content-header-social-wrapper right aligned item">
                     @parts.likes(content.contentType.toString.toLowerCase, content.id)
                 </div>
@@ -35,8 +35,7 @@
             </div>
             <div class="cleared content-padder"></div>
             <div class="content-main">
-
-
+                @content.text
             </div>
         </div>
     </body>

@@ -12,6 +12,6 @@ public class ChurchFilter extends QueryFilter
 {
     public ChurchFilter(Http.Request request)
     {
-        super(request);
+        super(request, "churches");
     }
 }

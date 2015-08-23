@@ -1,11 +1,10 @@
 var api =
 {
     'get summary': '/content/summary',
-    'get articles': '/content/articles/{ids}',
-    'get stories': '/content/stories/{ids}',
-    'get article': '/content/article/{id}',
-    'get story': '/content/story/{id}',
-    'get church revisions': '/content/churches/revisions/{id}'
+    'get articles': '/articles/{ids}',
+    'get stories': '/stories/{ids}',
+    'get article': '/article/{id}',
+    'get story': '/story/{id}'
 };
 
 // ss = starStories, sa = starArticles, ds = dateStories, da = dateArticles
@@ -132,7 +131,9 @@ function populateArticles(data) {
         var title = item.title;
         var lead = item.lead;
         var id = item.id;
-        var $item = $('<div/>').addClass('article thumb').attr('id', 'article_' + id).append(
+        var $item = $('<div/>').addClass('article thumb').attr('id', 'article_' + id
+        )
+            .append(
             $('<div/>').addClass('image face-content').append(
                 $('<img/>').addClass('ui image').attr('src', cover)
             )
@@ -194,6 +195,9 @@ function populateArticles(data) {
             $('.face-content', $(this)).show();
             hoverContent.hide();
         }
+    });
+    $('.article:not(.extra-articles)').on('click', function () {
+        window.open('/article/' + getId($(this)));
     });
 }
 

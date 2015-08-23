@@ -638,6 +638,16 @@ div.content-padder {
     text-align: center;
 }
 
+.content-quote-stub {
+    font-family: Georgia, serif !important;
+    font-size: 26pt !important;
+    font-style: italic;
+    color: #a0a0a0;
+    text-align: center;
+    line-height: 1.1em;
+    margin-bottom: 1em;
+}
+
 .content-quote
 {
     text-align: left;

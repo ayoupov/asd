@@ -1,4 +1,5 @@
-@(churches : List[Church])
+@import models.internal.search.filters.ChurchFilter
+@(churches : List[Church], filter : ChurchFilter)
 
 <div id="churches" class="admin-page">
     <table class="ui celled table">
@@ -25,7 +26,7 @@
             <tr>
                 <th colspan="4">
                     <div class="ui left floated search input">
-                        <input type="text" placeholder="Filter by name">
+                        <input type="text" placeholder="Filter by name" class="filter-like text-filter" value="@filter.getNameFilter">
                     </div>
                     <div class="ui right floated pagination menu">
                         <a class="icon item">

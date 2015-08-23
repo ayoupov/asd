@@ -1,9 +1,11 @@
 package models;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import models.user.User;
 import models.user.UserRole;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
+import utils.serialize.OnlyDateConverter;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -44,6 +46,7 @@ public class MediaContent
     public Set<User> authors;
 
     @Column(name = "approved_dt")
+    @JsonSerialize(using= OnlyDateConverter.class)
     public Date approvedDT;
 
     @OneToOne

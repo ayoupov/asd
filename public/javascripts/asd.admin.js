@@ -1,8 +1,27 @@
-var $admpages, $editor, $editorWrapper, $uihidden;
+var $admpages, $editors, $wrappers, $revisions,
+    $articleEditor, $storyEditor, $churchEditor,
+    $articleWrapper, $storyWrapper,
+    $articleForm, $storyForm;
+
+var apiExtension =
+{
+    'get church revisions': '/content/churches/revisions/{id}',
+    'get json article': '/article/{id}.json',
+    'get json story': '/story/{id}.json'
+};
 
 var raptorSettings = {
-    //autoEnable: true,
+    autoEnable: true,
     plugins: {
+        classMenu: {
+            classes: {
+                'Main content': 'content-main',
+                'Note': 'content-note',
+                'Quote': 'content-quote-stub',
+                'Golgen underline': 'golden content-underline',
+                'Afterwords': 'content-afterwards-stub'
+            }
+        },
         languageMenu: false,
         //languageMenu: {
         //    locale: "pl",
@@ -24,23 +43,42 @@ var raptorSettings = {
         floatLeft: false,
         floatNone: false,
         floatRight: false
+    },
+    bind: {
+        'cancel': function () {
+            restorePage();
+        }
     }
 };
 
+var articleDefaultSettings = {
+    //bind: {
+    //    'cancel' :
+    //}
+};
+
+
+var $prevPage;
+function restorePage() {
+    goAdmPage($prevPage);
+}
+
 function initAdmSelectorCache() {
-    $editor = $("#editor");
-    $editorWrapper = $("#editor-wrapper");
-    $uihidden = $(".ui-hidden");
     $admpages = $(".admin-page");
     $revisions = $("#revisions");
+    $editors = $(".editor-content");
+    $wrappers = $(".editor-wrapper");
+    $articleEditor = $(".article-editor");
+    $storyEditor = $(".story-editor");
+    $churchEditor = $(".church-editor");
+    $articleWrapper = $(".article-wrapper");
+    $storyWrapper = $(".story-wrapper");
+    $articleForm = $(".article-form");
+    $storyForm = $(".story-form");
 }
 
 $(document).ready(function () {
     initAdmSelectorCache();
-    $editor.raptor(raptorSettings);
-    $editorWrapper.hide();
-    $uihidden.hide();
-    $admpages.hide();
     if (window.location.hash)
         goAdmPage(window.location.hash);
     else
@@ -49,84 +87,160 @@ $(document).ready(function () {
         var id = $(this).attr('href');
         goAdmPage(id);
     });
-    $("tr", $("#articles")).on('click', articleEditClick);
-    $("tr", $("#stories")).on('click', storyEditClick);
+    $("td:not(.noedit)", $("#articles")).on('click', articleEditClick);
+    $("td:not(.noedit)", $("#stories")).on('click', storyEditClick);
     $("tr", $("#churches")).on('click', churchRevisionClick);
+
+    $("tr").hover(function () {
+        $(this).toggleClass('active');
+    }, function () {
+        $(this).toggleClass('active');
+    });
+    $(".text-filter").on("keypress", applyTextFilter);
+
+    $.extend($.fn.api.settings.api, apiExtension);
+
 });
 
 var goAdmPage = function (id) {
     $admpages.hide();
-    $editorWrapper.hide();
+    $wrappers.hide();
     $(id).show();
+    $prevPage = $(id);
 };
-
-function getId(elem) {
-    var rawId = elem.attr('id');
-    return rawId.substr(rawId.indexOf("_") + 1);
-}
 
 var articleEditClick = function () {
     var id = getId($(this));
-    $editor.empty();
-    $editorWrapper.show();
-    if (id == 0) {
-        $editor.append(newArticleTemplate());
-    } else {
-        $editor.api({on: 'now', action: "get article", urlData: {id : id}, onSuccess: fillEditor});
-    }
+    $articleWrapper.empty();
+    $articleForm = newArticleForm();
+    $articleForm.appendTo($articleWrapper);
+    $articleWrapper.append($("<div>Text:</div>"));
+    $articleEditor = $('<div id="articles" class="editor-content article-editor content-main">').appendTo($articleWrapper);
+    $articleEditor.append(newArticleTemplate());
+    if (id != 0)
+        $articleEditor.api({on: 'now', action: "get json article", urlData: {id: id}, onSuccess: fillArticle});
+    else
+        fillArticle(null);
+
 };
 
 var storyEditClick = function () {
     var id = getId($(this));
-    $editor.empty();
-    $editorWrapper.show();
+    $storyEditor.empty();
+    $storyEditor.show();
     if (id == 0) {
-        $editor.append(newStoryTemplate());
+        $storyEditor.append(newStoryTemplate());
     } else {
-        $editor.api({on: 'now', action: "get story", urlData: {id : id}, onSuccess: fillEditor});
+        $storyEditor.api({on: 'now', action: "get json story", urlData: {id: id}, onSuccess: fillStory});
     }
 };
 
 function fillInRevs(id) {
     $revisions.api(
         {
-            on : 'now',
-            onSuccess : renderRevisions,
-            urlData : {id : id},
-            action : 'get church revisions'
+            on: 'now',
+            onSuccess: renderRevisions,
+            urlData: {id: id},
+            action: 'get church revisions'
         }
     );
 }
 var churchRevisionClick = function () {
     var id = getId($(this));
-    $uihidden.hide();
     fillInRevs(id);
     $revisions.show();
 };
 
-var renderRevisions = function (data)
-{
+var renderRevisions = function (data) {
     $revisions.empty();
     // iterate thru versions till last approved
-    $(data).each(function(a, item)
-    {
+    $(data).each(function (a, item) {
         $revisions.append($("<div>").html(item));
     });
 };
 
 function newArticleTemplate() {
-    return $("<h1 id='title'>Title</h1><div id='authors'>Authors</div>" +
-        "<div id='publishDT'>When to publish</div><div id='lead'>Lead</div>" +
-        "<div id='text'>Text</div>");
+    return $("<p>Perfect text</p>");
 }
 
 function newStoryTemplate() {
-    return $("<h1 id='title'>Title</h1><div id='author'>Author</div>" +
-        "<div id='publishDT'>When to publish</div><div id='lead'>Lead</div>" +
+    return $("<h2 id='title'>Title</h2><div id='author'>Author</div>" +
+        "<div id='lead'>Lead</div>" +
         "<div id='text'>Text</div>");
 }
 
-function fillEditor(data)
-{
-    $editor.html(data.text);
+function newArticleForm() {
+    return $("<form class='article-form ui form' method='post'>" +
+        "<label for='title'>Title</label><input id='title' placeholder='Title' name='title'/>" +
+        "<label for='lead'>Lead</label><textarea id='lead' placeholder='Lead' name='lead'/>" +
+        "<label for='approvedDT'>Publish on</label><input type='date' name='approvedDT' id='approvedDT'/>" +
+        "<input type='hidden' id='id' name='id'/>" +
+        "<label for='authors'>Authors</label><select id='authors' name='authors'>" +
+        "</select>" +
+        "<input type='submit' value='update'>" +
+        "</form>");
+}
+
+function newStoryForm() {
+    return $("<form class='story-form ui form' method='post'>" +
+        "<label for='title'>Title</label><input id='title' placeholder='Title' name='title'/>" +
+        "<label for='lead'>Lead</label><textarea id='lead' placeholder='Lead' name='lead'/>" +
+        "<label for='approvedDT'>Publish on</label><input type='date' name='approvedDT' id='approvedDT'>" +
+        "<label for='author'>Author</label><select id='author' name='authors'>" +
+        "</select>" +
+        "</form>");
+}
+
+function fillArticle(data) {
+    $admpages.hide();
+    if (data) {
+        $("#text", $articleEditor).html(data.text);
+        $("#title", $articleWrapper).val(data.title);
+        $("#lead", $articleWrapper).html(data.lead);
+        $("#approvedDT", $articleWrapper).val(data.approvedDT);
+        $("#authors", $articleWrapper).html(data.authors);
+        $("#id", $articleWrapper).val(data.id);
+    }
+    var articleSettings = raptorSettings;
+    $.extend(articleSettings, articleDefaultSettings);
+    $articleEditor.raptor(articleSettings);
+    $articleEditor.ready(function () {
+        $articleEditor.raptor('enableEditing');
+        //$articleEditor.enableEditing();
+    });
+    $articleWrapper.show();
+    $articleEditor.show();
+}
+function fillStory(data) {
+    $storyEditor.html(data.text);
+}
+
+function fillRevisions(data) {
+    $churchEditor.html(data.text);
+}
+
+function getFilter(elem) {
+    var classes = elem.attr('class').split(' ');
+    var type = null;
+    for (var a in classes) {
+        var item = classes[a];
+        if (item.startsWith('filter-')) {
+            type = item.substr(7);
+            break;
+        }
+    }
+    return type;
+}
+
+function applyTextFilter(e) {
+    if (e.keyCode == 13) {
+        var $item = $(e.target);
+        var entity = $item.parents("div.admin-page").attr('id');
+        var filterType = getFilter($item);
+        var val = $item.val();
+        if (filterType) {
+            var hash = location.hash;
+            location = '/admin' + '?' + (entity + '_' + filterType) + '=' + val + (hash ? hash : '');
+        }
+    }
 }

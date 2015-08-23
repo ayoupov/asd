@@ -77,28 +77,28 @@ public class Admin extends Controller
         if (userFilter == null)
             userFilter = new UserFilter(request());
         else 
-            userFilter.apply(request());
+            userFilter.apply(request(), "users");
         SessionCache.put(session(), "userFilter", userFilter);
         
         ArticleFilter articleFilter = (ArticleFilter) SessionCache.get(session(), "articleFilter");
         if (articleFilter == null)
             articleFilter = new ArticleFilter(request());
         else 
-            articleFilter.apply(request());
+            articleFilter.apply(request(), "articles");
         SessionCache.put(session(), "articleFilter", articleFilter);
         
         StoryFilter storyFilter = (StoryFilter) SessionCache.get(session(), "storyFilter");
         if (storyFilter == null)
             storyFilter = new StoryFilter(request());
         else 
-            storyFilter.apply(request());
+            storyFilter.apply(request(), "stories");
         SessionCache.put(session(), "storyFilter", storyFilter);
         
         ChurchFilter churchFilter = (ChurchFilter) SessionCache.get(session(), "churchFilter");
         if (churchFilter == null)
             churchFilter = new ChurchFilter(request());
         else 
-            churchFilter.apply(request());
+            churchFilter.apply(request(), "churches");
         SessionCache.put(session(), "churchFilter", churchFilter);
         
         List<User> users = ContentManager.getUsers(userFilter);
@@ -112,7 +112,7 @@ public class Admin extends Controller
         issues.put("stories", ContentManager.getStoryIssuesCount());
         issues.put("churches", ContentManager.getChurchIssuesCount());
 
-        Html content = admin.render(users, articles, stories, churches, issues);
+        Html content = admin.render(users, articles, stories, churches, issues, session());
         commitTransaction();
         return ok(content);
     }

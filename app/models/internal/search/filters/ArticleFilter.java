@@ -12,6 +12,6 @@ public class ArticleFilter extends QueryFilter
 {
     public ArticleFilter(Http.Request request)
     {
-        super(request);
+        super(request, "articles");
     }
 }

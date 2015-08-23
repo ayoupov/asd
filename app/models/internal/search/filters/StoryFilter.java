@@ -12,6 +12,6 @@ public class StoryFilter extends QueryFilter
 {
     public StoryFilter(Http.Request request)
     {
-        super(request);
+        super(request, "stories");
     }
 }

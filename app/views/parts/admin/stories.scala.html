@@ -1,4 +1,5 @@
-@(stories: List[MediaContent])
+@import models.internal.search.filters.StoryFilter
+@(stories: List[MediaContent], filter : StoryFilter)
 <div id="stories" class="admin-page">
     <table class="ui celled table">
         <thead>
