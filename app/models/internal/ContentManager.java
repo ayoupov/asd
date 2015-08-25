@@ -241,4 +241,11 @@ public class ContentManager
                 .uniqueResult();
         return res.intValue();
     }
+
+    public static List<User> parseUserList(String userList)
+    {
+        Session session = getSession();
+        List<User> users = session.createQuery("from Users u where u.id in (:list)").setParameter("list", userList).list();
+        return users;
+    }
 }

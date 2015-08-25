@@ -1,0 +1,11 @@
+@(formId : String)
+<div id="fm_@formId" class="file-manager">
+    <form class="ui form" method="POST" action="@routes.FileManager.upload" enctype="multipart/form-data">
+        <input type="file" name="picture">
+        <input type="file" name="picture">
+        <input type="hidden" name="mcid" value="">
+        <p>
+            <input type="submit">
+        </p>
+    </form>
+</div>

@@ -2,6 +2,8 @@ package models.internal.search.filters;
 
 import play.mvc.Http;
 
+import static utils.DataUtils.safeInt;
+
 /**
  * Created with IntelliJ IDEA.
  * User: ayoupov
@@ -22,17 +24,6 @@ public class QueryFilter
     public QueryFilter(Http.Request request, String entity)
     {
         apply(request, entity);
-    }
-
-    private int safeInt(String s, int def)
-    {
-        int res;
-        try {
-            res = Integer.parseInt(s);
-        } catch (Exception e) {
-            res = def;
-        }
-        return res;
     }
 
     public String getNameFilter()

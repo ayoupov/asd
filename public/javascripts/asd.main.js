@@ -1,13 +1,19 @@
-var localdebug = true, apidebug = true, usemap = false;
+var localdebug = true, apidebug = true, usemap = true;
 
+//var local_paths = {
+//    metropolies: '/assets/metropolies_wgs84.topojson',
+//    diecezje: '/assets/diecezje_wgs84.topojson'
+//};
 var local_paths = {
-    metropolies: '/assets/metropolies_wgs84.topojson',
-    diecezje: '/assets/diecezje_wgs84.topojson'
+    metropolies: '/assets/metropolies_wgs84_10percent.topojson',
+    diecezje: '/assets/diecezje_wgs84_10percent.topojson',
+    dekanaty: '/assets/dekanaty_wgs84_10percent.topojson'
 };
 
 var prod_paths = {
     metropolies: '/asd/metropolies_wgs84.topojson',
-    diecezje: '/asd/diecezje_wgs84.topojson'
+    diecezje: '/asd/diecezje_wgs84.topojson',
+    dekanaty: '/asd/dekanaty_wgs84_10percent.topojson'
 };
 
 var metropStyle = function (feature) {
@@ -23,6 +29,14 @@ var dieStyle = function (feature) {
         color: '#bdbdbd',
         fillColor: 'transparent',
         weight: 2
+    };
+};
+
+var dekStyle = function (feature) {
+    return {
+        color: 'white',
+        fillColor: 'transparent',
+        weight: 1
     };
 };
 
@@ -51,11 +65,16 @@ var mapInit = function () {
 
     var customMetropLayer = L.geoJson(null, {style: metropStyle});
     var customDieLayer = L.geoJson(null, {style: dieStyle});
+    var customDekLayer = L.geoJson(null, {style: dekStyle});
+
     var metropoliesLayer = omnivore.topojson(localdebug ? local_paths.metropolies : prod_paths.metropolies, null, customMetropLayer);
     metropoliesLayer.addTo(map);
 
     var diecezjeLayer = omnivore.topojson(localdebug ? local_paths.diecezje : prod_paths.diecezje, null, customDieLayer);
     diecezjeLayer.addTo(map);
+
+    var dekanatyLayer = omnivore.topojson(localdebug ? local_paths.dekanaty : prod_paths.dekanaty, null, customDekLayer);
+    dekanatyLayer.addTo(map);
 
     map.on('zoomend ', function (e) {
         if (map.getZoom() < 8) {
@@ -63,6 +82,12 @@ var mapInit = function () {
         }
         else if (map.getZoom() >= 8) {
             map.addLayer(diecezjeLayer)
+        }
+        if (map.getZoom() < 10) {
+            map.removeLayer(dekanatyLayer)
+        }
+        else if (map.getZoom() >= 10) {
+            map.addLayer(dekanatyLayer)
         }
     });
 

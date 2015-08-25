@@ -30,10 +30,12 @@ GET         /search/:stype/:q                      controllers.Search.mediaConte
 
 # secure, role must be >= User
 
-GET          /files                                controllers.FileManager.files
-#GET         /image/:id            controllers.Images.get(id: Long)
 
 # secure, role must be >= Moderator
+POST        /files/upload                          controllers.FileManager.upload
+POST        /article/update                        controllers.MediaContents.update(ctype : String = "article")
+POST        /story/update                          controllers.MediaContents.update(ctype : String = "story")
+
 GET         /admin/reindex                         controllers.Admin.reindex
 GET         /admin/retile                          controllers.Tiles.rebuild
 GET         /admin/seed                            controllers.Tiles.seed

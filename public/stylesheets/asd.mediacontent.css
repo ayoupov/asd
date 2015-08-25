@@ -133,7 +133,7 @@
 }
 
 .grayish {
-    background-color: #e8e8e8;
+    background-color: #e8e8e8 !important;
 }
 
 .white-bordered {
@@ -690,8 +690,30 @@ div.full-width {
 }
 
 .content-shifted {
+    /*margin-left: 23vw;*/
+    margin-left: 16vw;
+    /*width: 50%;*/
+}
+
+.variant1 {
+    max-width: 68vw !important;
+}
+
+.variant2 {
+    width: 595px !important;
     margin-left: 23vw;
-    width: 50%;
+}
+
+.variant3 {
+    width: 958px;
+    /*height: 602.5px;*/
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.variant4 {
+    width: 100%;
+    margin:0;
 }
 
 .content-afterwords {

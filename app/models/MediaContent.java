@@ -9,6 +9,7 @@ import utils.serialize.OnlyDateConverter;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -42,18 +43,18 @@ public class MediaContent
     @OneToOne
     public User addedBy;
 
-    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    public Set<User> authors;
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    public List<User> authors;
 
     @Column(name = "approved_dt")
-    @JsonSerialize(using= OnlyDateConverter.class)
+    @JsonSerialize(using = OnlyDateConverter.class)
     public Date approvedDT;
 
     @OneToOne
     @JoinColumn(name = "approved_by")
     public User approvedBy;
 
-    public MediaContent(MediaContentType contentType, String text, String lead, String title, Boolean starred, Set<User> authors, User addedBy)
+    public MediaContent(MediaContentType contentType, String text, String lead, String title, Boolean starred, List<User> authors, User addedBy)
     {
         this.contentType = contentType;
         this.text = text;
@@ -63,8 +64,7 @@ public class MediaContent
         this.authors = authors;
         this.addedBy = addedBy;
         this.addedDT = new Date();
-        if (addedBy != null && (addedBy.role == UserRole.Administrator || addedBy.role == UserRole.Moderator))
-        {
+        if (addedBy != null && (addedBy.role == UserRole.Administrator || addedBy.role == UserRole.Moderator)) {
             approvedBy = addedBy;
             approvedDT = addedDT;
         }
@@ -174,13 +174,22 @@ public class MediaContent
         this.approvedBy = approvedBy;
     }
 
-    public Set<User> getAuthors()
+    public List<User> getAuthors()
     {
         return authors;
     }
 
-    public void setAuthors(Set<User> authors)
+    public void setAuthors(List<User> authors)
     {
         this.authors = authors;
+    }
+
+    @Override
+    public String toString()
+    {
+        return contentType + "{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                '}';
     }
 }

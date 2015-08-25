@@ -2,8 +2,7 @@ package models.user;
 
 import org.hibernate.annotations.Table;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -16,7 +15,11 @@ import java.io.Serializable;
 public class User
 {
     @Id
-    public String id;   // external id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public long id;
+
+    @Column(unique = true)
+    public String socialId;   // external id
 
     public String name;
 
@@ -24,25 +27,26 @@ public class User
 
     public UserStatus status;
 
-    public User(String name, UserRole role, UserStatus status)
+    public User(String name, UserRole role, UserStatus status, String socialId)
     {
         this.name = name;
         this.role = role;
         this.status = status;
+        this.socialId = socialId;
     }
 
     public User()
     {
     }
 
-    public void setId(String id)
+    public void setSocialId(String id)
     {
-        this.id = id;
+        this.socialId = socialId;
     }
 
-    public String getId()
+    public String getSocialId()
     {
-        return id;
+        return socialId;
     }
 
     public String getName()
@@ -75,11 +79,23 @@ public class User
         this.status = status;
     }
 
+    public long getId()
+    {
+        return id;
+    }
+
+    public void setId(long id)
+    {
+        this.id = id;
+    }
+
     @Override
     public String toString()
     {
         return "User{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", socialId='" + socialId + '\'' +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

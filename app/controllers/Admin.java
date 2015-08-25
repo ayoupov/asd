@@ -9,7 +9,6 @@ import models.internal.search.SearchManager;
 
 import models.internal.search.filters.*;
 import models.user.User;
-import play.cache.Cache;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.twirl.api.Html;
@@ -26,8 +25,6 @@ import java.util.Map;
 
 import static utils.HibernateUtils.beginTransaction;
 import static utils.HibernateUtils.commitTransaction;
-
-import scala.collection.JavaConverters;
 
 /**
  * Created with IntelliJ IDEA.
@@ -115,5 +112,11 @@ public class Admin extends Controller
         Html content = admin.render(users, articles, stories, churches, issues, session());
         commitTransaction();
         return ok(content);
+    }
+
+    public static Result topotest() throws IOException
+    {
+        TestTopoJsonProcessor.test();
+        return ok("did it");
     }
 }

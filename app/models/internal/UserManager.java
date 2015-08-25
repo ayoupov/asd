@@ -3,9 +3,6 @@ package models.internal;
 import models.user.User;
 import models.user.UserRole;
 import models.user.UserStatus;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import utils.HibernateUtils;
 
 import static utils.HibernateUtils.*;
 
@@ -19,19 +16,20 @@ public class UserManager
 {
     public static User getAutoUser()
     {
-        User user = (User) get(User.class, "asd:robot");
+        User user = getBySocialId("asd:robot");
         if (user == null)
         {
-            user = new User("ASD_Robot", UserRole.Administrator, UserStatus.Active);
-            user.setId("asd:robot");
+            user = new User("ASD_Robot", UserRole.Administrator, UserStatus.Active, "asd:robot");
             saveOrUpdate(user);
         }
         return user;
     }
 
-    public static User getByName(String username)
+    public static User getBySocialId(String socialId)
     {
-        User user = (User) get(User.class, username);
+        User user = (User) getSession().createQuery("from Users u where u.socialId = :sid")
+                .setParameter("sid", socialId)
+                .uniqueResult();
         return user;
     }
 }

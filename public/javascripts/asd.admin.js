@@ -52,18 +52,35 @@ var raptorSettings = {
 };
 
 var articleDefaultSettings = {
-    plugins :
-    {
-        fileManager: {
-            uriPublic: '/assets/uploads/',
-            uriAction: '/upload/'
-            //uriIcon: '/file-manager/icon/'
+    plugins: {
+        // The save UI plugin/button
+        save: {
+            // Specifies the UI to call the saveRest plugin to do the actual saving
+            plugin: 'saveJson'
+        },
+        saveJson: {
+            // The URI to send the content to
+            url: '/article/update',
+            postName: 'article',
+
+            id: function () {
+                return 'article';
+                //return this.raptor.getElement().data('id');
+            },
+            // Returns an object containing the data to send to the server
+            data: function() { return buildArticle();}
         }
+        //data: function(html) {
+        //    return {
+        //        article : buildArticle()
+        //        //content : html
+        //    };
+        //}
     }
+
 };
 
-var storyDefaultSettings = {
-};
+var storyDefaultSettings = {};
 
 
 var $prevPage;
@@ -125,6 +142,7 @@ var articleEditClick = function () {
     $articleWrapper.append($("<div>Text:</div>"));
     $articleEditor = $('<div id="articles" class="editor-content article-editor content-main">').appendTo($articleWrapper);
     $articleEditor.append(newArticleTemplate());
+    $articleWrapper.append(newFileManager(id));
     if (id != 0)
         $articleEditor.api({on: 'now', action: "get json article", urlData: {id: id}, onSuccess: fillArticle});
     else
@@ -139,6 +157,7 @@ var storyEditClick = function () {
     $storyWrapper.append($("<div>Story text:</div>"))
     $storyEditor = $('<div id="stories" class="editor-content story-editor content-main">').appendTo($storyWrapper);
     $storyEditor.append(newStoryTemplate());
+    $storyWrapper.append(newFileManager(id));
     if (id != 0)
         $storyEditor.api({on: 'now', action: "get json story", urlData: {id: id}, onSuccess: fillStory});
     else
@@ -169,14 +188,19 @@ var renderRevisions = function (data) {
     });
 };
 
+function newFileManager(id) {
+    return $('<div id="fm_@formId" class="file-manager"><form class="ui form" method="POST" action="/files/upload"" enctype="multipart/form-data">' +
+        '<input type="file" name="picture">' +
+            //'<input type="file" name="picture">'+
+        '<input type="hidden" name="mcid" value="' + id + '"><p><input type="submit"></p></form></div>');
+}
+
 function newArticleTemplate() {
     return $("<p>Perfect text</p>");
 }
 
 function newStoryTemplate() {
-    return $("<h2 id='title'>Title</h2><div id='author'>Author</div>" +
-        "<div id='lead'>Lead</div>" +
-        "<div id='text'>Text</div>");
+    return $("<p>Perfect story</p>");
 }
 
 function newArticleForm() {
@@ -193,9 +217,9 @@ function newArticleForm() {
 
 function newStoryForm() {
     return $("<form class='story-form ui form' method='post'>" +
+        "<label for='author'>Author</label><input type='text' id='author' name='authors' disabled class='grayish'/>" +
         "<label for='title'>Title</label><input id='title' placeholder='Title' name='title'/>" +
         "<label for='lead'>Lead</label><textarea id='lead' placeholder='Lead' name='lead'/>" +
-        "<label for='author'>Author</label><input type='text' id='author' name='authors' disabled/>" +
         "</form>");
 }
 
@@ -209,8 +233,9 @@ function fillArticle(data) {
         $("#authors", $articleForm).html(data.authors);    // todo: come on!
         $("#id", $articleForm).val(data.id);
     }
-    var articleSettings = raptorSettings;
-    $.extend(articleSettings, articleDefaultSettings);
+    var articleSettings = $.extend(true, {}, raptorSettings);
+    $.extend(true, articleSettings, articleDefaultSettings);
+    //console.log(articleSettings);
     $articleEditor.raptor(articleSettings);
     $articleEditor.ready(function () {
         $articleEditor.raptor('enableEditing');
@@ -218,6 +243,14 @@ function fillArticle(data) {
     $articleWrapper.show();
     $articleEditor.show();
 }
+
+function buildArticle() {
+    var form = $articleForm.serializeObject();
+    $.extend(form, {text: $articleEditor.html()});
+    console.log(form);
+    return form;
+}
+
 function fillStory(data) {
     $admpages.hide();
     if (data) {
