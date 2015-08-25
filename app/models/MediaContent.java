@@ -74,6 +74,11 @@ public class MediaContent
     {
     }
 
+    public MediaContent(MediaContentType mediaContentType)
+    {
+        this.contentType = mediaContentType;
+    }
+
     public Long getId()
     {
         return id;

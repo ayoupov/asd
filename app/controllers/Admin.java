@@ -114,9 +114,4 @@ public class Admin extends Controller
         return ok(content);
     }
 
-    public static Result topotest() throws IOException
-    {
-        TestTopoJsonProcessor.test();
-        return ok("did it");
-    }
 }

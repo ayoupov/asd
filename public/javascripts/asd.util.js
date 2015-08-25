@@ -21,3 +21,11 @@ $.fn.serializeObject = function()
     });
     return o;
 };
+
+function datenow()
+{
+    var d = new Date();
+    return d.getFullYear() +
+        '-' + (d.getMonth() + 1 <10 ? '0' : '') + (d.getMonth() + 1) +
+        '-' + (d.getDay() <10 ? '0' : '') + d.getDay();
+}

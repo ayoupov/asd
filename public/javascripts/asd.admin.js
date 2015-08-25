@@ -47,6 +47,9 @@ var raptorSettings = {
     bind: {
         'cancel': function () {
             restorePage();
+        },
+        'saved': function (data) {
+            restorePage(data);
         }
     }
 };
@@ -68,24 +71,67 @@ var articleDefaultSettings = {
                 //return this.raptor.getElement().data('id');
             },
             // Returns an object containing the data to send to the server
-            data: function() { return buildArticle();}
+            data: function () {
+                return buildArticle();
+            }
         }
-        //data: function(html) {
-        //    return {
-        //        article : buildArticle()
-        //        //content : html
-        //    };
-        //}
     }
-
 };
 
-var storyDefaultSettings = {};
+var storyDefaultSettings = {
+    plugins: {
+        // The save UI plugin/button
+        save: {
+            // Specifies the UI to call the saveRest plugin to do the actual saving
+            plugin: 'saveJson'
+        },
+        saveJson: {
+            // The URI to send the content to
+            url: '/story/update',
+            postName: 'story',
+
+            id: function () {
+                return 'story';
+                //return this.raptor.getElement().data('id');
+            },
+            // Returns an object containing the data to send to the server
+            data: function () {
+                return buildStory();
+            }
+        }
+    }
+};
 
 
 var $prevPage;
-function restorePage() {
+function restorePage(data) {
+    if (data) changeRow(data);
     goAdmPage($prevPage);
+}
+
+function changeRow(data) {
+    if (data.success) {
+        if (data.success == "article") {
+            var $articles = $("table", $("#articles"));
+            var id = data.id;
+            var $row = $("#article_" + id);
+            if ($row.length == 0)
+                $articles.append($row = $("<tr>").attr('id', 'article_' + id));
+            $row.empty();
+            $row.append($("<td/>").html($("#title", $articleForm).val()));
+            $row.append($("<td/>").html($("#authors", $articleForm).val()));
+            $row.append($("<td/>").addClass('noedit')
+                    .html(
+                    $("<input type='date' value='" +
+                        $("#approvedDT", $articleForm).val() + "' />")
+                )
+            );
+            $row.append($("<td/>").addClass('noedit').html(
+                    $("#starred", $articleForm).val())
+            );
+        }
+    }
+
 }
 
 function initAdmSelectorCache() {
@@ -154,7 +200,7 @@ var storyEditClick = function () {
     $storyWrapper.empty();
     $storyForm = newStoryForm();
     $storyForm.appendTo($storyWrapper);
-    $storyWrapper.append($("<div>Story text:</div>"))
+    $storyWrapper.append($("<div>Story text:</div>"));
     $storyEditor = $('<div id="stories" class="editor-content story-editor content-main">').appendTo($storyWrapper);
     $storyEditor.append(newStoryTemplate());
     $storyWrapper.append(newFileManager(id));
@@ -207,11 +253,11 @@ function newArticleForm() {
     return $("<form class='article-form ui form' method='post'>" +
         "<label for='title'>Title</label><input id='title' placeholder='Title' name='title'/>" +
         "<label for='lead'>Lead</label><textarea id='lead' placeholder='Lead' name='lead'/>" +
-        "<label for='approvedDT'>Publish on</label><input type='date' name='approvedDT' id='approvedDT'/>" +
-        "<input type='hidden' id='id' name='id'/>" +
+        "<label for='approvedDT'>Publish on</label><input type='date' name='approvedDT' id='approvedDT' value='" + datenow() + "'/>" +
+        "<input type='hidden' id='id' name='id' value='0'/>" +
         "<label for='authors'>Authors</label><select id='authors' name='authors'>" +
         "</select>" +
-        "<input type='submit' value='update'>" +
+        //"<input type='submit' value='update'>" +
         "</form>");
 }
 
@@ -258,7 +304,7 @@ function fillStory(data) {
         $("#title", $storyForm).val(data.title);
         $("#lead", $storyForm).html(data.lead);
         $("#id", $storyForm).val(data.id);
-        $("#author", $storyForm).val(data.addedBy.name);
+        $("#authors", $storyForm).val(data.addedBy.name);
     }
     var storySettings = raptorSettings;
     $.extend(storySettings, storyDefaultSettings);
@@ -268,6 +314,13 @@ function fillStory(data) {
     });
     $storyWrapper.show();
     $storyEditor.show();
+}
+
+function buildStory() {
+    var form = $storyForm.serializeObject();
+    $.extend(form, {text: $storyEditor.html()});
+    console.log(form);
+    return form;
 }
 
 function fillRevisions(data) {

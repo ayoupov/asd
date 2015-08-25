@@ -1,5 +1,9 @@
 package utils;
 
+import utils.serialize.OnlyDateConverter;
+
+import java.util.Date;
+
 /**
  * Created with IntelliJ IDEA.
  * User: ayoupov
@@ -30,4 +34,13 @@ public class DataUtils
         return res;
     }
 
+    public static Date dateFromReqString(String dt)
+    {
+        Date date = null;
+        try {
+            date = OnlyDateConverter.sdf.parse(dt);
+        } catch (Exception e) {
+        }
+        return date;
+    }
 }
