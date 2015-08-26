@@ -24,4 +24,9 @@ public abstract class SimpleTagFragment extends ContentFragment
 
     protected abstract String getPostfix();
 
+    @Override
+    public boolean accepts(String tag)
+    {
+        return getTag().equalsIgnoreCase(tag);
+    }
 }

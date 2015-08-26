@@ -1,11 +1,9 @@
 @import utils.media.ContentProcessor
 @import utils.media.ContentFragment
-
 @(text: String)
 @fragments() = @{
     ContentProcessor.parse(text)
 }
-
 @for(fragment : ContentFragment <- fragments) {
-    @fragment.render()
+    @Html(fragment.render())
 }

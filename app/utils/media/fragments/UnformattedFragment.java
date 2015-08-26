@@ -13,7 +13,7 @@ import utils.media.ContentFragmentDescription;
 @Fragment
 public class UnformattedFragment extends ContentFragment
 {
-    private static final String prefix = "<div class='main-content><p>";
+    private static final String prefix = "<div class='content-main'><p>";
     private static final String postfix = "</p></div>";
     private static final String TAG = "";
 
@@ -29,7 +29,7 @@ public class UnformattedFragment extends ContentFragment
 
     public UnformattedFragment(String content)
     {
-        this.content = content;
+        this.content = content.replaceAll("\n", "</p><p>");
     }
 
     public UnformattedFragment()

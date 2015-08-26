@@ -66,12 +66,6 @@ public class LeadFragment extends SimpleTagFragment
     }
 
     @Override
-    public boolean accepts(String tag)
-    {
-        return TAG.equals(tag);
-    }
-
-    @Override
     public ContentFragment newFragment(String[] options, String content)
     {
         return new LeadFragment(content);

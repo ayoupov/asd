@@ -8,17 +8,23 @@ import utils.media.ContentFragmentDescription;
  * Created with IntelliJ IDEA.
  * User: ayoupov
  * Date: 26.08.2015
- * Time: 17:57
+ * Time: 20:41
  */
 @Fragment
-public class HeaderFragment extends SimpleTagFragment
+public class QuoteFragment extends SimpleTagFragment
 {
-    private static final String prefix = "<div class='content-main'><h1>";
-    private static final String postfix = "</div>";
-
-    private static final String TAG = "header";
+    private static final String prefix = "<div class='content-quote-wrapper'>" +
+            "<div class='content-quote-symbol'>,,</div>" +
+            "<div class='content-quote\'>";
+    private static final String postfix = "</div></div>";
+    public static final String TAG = "quote";
 
     private String content;
+
+    public QuoteFragment(String content)
+    {
+        this.content = content;
+    }
 
     @Override
     protected String getContent()
@@ -38,15 +44,6 @@ public class HeaderFragment extends SimpleTagFragment
         return postfix;
     }
 
-    public HeaderFragment(String content)
-    {
-        this.content = content;
-    }
-
-    public HeaderFragment()
-    {
-    }
-
     @Override
     public ContentFragmentDescription getDescription()
     {
@@ -62,6 +59,10 @@ public class HeaderFragment extends SimpleTagFragment
     @Override
     public ContentFragment newFragment(String[] options, String content)
     {
-        return new HeaderFragment(content);
+        return new QuoteFragment(content);
+    }
+
+    public QuoteFragment()
+    {
     }
 }

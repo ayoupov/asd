@@ -20,7 +20,7 @@ public class ContentProcessor
     private static final LinkedHashSet<ContentFragment> registeredFragments = new LinkedHashSet<>();
     private static final LinkedHashSet<ContentFragmentDescription> registeredDescriptions = new LinkedHashSet<>();
 
-    private static final String FRAGMENT = "((\\[([\\w+\\s]+)\\])(.+)(\\[\\/(\\w+)\\]))";
+    private static final String FRAGMENT = "((\\[([\\w+\\s]+)\\])(.+?)(\\[\\/(\\w+)\\]))";
     private static final Pattern FRAGMENT_REGEX = Pattern.compile(FRAGMENT);
 
     static {
@@ -104,6 +104,8 @@ public class ContentProcessor
                 throw new ContentProcessorException("Unknown tag [" + tag  + "]");
             fragments.add(cf);
         }
+        if (fragments.size() == 0)
+            fragments.add(new UnformattedFragment(text));
         return fragments;
     }
 }

@@ -1,6 +1,5 @@
 var $admpages, $editors, $wrappers, $revisions,
-    $articleEditor, $storyEditor, $churchEditor,
-    $articleWrapper, $storyWrapper,
+    $churchEditor, $articleWrapper, $storyWrapper,
     $articleForm, $storyForm;
 
 var apiExtension =
@@ -9,99 +8,6 @@ var apiExtension =
     'get json article': '/article/{id}.json',
     'get json story': '/story/{id}.json'
 };
-
-var raptorSettings = {
-    autoEnable: true,
-    plugins: {
-        classMenu: {
-            classes: {
-                'Main content': 'content-main',
-                'Note': 'content-note',
-                'Quote': 'content-quote-stub',
-                'Golgen underline': 'golden content-underline',
-                'Afterwords': 'content-afterwards-stub'
-            }
-        },
-        languageMenu: false,
-        //languageMenu: {
-        //    locale: "pl",
-        //    language : "pl"
-        //},
-        logo: false,
-        tableCreate: false,
-        tableDeleteColumn: false,
-        tableDeleteRow: false,
-        tableInsertColumn: false,
-        tableInsertRow: false,
-        tableMergeCells: false,
-        tableSplitCells: false,
-        statistics: false,
-        guides: false,
-        dockToElement: false,
-        dockToScreen: false,
-        specialCharacters: false,
-        floatLeft: false,
-        floatNone: false,
-        floatRight: false
-    },
-    bind: {
-        'cancel': function () {
-            restorePage();
-        },
-        'saved': function (data) {
-            restorePage(data);
-        }
-    }
-};
-
-var articleDefaultSettings = {
-    plugins: {
-        // The save UI plugin/button
-        save: {
-            // Specifies the UI to call the saveRest plugin to do the actual saving
-            plugin: 'saveJson'
-        },
-        saveJson: {
-            // The URI to send the content to
-            url: '/article/update',
-            postName: 'article',
-
-            id: function () {
-                return 'article';
-                //return this.raptor.getElement().data('id');
-            },
-            // Returns an object containing the data to send to the server
-            data: function () {
-                return buildArticle();
-            }
-        }
-    }
-};
-
-var storyDefaultSettings = {
-    plugins: {
-        // The save UI plugin/button
-        save: {
-            // Specifies the UI to call the saveRest plugin to do the actual saving
-            plugin: 'saveJson'
-        },
-        saveJson: {
-            // The URI to send the content to
-            url: '/story/update',
-            postName: 'story',
-
-            id: function () {
-                return 'story';
-                //return this.raptor.getElement().data('id');
-            },
-            // Returns an object containing the data to send to the server
-            data: function () {
-                return buildStory();
-            }
-        }
-    }
-};
-
 
 var $prevPage;
 function restorePage(data) {
@@ -139,8 +45,6 @@ function initAdmSelectorCache() {
     $revisions = $("#revisions");
     $editors = $(".editor-content");
     $wrappers = $(".editor-wrapper");
-    $articleEditor = $(".article-editor");
-    $storyEditor = $(".story-editor");
     $churchEditor = $(".church-editor");
     $articleWrapper = $(".article-wrapper");
     $storyWrapper = $(".story-wrapper");
@@ -185,12 +89,9 @@ var articleEditClick = function () {
     $articleWrapper.empty();
     $articleForm = newArticleForm();
     $articleForm.appendTo($articleWrapper);
-    $articleWrapper.append($("<div>Text:</div>"));
-    $articleEditor = $('<div id="articles" class="editor-content article-editor content-main">').appendTo($articleWrapper);
-    $articleEditor.append(newArticleTemplate());
     $articleWrapper.append(newFileManager(id));
     if (id != 0)
-        $articleEditor.api({on: 'now', action: "get json article", urlData: {id: id}, onSuccess: fillArticle});
+        $articleForm.api({on: 'now', action: "get json article", urlData: {id: id}, onSuccess: fillArticle});
     else
         fillArticle(null);
 };
@@ -241,10 +142,6 @@ function newFileManager(id) {
         '<input type="hidden" name="mcid" value="' + id + '"><p><input type="submit"></p></form></div>');
 }
 
-function newArticleTemplate() {
-    return $("<p>Perfect text</p>");
-}
-
 function newStoryTemplate() {
     return $("<p>Perfect story</p>");
 }
@@ -257,6 +154,7 @@ function newArticleForm() {
         "<input type='hidden' id='id' name='id' value='0'/>" +
         "<label for='authors'>Authors</label><select id='authors' name='authors'>" +
         "</select>" +
+        "<label for='text'>Text</label><textarea id='text'>Perfect text of article</textarea>" +
         //"<input type='submit' value='update'>" +
         "</form>");
 }
@@ -272,22 +170,14 @@ function newStoryForm() {
 function fillArticle(data) {
     $admpages.hide();
     if (data) {
-        $articleEditor.html(data.text);
         $("#title", $articleForm).val(data.title);
         $("#lead", $articleForm).html(data.lead);
         $("#approvedDT", $articleForm).val(data.approvedDT);
         $("#authors", $articleForm).html(data.authors);    // todo: come on!
         $("#id", $articleForm).val(data.id);
+        $("#text", $articleForm).html(data.text);
     }
-    var articleSettings = $.extend(true, {}, raptorSettings);
-    $.extend(true, articleSettings, articleDefaultSettings);
-    //console.log(articleSettings);
-    $articleEditor.raptor(articleSettings);
-    $articleEditor.ready(function () {
-        $articleEditor.raptor('enableEditing');
-    });
     $articleWrapper.show();
-    $articleEditor.show();
 }
 
 function buildArticle() {

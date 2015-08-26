@@ -1,5 +1,7 @@
 package utils.media;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: ayoupov
@@ -13,7 +15,12 @@ public class TestContentParse
         try {
             System.out.println(ContentProcessor.getDescriptions());
             String text = "Test unformatted\nAndmore[lead]Some lead goes here[/lead]\nusual simple text\n[image fullwidth]images/Poland-6[/image]";
-            System.out.println(ContentProcessor.parse(text));
+            List<ContentFragment> parsed = ContentProcessor.parse(text);
+            System.out.println(parsed);
+            for (ContentFragment fr : parsed)
+            {
+                System.out.println(fr.render());
+            }
         } catch (Exception e)
         {
             e.printStackTrace();

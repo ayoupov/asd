@@ -3,6 +3,7 @@ package models;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import models.user.User;
 import models.user.UserRole;
+import org.hibernate.annotations.Type;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 import utils.serialize.OnlyDateConverter;
@@ -28,8 +29,10 @@ public class MediaContent
 
     public MediaContentType contentType;
     @Field
+    @Type(type = "text")
     public String text;
     @Field
+    @Type(type = "text")
     public String lead;
     @Field
     public String title;
