@@ -43,6 +43,7 @@ GET         /admin/sieve                           controllers.Admin.sieve
 GET         /admin/parse                           controllers.Admin.parse
 GET         /admin/parse_add                       controllers.Admin.parseAdd
 GET         /admin/snapshotify                     controllers.Admin.snapshotify
+GET         /admin/testparse                       controllers.Admin.checkParse
 GET         /admin/                                controllers.Admin.index
 GET         /admin                                 controllers.Admin.index
 

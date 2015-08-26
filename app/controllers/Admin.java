@@ -6,8 +6,10 @@ import models.MediaContentType;
 import models.internal.ContentManager;
 import models.internal.SessionCache;
 import models.internal.search.SearchManager;
-
-import models.internal.search.filters.*;
+import models.internal.search.filters.ArticleFilter;
+import models.internal.search.filters.ChurchFilter;
+import models.internal.search.filters.StoryFilter;
+import models.internal.search.filters.UserFilter;
 import models.user.User;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -16,6 +18,7 @@ import utils.map.AdditiveProcessor;
 import utils.map.BadIdsSieve;
 import utils.map.Processor;
 import utils.map.Snapshoter;
+import utils.media.TestContentParse;
 import views.html.admin;
 
 import java.io.IOException;
@@ -66,38 +69,49 @@ public class Admin extends Controller
         return ok("parsed additionally");
     }
 
+    public static Result checkParse()
+    {
+        try {
+            TestContentParse.main(null);
+        } catch (Exception e)
+        {
+            return forbidden(e.getMessage());
+        }
+        return ok("parsed");
+    }
+
     public static Result index()
     {
         beginTransaction();
-        
+
         UserFilter userFilter = (UserFilter) SessionCache.get(session(), "userFilter");
         if (userFilter == null)
             userFilter = new UserFilter(request());
-        else 
+        else
             userFilter.apply(request(), "users");
         SessionCache.put(session(), "userFilter", userFilter);
-        
+
         ArticleFilter articleFilter = (ArticleFilter) SessionCache.get(session(), "articleFilter");
         if (articleFilter == null)
             articleFilter = new ArticleFilter(request());
-        else 
+        else
             articleFilter.apply(request(), "articles");
         SessionCache.put(session(), "articleFilter", articleFilter);
-        
+
         StoryFilter storyFilter = (StoryFilter) SessionCache.get(session(), "storyFilter");
         if (storyFilter == null)
             storyFilter = new StoryFilter(request());
-        else 
+        else
             storyFilter.apply(request(), "stories");
         SessionCache.put(session(), "storyFilter", storyFilter);
-        
+
         ChurchFilter churchFilter = (ChurchFilter) SessionCache.get(session(), "churchFilter");
         if (churchFilter == null)
             churchFilter = new ChurchFilter(request());
-        else 
+        else
             churchFilter.apply(request(), "churches");
         SessionCache.put(session(), "churchFilter", churchFilter);
-        
+
         List<User> users = ContentManager.getUsers(userFilter);
         List<MediaContent> articles = ContentManager.getMediaContent(articleFilter, MediaContentType.Article);
         List<MediaContent> stories = ContentManager.getMediaContent(storyFilter, MediaContentType.Story);

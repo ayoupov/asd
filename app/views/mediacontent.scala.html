@@ -1,5 +1,5 @@
 @import utils.web.RenderUtils
-@(content : MediaContent)
+@(content: MediaContent)
 
 <!DOCTYPE html>
 <html lang="pl">
@@ -16,27 +16,21 @@
             @sociallinks()
 
             <div class="content-cover-image">
-                <!-- add cover image somehow to background -->
+                    <!-- add cover image somehow to background -->
                 <div class="content-title">
-                    @content.title
+                @content.title
                 </div>
             </div>
             <div class="content-header ui borderless menu">
                 <div class="content-header-date item">@RenderUtils.contentDateToString(content.approvedDT)</div>
                 @for(author <- content.authors) {
-                <div class="content-header-authors item">@author.name</div>
+                    <div class="content-header-authors item">@author.name</div>
                 }
                 <div class="content-header-social-wrapper right aligned item">
-                    @parts.likes(content.contentType.toString.toLowerCase, content.id)
+                @parts.likes(content.contentType.toString.toLowerCase, content.id)
                 </div>
             </div>
-            <div class="content-lead-wrapper">
-                <div class="content-lead">@content.lead</div>
-            </div>
-            <div class="cleared content-padder"></div>
-            <div class="content-main">
-                @content.text
-            </div>
+            @parts.media.processed(content.text)
         </div>
     </body>
 </html>

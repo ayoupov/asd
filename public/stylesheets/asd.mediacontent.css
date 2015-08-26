@@ -547,7 +547,7 @@ td.passport-data-filler {
     margin-left: auto;
     margin-right: auto;
     margin-top: 60px;
-    background: url(../images/church_passport.png);
+    background: url(../images/church_passport.png) center;
     background-size: cover;
 }
 
@@ -580,42 +580,39 @@ td.passport-data-filler {
     text-transform: uppercase !important;
 }
 
-/*.content-header-authors-divider*/
-/*{*/
-    /*height: 2px;*/
-    /*width: 2px;*/
-    /*background-color: #7b5fe4 !important;*/
-    /*padding: 0 !important;*/
-/*}*/
-
 .content-lead-wrapper {
-    width: 36%;
+    width: 980px;
     margin-left: auto;
     margin-right: auto;
 }
 
 .content-lead {
-    float: right;
     color: #d0b165;
     font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
     font-weight: bold;
+    text-align: center;
     text-transform: uppercase;
     font-size: 11pt;
-    /*width: 80%;*/
     line-height: 1.7em;
     letter-spacing: 0.3px;
+    width: 460px;
+    margin-left: 260px;
+    margin-right: 260px;
+
 }
 
 .content-main p {
     font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
     font-size: 11pt;
+    width: 580px;
+    margin-left: 140px;
+    margin-right: 260px;
 }
 
 .content-main {
-    /*width: 50%;*/
-    margin-left: 22%;
-    margin-right: 32%;
-    min-width: 585px;
+    width: 980px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 div.content-padder {
@@ -626,35 +623,40 @@ div.content-padder {
     width: 100%;
 }
 
-.content-main h2 {
+.content-main h2, .content-main h1 {
     font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
+    margin-left: 140px;
 }
 
-.content-note {
-    font-family: Georgia, serif !important;
-    font-size: 26pt !important;
-    font-style: italic;
-    color: #a0a0a0;
-    text-align: center;
-}
-
-.content-quote-stub {
+div.content-note {
+    width: 380px;
+    margin-left: 240px;
+    margin-right: 360px;
     font-family: Georgia, serif !important;
     font-size: 26pt !important;
     font-style: italic;
     color: #a0a0a0;
     text-align: center;
     line-height: 1.1em;
-    margin-bottom: 1em;
 }
 
 .content-quote
 {
+    width: 460px;
+    margin-left: 240px;
+    margin-right: 260px;
+    font-family: Georgia, serif !important;
+    font-size: 26pt !important;
+    font-style: italic;
+    color: #a0a0a0;
     text-align: left;
-    float: right;
-    width: 80%;
     line-height: 1.1em;
-    margin-bottom: 1em;
+    /*margin-bottom: 1em;*/
+}
+
+.content-quote-second
+{
+    font-style: normal;
 }
 
 div.content-quote-wrapper
@@ -665,6 +667,7 @@ div.content-quote-wrapper
 }
 
 div.content-quote-symbol {
+    margin-left: 120px;
     font-family: Georgia, serif !important;
     font-size: 78pt !important;
     font-style: italic;
@@ -672,7 +675,8 @@ div.content-quote-symbol {
     margin-top: -18px;
     letter-spacing: -6px;
     margin-right: 20px;
-    float: right;
+    text-align: right;
+    width: 100px;
 }
 
 .content-underline {
@@ -685,35 +689,30 @@ div.content-quote-symbol {
 }
 
 div.full-width {
-    width: 100vw;
-    margin-left: -23vw;
-}
-
-.content-shifted {
-    /*margin-left: 23vw;*/
-    margin-left: 16vw;
-    /*width: 50%;*/
-}
-
-.variant1 {
-    max-width: 68vw !important;
-}
-
-.variant2 {
-    width: 595px !important;
-    margin-left: 23vw;
-}
-
-.variant3 {
-    width: 958px;
-    /*height: 602.5px;*/
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.variant4 {
     width: 100%;
-    margin:0;
+}
+
+img.full-width {
+    width: 100%;
+    max-width: 1800px;
+}
+/*.content-shifted {*/
+    /*/!*margin-left: 23vw;*!/*/
+    /*margin-left: 16vw;*/
+    /*/!*width: 50%;*!/*/
+/*}*/
+
+.fit-main-text {
+    width: 580px;
+    margin-left: 140px;
+    margin-right: 260px;
+}
+
+/* center ??? */
+.fit-main-text-plus {
+    width: 700px;
+    margin-left: 140px;
+    margin-right: 140px;
 }
 
 .content-afterwords {
