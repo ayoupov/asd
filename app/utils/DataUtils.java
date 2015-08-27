@@ -34,6 +34,26 @@ public class DataUtils
         return res;
     }
 
+    public static long safeLong(String[] ss, long def)
+    {
+        return safeLong(ss[0], def);
+    }
+
+    public static Boolean safeBool(String req)
+    {
+        Boolean res = null;
+        if ("1".equals(req) || "true".equalsIgnoreCase(req))
+            res = true;
+        if ("0".equals(req) || "false".equalsIgnoreCase(req))
+            res = false;
+        return res;
+    }
+
+    public static Boolean safeBool(String[] reqStr)
+    {
+        return safeBool(reqStr[0]);
+    }
+
     public static Date dateFromReqString(String dt)
     {
         Date date = null;
@@ -42,5 +62,10 @@ public class DataUtils
         } catch (Exception e) {
         }
         return date;
+    }
+
+    public static Date dateFromReqString(String[] dts)
+    {
+        return dateFromReqString(dts[0]);
     }
 }

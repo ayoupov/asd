@@ -58,9 +58,14 @@ public class Admin extends Controller
 
     public static Result snapshotify() throws IOException, InterruptedException
     {
-//        Snapshoter.snap("d:/prog/asd/res/doc.kml", "d:/prog/asd/res/snapshots");
         Snapshoter.snap("d:/prog/asd/res/doc.kml", "C:\\Users\\ayoupov\\Google Диск\\snapshots");
         return ok("snapshots in progress");
+    }
+
+    public static Result snapshotifySome() throws IOException, InterruptedException
+    {
+        Snapshoter.snapSome("d:/prog/asd/res/doc.kml", "C:\\Users\\ayoupov\\Google Диск\\snapshots", "d:/prog/asd/res/data/churches_snapshot_reexport.txt");
+        return ok("some snapshots are in progress");
     }
 
     public static Result parseAdd() throws IOException, InterruptedException

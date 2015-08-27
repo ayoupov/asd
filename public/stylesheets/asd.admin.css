@@ -6,6 +6,15 @@
     z-index:1000;
 }
 
+.right-admin-menu
+{
+    position: fixed !important;
+    right:0;
+    top: 36%;
+    max-height: 500px;
+    z-index:1000;
+}
+
 .skipped-top
 {
     margin-top: 60px !important;

@@ -11,12 +11,12 @@ import utils.media.ContentFragmentDescription;
  * Time: 17:57
  */
 @Fragment
-public class LeadFragment extends SimpleTagFragment
+public class ExcerptFragment extends SimpleTagFragment
 {
-    private static final String prefix = "<div class='content-lead-wrapper'><div class='content-lead'>";
-    private static final String postfix = "</div></div>";
+    private static final String prefix = "<div class='content-main'><div class='content-note'>";
+    private static final String postfix = "<div class='golden content-underline'></div></div></div>";
 
-    private static final String TAG = "lead";
+    private static final String TAG = "excerpt";
 
     private String content;
 
@@ -38,18 +38,12 @@ public class LeadFragment extends SimpleTagFragment
         return postfix;
     }
 
-    @Override
-    public String render()
-    {
-        return prefix + content + postfix;
-    }
-
-    public LeadFragment(String content)
+    public ExcerptFragment(String content)
     {
         this.content = content;
     }
 
-    public LeadFragment()
+    public ExcerptFragment()
     {
     }
 
@@ -68,6 +62,6 @@ public class LeadFragment extends SimpleTagFragment
     @Override
     public ContentFragment newFragment(String[] options, String content)
     {
-        return new LeadFragment(content);
+        return new ExcerptFragment(content);
     }
 }

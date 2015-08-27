@@ -33,6 +33,7 @@ GET         /search/:stype/:q                      controllers.Search.mediaConte
 
 # secure, role must be >= Moderator
 POST        /files/upload                          controllers.FileManager.upload
+GET         /files/list/:path                      controllers.FileManagerJava.list(path : String)
 POST        /article/update                        controllers.MediaContents.update(ctype : String = "article")
 POST        /story/update                          controllers.MediaContents.update(ctype : String = "story")
 
@@ -43,6 +44,7 @@ GET         /admin/sieve                           controllers.Admin.sieve
 GET         /admin/parse                           controllers.Admin.parse
 GET         /admin/parse_add                       controllers.Admin.parseAdd
 GET         /admin/snapshotify                     controllers.Admin.snapshotify
+GET         /admin/snapsome                        controllers.Admin.snapshotifySome
 GET         /admin/testparse                       controllers.Admin.checkParse
 GET         /admin/                                controllers.Admin.index
 GET         /admin                                 controllers.Admin.index

@@ -33,27 +33,27 @@ public class Disseminator
 {
     public static void main(String[] args) throws IOException
     {
-        beginTransaction();
-        seedUsers();
-        commitTransaction();
-        beginTransaction();
-        MetropolieProcessor mp = new MetropolieProcessor();
-//        seedGeography("d:/prog/asd/res/gis/cleaned/metropolies_wgs84", mp);
-        seedGeography("d:/prog/asd/res/gis/cut/metropolies_10percent", mp);
-        commitTransaction();
-        beginTransaction();
-        DioceseProcessor dp = new DioceseProcessor();
-//        seedGeography("d:/prog/asd/res/gis/cleaned/diecezje_wgs84", dp);
-        seedGeography("d:/prog/asd/res/gis/cut/diecezje_wgs84_10percent", dp);
-        commitTransaction();
-        beginTransaction();
-        DekanatProcessor dekp = new DekanatProcessor();
-//        seedGeography("d:/prog/asd/res/gis/cleaned/dekanaty_wgs84", dekp);
-        seedGeography("d:/prog/asd/res/gis/cut/dekanaty_wgs84_10percent", dekp);
-        commitTransaction();
-        beginTransaction();
-        seedChurches("res/data/churches.csv");
-        commitTransaction();
+//        beginTransaction();
+//        seedUsers();
+//        commitTransaction();
+//        beginTransaction();
+//        MetropolieProcessor mp = new MetropolieProcessor();
+////        seedGeography("d:/prog/asd/res/gis/cleaned/metropolies_wgs84", mp);
+//        seedGeography("d:/prog/asd/res/gis/cut/metropolies_10percent", mp);
+//        commitTransaction();
+//        beginTransaction();
+//        DioceseProcessor dp = new DioceseProcessor();
+////        seedGeography("d:/prog/asd/res/gis/cleaned/diecezje_wgs84", dp);
+//        seedGeography("d:/prog/asd/res/gis/cut/diecezje_wgs84_10percent", dp);
+//        commitTransaction();
+//        beginTransaction();
+//        DekanatProcessor dekp = new DekanatProcessor();
+////        seedGeography("d:/prog/asd/res/gis/cleaned/dekanaty_wgs84", dekp);
+//        seedGeography("d:/prog/asd/res/gis/cut/dekanaty_wgs84_10percent", dekp);
+//        commitTransaction();
+//        beginTransaction();
+//        seedChurches("res/data/churches.csv");
+//        commitTransaction();
         beginTransaction();
         seedMockContent();
         commitTransaction();

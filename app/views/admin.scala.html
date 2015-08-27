@@ -25,12 +25,6 @@
         <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/asd.index.css")">
         <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/asd.mediacontent.css")">
         <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/asd.admin.css")">
-        <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/raptor-front-end.shrunk.min.css")">
-
-        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/smoothness/jquery-ui-1.8.13.custom.css")"
-        type="text/css" media="screen" title="no title" charset="utf-8">
-        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/elfinder.css")" type="text/css" media="screen"
-        title="no title" charset="utf-8">
 
         <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")"></script>
         <script src="//oss.maxcdn.com/semantic-ui/2.0.4/semantic.min.js"></script>
@@ -98,9 +92,14 @@
                             @parts.admin.storyeditor()
                             @parts.admin.churcheditor()
                         </div>
+
                     </div>
                 </div>
                 <div class="column"></div>
+            </div>
+            <div class="ui right rail">
+                <div id="fm" class="ui form right-admin-menu article-visible story-visible">
+                </div>
             </div>
         </div>
     </body>

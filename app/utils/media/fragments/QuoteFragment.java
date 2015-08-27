@@ -4,6 +4,9 @@ import org.panaggelica.media.Fragment;
 import utils.media.ContentFragment;
 import utils.media.ContentFragmentDescription;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: ayoupov
@@ -13,16 +16,23 @@ import utils.media.ContentFragmentDescription;
 @Fragment
 public class QuoteFragment extends SimpleTagFragment
 {
-    private static final String prefix = "<div class='content-quote-wrapper'>" +
+    private static final String commonPrefix = "<div class='content-main'><div class='content-quote-wrapper'>";
+    private static final String prefix = commonPrefix +
             "<div class='content-quote-symbol'>,,</div>" +
-            "<div class='content-quote\'>";
-    private static final String postfix = "</div></div>";
+            "<div class='content-quote'>";
+    private static final String prefixSecond = commonPrefix +
+            "<div class='content-quote content-quote-second'>";
+    private static final String postfix = "</div></div></div>";
     public static final String TAG = "quote";
 
     private String content;
+    private boolean second = false;
+    private static final String SECOND = "second";
 
-    public QuoteFragment(String content)
+    public QuoteFragment(String[] options, String content)
     {
+        List<String> opts = Arrays.asList(options);
+        second = (opts.contains(SECOND));
         this.content = content;
     }
 
@@ -35,7 +45,7 @@ public class QuoteFragment extends SimpleTagFragment
     @Override
     protected String getPrefix()
     {
-        return prefix;
+        return second ? prefixSecond : prefix;
     }
 
     @Override
@@ -59,7 +69,7 @@ public class QuoteFragment extends SimpleTagFragment
     @Override
     public ContentFragment newFragment(String[] options, String content)
     {
-        return new QuoteFragment(content);
+        return new QuoteFragment(options, content);
     }
 
     public QuoteFragment()

@@ -7,6 +7,7 @@ import models.internal.search.filters.ChurchFilter;
 import models.internal.search.filters.QueryFilter;
 import models.internal.search.filters.UserFilter;
 import models.user.User;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -247,5 +248,11 @@ public class ContentManager
         Session session = getSession();
         List<User> users = session.createQuery("from Users u where u.id in (:list)").setParameter("list", userList).list();
         return users;
+    }
+
+    public static List<User> parseUserList(String[] strings)
+    {
+        String idList = StringUtils.join(strings, ",");
+        return parseUserList(idList);
     }
 }

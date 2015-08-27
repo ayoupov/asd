@@ -18,6 +18,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import static utils.DataUtils.safeBool;
+import static utils.DataUtils.safeLong;
 import static utils.HibernateUtils.*;
 
 /**
@@ -95,15 +97,14 @@ public class MediaContents extends Controller
     {
         ObjectNode result = Json.newObject();
         Http.RequestBody body = request().body();
+//        System.out.println("body = " + body);
         Map<String, String[]> map = body.asFormUrlEncoded();
-        JsonNode node = Json.parse(map.get(ctype)[0]); // ugly as f*ck, thanks, raptor
-        node = node.get(ctype);
-        System.out.println("node = " + node);
+//        System.out.println("map = " + map);
         MediaContentType mct = MediaContentType.fromString(ctype);
 
         beginTransaction();
-        long id = node.get("id").asLong();
-        System.out.println("id = " + id);
+        long id = safeLong(map.get("id"), 0);
+//        System.out.println("id = " + id);
         boolean isNew = id == 0;
         MediaContent c;
         if (!isNew)
@@ -118,10 +119,18 @@ public class MediaContents extends Controller
         }
 
         // possible changeable fields
-        String jtext = (node.get("text") != null) ? node.get("text").asText() : null, jlead = (node.get("lead") != null) ? node.get("lead").asText() : null, jtitle = (node.get("title") != null) ? node.get("title").asText() : null;
-        Boolean jstarred = (node.get("starred") != null) ? node.get("starred").asBoolean() : null;
-        Date jpublishDate = (node.get("approvedDT") != null) ? DataUtils.dateFromReqString(node.get("approvedDT").asText()) : null;
-        List<User> jauthors = (node.get("authors") != null) ? ContentManager.parseUserList(node.get("authors").asText()) : null;
+        String jtext = (map.get("text") != null) ? map.get("text")[0] : null,
+                jlead = (map.get("lead") != null) ? map.get("lead")[0] : null,
+                jtitle = (map.get("title") != null) ? map.get("title")[0] : null;
+        Boolean jstarred = (map.get("starred") != null) ? safeBool(map.get("starred")) : null;
+        Date jpublishDate = (map.get("approvedDT") != null) ? DataUtils.dateFromReqString(map.get("approvedDT")) : null;
+        List<User> jauthors = (map.get("authors") != null) ? ContentManager.parseUserList(map.get("authors")) : null;
+//        System.out.println("jtitle = " + jtitle);
+//        System.out.println("jlead = " + jlead);
+//        System.out.println("jtext = " + jtext);
+//        System.out.println("jstarred = " + jstarred);
+//        System.out.println("jpublishDate = " + jpublishDate);
+//        System.out.println("jauthors = " + jauthors);
         if (jtext != null)
             c.setText(jtext);
         if (jlead != null)

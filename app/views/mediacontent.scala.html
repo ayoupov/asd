@@ -30,6 +30,10 @@
                 @parts.likes(content.contentType.toString.toLowerCase, content.id)
                 </div>
             </div>
+            @if(content.lead != null && "" != content.lead.trim) {
+            <div class='content-lead-wrapper'><div class='content-lead'>
+            @content.lead</div></div>
+            }
             @parts.media.processed(content.text)
         </div>
     </body>

@@ -1,12 +1,15 @@
 var $admpages, $editors, $wrappers, $revisions,
     $churchEditor, $articleWrapper, $storyWrapper,
-    $articleForm, $storyForm;
+    $articleForm, $storyForm, $fm;
 
 var apiExtension =
 {
     'get church revisions': '/content/churches/revisions/{id}',
     'get json article': '/article/{id}.json',
-    'get json story': '/story/{id}.json'
+    'get json story': '/story/{id}.json',
+    'get associated pictures': '/files/list/{id}',
+    'post update article': '/article/update',
+    'post update story': '/story/update'
 };
 
 var $prevPage;
@@ -50,6 +53,7 @@ function initAdmSelectorCache() {
     $storyWrapper = $(".story-wrapper");
     $articleForm = $(".article-form");
     $storyForm = $(".story-form");
+    $fm = $("#fm");
 }
 
 $(document).ready(function () {
@@ -80,6 +84,7 @@ $(document).ready(function () {
 var goAdmPage = function (id) {
     $admpages.hide();
     $wrappers.hide();
+    $fm.hide();
     $(id).show();
     $prevPage = $(id);
 };
@@ -88,10 +93,21 @@ var articleEditClick = function () {
     var id = getId($(this));
     $articleWrapper.empty();
     $articleForm = newArticleForm();
+    $(".submit.button", $articleForm).api({
+        on: 'click',
+        action: 'post update article',
+        method: 'POST',
+        onSuccess: changeRow,
+        serializeForm: true
+    });
     $articleForm.appendTo($articleWrapper);
-    $articleWrapper.append(newFileManager(id));
-    if (id != 0)
+    $fm.empty();
+    $fm.append(newFileManager('article', id));
+    $(".article-visible").show();
+    if (id != 0) {
         $articleForm.api({on: 'now', action: "get json article", urlData: {id: id}, onSuccess: fillArticle});
+        $fm.api({on: 'now', action: 'get associated pictures', urlData: {id: id}, onSuccess: fillFM});
+    }
     else
         fillArticle(null);
 };
@@ -104,9 +120,12 @@ var storyEditClick = function () {
     $storyWrapper.append($("<div>Story text:</div>"));
     $storyEditor = $('<div id="stories" class="editor-content story-editor content-main">').appendTo($storyWrapper);
     $storyEditor.append(newStoryTemplate());
-    $storyWrapper.append(newFileManager(id));
-    if (id != 0)
+    $fm.empty();
+    $fm.append(newFileManager('story', id));
+    if (id != 0) {
         $storyEditor.api({on: 'now', action: "get json story", urlData: {id: id}, onSuccess: fillStory});
+        $fm.api({on: 'now', action: 'get associated pictures', urlData: {id: id}, onSuccess: fillFM});
+    }
     else
         fillStory(null);
 };
@@ -135,11 +154,29 @@ var renderRevisions = function (data) {
     });
 };
 
-function newFileManager(id) {
-    return $('<div id="fm_@formId" class="file-manager"><form class="ui form" method="POST" action="/files/upload"" enctype="multipart/form-data">' +
+function newFileManager(mctype, id) {
+    return $('<form class="ui form" method="POST" action="/files/upload" enctype="multipart/form-data">' +
         '<input type="file" name="picture">' +
-            //'<input type="file" name="picture">'+
-        '<input type="hidden" name="mcid" value="' + id + '"><p><input type="submit"></p></form></div>');
+        '<input type="hidden" name="mcid" value="' + id + '">' +
+        '<input type="hidden" name="mctype" value="' + mctype + '">' +
+        '<p><input type="submit"></p></form>');
+}
+
+function fillFM(data) {
+    $(data).each(function (a, item) {
+        $fm.append(addFileItem(item));
+    });
+}
+
+function addFileItem(item) {
+    var path = item.path;
+    var thumb = item.thumb;
+
+    var $item = $("<div class='fm-item'/>").append($("<div class='fm-item-path'>").html(path));
+    if (thumb)
+        $item.append($("<img/>").attr('src', thumb));
+
+    return $item;
 }
 
 function newStoryTemplate() {
@@ -150,12 +187,13 @@ function newArticleForm() {
     return $("<form class='article-form ui form' method='post'>" +
         "<label for='title'>Title</label><input id='title' placeholder='Title' name='title'/>" +
         "<label for='lead'>Lead</label><textarea id='lead' placeholder='Lead' name='lead'/>" +
-        "<label for='approvedDT'>Publish on</label><input type='date' name='approvedDT' id='approvedDT' value='" + datenow() + "'/>" +
+        "<label for='approvedDT'>Publish on</label><input type='datetime' name='approvedDT' id='approvedDT' value='" + datenow() + "'/>" +
         "<input type='hidden' id='id' name='id' value='0'/>" +
+        "<input type='hidden' id='ctype' name='ctype' value='article'/>" +
         "<label for='authors'>Authors</label><select id='authors' name='authors'>" +
         "</select>" +
-        "<label for='text'>Text</label><textarea id='text'>Perfect text of article</textarea>" +
-        //"<input type='submit' value='update'>" +
+        "<label for='text'>Text</label><textarea id='text' name='text'>Perfect text of article</textarea>" +
+        "<input id='submit' type='button' class='submit button' value='update'>" +
         "</form>");
 }
 
@@ -182,7 +220,7 @@ function fillArticle(data) {
 
 function buildArticle() {
     var form = $articleForm.serializeObject();
-    $.extend(form, {text: $articleEditor.html()});
+    //$.extend(form, {text: $articleEditor.html()});
     console.log(form);
     return form;
 }

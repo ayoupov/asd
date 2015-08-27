@@ -4,6 +4,7 @@ import java.io.File
 
 import play.api.mvc.{Action, Controller}
 import utils.ServerProperties
+import utils.media.images.Thumber
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,15 +22,17 @@ object FileManager extends Controller {
         picture =>
           val filename = picture.filename
           val contentType = picture.contentType
-          picture.ref.moveTo(new File(s"/$where/$filename"))
+          val outFile: File = new File(s"/$where/$filename")
+          picture.ref.moveTo(outFile)
+          Thumber.rethumb(outFile)
       }
       Redirect(routes.Admin.index()).flashing(
-        "success" -> (request.body.files.map{f => f.filename}.mkString(",") + " uploaded successfully")
+        "success" -> (request.body.files.map { f => f.filename }.mkString(",") + " uploaded successfully")
       )
 
     //        .getOrElse {
-//        Redirect(routes.Application.index()).flashing(
-//          "error" -> "Missing file")
-//      }
+    //        Redirect(routes.Application.index()).flashing(
+    //          "error" -> "Missing file")
+    //      }
   }
 }
