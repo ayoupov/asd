@@ -41,6 +41,8 @@ public class ImageFragment extends ContentFragment
     private static final List<String> colorOptions = Arrays.asList(GREY, WHITE);
     private String[] options;
 
+    private static final ImageFragmentDescription description = new ImageFragmentDescription();
+
     public ImageFragment(String[] options, String content)
     {
         this.options = options;
@@ -104,7 +106,7 @@ public class ImageFragment extends ContentFragment
     @Override
     public ContentFragmentDescription getDescription()
     {
-        return null;
+        return description;
     }
 
     @Override

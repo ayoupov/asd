@@ -1,9 +1,12 @@
 package utils.media.fragments;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.panaggelica.media.Fragment;
+import org.panaggelica.media.FragmentDescription;
 import utils.media.ContentFragment;
 import utils.media.ContentFragmentDescription;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,6 +31,8 @@ public class QuoteFragment extends SimpleTagFragment
     private String content;
     private boolean second = false;
     private static final String SECOND = "second";
+
+    private static QuoteFragmentDescription description = new QuoteFragmentDescription();
 
     public QuoteFragment(String[] options, String content)
     {
@@ -57,7 +62,7 @@ public class QuoteFragment extends SimpleTagFragment
     @Override
     public ContentFragmentDescription getDescription()
     {
-        return null;
+        return description;
     }
 
     @Override
@@ -75,4 +80,29 @@ public class QuoteFragment extends SimpleTagFragment
     public QuoteFragment()
     {
     }
+
+    @FragmentDescription
+    private static class QuoteFragmentDescription extends ContentFragmentDescription
+    {
+
+        private static List<Pair<String, String>> options = new ArrayList<>();
+
+        static {
+            options.add(Pair.of("no options", "italic quote with quote sign"));
+            options.add(Pair.of("second", "non-italic part of quote"));
+        }
+
+        @Override
+        public String getTag()
+        {
+            return TAG;
+        }
+
+        @Override
+        public List<Pair<String, String>> getOptions()
+        {
+            return options;
+        }
+    }
+
 }

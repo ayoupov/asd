@@ -539,6 +539,11 @@ td.passport-data-filler {
     margin-right: auto;
 }
 
+.content-header-center
+{
+    position: relative;
+    top:25%;
+}
 .content-cover-image {
     height: 500px;
     max-height: 500px;
@@ -557,9 +562,17 @@ td.passport-data-filler {
     top: 480px;
     font-size: 31pt;
     font-weight: bold;
+    font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
 }
 
-.content-header.menu {
+/*.content-header.menu {*/
+    /*background-color : #ececec !important;*/
+    /*border: none !important;*/
+    /*height: 34px !important;*/
+    /*margin-top: 0 !important;*/
+/*}*/
+
+.content-header-wrapper {
     background-color : #ececec !important;
     border: none !important;
     height: 34px !important;
@@ -567,17 +580,30 @@ td.passport-data-filler {
 }
 
 .content-header-date {
-    margin-left: 12.5%;
-    margin-right: 4.6875%;
+    margin-left: 20px;
+    /*margin-right: 4.6875%;*/
     color: #b5b5b5 !important;
-    font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
+    /*font-family: "Helvetica", "Helvetica Neue Light", sans-serif;*/
     font-size: 8pt;
+    float: left;
+}
+
+.content-header-authors-wrapper
+{
+    margin-left: 115px;
 }
 
 .content-header-authors {
-    font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
+    /*font-family: "Helvetica", "Helvetica Neue Light", sans-serif;*/
     font-size: 8pt;
     text-transform: uppercase !important;
+    margin-left: 25px;
+    float:left;
+}
+
+.content-header-social-wrapper div{
+    float: right;
+    margin-right:20px;
 }
 
 .content-lead-wrapper {
@@ -602,7 +628,7 @@ td.passport-data-filler {
 }
 
 .content-main p {
-    font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
+    /*font-family: "Helvetica", "Helvetica Neue Light", sans-serif;*/
     font-size: 11pt;
     width: 580px;
     margin-left: 140px;
@@ -610,6 +636,7 @@ td.passport-data-filler {
 }
 
 .content-main {
+    font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
     width: 980px;
     margin-left: auto;
     margin-right: auto;
@@ -624,7 +651,7 @@ div.content-padder {
 }
 
 .content-main h2, .content-main h1 {
-    font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
+    /*font-family: "Helvetica", "Helvetica Neue Light", sans-serif;*/
     margin-left: 140px;
 }
 
@@ -696,11 +723,6 @@ img.full-width {
     width: 100%;
     max-width: 1800px;
 }
-/*.content-shifted {*/
-    /*/!*margin-left: 23vw;*!/*/
-    /*margin-left: 16vw;*/
-    /*/!*width: 50%;*!/*/
-/*}*/
 
 .fit-main-text {
     width: 580px;

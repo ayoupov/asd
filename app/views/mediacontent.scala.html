@@ -21,18 +21,22 @@
                 @content.title
                 </div>
             </div>
-            <div class="content-header ui borderless menu">
-                <div class="content-header-date item">@RenderUtils.contentDateToString(content.approvedDT)</div>
-                @for(author <- content.authors) {
-                    <div class="content-header-authors item">@author.name</div>
-                }
-                <div class="content-header-social-wrapper right aligned item">
-                @parts.likes(content.contentType.toString.toLowerCase, content.id)
+            <div class="content-header-wrapper">
+                <div class="content-main content-header-center">
+                    <div class="content-header-date">@RenderUtils.contentDateToString(content.approvedDT)</div>
+                    <div class="content-header-authors-wrapper">
+                    @for(author <- content.authors) {
+                        <div class="content-header-authors">@author.name</div>
+                    }
+                    </div>
+                    <div class="content-header-social-wrapper">
+                    @parts.likes(content.contentType.toString.toLowerCase, content.id)
+                    </div>
                 </div>
             </div>
             @if(content.lead != null && "" != content.lead.trim) {
-            <div class='content-lead-wrapper'><div class='content-lead'>
-            @content.lead</div></div>
+                <div class='content-lead-wrapper'><div class='content-lead'>
+                @content.lead</div></div>
             }
             @parts.media.processed(content.text)
         </div>

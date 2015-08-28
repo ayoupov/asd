@@ -16,16 +16,17 @@ import java.util.List;
  * Time: 17:57
  */
 @Fragment
-public class ExcerptFragment extends SimpleTagFragment
+public class PadderFragment extends SimpleTagFragment
 {
-    private static final String prefix = "<div class='content-main'><div class='content-note'>";
-    private static final String postfix = "<div class='golden content-underline'></div></div></div>";
+    private static final String prefix = "<div class='content-padder'>";
+    private static final String postfix = "</div>";
 
-    private static final String TAG = "excerpt";
+    private static final String TAG = "padder";
 
-    private String content;
+    private static final PadderFragmentDescription description = new PadderFragmentDescription();
 
-    private static final ExcerptFragmentDescription description = new ExcerptFragmentDescription();
+    private String content = null;
+
     @Override
     protected String getContent()
     {
@@ -44,12 +45,8 @@ public class ExcerptFragment extends SimpleTagFragment
         return postfix;
     }
 
-    public ExcerptFragment(String content)
-    {
-        this.content = content;
-    }
 
-    public ExcerptFragment()
+    public PadderFragment()
     {
     }
 
@@ -68,11 +65,11 @@ public class ExcerptFragment extends SimpleTagFragment
     @Override
     public ContentFragment newFragment(String[] options, String content)
     {
-        return new ExcerptFragment(content);
+        return new PadderFragment();
     }
 
     @FragmentDescription
-    private static class ExcerptFragmentDescription extends ContentFragmentDescription
+    private static class PadderFragmentDescription extends ContentFragmentDescription
     {
 
         private static List<Pair<String, String>> options = new ArrayList<>();
@@ -92,5 +89,4 @@ public class ExcerptFragment extends SimpleTagFragment
             return options;
         }
     }
-
 }

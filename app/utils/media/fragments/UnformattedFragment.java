@@ -1,8 +1,13 @@
 package utils.media.fragments;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.panaggelica.media.Fragment;
+import org.panaggelica.media.FragmentDescription;
 import utils.media.ContentFragment;
 import utils.media.ContentFragmentDescription;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,6 +25,8 @@ public class UnformattedFragment extends ContentFragment
     protected String tag = "";
 
     private String content;
+
+    private static final UnformattedFragmentDescription description = new UnformattedFragmentDescription();
 
     @Override
     public String render()
@@ -39,7 +46,7 @@ public class UnformattedFragment extends ContentFragment
     @Override
     public ContentFragmentDescription getDescription()
     {
-        return null;
+        return description;
     }
 
     @Override
@@ -59,4 +66,27 @@ public class UnformattedFragment extends ContentFragment
     {
         return new UnformattedFragment(content);
     }
+
+    @FragmentDescription
+    private static class UnformattedFragmentDescription extends ContentFragmentDescription
+    {
+
+        private static List<Pair<String, String>> options = new ArrayList<>();
+
+        static {
+        }
+
+        @Override
+        public String getTag()
+        {
+            return TAG;
+        }
+
+        @Override
+        public List<Pair<String, String>> getOptions()
+        {
+            return options;
+        }
+    }
+
 }

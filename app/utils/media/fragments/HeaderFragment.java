@@ -1,8 +1,13 @@
 package utils.media.fragments;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.panaggelica.media.Fragment;
+import org.panaggelica.media.FragmentDescription;
 import utils.media.ContentFragment;
 import utils.media.ContentFragmentDescription;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,6 +24,8 @@ public class HeaderFragment extends SimpleTagFragment
     private static final String TAG = "header";
 
     private String content;
+
+    private static final HeaderFragmentDescription description = new HeaderFragmentDescription();
 
     @Override
     protected String getContent()
@@ -50,7 +57,7 @@ public class HeaderFragment extends SimpleTagFragment
     @Override
     public ContentFragmentDescription getDescription()
     {
-        return null;
+        return description;
     }
 
     @Override
@@ -64,4 +71,27 @@ public class HeaderFragment extends SimpleTagFragment
     {
         return new HeaderFragment(content);
     }
+
+    @FragmentDescription
+    private static class HeaderFragmentDescription extends ContentFragmentDescription
+    {
+
+        private static List<Pair<String, String>> options = new ArrayList<>();
+
+        static {
+        }
+
+        @Override
+        public String getTag()
+        {
+            return TAG;
+        }
+
+        @Override
+        public List<Pair<String, String>> getOptions()
+        {
+            return options;
+        }
+    }
+
 }
