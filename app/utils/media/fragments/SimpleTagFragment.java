@@ -15,7 +15,7 @@ public abstract class SimpleTagFragment extends ContentFragment
     @Override
     public String render()
     {
-        return getPrefix() + getContent() + getPostfix();
+        return getPrefix() + ((getContent() == null) ? "" : getContent()) + getPostfix();
     }
 
     protected abstract String getContent();

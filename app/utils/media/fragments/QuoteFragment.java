@@ -82,7 +82,7 @@ public class QuoteFragment extends SimpleTagFragment
     }
 
     @FragmentDescription
-    private static class QuoteFragmentDescription extends ContentFragmentDescription
+    public static class QuoteFragmentDescription extends ContentFragmentDescription
     {
 
         private static List<Pair<String, String>> options = new ArrayList<>();

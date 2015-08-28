@@ -37,7 +37,7 @@
 }
 
 .social-links {
-    bottom: 10px;
+    bottom: 0;
     position: fixed;
     z-index: 100;
 }
@@ -366,7 +366,7 @@
 }
 
 .social-fb {
-    margin-left: 10px;
+    margin-left: 2px;
     float: right;
     cursor: pointer;
 }
@@ -655,7 +655,7 @@ div.content-padder {
     margin-left: 140px;
 }
 
-div.content-note {
+div.content-excerpt {
     width: 380px;
     margin-left: 240px;
     margin-right: 360px;

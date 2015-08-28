@@ -18,7 +18,7 @@ import java.util.List;
 @Fragment
 public class ExcerptFragment extends SimpleTagFragment
 {
-    private static final String prefix = "<div class='content-main'><div class='content-note'>";
+    private static final String prefix = "<div class='content-main'><div class='content-excerpt'>";
     private static final String postfix = "<div class='golden content-underline'></div></div></div>";
 
     private static final String TAG = "excerpt";
@@ -72,7 +72,7 @@ public class ExcerptFragment extends SimpleTagFragment
     }
 
     @FragmentDescription
-    private static class ExcerptFragmentDescription extends ContentFragmentDescription
+    public static class ExcerptFragmentDescription extends ContentFragmentDescription
     {
 
         private static List<Pair<String, String>> options = new ArrayList<>();

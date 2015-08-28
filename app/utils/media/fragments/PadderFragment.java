@@ -69,7 +69,7 @@ public class PadderFragment extends SimpleTagFragment
     }
 
     @FragmentDescription
-    private static class PadderFragmentDescription extends ContentFragmentDescription
+    public static class PadderFragmentDescription extends ContentFragmentDescription
     {
 
         private static List<Pair<String, String>> options = new ArrayList<>();

@@ -13,13 +13,9 @@ import utils.seed.geo.MetropolieProcessor;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import static utils.HibernateUtils.beginTransaction;
-import static utils.HibernateUtils.commitTransaction;
-import static utils.HibernateUtils.save;
+import static utils.HibernateUtils.*;
 import static utils.seed.ChurchSeeds.seedChurches;
 import static utils.seed.GeographySeeds.seedGeography;
 
@@ -33,27 +29,27 @@ public class Disseminator
 {
     public static void main(String[] args) throws IOException
     {
-//        beginTransaction();
-//        seedUsers();
-//        commitTransaction();
-//        beginTransaction();
-//        MetropolieProcessor mp = new MetropolieProcessor();
-////        seedGeography("d:/prog/asd/res/gis/cleaned/metropolies_wgs84", mp);
-//        seedGeography("d:/prog/asd/res/gis/cut/metropolies_10percent", mp);
-//        commitTransaction();
-//        beginTransaction();
-//        DioceseProcessor dp = new DioceseProcessor();
-////        seedGeography("d:/prog/asd/res/gis/cleaned/diecezje_wgs84", dp);
-//        seedGeography("d:/prog/asd/res/gis/cut/diecezje_wgs84_10percent", dp);
-//        commitTransaction();
-//        beginTransaction();
-//        DekanatProcessor dekp = new DekanatProcessor();
-////        seedGeography("d:/prog/asd/res/gis/cleaned/dekanaty_wgs84", dekp);
-//        seedGeography("d:/prog/asd/res/gis/cut/dekanaty_wgs84_10percent", dekp);
-//        commitTransaction();
-//        beginTransaction();
-//        seedChurches("res/data/churches.csv");
-//        commitTransaction();
+        beginTransaction();
+        seedUsers();
+        commitTransaction();
+        beginTransaction();
+        MetropolieProcessor mp = new MetropolieProcessor();
+//        seedGeography("d:/prog/asd/res/gis/cleaned/metropolies_wgs84", mp);
+        seedGeography("d:/prog/asd/res/gis/cut/metropolies_10percent", mp);
+        commitTransaction();
+        beginTransaction();
+        DioceseProcessor dp = new DioceseProcessor();
+//        seedGeography("d:/prog/asd/res/gis/cleaned/diecezje_wgs84", dp);
+        seedGeography("d:/prog/asd/res/gis/cut/diecezje_wgs84_10percent", dp);
+        commitTransaction();
+        beginTransaction();
+        DekanatProcessor dekp = new DekanatProcessor();
+//        seedGeography("d:/prog/asd/res/gis/cleaned/dekanaty_wgs84", dekp);
+        seedGeography("d:/prog/asd/res/gis/cut/dekanaty_wgs84_10percent", dekp);
+        commitTransaction();
+        beginTransaction();
+        seedChurches("res/data/churches.csv");
+        commitTransaction();
         beginTransaction();
         seedMockContent();
         commitTransaction();
@@ -77,7 +73,7 @@ public class Disseminator
             MediaContent mc = new MediaContent(MediaContentType.Article, text, lead, title, (i > 5 && i < 13), authors, user);
             HibernateUtils.save(mc);
         }
-        authors= new ArrayList<>();
+        authors = new ArrayList<>();
         authors.add(storyUser1);
         authors.add(storyUser2);
         for (int i = 0; i < 20; i++) {
@@ -88,6 +84,15 @@ public class Disseminator
             MediaContent mc = new MediaContent(MediaContentType.Story, text, lead, title, (i > 5 && i < 13), authors, user);
             HibernateUtils.save(mc);
         }
+        String text = "[padder][/padder]Powstanie kombinatu metalurgicznego i miasta nowa Huta pod Krakowem zostało postanowione przez rząd PRL 17    maja 1947. Miasto miało wyrażać ducha myśli socjalistycznej - w planie widać wyraźne inspiracje    Magnitogorskiem - ówczesnym radzieckim wzorcem ośrodka przemysłowego. Symetryczne, osiowe założenie    kompozycyjne wypełnione zostało prostymi, klasycznymi budynkami, parkami i socjalistycznymi ośrodkami    kultury -  miejsca na kościół w planie  oczywiście  nie było.[image textsizeplus]/assets/images/Poland-1.png[/image]Abstrakcyjna idea stworzenia idealnego robotniczego miasta, szybko zderzyła się z tradycyjną polską    rzeczywistością. Przez pierwsze 10 lat przez Nową Hutę przewinęło się około 200 tysięcy ludzi - większość    przyjechała z przesiąkniętej obyczajem wsi. Brak kościoła był dojmujący - dla wielu zajmował przecież    centralne miejsce w życiu. Był on bowiem odwiecznym miejscem mszy, spowiedzi i innych zwyczajów    definiujących rytm życia. Niezbudowanie w Hucie kościoła miało wkrótce stać się problemem, którego skali nie    przewidział nikt.<br>[image mainfullwidth]/assets/images/Poland-1.png[/image]W 1957, w zawierusze związanej z końcem stalinizmu, miasto uzyskało od władz zgodę na budowę kościoła.    Natychmiast w miejscu planowanej budowy postawiono i wyświęcono krzyż. [excerpt]Milicja użyła broni palnej,\u0003aresztowano ok 500 osób,\u0003a skazano 87[/excerpt]Zaledwie dwa lata później  zgodę    cofnięto, pieniądze na budowę skonfiskowano a komitet budowy kościoła rozwiązano. Miarka przebrała się 26. kwietnia 1960 roku, gdy krakowski Komitet Miejski PZPR podjął decyzję o likwidacji krzyża.  Przerodziło się    to w protest, a następnie w regularne walki uliczne, podczas których zdemolowano siedzibę władz    administracyjnych dzielnicy, milicja użyła broni palnej, aresztowano ok 500 osób, a skazano 87. Krzyż    ostatecznie pozostał, ale zamiast kościoła zbudowano równie potrzebną szkołę - obrazek doskonale ilustrujący    stan zawieszenia broni pomiędzy państwem i Kościołem.[image textwidth]/assets/images/world4.png[/image]\n" +
+                "[quote]Wchodziłem na dach jednego z bloków mieszkalnych\u0003i patrzyłem oniemiały –[/quote]\n" +
+                "[quote second]ze wszystkich stron szli ludzie\u0003z łopatami, wiadrami, taczkami, również osoby starsze i dzieci kłamstwa\u0003i hipokryzję Kościoła[/quote]";
+        String lead = "Najbardziej wyrazistym przykładem Architektury Siódmego Dnia jest kościół Arka Pana w    Nowej Hucie. Jak w doskonałym scenariuszu filmowym, w historii powstania kościoła łączą się silne wątki:    czytelna walka o symbole, zaangażowanie najznakomitszych osobistości, krwawy przebieg konfliktu i jakość    architektoniczna wzniesionej w efekcie świątyni.";
+        String title = "Kamień z kosmosu";
+        boolean starred = true;
+        MediaContent goodArticle = new MediaContent(MediaContentType.Article, text, lead, title, starred, authors, user);
+        HibernateUtils.save(goodArticle);
+
     }
 
     private static void seedUsers()

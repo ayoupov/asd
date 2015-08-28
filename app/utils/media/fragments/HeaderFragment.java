@@ -73,7 +73,7 @@ public class HeaderFragment extends SimpleTagFragment
     }
 
     @FragmentDescription
-    private static class HeaderFragmentDescription extends ContentFragmentDescription
+    public static class HeaderFragmentDescription extends ContentFragmentDescription
     {
 
         private static List<Pair<String, String>> options = new ArrayList<>();

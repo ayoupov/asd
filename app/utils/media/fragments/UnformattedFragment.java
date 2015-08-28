@@ -68,7 +68,7 @@ public class UnformattedFragment extends ContentFragment
     }
 
     @FragmentDescription
-    private static class UnformattedFragmentDescription extends ContentFragmentDescription
+    public static class UnformattedFragmentDescription extends ContentFragmentDescription
     {
 
         private static List<Pair<String, String>> options = new ArrayList<>();

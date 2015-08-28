@@ -119,7 +119,7 @@ var resizeFunc = function () {
         top: menuOffsetTop + 'px',
         width: (wwidth - 2 * menuOffsetLeft) + "px"
     });
-    var margin = Math.max($articles.position().left, parseInt($('.media-container').css('margin-left')));
+    var margin = parseFloat($('.media-container').css('margin-left'));
     $(".social-links").css({
         'bottom': menuOffsetTop + 'px',
         'margin-left' : (margin + 10) + 'px'
