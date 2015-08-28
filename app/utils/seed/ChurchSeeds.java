@@ -84,6 +84,9 @@ public class ChurchSeeds
     {
         if ("".equals(s))
             return "";
+        int idx = s.indexOf("\"");
+        if (idx == -1)
+            return s;
         String res = s.substring(0, s.lastIndexOf("\""));
         return res.substring(1);
     }

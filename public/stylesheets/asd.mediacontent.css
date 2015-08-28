@@ -744,6 +744,14 @@ img.full-width {
     line-height: 1.6em;
 }
 
+.content-afterwords-consulted::before
+{
+    content: 'Konsultacje: ';
+    color: #d0b165;
+    font-size: 8pt;
+    text-transform: uppercase;
+}
+
 .content-grey {
     background-color: #f7f8f8;
 }

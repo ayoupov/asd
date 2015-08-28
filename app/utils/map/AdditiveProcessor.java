@@ -4,7 +4,10 @@ import com.google.code.geocoder.Geocoder;
 import com.google.code.geocoder.GeocoderRequestBuilder;
 import com.google.code.geocoder.model.*;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,8 +25,7 @@ public class AdditiveProcessor
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(args[0]), "UTF-8"));
         Map<KMLParser.Church, KMLParser.Coordinates> coords = new LinkedHashMap<KMLParser.Church, KMLParser.Coordinates>();
         String line;
-        while ((line = reader.readLine()) != null)
-        {
+        while ((line = reader.readLine()) != null) {
             // skip header
             String[] row = line.split("\\|");
             if ("ID".equals(row[0]))
@@ -40,23 +42,24 @@ public class AdditiveProcessor
 
         final Geocoder geocoder = new Geocoder();
 
-        for (Map.Entry<KMLParser.Church, KMLParser.Coordinates> entry : coords.entrySet())
-        {
+        for (Map.Entry<KMLParser.Church, KMLParser.Coordinates> entry : coords.entrySet()) {
             LatLng ll = new LatLng(entry.getValue().lat + "", entry.getValue().lng + "");
             GeocoderRequestBuilder grb = new GeocoderRequestBuilder().setLocation(ll).setLanguage("pl");
             GeocoderRequest greq = grb.getGeocoderRequest();
-            GeocodeResponse gresp = geocoder.geocode(greq);
-            if (GeocoderStatus.OK.equals(gresp.getStatus()))
-            {
-                List<GeocoderResult> results = gresp.getResults();
-                String address = results.get(0).getFormattedAddress();
-                addresses.put(entry.getKey(), address);
-                System.out.println("address = " + address);
-            }
-            else
-            {
+            try {
+                GeocodeResponse gresp = geocoder.geocode(greq);
+                if (GeocoderStatus.OK.equals(gresp.getStatus())) {
+                    List<GeocoderResult> results = gresp.getResults();
+                    String address = results.get(0).getFormattedAddress();
+                    addresses.put(entry.getKey(), address);
+                    System.out.println("address = " + address);
+                } else {
+                    addresses.put(entry.getKey(), "NOT_FOUND!");
+                    System.out.println("status = " + gresp.getStatus().value());
+                }
+            } catch (Exception e) {
                 addresses.put(entry.getKey(), "NOT_FOUND!");
-                System.out.println("status = " + gresp.getStatus().value());
+                System.out.println("http error: " + e.getMessage());
             }
             Thread.sleep(200l);
         }
