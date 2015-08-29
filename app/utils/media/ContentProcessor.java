@@ -1,5 +1,6 @@
 package utils.media;
 
+import org.apache.commons.lang3.StringUtils;
 import org.reflections.Reflections;
 import utils.media.fragments.UnformattedFragment;
 
@@ -20,8 +21,15 @@ public class ContentProcessor
     private static final LinkedHashSet<ContentFragment> registeredFragments = new LinkedHashSet<>();
     private static final LinkedHashSet<ContentFragmentDescription> registeredDescriptions = new LinkedHashSet<>();
 
-    private static final String FRAGMENT = "((\\[([\\w+\\s]+)\\])(.*?)(\\[\\/(\\w+)\\]))";
-    private static final Pattern FRAGMENT_REGEX = Pattern.compile(FRAGMENT);
+//    private static final String FRAGMENT = "((\\[([\\w+\\s]+)\\])(.*?)(\\[\\/(\\w+)\\]))";
+//    private static final String FRAGMENT = "((\\[(\\w+)((\\s+\\w+)*)\\])((.|\\n)*?)(\\[\\/\\3\\]))";
+//    private static final String FRAGMENT = "(\\[(\\w+)([\\s|\\w]*?)\\])((.|\\n)*?)\\[\\/\\2\\]";
+//    private static final Pattern FRAGMENT_REGEX = Pattern.compile(FRAGMENT);
+    private static final String FRAGMENT_PREFIX = "(\\[(";
+    private static final String FRAGMENT_POSTFIX = ")([\\s|\\w]*?)\\])((.|\\n)*?)\\[\\/\\2\\]";
+
+
+    private static Pattern FRAGMENT_REGEX;
 
     static {
         init();
@@ -32,18 +40,25 @@ public class ContentProcessor
         Reflections reflections = new Reflections("utils.media.fragments");
         Set<Class<?>> classes = reflections.getTypesAnnotatedWith(org.panaggelica.media.Fragment.class);
 
+        Set<String> tags = new HashSet<>();
         for (Class<?> clazz : classes) {
             Class cl = clazz;
             registeredFragmentClasses.add(cl);
             try {
                 ContentFragment fragment = (ContentFragment) cl.newInstance();
                 registeredFragments.add(fragment);
+                String tag = fragment.getTag();
+                if (tag != null && !"".equals(tag))
+                    tags.add(tag);
                 System.out.println("Registered fragment: " + clazz + " [" + fragment.getTag() + "]");
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("Failed to register: " + clazz);
             }
         }
+        String regex = FRAGMENT_PREFIX + StringUtils.join(tags, "|") + FRAGMENT_POSTFIX;
+        System.out.println("regex = " + regex);
+        FRAGMENT_REGEX = Pattern.compile(regex);
 
         Set<Class<?>> descClasses = reflections.getTypesAnnotatedWith(org.panaggelica.media.FragmentDescription.class);
 
@@ -66,6 +81,8 @@ public class ContentProcessor
 
     public static List<ContentFragment> parse(String text) throws ContentProcessorException
     {
+        text = text.replaceAll("\\r", "");
+        System.out.println("text = " + text);
         List<ContentFragment> fragments = new ArrayList<>();
         // 1. extract fragments && instantiate it
         // grasp all fragments and assume that all text not in fragments is unformatted (main content)
@@ -76,36 +93,45 @@ public class ContentProcessor
             String unformatted = text.substring(idx, matcher.start());
             if (!"".equals(unformatted)) {
                 unformatted = unformatted.trim();
-                if (!"".equals(unformatted))
+                if (!"".equals(unformatted)) {
                     fragments.add(new UnformattedFragment(unformatted));
+                    System.out.println("unformatted (" + idx + ")= " + unformatted);
+                }
             }
-            System.out.println("unformatted (" + idx + ")= " + unformatted);
             idx = matcher.end();
 //            System.out.println("idx = " + idx);
             String found = matcher.group();
             // instantiate fragment based on found
             System.out.println("found = " + found);
-            String[] tagWithOptions = matcher.group(3).split(" ");
-            String tag = tagWithOptions[0];
-            String[] options = Arrays.copyOfRange(tagWithOptions, 1, tagWithOptions.length);
+//            String[] tagWithOptions = matcher.group(3).split(" ");
+//            String tag = tagWithOptions[0];
+//            String[] options = Arrays.copyOfRange(tagWithOptions, 1, tagWithOptions.length);
+            String tag = matcher.group(2);
+            String[] options = matcher.group(3).trim().split("\\s");
             String content = matcher.group(4);
-            String closingTag = matcher.group(6);
-            if (!tag.equalsIgnoreCase(closingTag))
-                throw new ContentProcessorException("tags mismatch: [" + tag + "] vs [/" + closingTag + "]");
+//            String closingTag = matcher.group(7);
+//            if (!tag.equalsIgnoreCase(closingTag))
+//                throw new ContentProcessorException("tags mismatch: [" + tag + "] vs [/" + closingTag + "]");
             ContentFragment cf = null;
-            for (ContentFragment frag : registeredFragments)
-            {
-                if (frag.accepts(tag))
-                {
+            for (ContentFragment frag : registeredFragments) {
+                if (frag.accepts(tag)) {
                     cf = frag.newFragment(options, content);
                 }
             }
             if (cf == null)
-                throw new ContentProcessorException("Unknown tag [" + tag  + "]");
+                throw new ContentProcessorException("Unknown tag [" + tag + "]");
             fragments.add(cf);
         }
         if (fragments.size() == 0)
             fragments.add(new UnformattedFragment(text));
+        else {
+            int lastIndex = text.lastIndexOf("]") + 1;
+            if (lastIndex < text.length()) {
+                String possible = text.substring(lastIndex).trim();
+                if (!"".equals(possible) && !"\n".equals(possible))
+                    fragments.add(new UnformattedFragment(possible));
+            }
+        }
         return fragments;
     }
 }

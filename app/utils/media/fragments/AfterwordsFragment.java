@@ -17,36 +17,38 @@ import java.util.List;
  * Time: 17:57
  */
 @Fragment
-public class AfterwordsFragment extends SimpleTagFragment
+public class AfterwordsFragment extends ContentFragment
 {
     private static final String commonPrefix = "<div class='full-width content-grey'><div class='content-main'>";
+    private static final String afterwordsPrefix = "<div class='content-afterwords content-afterwords-style'>";
     private static final String simplePrefix = commonPrefix +
-            "<p class='content-afterwords'>";
-    private static final String consultedPrefix = commonPrefix +
-            "<p class='content-afterwords content-afterwords-consulted'>";
-    private static final String postfix = "</p></div></div>";
+            afterwordsPrefix;
+    private static final String postfix = "</div></div></div>";
+
+    private static final String prependPrefix = commonPrefix +
+            "<div class='content-afterwords-wrapper'><span class='content-afterwords-content'>";
+    private static final String prependSuffix = "</span><div class='content-afterwords-style'>";
+    private static final String prependPostfix = "</div></div>";
 
     private static final String TAG = "afterwords";
 
-    private static final String CONSULTED = "consulted";
+    private static final String PREPEND = "prepend";
+    private boolean prepended = false;
 
-    private String content, prefix;
+    private String content, prependContent = null, prefix;
 
     private static final ExcerptFragmentDescription description = new ExcerptFragmentDescription();
 
-    @Override
     protected String getContent()
     {
         return content;
     }
 
-    @Override
     protected String getPrefix()
     {
         return prefix;
     }
 
-    @Override
     protected String getPostfix()
     {
         return postfix;
@@ -54,14 +56,29 @@ public class AfterwordsFragment extends SimpleTagFragment
 
     public AfterwordsFragment(String[] options, String content)
     {
-        if (Arrays.asList(options).contains(CONSULTED))
-            prefix = consultedPrefix;
-        else prefix = simplePrefix;
+        prepended = (Arrays.asList(options).contains(PREPEND));
         this.content = content;
+        if (prepended) {
+            int idx = content.indexOf(":");
+            if (idx >= 0) {
+                this.prependContent = content.substring(0, idx + 1);
+                this.content = content.substring(idx + 1);
+            }
+            else
+                prependContent = "";
+        }
     }
 
     public AfterwordsFragment()
     {
+    }
+
+    @Override
+    public String render()
+    {
+        if (prepended)
+            return prependPrefix + prependContent + prependSuffix + content + prependPostfix;
+        return simplePrefix + content + postfix;
     }
 
     @Override
@@ -77,6 +94,12 @@ public class AfterwordsFragment extends SimpleTagFragment
     }
 
     @Override
+    public boolean accepts(String tag)
+    {
+        return TAG.equalsIgnoreCase(tag);
+    }
+
+    @Override
     public ContentFragment newFragment(String[] options, String content)
     {
         return new AfterwordsFragment(options, content);
@@ -89,7 +112,7 @@ public class AfterwordsFragment extends SimpleTagFragment
         private static List<Pair<String, String>> options = new ArrayList<>();
 
         static {
-            options.add(Pair.of("consulted", "prepends text with Konsultacje:"));
+            options.add(Pair.of("prepend", "prepends main text with text before ':'"));
         }
 
         @Override

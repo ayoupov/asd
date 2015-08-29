@@ -539,11 +539,11 @@ td.passport-data-filler {
     margin-right: auto;
 }
 
-.content-header-center
-{
+.content-header-center {
     position: relative;
-    top:25%;
+    top: 25%;
 }
+
 .content-cover-image {
     height: 500px;
     max-height: 500px;
@@ -566,14 +566,14 @@ td.passport-data-filler {
 }
 
 /*.content-header.menu {*/
-    /*background-color : #ececec !important;*/
-    /*border: none !important;*/
-    /*height: 34px !important;*/
-    /*margin-top: 0 !important;*/
+/*background-color : #ececec !important;*/
+/*border: none !important;*/
+/*height: 34px !important;*/
+/*margin-top: 0 !important;*/
 /*}*/
 
 .content-header-wrapper {
-    background-color : #ececec !important;
+    background-color: #ececec !important;
     border: none !important;
     height: 34px !important;
     margin-top: 0 !important;
@@ -588,8 +588,7 @@ td.passport-data-filler {
     float: left;
 }
 
-.content-header-authors-wrapper
-{
+.content-header-authors-wrapper {
     margin-left: 115px;
 }
 
@@ -598,12 +597,12 @@ td.passport-data-filler {
     font-size: 8pt;
     text-transform: uppercase !important;
     margin-left: 25px;
-    float:left;
+    float: left;
 }
 
-.content-header-social-wrapper div{
+.content-header-social-wrapper div {
     float: right;
-    margin-right:20px;
+    margin-right: 20px;
 }
 
 .content-lead-wrapper {
@@ -613,6 +612,7 @@ td.passport-data-filler {
 }
 
 .content-lead {
+    margin-top: 3em;
     color: #d0b165;
     font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
     font-weight: bold;
@@ -636,7 +636,7 @@ td.passport-data-filler {
 }
 
 .content-main {
-    font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
+    font-family: "Helvetica", "Helvetica Neue Light", Arial, sans-serif;
     width: 980px;
     margin-left: auto;
     margin-right: auto;
@@ -651,8 +651,10 @@ div.content-padder {
 }
 
 .content-main h2, .content-main h1 {
-    /*font-family: "Helvetica", "Helvetica Neue Light", sans-serif;*/
+    font-family: Arial, "Helvetica", "Helvetica Neue Light", sans-serif !important;
     margin-left: 140px;
+    margin-bottom: 50px;
+    margin-top: 50px;
 }
 
 div.content-excerpt {
@@ -667,13 +669,21 @@ div.content-excerpt {
     line-height: 1.1em;
 }
 
-.content-quote
+.content-quote-symbol:not(.content-quote-second) {
+    margin-top: 50px;
+}
+
+.content-quote:not(.content-quote-second),
 {
+    margin-top: 50px;
+}
+
+.content-quote {
     width: 460px;
     margin-left: 240px;
     margin-right: 260px;
-    font-family: Georgia, serif !important;
-    font-size: 26pt !important;
+    font-family: Georgia, serif;
+    font-size: 26pt;
     font-style: italic;
     color: #a0a0a0;
     text-align: left;
@@ -681,16 +691,16 @@ div.content-excerpt {
     /*margin-bottom: 1em;*/
 }
 
-.content-quote-second
-{
+.content-quote-second {
     font-style: normal;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 24pt;
+    margin-bottom: 50px;
 }
 
-div.content-quote-wrapper
-{
+div.content-quote-wrapper {
     width: 100%;
-    margin-top: 1em;
-    margin-bottom: 1em;
+    /*margin-top: 50px;*/
 }
 
 div.content-quote-symbol {
@@ -716,7 +726,17 @@ div.content-quote-symbol {
 }
 
 div.full-width {
+    margin-bottom: 50px;
+    margin-top: 50px;
     width: 100%;
+}
+
+.content-image-caption {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 8pt;
+    color: #a8a8a8;
+    margin-top: 4px;
 }
 
 img.full-width {
@@ -740,17 +760,35 @@ img.full-width {
 .content-afterwords {
     padding-top: 20px !important;
     padding-bottom: 20px !important;
-    color: #a8a8a8 !important;
-    line-height: 1.6em;
+    width: 580px;
+    margin-left: 140px;
+    margin-right: 260px;
 }
 
-.content-afterwords-consulted::before
-{
-    content: 'Konsultacje: ';
-    color: #d0b165;
-    font-size: 8pt;
-    text-transform: uppercase;
+.content-afterwords-style {
+    color: #a8a8a8 !important;
+    line-height: 1.6em;
+    /*float: left;*/
 }
+
+.content-afterwords-content {
+    line-height: 1.6em;
+    color: #d0b165 ;
+    font-size: 8pt ;
+    text-transform: uppercase;
+    float: left;
+    margin-right: 4px;
+    margin-top: 4px;
+}
+
+div.content-afterwords-wrapper {
+    padding-top: 20px !important;
+    padding-bottom: 20px !important;
+    width: 580px;
+    margin-left: 140px;
+    margin-right: 260px;
+}
+
 
 .content-grey {
     background-color: #f7f8f8;
