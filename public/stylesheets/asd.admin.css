@@ -29,3 +29,8 @@ body
 {
     height: auto;
 }
+
+.fullwidth
+{
+    width: 100%;
+}

@@ -14,7 +14,9 @@ import org.hibernate.Session;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+import static utils.DataUtils.safeLong;
 import static utils.HibernateUtils.getSession;
 
 /**
@@ -243,16 +245,30 @@ public class ContentManager
         return res.intValue();
     }
 
-    public static List<User> parseUserList(String userList)
-    {
-        Session session = getSession();
-        List<User> users = session.createQuery("from Users u where u.id in (:list)").setParameter("list", userList).list();
-        return users;
-    }
-
     public static List<User> parseUserList(String[] strings)
     {
-        String idList = StringUtils.join(strings, ",");
-        return parseUserList(idList);
+        List<User> res = new ArrayList<>();
+        for (String s : strings)
+        {
+            long id = safeLong(s, -1);
+            if (id > -1)
+                res.add((User) getSession().get(User.class, id));
+            else
+                System.out.println("Warning! Bad authors detected!");
+        }
+        return res;
     }
+
+//    public static List<User> parseUserList(Set<Long> userList )
+//    {
+//        Session session = getSession();
+//        List<User> users = session.createQuery("from Users u where u.id in (:list)").setParameter("list", userList).list();
+//        return users;
+//    }
+//
+//    public static List<User> parseUserList(String[] strings)
+//    {
+//        String idList = StringUtils.join(strings, ",");
+//        return parseUserList(idList);
+//    }
 }

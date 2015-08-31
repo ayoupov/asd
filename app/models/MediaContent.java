@@ -6,12 +6,11 @@ import models.user.UserRole;
 import org.hibernate.annotations.Type;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
-import utils.serialize.OnlyDateConverter;
+import utils.serialize.DateTimeConverter;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -50,7 +49,7 @@ public class MediaContent
     public List<User> authors;
 
     @Column(name = "approved_dt")
-    @JsonSerialize(using = OnlyDateConverter.class)
+    @JsonSerialize(using = DateTimeConverter.class)
     public Date approvedDT;
 
     @OneToOne

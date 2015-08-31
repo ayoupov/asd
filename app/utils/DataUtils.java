@@ -1,6 +1,6 @@
 package utils;
 
-import utils.serialize.OnlyDateConverter;
+import utils.serialize.DateTimeConverter;
 
 import java.util.Date;
 
@@ -41,11 +41,11 @@ public class DataUtils
 
     public static Boolean safeBool(String req)
     {
-        Boolean res = null;
-        if ("1".equals(req) || "true".equalsIgnoreCase(req))
+        Boolean res = false; // as serialization doesn't return parameter if not checked
+        if ("1".equals(req) || "true".equalsIgnoreCase(req) || "on".equalsIgnoreCase(req))
             res = true;
-        if ("0".equals(req) || "false".equalsIgnoreCase(req))
-            res = false;
+//        if ("0".equals(req) || "false".equalsIgnoreCase(req) || "off".equalsIgnoreCase(req))
+//            res = false;
         return res;
     }
 
@@ -58,7 +58,7 @@ public class DataUtils
     {
         Date date = null;
         try {
-            date = OnlyDateConverter.sdf.parse(dt);
+            date = DateTimeConverter.sdf.parse(dt);
         } catch (Exception e) {
         }
         return date;

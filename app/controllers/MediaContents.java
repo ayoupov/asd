@@ -6,6 +6,7 @@ import models.MediaContent;
 import models.MediaContentType;
 import models.internal.ContentManager;
 import models.internal.RequestException;
+import models.internal.UserManager;
 import models.user.User;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -14,9 +15,7 @@ import play.mvc.Result;
 import utils.DataUtils;
 import views.html.mediacontent;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static utils.DataUtils.safeBool;
 import static utils.DataUtils.safeLong;
@@ -122,15 +121,17 @@ public class MediaContents extends Controller
         String jtext = (map.get("text") != null) ? map.get("text")[0] : null,
                 jlead = (map.get("lead") != null) ? map.get("lead")[0] : null,
                 jtitle = (map.get("title") != null) ? map.get("title")[0] : null;
-        Boolean jstarred = (map.get("starred") != null) ? safeBool(map.get("starred")) : null;
+        Boolean jstarred = (map.get("starred") != null) ? safeBool(map.get("starred")) : false;
         Date jpublishDate = (map.get("approvedDT") != null) ? DataUtils.dateFromReqString(map.get("approvedDT")) : null;
         List<User> jauthors = (map.get("authors") != null) ? ContentManager.parseUserList(map.get("authors")) : null;
-//        System.out.println("jtitle = " + jtitle);
-//        System.out.println("jlead = " + jlead);
-//        System.out.println("jtext = " + jtext);
-//        System.out.println("jstarred = " + jstarred);
-//        System.out.println("jpublishDate = " + jpublishDate);
-//        System.out.println("jauthors = " + jauthors);
+        if (jauthors == null)
+            jauthors = (map.get("authors[]") != null) ? ContentManager.parseUserList(map.get("authors[]")) : null;
+        System.out.println("jtitle = " + jtitle);
+        System.out.println("jlead = " + jlead);
+        System.out.println("jtext = " + jtext);
+        System.out.println("jstarred = " + jstarred);
+        System.out.println("jpublishDate = " + jpublishDate);
+        System.out.println("jauthors = " + jauthors);
         if (jtext != null)
             c.setText(jtext);
         if (jlead != null)
@@ -152,7 +153,22 @@ public class MediaContents extends Controller
         result.put("success", ctype);
         result.put("id", c.getId());
         return ok(result);
+    }
 
-
+    public static Result listAuthors()
+    {
+        beginTransaction();
+        String q = request().getQueryString("q");
+        List<Object[]> users = UserManager.getUserNames(q);
+        List<Map<String, Object>> out = new ArrayList<>();
+        for (Object[] arr : users)
+        {
+            Map<String, Object> map = new HashMap<>();
+            map.put("value", arr[0]);
+            map.put("text", arr[1]);
+            out.add(map);
+        }
+        commitTransaction();
+        return ok(Json.toJson(out));
     }
 }

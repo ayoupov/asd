@@ -20,6 +20,7 @@ GET         /articles/:ids                         controllers.MediaContents.byT
 GET         /stories/:ids                          controllers.MediaContents.byTypeAndIds(ctype: String = "story", ids: String)
 
 GET         /content/summary                       controllers.Application.summary
+GET         /content/authors/                      controllers.MediaContents.listAuthors
 GET         /content/churches/revisions/:id        controllers.Churches.revsById(id: String)
 
 

@@ -24,20 +24,34 @@ function changeRow(data) {
             var $articles = $("table", $("#articles"));
             var id = data.id;
             var $row = $("#article_" + id);
-            if ($row.length == 0)
+            var isNew = $row.length == 0;
+            if (isNew)
                 $articles.append($row = $("<tr>").attr('id', 'article_' + id));
             $row.empty();
             $row.append($("<td/>").html($("#title", $articleForm).val()));
-            $row.append($("<td/>").html($("#authors", $articleForm).val()));
+            var auths = [];
+            $("#authors option[selected='selected']", $articleForm).each(function (a, item) {
+                auths.push($(item).html());
+            });
+            $row.append($("<td/>").html(auths.join(", ")));
             $row.append($("<td/>").addClass('noedit')
                     .html(
-                    $("<input type='date' value='" +
+                    $("<input type='datetime' value='" +
                         $("#approvedDT", $articleForm).val() + "' />")
                 )
             );
             $row.append($("<td/>").addClass('noedit').html(
-                    $("#starred", $articleForm).val())
+                    $("<input type='checkbox' " +
+                        ($("#starred:checked", $articleForm).length > 0 ? "checked" : "") +
+                        "/>"))
             );
+            $("td:not(.noedit)", $row).on('click', articleEditClick);
+            if (isNew)
+                $row.hover(function () {
+                    $(this).toggleClass('active');
+                }, function () {
+                    $(this).toggleClass('active');
+                });
         }
     }
 

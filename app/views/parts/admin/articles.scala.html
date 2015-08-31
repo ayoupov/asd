@@ -1,5 +1,5 @@
 @import models.internal.search.filters.ArticleFilter
-@import utils.serialize.OnlyDateConverter
+@import utils.serialize.DateTimeConverter
 @(articles: List[MediaContent], filter: ArticleFilter)
 
 <div id="articles" class="admin-page">
@@ -19,7 +19,7 @@
             <tr id="article_@a.getId">
                 <td>@a.getTitle</td>
                 <td>@a.getAuthors.map(x => x.getName).mkString(", ")</td>
-                <td class="noedit"><input type="date" value="@OnlyDateConverter.sdf.format(a.getApprovedDT)"></td>
+                <td class="noedit"><input type="datetime" value="@DateTimeConverter.sdf.format(a.getApprovedDT)"></td>
                 <td class="noedit"><input type="checkbox" @{if (a.getStarred) "checked"}></td>
             </tr>
         }

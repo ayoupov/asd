@@ -15,9 +15,9 @@ import java.util.Date;
  * Date: 23.08.2015
  * Time: 22:03
  */
-public class OnlyDateConverter extends JsonSerializer<Date>
+public class DateTimeConverter extends JsonSerializer<Date>
 {
-    public static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    public static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public void serialize(Date date, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException

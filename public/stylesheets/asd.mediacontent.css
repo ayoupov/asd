@@ -726,8 +726,8 @@ div.content-quote-symbol {
 }
 
 div.full-width {
-    margin-bottom: 50px;
-    margin-top: 50px;
+    /*margin-bottom: 50px;*/
+    /*margin-top: 50px;*/
     width: 100%;
 }
 
@@ -743,6 +743,11 @@ img.full-width {
     width: 100%;
     max-width: 1800px;
 }
+
+/*img.ui.image {*/
+    /*margin-top: 50px;*/
+    /*margin-bottom: 50px;*/
+/*}*/
 
 .fit-main-text {
     width: 580px;
@@ -789,7 +794,13 @@ div.content-afterwords-wrapper {
     margin-right: 260px;
 }
 
-
 .content-grey {
     background-color: #f7f8f8;
+}
+
+.content-main ol
+{
+    margin-left: 140px;
+    width: 580px;
+    font-style: italic;
 }

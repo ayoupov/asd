@@ -26,6 +26,14 @@ function datenow()
 {
     var d = new Date();
     return d.getFullYear() +
-        '-' + (d.getMonth() + 1 <10 ? '0' : '') + (d.getMonth() + 1) +
-        '-' + (d.getDay() <10 ? '0' : '') + d.getDay();
+        '-' + prepad(d.getUTCMonth() + 1) + (d.getUTCMonth() + 1) +
+        '-' + prepad(d.getUTCDate()) + d.getUTCDate() + ' ' +
+        prepad(d.getHours()) + d.getHours() + ':' +
+        prepad(d.getMinutes()) + d.getMinutes() + ':' +
+        prepad(d.getSeconds()) + d.getSeconds();
+}
+
+function prepad(val)
+{
+    return (val <10 ? '0' : '');
 }

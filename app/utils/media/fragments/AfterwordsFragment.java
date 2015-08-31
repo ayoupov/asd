@@ -28,7 +28,7 @@ public class AfterwordsFragment extends ContentFragment
     private static final String prependPrefix = commonPrefix +
             "<div class='content-afterwords-wrapper'><span class='content-afterwords-content'>";
     private static final String prependSuffix = "</span><div class='content-afterwords-style'>";
-    private static final String prependPostfix = "</div></div>";
+    private static final String prependPostfix = "</div></div></div></div>";
 
     private static final String TAG = "afterwords";
 
