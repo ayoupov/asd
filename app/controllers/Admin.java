@@ -94,6 +94,9 @@ public class Admin extends Controller
             userFilter = new UserFilter(request());
         else
             userFilter.apply(request(), "users");
+        long totalUsers = ContentManager.getTotalUsers();
+        userFilter.setTotalResults(totalUsers);
+
         SessionCache.put(session(), "userFilter", userFilter);
 
         ArticleFilter articleFilter = (ArticleFilter) SessionCache.get(session(), "articleFilter");
@@ -101,6 +104,8 @@ public class Admin extends Controller
             articleFilter = new ArticleFilter(request());
         else
             articleFilter.apply(request(), "articles");
+        long totalArticles = ContentManager.getTotalMediaContent(MediaContentType.Article);
+        articleFilter.setTotalResults(totalArticles);
         SessionCache.put(session(), "articleFilter", articleFilter);
 
         StoryFilter storyFilter = (StoryFilter) SessionCache.get(session(), "storyFilter");
@@ -108,6 +113,8 @@ public class Admin extends Controller
             storyFilter = new StoryFilter(request());
         else
             storyFilter.apply(request(), "stories");
+        long totalStories = ContentManager.getTotalMediaContent(MediaContentType.Story);
+        storyFilter.setTotalResults(totalStories);
         SessionCache.put(session(), "storyFilter", storyFilter);
 
         ChurchFilter churchFilter = (ChurchFilter) SessionCache.get(session(), "churchFilter");
@@ -115,6 +122,8 @@ public class Admin extends Controller
             churchFilter = new ChurchFilter(request());
         else
             churchFilter.apply(request(), "churches");
+        long totalChurches = ContentManager.getTotalChurches(churchFilter);
+        churchFilter.setTotalResults(totalChurches);
         SessionCache.put(session(), "churchFilter", churchFilter);
 
         List<User> users = ContentManager.getUsers(userFilter);

@@ -15,6 +15,8 @@ public class QueryFilter
     protected String nameFilter = "";
 
     protected int maxResults = 20, page = 0;
+    protected long totalResults = 0;
+    private long totalPages = 0;
 
     public QueryFilter(Http.Request request)
     {
@@ -76,5 +78,26 @@ public class QueryFilter
         String likeString = request.getQueryString(prefix + "like");
         if (likeString != null)
             nameFilter = likeString;
+    }
+
+    public void setTotalResults(long totalResults)
+    {
+        this.totalResults = totalResults;
+        this.totalPages = totalResults / maxResults;
+    }
+
+    public long getTotalResults()
+    {
+        return totalResults;
+    }
+
+    public long getTotalPages()
+    {
+        return totalPages;
+    }
+
+    public void setTotalPages(long totalPages)
+    {
+        this.totalPages = totalPages;
     }
 }

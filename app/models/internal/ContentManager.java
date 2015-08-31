@@ -7,14 +7,12 @@ import models.internal.search.filters.ChurchFilter;
 import models.internal.search.filters.QueryFilter;
 import models.internal.search.filters.UserFilter;
 import models.user.User;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static utils.DataUtils.safeLong;
 import static utils.HibernateUtils.getSession;
@@ -140,7 +138,7 @@ public class ContentManager
                 .setParameter("fname", "%" + filter.getNameFilter() + "%")
                 .setMaxResults(filter.getMaxResults())
                 .setFirstResult(filter.getPage() * filter.getMaxResults());
-        System.out.println("query = " + query + " : " + filter);
+//        System.out.println("query = " + query + " : " + filter);
         List<Church> churches = query.list();
         return churches;
     }
@@ -248,8 +246,7 @@ public class ContentManager
     public static List<User> parseUserList(String[] strings)
     {
         List<User> res = new ArrayList<>();
-        for (String s : strings)
-        {
+        for (String s : strings) {
             long id = safeLong(s, -1);
             if (id > -1)
                 res.add((User) getSession().get(User.class, id));
@@ -257,6 +254,49 @@ public class ContentManager
                 System.out.println("Warning! Bad authors detected!");
         }
         return res;
+    }
+
+    public static long getTotalChurches(ChurchFilter filter)
+    {
+        String nameFilter = filter.getNameFilter();
+        if (nameFilter != null && !"".equals(nameFilter))
+            return (long) getSession().createQuery(
+                    "select distinct count(c1) " +
+                            "from Church c1, Church c2 " +
+                            "where " +
+                            "c1.extID = c2.extID and " +
+                            "c1.version >= c2.version and " +
+                            "c1.name like :fname and " +
+                            "c1.approvedDT is not null " +
+                            "order by c1.version desc, c1.extID"
+            ).setParameter("fname", "%" + filter.getNameFilter() + "%")
+                    .uniqueResult();
+        else
+            return (long) getSession().createQuery(
+                    "select distinct count(c1) " +
+                            "from Church c1, Church c2 " +
+                            "where " +
+                            "c1.extID = c2.extID and " +
+                            "c1.version >= c2.version and " +
+                            "c1.approvedDT is not null " +
+                            "order by c1.version desc, c1.extID"
+            ).setCacheable(true).uniqueResult();
+    }
+
+    public static long getTotalUsers()
+    {
+        return (long) getSession().createQuery("select count(*) from Users u").setCacheable(true).uniqueResult();
+    }
+
+    public static long getTotalMediaContent(MediaContentType mct)
+    {
+        return (long) getSession().createQuery(
+                "select count(*)" +
+                        "from MediaContent mc where " +
+                        "mc.contentType = :mct ")
+                .setParameter("mct", mct)
+                .setCacheable(true)
+                .uniqueResult();
     }
 
 //    public static List<User> parseUserList(Set<Long> userList )

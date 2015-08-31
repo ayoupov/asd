@@ -1,0 +1,32 @@
+@import models.internal.search.filters.QueryFilter
+@import scala.collection.mutable
+@(filter: QueryFilter, entity: String)
+@pageSet = @{
+    if (filter.getTotalPages <= 5)
+    1l to filter.getTotalPages + 1
+    else
+    {
+        val curpage = filter.getPage
+        val pageSet = mutable.LinkedHashSet(1l)
+        if (curpage > 0)
+            pageSet += curpage
+        pageSet += curpage + 1
+        if (curpage < filter.getTotalPages + 1)
+            pageSet += curpage + 2
+        pageSet += filter.getTotalPages + 1
+        pageSet
+    }
+}
+@if(filter.getTotalPages > 0) {
+    <div class="ui right floated pagination menu">
+        <a @if(filter.getPage > 0){href="@routes.Admin.index()?@(entity + "_page")=@(filter.getPage-1)#@entity"} class="icon item">
+            <i class="left chevron icon"></i>
+        </a>
+        @for(page <- pageSet){
+            <a @if(page != filter.getPage + 1){href="@routes.Admin.index()?@(entity + "_page")=@(page-1)#@entity"} class="item">@page</a>
+        }
+        <a @if(filter.getPage < filter.getTotalPages) {href="@routes.Admin.index()?@(entity + "_page")=@(filter.getPage + 1)#@entity"} class="icon item">
+            <i class="right chevron icon"></i>
+        </a>
+    </div>
+}
