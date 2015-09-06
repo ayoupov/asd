@@ -5,6 +5,7 @@ import org.panaggelica.media.Fragment;
 import org.panaggelica.media.FragmentDescription;
 import utils.media.ContentFragment;
 import utils.media.ContentFragmentDescription;
+import utils.media.ContentProcessor;
 
 import java.util.ArrayList;
 import java.util.List;

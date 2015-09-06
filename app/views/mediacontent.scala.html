@@ -13,7 +13,7 @@
         @parts.likesInit()
         <div class="wrapper">
             @staticmenu()
-            <div class="content-main">
+            <div class="content-main-wrapper">
             @sociallinks()
             </div>
             <div class="content-cover-image">
@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div class="content-header-wrapper">
-                <div class="content-main content-header-center">
+                <div class="content-main-wrapper content-header-center">
                     <div class="content-header-date">@RenderUtils.contentDateToString(content.approvedDT)</div>
                     <div class="content-header-authors-wrapper">
                     @for(author <- content.authors) {
@@ -39,7 +39,7 @@
                 <div class='content-lead-wrapper'><div class='content-lead'>
                 @content.lead</div></div>
             }
-            @parts.media.processed(content.text)
+            @parts.media.processed2(content.text)
         </div>
     </body>
 </html>

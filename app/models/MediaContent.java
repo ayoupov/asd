@@ -11,6 +11,7 @@ import utils.serialize.DateTimeConverter;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -37,6 +38,12 @@ public class MediaContent
     public String title;
     @Field
     public Boolean starred;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    public Image coverImage;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    public Set<Image> images;
 
     @Column(name = "added_dt")
     public Date addedDT;

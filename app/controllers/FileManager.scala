@@ -1,6 +1,7 @@
 package controllers
 
 import java.io.File
+import java.nio.file.attribute.PosixFilePermissions
 
 import play.api.mvc.{Action, Controller}
 import utils.ServerProperties
@@ -23,7 +24,9 @@ object FileManager extends Controller {
           val filename = picture.filename
           val contentType = picture.contentType
           val outFile: File = new File(s"/$where/$filename")
-          picture.ref.moveTo(outFile)
+          picture.ref.moveTo(outFile, replace = true)
+          val setReadableSuccess = outFile.setReadable(true,false)
+          println(s"uploaded to $outFile with setReadable success [$setReadableSuccess]")
           Thumber.rethumb(outFile)
       }
       Redirect(routes.Admin.index()).flashing(

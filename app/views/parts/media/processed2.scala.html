@@ -1,0 +1,7 @@
+@import utils.media.bbcode.BBCodeParser
+@(text: String)
+<div class="content-main-wrapper">
+    <div class="content-main">
+        @Html(BBCodeParser.parse(text))
+    </div>
+</div>

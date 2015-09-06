@@ -1,5 +1,7 @@
 package utils.seed.geo;
 
+import utils.ServerProperties;
+
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +18,7 @@ public class StaticRegionalDataProvider
     private static Map<String, Long> metropolias = new HashMap<>();
     private static Map<String, String> diecezje = new HashMap<>();
     private static Map<String, Long> dmConn = new HashMap<>();
-    private static final String path = "res/data/diecezje-skroty.csv";
+    private static final String path = ServerProperties.getValue("asd.seed.data.folder") + "diecezje-skroty.csv";
 
     static
     {

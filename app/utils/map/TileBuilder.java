@@ -37,6 +37,7 @@ public class TileBuilder
     public static final String TILES_CONFIG_NSWE_EXTENT = TILES_CONFIG_PREF + "nswe.extent";
     private static HashMap<String, Class<? extends Geometrified>> classes = new HashMap<>();
     private static HashMap<String, Integer> zooms = new HashMap<>();
+    private static String dataDir = ServerProperties.getValue("asd.seed.data.folder");
 
     public static void buildTiles(String whereTo) throws ClassNotFoundException
     {
@@ -213,7 +214,7 @@ public class TileBuilder
 
     public static void main(String[] args) throws ClassNotFoundException
     {
-        buildTiles("d:/prog/asd/app/assets/tiles");
+        buildTiles(dataDir + "/assets/tiles");
     }
 
 }

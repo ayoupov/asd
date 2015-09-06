@@ -20,4 +20,6 @@ public abstract class ContentFragment
 
     public abstract ContentFragment newFragment(String[] options, String content);
 
+//    public abstract boolean isInline();
+
 }

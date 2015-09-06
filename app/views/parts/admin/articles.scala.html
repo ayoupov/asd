@@ -8,8 +8,9 @@
             <tr>
                 <th>Title</th>
                 <th>Authors</th>
-                <th>Publish on</th>
-                <th>Starred</th>
+                <th>Publish</th>
+                <th>Star</th>
+                <th>Preview</th>
             </tr>
         </thead>
         <tr id="article_0">
@@ -21,6 +22,7 @@
                 <td>@a.getAuthors.map(x => x.getName).mkString(", ")</td>
                 <td class="noedit"><input type="datetime" value="@DateTimeConverter.sdf.format(a.getApprovedDT)"></td>
                 <td class="noedit"><input type="checkbox" @{if (a.getStarred) "checked"}></td>
+                <td class="noedit"><a href="@routes.MediaContents.byTypeAndId("article", a.getId, "html")" target="_blank">→</a></td>
             </tr>
         }
         <tfoot>

@@ -14,11 +14,13 @@ import models.user.User;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.twirl.api.Html;
+import utils.ServerProperties;
 import utils.map.AdditiveProcessor;
 import utils.map.BadIdsSieve;
 import utils.map.Processor;
 import utils.map.Snapshoter;
 import utils.media.TestContentParse;
+import utils.media.bbcode.BBCodeTest;
 import views.html.admin;
 
 import java.io.IOException;
@@ -37,6 +39,8 @@ import static utils.HibernateUtils.commitTransaction;
  */
 public class Admin extends Controller
 {
+    private static final String dataDir = ServerProperties.getValue("asd.seed.data.folder");
+    private static final String snapshotPath = ServerProperties.getValue("asd.snapshoter.path");
 
     public static Result reindex() throws InterruptedException
     {
@@ -52,25 +56,25 @@ public class Admin extends Controller
 
     public static Result parse() throws IOException, InterruptedException
     {
-        Processor.main(new String[]{"d:/prog/asd/res/doc.kml"});
+        Processor.main(new String[]{dataDir + "doc.kml"});
         return ok("parsed");
     }
 
     public static Result snapshotify() throws IOException, InterruptedException
     {
-        Snapshoter.snap("d:/prog/asd/res/doc.kml", "C:\\Users\\ayoupov\\Google Диск\\snapshots");
+        Snapshoter.snap(dataDir + "doc.kml", snapshotPath);
         return ok("snapshots in progress");
     }
 
     public static Result snapshotifySome() throws IOException, InterruptedException
     {
-        Snapshoter.snapSome("d:/prog/asd/res/doc.kml", "C:\\Users\\ayoupov\\Google Диск\\snapshots", "d:/prog/asd/res/data/churches_snapshot_reexport.txt");
+        Snapshoter.snapSome(dataDir + "doc.kml", snapshotPath, dataDir + "churches_snapshot_reexport.txt");
         return ok("some snapshots are in progress");
     }
 
     public static Result parseAdd() throws IOException, InterruptedException
     {
-        AdditiveProcessor.main(new String[]{"d:/prog/asd/res/data/churches.csv"});
+        AdditiveProcessor.main(new String[]{dataDir + "churches.csv"});
         return ok("parsed additionally");
     }
 
@@ -78,8 +82,7 @@ public class Admin extends Controller
     {
         try {
             TestContentParse.main(null);
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             return forbidden(e.getMessage());
         }
         return ok("parsed");
@@ -142,4 +145,13 @@ public class Admin extends Controller
         return ok(content);
     }
 
+    public static Result checkParse2()
+    {
+        try {
+            BBCodeTest.main(null);
+        } catch (Exception e) {
+            return forbidden(e.getMessage());
+        }
+        return ok("parsed");
+    }
 }

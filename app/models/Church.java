@@ -91,7 +91,7 @@ public class Church
     @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     public Set<Architect> architects;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public Set<Image> images;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

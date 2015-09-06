@@ -106,7 +106,7 @@ public class ImageFragment extends ContentFragment
 //                System.out.println(colM + "to" + colN);
                 prfx = gridPrefix;
                 pstfx = gridPostfix;
-                int width = (colN - colM) * (colWidth + colGutterWidth) - colGutterWidth;
+                int width = (colN - colM + 1) * (colWidth + colGutterWidth) - colGutterWidth;
                 marginLeft = marginLeftInit + (colM - 1) * (colWidth + colGutterWidth);
                 imageStyle += String.format(" style='width: %dpx; margin-left: %dpx;' ", width, marginLeft);
             } else {

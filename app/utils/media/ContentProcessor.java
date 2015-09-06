@@ -48,6 +48,7 @@ public class ContentProcessor
                 ContentFragment fragment = (ContentFragment) cl.newInstance();
                 registeredFragments.add(fragment);
                 String tag = fragment.getTag();
+//                if (tag != null && !"".equals(tag) && !fragment.isInline())
                 if (tag != null && !"".equals(tag))
                     tags.add(tag);
                 System.out.println("Registered fragment: " + clazz + " [" + fragment.getTag() + "]");
@@ -99,33 +100,28 @@ public class ContentProcessor
                 }
             }
             idx = matcher.end();
-//            System.out.println("idx = " + idx);
             String found = matcher.group();
             // instantiate fragment based on found
             System.out.println("found = " + found);
-//            String[] tagWithOptions = matcher.group(3).split(" ");
-//            String tag = tagWithOptions[0];
-//            String[] options = Arrays.copyOfRange(tagWithOptions, 1, tagWithOptions.length);
             String tag = matcher.group(2);
             String[] options = matcher.group(3).trim().split("\\s");
             String content = matcher.group(4);
-//            String closingTag = matcher.group(7);
-//            if (!tag.equalsIgnoreCase(closingTag))
-//                throw new ContentProcessorException("tags mismatch: [" + tag + "] vs [/" + closingTag + "]");
             ContentFragment cf = null;
             for (ContentFragment frag : registeredFragments) {
                 if (frag.accepts(tag)) {
                     cf = frag.newFragment(options, content);
                 }
             }
-            if (cf == null)
+            if (cf == null) {
+                // which is not going to happen
                 throw new ContentProcessorException("Unknown tag [" + tag + "]");
+            }
             fragments.add(cf);
         }
         if (fragments.size() == 0)
             fragments.add(new UnformattedFragment(text));
         else {
-            int lastIndex = text.lastIndexOf("]") + 1;
+            int lastIndex = idx + 1;
             if (lastIndex < text.length()) {
                 String possible = text.substring(lastIndex).trim();
                 if (!"".equals(possible) && !"\n".equals(possible))

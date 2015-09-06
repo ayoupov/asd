@@ -45,6 +45,10 @@ function changeRow(data) {
                         ($("#starred:checked", $articleForm).length > 0 ? "checked" : "") +
                         "/>"))
             );
+            $row.append($("<td/>").addClass('noedit').html(
+                    $("<a href='/article/" + id +
+                        "' target='_blank'>→</a>"))
+            );
             $("td:not(.noedit)", $row).on('click', articleEditClick);
             if (isNew)
                 $row.hover(function () {

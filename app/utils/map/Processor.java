@@ -3,6 +3,7 @@ package utils.map;
 import com.google.code.geocoder.Geocoder;
 import com.google.code.geocoder.GeocoderRequestBuilder;
 import com.google.code.geocoder.model.*;
+import utils.ServerProperties;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,6 +20,8 @@ import java.util.Map;
  */
 public class Processor
 {
+    private static String dataDir = ServerProperties.getValue("asd.seed.data.folder");
+
     public static void main(String[] args) throws IOException, InterruptedException
     {
         Map<KMLParser.Church, KMLParser.Coordinates> coords = KMLParser.parse(args[0]);
@@ -54,7 +57,7 @@ public class Processor
 
     public static void write(Map<KMLParser.Church, KMLParser.Coordinates> coords, Map<KMLParser.Church, String> addresses) throws IOException
     {
-        OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream("d:\\prog\\asd\\res\\data\\churches.csv"), "UTF-8");
+        OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(dataDir + "churches.csv"), "UTF-8");
         String header = "ID|Ext_ID|Name|Lat|Lng|Address\n";
         osw.write(header);
         int i = 1;

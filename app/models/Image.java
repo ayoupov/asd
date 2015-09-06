@@ -44,8 +44,7 @@ public class Image
 
     public Image(String filename, File file, User user)
     {
-        String path = "/public/images/" + filename;
-        file.renameTo(new File(path));
+        path = filename;
         uploadedBy = user;
         uploadedTS = new Date();
         description = "uploaded by " + user + " at " + uploadedTS;
