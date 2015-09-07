@@ -10,8 +10,8 @@
 {
     position: fixed !important;
     right:0;
-    top: 36%;
-    max-height: 500px;
+    top: 65px;
+    /*max-height: 500px;*/
     z-index:1000;
 }
 
@@ -33,4 +33,16 @@ body
 .fullwidth
 {
     width: 100%;
+}
+
+.article-text textarea
+{
+    max-height: 75vh !important;
+    height: 450px !important;
+}
+
+span.editor-tool
+{
+    padding: 2px;
+    cursor: pointer;
 }

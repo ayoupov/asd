@@ -1,5 +1,6 @@
 package utils.media.bbcode.substitutes.complex;
 
+import utils.ServerProperties;
 import utils.media.bbcode.BBCodeParser;
 import utils.media.bbcode.substitutes.options.ImageOptions;
 import utils.media.bbcode.substitutes.ComplexSubstitute;
@@ -39,8 +40,12 @@ public class GridImage extends ComplexSubstitute
         String imageStyle = String.format("style='width: %dpx; margin-left: %dpx;' ", width, marginLeft);
 
         return String.format(
-                "<img src='%s' class='ui image' alt='%s' %s>",
-                opts.getSrc(), opts.getCaption(), imageStyle);
+                "<img src='%s' alt='%s' %s>",
+                opts.getSrc() == null ? ServerProperties.getValue("asd.editor.nosrc.image") : opts.getSrc(),
+                opts.getCaption(), imageStyle);
+//        return String.format(
+//                "<img src='%s' class='ui image' alt='%s' %s>",
+//                opts.getSrc(), opts.getCaption(), imageStyle);
     }
 
     @Override

@@ -11,16 +11,16 @@ import java.util.regex.Pattern;
  * Date: 04.09.2015
  * Time: 1:49
  */
-//@SubstituteAnnotation
-public class Breaks extends AbstractSimpleSubstitute
+@SubstituteAnnotation
+public class Paragraph extends AbstractSimpleSubstitute
 {
-    private static Pattern pattern = Pattern.compile("(\r|\n|\n\r|\r\n)");
-    private String replacement = "<br/>";
+    private static Pattern pattern = Pattern.compile("\\[p](.+?)\\[\\/p]", Pattern.DOTALL);
+    private String replacement = "<p>$1</p>";
 
     @Override
     public String getTag()
     {
-        return "newline";
+        return "p";
     }
 
     @Override

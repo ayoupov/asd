@@ -11,16 +11,16 @@ import java.util.regex.Pattern;
  * Date: 04.09.2015
  * Time: 1:49
  */
-//@SubstituteAnnotation
-public class Breaks extends AbstractSimpleSubstitute
+@SubstituteAnnotation
+public class BibLinkRev extends AbstractSimpleSubstitute
 {
-    private static Pattern pattern = Pattern.compile("(\r|\n|\n\r|\r\n)");
-    private String replacement = "<br/>";
+    private static Pattern pattern = Pattern.compile("\\[biblink=reverse](.+?)\\[\\/biblink]");
+    private String replacement = "<a id='biblink_fwd_$1' href='#biblink_rev_$1'><sup>$1</sup></a>";
 
     @Override
     public String getTag()
     {
-        return "newline";
+        return "biblinkfwd";
     }
 
     @Override

@@ -9,7 +9,8 @@ var apiExtension =
     'get json story': '/story/{id}.json',
     'get associated pictures': '/files/list/{id}',
     'post update article': '/article/update',
-    'post update story': '/story/update'
+    'post update story': '/story/update',
+    'upload files' : '/files/upload'
 };
 
 var $prevPage;
@@ -19,8 +20,8 @@ function restorePage(data) {
 }
 
 function changeRow(data) {
-    if (data.success) {
-        if (data.success == "article") {
+    if (data.success && data.entity) {
+        if (data.entity == "article") {
             var $articles = $("table", $("#articles"));
             var id = data.id;
             var $row = $("#article_" + id);

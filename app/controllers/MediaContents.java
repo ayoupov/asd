@@ -103,7 +103,6 @@ public class MediaContents extends Controller
 
         beginTransaction();
         long id = safeLong(map.get("id"), 0);
-//        System.out.println("id = " + id);
         boolean isNew = id == 0;
         MediaContent c;
         if (!isNew)
@@ -111,10 +110,12 @@ public class MediaContents extends Controller
         else {
             c = new MediaContent(mct);
         }
+        result.put("entity", ctype);
 
         if (mct != c.contentType) {
             commitTransaction();
-            return badRequest();
+            result.put("error", "wrong entity type");
+            return badRequest(result);
         }
 
         // possible changeable fields
@@ -150,7 +151,8 @@ public class MediaContents extends Controller
             saveOrUpdate(c);
         System.out.println("c = " + c);
         commitTransaction();
-        result.put("success", ctype);
+        result.put("entity", ctype);
+        result.put("success", true);
         result.put("id", c.getId());
         return ok(result);
     }

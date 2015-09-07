@@ -35,7 +35,7 @@ public class HibernateUtils
     static {
         try {
             Configuration configuration = new Configuration();
-            configuration.configure();
+            configuration.configure(ServerProperties.PRODUCTION_MODE ? "hibernate.prod.cfg.xml" : "hibernate.cfg.xml");
             Reflections reflections = new Reflections("models");
 
             Set<Class<?>> classes = reflections.getTypesAnnotatedWith(javax.persistence.Entity.class);
@@ -103,5 +103,7 @@ public class HibernateUtils
     public static void commitTransaction()
     {
         getSession().getTransaction().commit();
+//        ourSessionFactory.close();
+//        getSession().close();
     }
 }

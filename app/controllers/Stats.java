@@ -5,12 +5,12 @@ import com.vividsolutions.jts.geom.Point;
 import models.Church;
 import models.address.Dekanat;
 import models.address.Diocese;
-import models.address.Geometrified;
 import models.address.Metropolie;
 import models.internal.ContentManager;
 import models.internal.GeographyManager;
 import play.libs.Json;
-import play.mvc.*;
+import play.mvc.Controller;
+import play.mvc.Result;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,37 +29,42 @@ public class Stats extends Controller
 {
     public static Result count()
     {
+        beginTransaction();
+        ObjectNode res = doCount();
+        commitTransaction();
+        return ok(res);
+    }
+
+    public static ObjectNode doCount()
+    {
         Map<Dekanat, Integer> deks = new HashMap<>();
         Map<Diocese, Integer> dios = new HashMap<>();
         Map<Metropolie, Integer> metros = new HashMap<>();
-        beginTransaction();
         ObjectNode res = Json.newObject();
         List<Church> churches = ContentManager.getChurches();
-        for (Church church : churches)
-        {
+        for (Church church : churches) {
             System.out.println("church = " + church);
             Dekanat dek = church.address.getDekanat();
             Integer dekCount = deks.get(dek);
             if (dekCount == null)
                 dekCount = 0;
-            deks.put(dek, dekCount+1);
+            deks.put(dek, dekCount + 1);
             Diocese dio = dek.getDiocese();
             Integer dioCount = dios.get(dio);
             if (dioCount == null)
                 dioCount = 0;
-            dios.put(dio, dioCount+1);
+            dios.put(dio, dioCount + 1);
             Metropolie metro = dio.getMetropolie();
             Integer metroCount = metros.get(metro);
             if (metroCount == null)
                 metroCount = 0;
-            metros.put(metro, metroCount+1);
+            metros.put(metro, metroCount + 1);
             System.out.println(" [dek = " + dek + "]");
         }
         res.put("deks", Json.toJson(deks));
         res.put("dios", Json.toJson(dios));
         res.put("metros", Json.toJson(metros));
-        commitTransaction();
-        return ok(res);
+        return res;
     }
 
     public static Result test()

@@ -45,6 +45,7 @@ public class Application extends Controller
         ObjectNode dataNode = Json.newObject();
         dataNode.put("articles", Json.toJson(articleSummary));
         dataNode.put("stories", Json.toJson(storySummary));
+        dataNode.put("geostats", Json.toJson(Stats.doCount()));
         result.put("data", dataNode);
 //        result.put("churches", churchCount);
         result.put("success", true);
