@@ -19,7 +19,6 @@ import utils.map.AdditiveProcessor;
 import utils.map.BadIdsSieve;
 import utils.map.Processor;
 import utils.map.Snapshoter;
-import utils.media.TestContentParse;
 import utils.media.bbcode.BBCodeTest;
 import views.html.admin;
 
@@ -76,16 +75,6 @@ public class Admin extends Controller
     {
         AdditiveProcessor.main(new String[]{dataDir + "churches.csv"});
         return ok("parsed additionally");
-    }
-
-    public static Result checkParse()
-    {
-        try {
-            TestContentParse.main(null);
-        } catch (Exception e) {
-            return forbidden(e.getMessage());
-        }
-        return ok("parsed");
     }
 
     public static Result index()

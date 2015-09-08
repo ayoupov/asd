@@ -1,20 +1,11 @@
-var localdebug = true, apidebug = true, usemap = true;
+var apidebug = true, usemap = true;
 
-//var local_paths = {
-//    metropolies: '/assets/metropolies_wgs84.topojson',
-//    diecezje: '/assets/diecezje_wgs84.topojson'
-//};
-var local_paths = {
+var feature_paths = {
     metropolies: '/assets/metropolies_wgs84_10percent.topojson',
     diecezje: '/assets/diecezje_wgs84_10percent.topojson',
     dekanaty: '/assets/dekanaty_wgs84_10percent.topojson'
 };
 
-var prod_paths = {
-    metropolies: '/asd/metropolies_wgs84.topojson',
-    diecezje: '/asd/diecezje_wgs84.topojson',
-    dekanaty: '/asd/dekanaty_wgs84_10percent.topojson'
-};
 
 var metropStyle = function (feature) {
     return {
@@ -67,13 +58,13 @@ var mapInit = function () {
     var customDieLayer = L.geoJson(null, {style: dieStyle});
     var customDekLayer = L.geoJson(null, {style: dekStyle});
 
-    var metropoliesLayer = omnivore.topojson(localdebug ? local_paths.metropolies : prod_paths.metropolies, null, customMetropLayer);
+    var metropoliesLayer = omnivore.topojson(feature_paths.metropolies, null, customMetropLayer);
     metropoliesLayer.addTo(map);
 
-    var diecezjeLayer = omnivore.topojson(localdebug ? local_paths.diecezje : prod_paths.diecezje, null, customDieLayer);
+    var diecezjeLayer = omnivore.topojson(feature_paths.diecezje, null, customDieLayer);
     diecezjeLayer.addTo(map);
 
-    var dekanatyLayer = omnivore.topojson(localdebug ? local_paths.dekanaty : prod_paths.dekanaty, null, customDekLayer);
+    var dekanatyLayer = omnivore.topojson(feature_paths.dekanaty, null, customDekLayer);
     dekanatyLayer.addTo(map);
 
     map.on('zoomend ', function (e) {
@@ -89,8 +80,13 @@ var mapInit = function () {
         else if (map.getZoom() >= 10) {
             map.addLayer(dekanatyLayer)
         }
+        updateMarkers();
     });
 
     map.fire('zoomend');
 };
 
+function updateMarkers()
+{
+    // check if we have cached data
+}

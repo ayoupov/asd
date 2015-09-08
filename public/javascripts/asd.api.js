@@ -83,6 +83,7 @@ var applySummary = function (response) {
         onSuccess: populateDateStories,
         on: 'now'
     });
+    updateMarkers();
 };
 
 function getNext(key, q) {
