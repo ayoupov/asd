@@ -6,6 +6,7 @@ var feature_paths = {
     dekanaty: '/assets/dekanaty_wgs84_10percent.topojson'
 };
 
+var debughost = 'localhost:9000', prodhost = '46.101.181.135';
 
 var metropStyle = function (feature) {
     return {
@@ -36,57 +37,159 @@ $(document).ready(function () {
     isotopeThumbs();
     uiInit();
     resizeFunc();
-    if (usemap)
-        mapInit();
+    //if (usemap)
+    //    mapInit();
 });
 
-var map;
+var map, customMetropLayer,
+    metropoliesLayer, dekanatyLayer, diecezjeLayer, churchesLayer,
+    metroCountersLayer, dioCounterLayer;
 
-var mapInit = function () {
+var mapInit = function (geostats) {
     L.mapbox.accessToken = 'pk.eyJ1IjoiYXlvdXBvdiIsImEiOiJjYTc1MDkyY2ZlZDIyOGE3Mjc2NzE1ODk3Yzg0OGRlMSJ9.TLk_UalfiCktwxGqd9kRmg';
-    var opts = {};
+    var opts = {
+        loadingControl: true
+    };
     map = L.mapbox.map('map', 'ayoupov.09a5336b', opts).setView([52.36, 18.45], 6);
+    // relocate attribution
     $('.leaflet-control-attribution').css(
-        {"display": 'inline', 'clear': 'none'}
-    ).appendTo($('.leaflet-bottom.leaflet-left'));
+        {
+            "display": 'inline',
+            'clear': 'none'
+        }
+    )
+        .appendTo($('.leaflet-bottom.leaflet-left'));
     $('.mapbox-logo').css('padding-right', '10px');
+
     map.options.doubleClickZoom = true;
     map.options.minZoom = 6;
     map.scrollWheelZoom.disable();
 
-    var customMetropLayer = L.geoJson(null, {style: metropStyle});
+    addChurchContents();
+
+    customMetropLayer = L.geoJson(null, {
+        style: metropStyle
+        //, pointToLayer: function (feature, latlng) {
+        //    return L.marker(latlng,
+        //        {
+        //            icon: L.divIcon({html: feature.properties.count})
+        //        });
+        //}
+    });
+
     var customDieLayer = L.geoJson(null, {style: dieStyle});
     var customDekLayer = L.geoJson(null, {style: dekStyle});
 
-    var metropoliesLayer = omnivore.topojson(feature_paths.metropolies, null, customMetropLayer);
-    metropoliesLayer.addTo(map);
+    metropoliesLayer = omnivore.topojson(feature_paths.metropolies, null, customMetropLayer);
+    metropoliesLayer.on('dblclick', function (ev) {
+        map.fire('dblclick', ev);
+    });
 
-    var diecezjeLayer = omnivore.topojson(feature_paths.diecezje, null, customDieLayer);
-    diecezjeLayer.addTo(map);
+    diecezjeLayer = omnivore.topojson(feature_paths.diecezje, null, customDieLayer);
+    diecezjeLayer.on('dblclick', function (ev) {
+        map.fire('dblclick', ev);
+    });
 
-    var dekanatyLayer = omnivore.topojson(feature_paths.dekanaty, null, customDekLayer);
-    dekanatyLayer.addTo(map);
+    dekanatyLayer = omnivore.topojson(feature_paths.dekanaty, null, customDekLayer);
+    dekanatyLayer.on('dblclick', function (ev) {
+        map.fire('dblclick', ev);
+    });
+
+    metroCountersLayer = L.geoJson();
+    dioCounterLayer = L.geoJson();
+    addLayerCounters(metroCountersLayer, geostats.metro);
+    addLayerCounters(dioCounterLayer, geostats.dio);
 
     map.on('zoomend ', function (e) {
         if (map.getZoom() < 8) {
-            map.removeLayer(diecezjeLayer)
+            map.removeLayer(dioCounterLayer);
+            map.removeLayer(diecezjeLayer);
+            map.addLayer(metropoliesLayer);
+            map.addLayer(metroCountersLayer);
         }
         else if (map.getZoom() >= 8) {
-            map.addLayer(diecezjeLayer)
+            if (map.getZoom() < 10) {
+                map.addLayer(dioCounterLayer);
+                map.addLayer(diecezjeLayer);
+            }
+            map.removeLayer(metroCountersLayer);
+            map.removeLayer(metropoliesLayer);
         }
         if (map.getZoom() < 10) {
-            map.removeLayer(dekanatyLayer)
+            map.removeLayer(dekanatyLayer);
+            map.removeLayer(churchesLayer);
         }
         else if (map.getZoom() >= 10) {
-            map.addLayer(dekanatyLayer)
+            map.removeLayer(dioCounterLayer);
+            map.removeLayer(diecezjeLayer);
+            map.addLayer(dekanatyLayer);
+            map.addLayer(churchesLayer);
         }
-        updateMarkers();
     });
 
     map.fire('zoomend');
 };
 
-function updateMarkers()
-{
-    // check if we have cached data
+var churchIcon = L.icon(
+    {
+        iconUrl: '/assets/images/church_marker.png',
+        iconSize: [43, 59]
+    });
+
+function addLayerCounters(layer, data) {
+    $(data).each(function (a, item) {
+        var id = item[0];
+        var count = item[1];
+        var ll = item[2];
+        L.marker(ll, {
+            icon: L.divIcon({
+                html: count,
+                iconSize: [78, 78],
+                className: 'church-counter-divicon'
+            })
+        }).addTo(layer);
+    });
+}
+
+function addChurchContents() {
+
+    var churchMarkerStyle = {
+        icon: churchIcon
+    };
+    var style = {
+        "clickable": true,
+        "color": "#00D",
+        "fillColor": "#00D",
+        "weight": 1.0,
+        "opacity": 0.3,
+        "fillOpacity": 0.2
+    };
+    var hoverStyle = {
+        "fillOpacity": 0.5
+    };
+
+    var geojsonURL = 'http://' + (apidebug ? debughost : prodhost) + '/tiles/c/{z}/{x}/{y}.json';
+    churchesLayer = new L.TileLayer.GeoJSON(geojsonURL, {
+            clipTiles: true,
+            unique: function (feature) {
+                return feature.properties.id;
+            }
+        }, {
+            style: style,
+            pointToLayer: function (feature, latlng) {
+                return L.marker(latlng, churchMarkerStyle);
+            },
+            onEachFeature: function (feature, layer) {
+                if (feature.properties) {
+                    var popupString = '<div class="popup">';
+                    for (var k in feature.properties) {
+                        var v = feature.properties[k];
+                        popupString += k + ': ' + v + '<br />';
+                    }
+                    popupString += '</div>';
+                    layer.bindPopup(popupString);
+                }
+            }
+        }
+    );
 }

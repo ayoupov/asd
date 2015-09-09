@@ -15,16 +15,16 @@ import java.io.IOException;
  * Date: 15.07.2015
  * Time: 2:22
  */
-public class PointConverter extends JsonSerializer<Geometry>
+public class PointConverter extends JsonSerializer<Point>
 {
 
     @Override
-    public void serialize(Geometry geometry, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException
+    public void serialize(Point point, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException
     {
-        Point point = (Point) geometry;
-        jsonGenerator.writeStartObject();
-        jsonGenerator.writeNumberField("lat", point.getCoordinate().x);
-        jsonGenerator.writeNumberField("lng", point.getCoordinate().y);
-        jsonGenerator.writeEndObject();
+        jsonGenerator.writeStartArray();
+        jsonGenerator.writeNumber(point.getCoordinate().y); // lat
+        jsonGenerator.writeNumber(point.getCoordinate().x); // lng
+        jsonGenerator.writeEndArray();
+
     }
 }

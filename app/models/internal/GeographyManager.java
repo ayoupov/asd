@@ -1,11 +1,15 @@
 package models.internal;
 
+import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 import models.address.*;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.opengis.geometry.BoundingBox;
 import utils.map.GeocodeUtils;
+import utils.map.TileBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -160,5 +164,29 @@ public class GeographyManager
         query.setCacheable(true);
         List<Geometrified> list = query.list();
         return list;
+    }
+
+    public static List findChurchesByGeometry(Geometry geometry)
+    {
+        Session session = getSession();
+        List res = session.createQuery(
+                "select c.id as id, c.extID as extID, a.geometry as geometry " +
+                        "from Church c, Address a " +
+                        "where c.address = a and ST_CONTAINS(:geom, a.geometry) = 1")
+                .setParameter("geom",  geometry)
+                .list();
+        return res;
+    }
+
+    public static List findChurchesByEnv(Envelope envelope)
+    {
+        Session session = getSession();
+        List res = session.createQuery(
+                "select c.id as id, c.extID as extID, a.geometry as geometry " +
+                        "from Church c, Address a " +
+                        "where c.address = a and ST_CONTAINS(:geom, a.geometry) = 1")
+                .setParameter("geom",  envelope)
+                .list();
+        return res;
     }
 }

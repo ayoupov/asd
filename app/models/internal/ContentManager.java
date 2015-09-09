@@ -1,5 +1,6 @@
 package models.internal;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import models.Church;
 import models.MediaContent;
 import models.MediaContentType;
@@ -10,9 +11,15 @@ import models.user.User;
 import org.apache.commons.lang3.tuple.Pair;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.spatial.GeometryType;
+import org.hibernate.spatial.dialect.mysql.MySQLSpatial56Dialect;
+import org.hibernate.type.StandardBasicTypes;
+import utils.serialize.PointConverter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static utils.DataUtils.safeLong;
 import static utils.HibernateUtils.getSession;
@@ -110,6 +117,19 @@ public class ContentManager
                         "where c.extID = :id " +
                         "order by c.version asc"
         ).setParameter("id", id).list();
+        return churches;
+    }
+
+    public static List<Object> getChurchesShort()
+    {
+        Session session = getSession();
+        List churches = session.createQuery("select distinct c1.id, c1.address.geometry " +
+                "from Church c1, Church c2 " +
+                "where " +
+                "c1.extID = c2.extID and " +
+                "c1.version >= c2.version and " +
+                "c1.approvedDT is not null " +
+                "order by c1.version desc, c1.extID").list();
         return churches;
     }
 
@@ -297,6 +317,51 @@ public class ContentManager
                 .setParameter("mct", mct)
                 .setCacheable(true)
                 .uniqueResult();
+    }
+
+    public static Map<String, Object> getChurchCountSummary()
+    {
+        Map<String, Object> res = new HashMap<>();
+        res.put("metro", getMetroCount());
+        res.put("dio", getDioCount());
+        res.put("dek", getDekCount());
+        return res;
+    }
+
+    private static Object getDekCount()
+    {
+        return getSession()
+                .createQuery("select dek.id, count(c.extID) from Dekanat dek, Church c " +
+                        "where c.address.dekanat = dek and c.approvedDT is not null " +
+                        "group by dek.id").setCacheable(true).list();
+    }
+
+    private static Object getDioCount()
+    {
+//        return getSession().createSQLQuery("select id, count, centroid from dio_view")
+//                .addScalar("id", StandardBasicTypes.STRING)
+//                .addScalar("count", StandardBasicTypes.LONG)
+//                .addScalar("centroid", GeometryType.INSTANCE)
+//                .addSynchronizedQuerySpace("")
+//                .setCacheable(true)
+//                .list();
+        return getSession().createQuery("select d.id, count(c.extID), d.centroid " +
+                "from Diocese d, Church c " +
+                "where c.address.dekanat.diocese = d and c.approvedDT is not null " +
+                "group by d.id")
+                .setCacheable(true)
+                .list();
+    }
+
+//    @JsonSerialize(using = PointConverter.class)
+    private static Object getMetroCount()
+    {
+        return getSession().createQuery("select m.id, count(c.extID), m.centroid " +
+                "from Metropolie m, Church c " +
+                "where c.address.dekanat.diocese.metropolie = m and c.approvedDT is not null " +
+                "group by m.id")
+                .setCacheable(true)
+                .list();
     }
 
 //    public static List<User> parseUserList(Set<Long> userList )

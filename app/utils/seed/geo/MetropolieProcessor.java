@@ -1,6 +1,7 @@
 package utils.seed.geo;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
 import models.address.Metropolie;
 import org.opengis.feature.simple.SimpleFeature;
 import utils.HibernateUtils;
@@ -28,9 +29,10 @@ public class MetropolieProcessor implements ShapeProcessor
         for (Map.Entry<String, Long> entry : metropolias.entrySet()) {
             String name = entry.getKey();
             Long id = entry.getValue();
-//            String nameFromFeature = feature.getAttribute("jpt_nazwa_").toString();
             if (Objects.equals(id, idFromShape)) {
-                Metropolie metropolie = new Metropolie(id, geometry, name);
+                Point centroid = ShapeRegionalDataProvider.getMetropoliaCentroid(idFromShape);
+                System.out.println("centroid = " + centroid);
+                Metropolie metropolie = new Metropolie(id, geometry, centroid, name);
                 HibernateUtils.saveOrUpdate(metropolie);
                 res = true;
                 break;

@@ -83,7 +83,7 @@ var applySummary = function (response) {
         onSuccess: populateDateStories,
         on: 'now'
     });
-    updateMarkers();
+    mapInit(response.data['geostats']);
 };
 
 function getNext(key, q) {

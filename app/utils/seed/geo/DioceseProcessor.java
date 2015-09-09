@@ -1,6 +1,7 @@
 package utils.seed.geo;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
 import models.address.Diocese;
 import models.address.Metropolie;
 import org.opengis.feature.simple.SimpleFeature;
@@ -25,17 +26,20 @@ public class DioceseProcessor implements ShapeProcessor
         Map<String, Long> connection = StaticRegionalDataProvider.getDmConn();
         Geometry geometry = ((Geometry) (feature).getDefaultGeometry());
         String nameFromFeature = feature.getAttribute("jpt_nazwa_").toString();
+        Long idFromShape = (Long) feature.getAttribute("id");
         boolean res = false;
         for (Map.Entry<String, String> entry : names.entrySet()) {
             String name = entry.getKey();
             if (PolishSupport.similar(name, nameFromFeature)) {
                 String abbr = entry.getValue();
+                Point centroid = ShapeRegionalDataProvider.getDioceseCentroid(idFromShape);
+
                 Metropolie metropolie = (Metropolie) HibernateUtils.load(Metropolie.class, connection.get(abbr));
                 if (metropolie == null) {
                     System.out.println("Metropolie " + connection.get(abbr) + " not found!");
                     break;
                 }
-                Diocese diocese = new Diocese(abbr, name, geometry, metropolie);
+                Diocese diocese = new Diocese(abbr, name, geometry, centroid, metropolie);
                 if (name.startsWith("Archi")) diocese.setArchidiocese(true);
                 // store to db and change res accordingly
                 HibernateUtils.saveOrUpdate(diocese);

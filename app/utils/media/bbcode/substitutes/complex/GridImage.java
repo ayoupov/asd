@@ -69,7 +69,7 @@ public class GridImage extends ComplexSubstitute
     @Override
     protected String getPostfix()
     {
-        return String.format("<span class='content-image-caption' style='margin-left: %dpx;'>%s</span>",
+        return String.format("<br><span class='content-image-caption' style='margin-left: %dpx;'>%s</span>",
                 marginLeft, getOptions().getCaption());
     }
 

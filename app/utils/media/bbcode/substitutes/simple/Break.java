@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 @SubstituteAnnotation
 public class Break extends AbstractSimpleSubstitute
 {
-    private static Pattern pattern = Pattern.compile("\\[br\\s*?]");
+    private static Pattern pattern = Pattern.compile("\\[br\\s*?\\/*?]");
     private String replacement = "<br/>";
 
     @Override

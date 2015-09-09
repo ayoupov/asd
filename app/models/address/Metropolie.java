@@ -1,6 +1,7 @@
 package models.address;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
 
@@ -23,13 +24,17 @@ public class Metropolie implements Geometrified
     @Type(type = "org.hibernate.spatial.GeometryType")
     private Geometry geometry;
 
+    @Type(type = "org.hibernate.spatial.GeometryType")
+    protected Point centroid;
+
     private String name;
 
-    public Metropolie(Long id, Geometry geometry, String name)
+    public Metropolie(Long id, Geometry geometry, Point centroid, String name)
     {
         this.id = id;
         this.geometry = geometry;
         this.name = name;
+        this.centroid = centroid;
     }
 
     public Metropolie()

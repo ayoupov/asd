@@ -1,6 +1,7 @@
 package models.address;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
@@ -28,16 +29,20 @@ public class Diocese implements Geometrified
     @Type(type = "org.hibernate.spatial.GeometryType")
     protected Geometry geometry;
 
+    @Type(type = "org.hibernate.spatial.GeometryType")
+    protected Point centroid;
+
     @OneToOne
     private Metropolie metropolie;
 
     private boolean archidiocese;
 
-    public Diocese(String id, String name, Geometry geometry, Metropolie metropolie)
+    public Diocese(String id, String name, Geometry geometry, Point centroid, Metropolie metropolie)
     {
         this.id = id;
         this.name = name;
         this.geometry = geometry;
+        this.centroid = centroid;
         this.metropolie = metropolie;
     }
 

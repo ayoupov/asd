@@ -149,6 +149,17 @@ public class TileBuilder
         return Math.toDegrees(Math.atan(Math.sinh(n)));
     }
 
+    public static Envelope tile2Env(Integer x, Integer y, Integer zoom)
+    {
+        Envelope envelope = new Envelope(
+                Math.abs(tile2lat(y, zoom)),
+                Math.abs(tile2lat(y + 1, zoom)),
+                Math.abs(tile2lon(x, zoom)),
+                Math.abs(tile2lon(x + 1, zoom))
+        );
+        return envelope;
+    }
+
     public static class BoundingBox
     {
         public double north;
@@ -202,7 +213,7 @@ public class TileBuilder
         }
     }
 
-    static BoundingBox tile2boundingBox(final int x, final int y, final int zoom)
+    public static BoundingBox tile2boundingBox(final int x, final int y, final int zoom)
     {
         BoundingBox bb = new BoundingBox();
         bb.north = Math.abs(tile2lat(y, zoom));

@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 @SubstituteAnnotation
 public class Padder extends FullwidthSubstitute
 {
-    private static Pattern pattern = Pattern.compile("\\[padder\\s*?\\/]", Pattern.DOTALL);
+    private static Pattern pattern = Pattern.compile("\\[padder\\s*?\\/*?]", Pattern.DOTALL);
     private String replacement = "<div class='content-padder'></div>";
 
     @Override
