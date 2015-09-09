@@ -2,6 +2,7 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import models.Image;
 import models.MediaContent;
 import models.MediaContentType;
 import models.internal.ContentManager;
@@ -121,6 +122,8 @@ public class MediaContents extends Controller
         // possible changeable fields
         String jtext = (map.get("text") != null) ? map.get("text")[0] : null,
                 jlead = (map.get("lead") != null) ? map.get("lead")[0] : null,
+                jcover = (map.get("cover") != null) ? map.get("cover")[0] : null,
+                jdesc = (map.get("desc") != null) ? map.get("desc")[0] : null,
                 jtitle = (map.get("title") != null) ? map.get("title")[0] : null;
         Boolean jstarred = (map.get("starred") != null) ? safeBool(map.get("starred")) : false;
         Date jpublishDate = (map.get("approvedDT") != null) ? DataUtils.dateFromReqString(map.get("approvedDT")) : null;
@@ -129,6 +132,8 @@ public class MediaContents extends Controller
             jauthors = (map.get("authors[]") != null) ? ContentManager.parseUserList(map.get("authors[]")) : null;
         System.out.println("jtitle = " + jtitle);
         System.out.println("jlead = " + jlead);
+        System.out.println("jdesc = " + jdesc);
+        System.out.println("jcover = " + jcover);
         System.out.println("jtext = " + jtext);
         System.out.println("jstarred = " + jstarred);
         System.out.println("jpublishDate = " + jpublishDate);
@@ -137,6 +142,10 @@ public class MediaContents extends Controller
             c.setText(jtext);
         if (jlead != null)
             c.setLead(jlead);
+        if (jdesc != null)
+            c.setCoverDescription(jdesc);
+        if (jcover != null)
+            c.setCoverImage(findImage(jcover));
         if (jtitle != null)
             c.setTitle(jtitle);
         if (jstarred != null)
@@ -155,6 +164,15 @@ public class MediaContents extends Controller
         result.put("success", true);
         result.put("id", c.getId());
         return ok(result);
+    }
+
+    private static Image findImage(String path)
+    {
+        Image i = ContentManager.findImageByPath(path);
+        // fallback fs option???
+        if (i == null)
+            return new Image("auto", path);
+        return i;
     }
 
     public static Result listAuthors()

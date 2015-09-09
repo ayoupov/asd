@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 public class BibLinkRev extends AbstractSimpleSubstitute
 {
     private static Pattern pattern = Pattern.compile("\\[biblink=reverse](.+?)\\[\\/biblink]");
-    private String replacement = "<a id='biblink_fwd_$1' href='#biblink_rev_$1'><sup>$1</sup></a>";
+    private String replacement = "<a id='biblink_rev_$1' href='#biblink_fwd_$1' class='biblink biblink-back-ref'><sup>$1</sup></a>";
 
     @Override
     public String getTag()

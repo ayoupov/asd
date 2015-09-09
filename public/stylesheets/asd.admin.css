@@ -46,3 +46,8 @@ span.editor-tool
     padding: 2px;
     cursor: pointer;
 }
+
+#lead, #desc
+{
+    height: 8em;
+}

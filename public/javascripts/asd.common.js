@@ -4,10 +4,10 @@ var $articles, $stories, $dateStories;
 var initSelectorCache = function () {
     $map = $("#map");
     $menu = $("#menu");
-    $slide1 = $("#slide1");
-    $slide2 = $("#slide2");
-    $slide3 = $("#slide3");
-    $slide4 = $("#slide4");
+    $slide1 = $("#slide-map");
+    $slide2 = $("#slide-articles");
+    $slide3 = $("#slide-stories");
+    $slide4 = $("#slide-about");
     $prompt = $(".prompt");
     $links = $("#links");
     $about = $("#about");

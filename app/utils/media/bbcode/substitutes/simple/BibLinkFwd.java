@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 public class BibLinkFwd extends AbstractSimpleSubstitute
 {
     private static Pattern pattern = Pattern.compile("\\[biblink](.+?)\\[\\/biblink]");
-    private String replacement = "<a id='biblink_rev_$1' href='#biblink_fwd_$1'><sup>$1</sup></a>";
+    private String replacement = "<a id='biblink_fwd_$1' href='#biblink_rev_$1' class='biblink biblink-fwd-ref'><sup>$1</sup></a>";
 
     @Override
     public String getTag()

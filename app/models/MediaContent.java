@@ -35,6 +35,8 @@ public class MediaContent
     @Type(type = "text")
     public String lead;
     @Field
+    public String coverDescription;
+    @Field
     public String title;
     @Field
     public Boolean starred;
@@ -196,6 +198,36 @@ public class MediaContent
     public void setAuthors(List<User> authors)
     {
         this.authors = authors;
+    }
+
+    public String getCoverDescription()
+    {
+        return coverDescription;
+    }
+
+    public void setCoverDescription(String coverDescription)
+    {
+        this.coverDescription = coverDescription;
+    }
+
+    public Image getCoverImage()
+    {
+        return coverImage;
+    }
+
+    public void setCoverImage(Image coverImage)
+    {
+        this.coverImage = coverImage;
+    }
+
+    public Set<Image> getImages()
+    {
+        return images;
+    }
+
+    public void setImages(Set<Image> images)
+    {
+        this.images = images;
     }
 
     @Override

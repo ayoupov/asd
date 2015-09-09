@@ -2,6 +2,7 @@ package models.internal;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import models.Church;
+import models.Image;
 import models.MediaContent;
 import models.MediaContentType;
 import models.internal.search.filters.ChurchFilter;
@@ -362,6 +363,15 @@ public class ContentManager
                 "group by m.id")
                 .setCacheable(true)
                 .list();
+    }
+
+    public static Image findImageByPath(String path)
+    {
+        System.out.println("searching for an image with path: " + path);
+        return (Image) getSession().createQuery(
+                "select i from Image i " +
+                        "where i.path = :p")
+                .setParameter("p", path).uniqueResult();
     }
 
 //    public static List<User> parseUserList(Set<Long> userList )

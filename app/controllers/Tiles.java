@@ -67,7 +67,7 @@ public class Tiles extends Controller
             result.put("features", Json.toJson(farr));
         }
         commitTransaction();
-        response().setHeader("Cache-Control", "no-transform,public,max-age=86400,s-maxage=86400");
+        response().setHeader("Cache-Control", "no-transform,public,max-age=3600,s-maxage=3600");
         return ok(result);
     }
 

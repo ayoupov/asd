@@ -33,3 +33,23 @@ var changeSearchPrompt = function () {
         $prompt.css('font-size', '18pt');
     }
 };
+
+// content specific ui init
+$(document).ready(function () {
+    $('a[href*=#]:not([href=#])').click(function () {
+        if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '')
+            || location.hostname == this.hostname) {
+            var menuOffset = 0;
+            var target = $(this.hash);
+            target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+            if (target.length) {
+                if (target.hasClass('biblink-fwd-ref'))
+                   menuOffset = $menu.height();
+                $('html,body').animate({
+                    scrollTop: target.offset().top - menuOffset
+                }, 600);
+                return false;
+            }
+        }
+    });
+});

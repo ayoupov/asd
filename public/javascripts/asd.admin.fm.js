@@ -26,8 +26,12 @@ function addFileItem(item) {
         $item.append($("<img/>").attr('src', thumb));
 
     $item.on('click', function () {
-        insertAtCaret("text",
-            path);
+        var target = "text";
+        if ($("[data-tab=basic-props]").hasClass('active'))
+        {
+            target = "cover";
+        }
+        insertAtCaret(target, path);
     });
 
     return $item;

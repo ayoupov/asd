@@ -2,13 +2,13 @@ function currentSlide() {
     var top = $(window).scrollTop();
     var prev = $slide1.height();
     if (top <= prev)
-        return "slide1";
+        return "map";
     if (top <= (prev = prev + $slide2.height()))
-        return "slide2";
+        return "articles";
     if (top <= (prev = prev + $slide3.height()))
-        return "slide3";
+        return "stories";
     if (top <= (prev = prev + $slide4.height()))
-        return "slide4";
+        return "about";
 }
 
 var uiInit = function () {
@@ -148,7 +148,7 @@ var resizeFunc = function () {
 var followMenu = function () {
     var slide = currentSlide();
     $('a', $links).removeClass('active');
-    $("a[href='#" + slide + "']", $links).addClass('active');
+    $(".slide-" + slide, $links).addClass('active');
 };
 
 var prevWidth = 50;

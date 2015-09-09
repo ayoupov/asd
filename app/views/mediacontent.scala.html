@@ -1,4 +1,5 @@
 @import utils.web.RenderUtils
+@import utils.ServerProperties
 @(content: MediaContent)
 <!DOCTYPE html>
 <html lang="pl">
@@ -11,12 +12,11 @@
     <body>
         @parts.likesInit()
         <div class="wrapper">
-            @staticmenu()
+            @staticmenu(false)
             <div class="content-main-wrapper">
             @sociallinks()
             </div>
-            <div class="content-cover-image">
-                    <!-- add cover image somehow to background -->
+            <div class="content-cover-image" style="background: url(@{if(content.coverImage != null) content.coverImage.path else ServerProperties.getValue("asd.editor.nosrc.image")}) center">
                 <div class="content-title">
                 @content.title
                 </div>

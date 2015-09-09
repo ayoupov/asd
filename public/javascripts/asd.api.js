@@ -222,10 +222,11 @@ function populateStories(data) {
     var lastItem = null;
     $stories.isotope('remove', $(".extra-stories"));
     $(data.data).each(function (a, item) {
-        var cover = item.cover;
+        var cover = (item.coverImage) ? item.coverImage.path : "";
         var title = item.title;
         var lead = item.lead;
         var id = item.id;
+        var desc = item.coverDescription;
         var $item = $("<div/>").addClass('story thumb').attr('id', 'story_' + id)
             .append(
             $("<div/>").addClass('image').append(
@@ -235,7 +236,7 @@ function populateStories(data) {
             $("<div/>").addClass('content').append(
                 $("<div/>").addClass('header').html(title)
             ).append(
-                $("<div/>").addClass('description').html(lead)
+                $("<div/>").addClass('description').html(desc)
             )
         ).append(
             $("<div/>").addClass('golden shameful-underline')
