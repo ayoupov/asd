@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.Set;
 
 @Entity
+@Table(name = "church")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Indexed
 @AnalyzerDef(name = "polish_def_analyzer",

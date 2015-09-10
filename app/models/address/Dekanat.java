@@ -13,6 +13,7 @@ import javax.persistence.*;
  * Time: 17:55
  */
 @Entity
+@Table(name = "dekanat")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Dekanat implements Geometrified
 {

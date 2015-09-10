@@ -15,6 +15,7 @@ import java.util.Set;
  */
 @Embeddable
 @Entity
+@Table(name="synonym")
 public class Synonym
 {
     @Id
@@ -22,5 +23,6 @@ public class Synonym
 
     @IndexedEmbedded
     @ElementCollection
+    @CollectionTable(name="synsets")
     public Set<String> synset = new LinkedHashSet<String>();
 }

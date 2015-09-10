@@ -9,6 +9,7 @@ import org.hibernate.annotations.Type;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,6 +18,7 @@ import javax.persistence.OneToOne;
  * Time: 18:27
  */
 @Entity
+@Table(name = "diocese")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Diocese implements Geometrified
 {

@@ -20,6 +20,7 @@ import java.util.Set;
  * Time: 23:54
  */
 @Entity
+@Table(name = "content")
 @Indexed
 public class MediaContent
 {

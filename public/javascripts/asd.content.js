@@ -7,6 +7,7 @@ $(document).ready(function () {
     $('.prompt').on('focus', changeSearchPrompt).on('focusout', changeSearchPrompt);
     changeSearchPrompt();
     resizeContentFunc();
+    anchorFix();
 });
 
 var resizeContentFunc = function () {
@@ -34,8 +35,7 @@ var changeSearchPrompt = function () {
     }
 };
 
-// content specific ui init
-$(document).ready(function () {
+function anchorFix() {
     $('a[href*=#]:not([href=#])').click(function () {
         if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '')
             || location.hostname == this.hostname) {
@@ -44,7 +44,7 @@ $(document).ready(function () {
             target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
             if (target.length) {
                 if (target.hasClass('biblink-fwd-ref'))
-                   menuOffset = $menu.height();
+                    menuOffset = $menu.height();
                 $('html,body').animate({
                     scrollTop: target.offset().top - menuOffset
                 }, 600);
@@ -52,4 +52,4 @@ $(document).ready(function () {
             }
         }
     });
-});
+}

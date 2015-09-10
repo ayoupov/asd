@@ -30,7 +30,7 @@ public class UserManager
 
     public static User getBySocialId(String socialId)
     {
-        User user = (User) getSession().createQuery("from Users u where u.socialId = :sid")
+        User user = (User) getSession().createQuery("from User u where u.socialId = :sid")
                 .setParameter("sid", socialId)
                 .uniqueResult();
         return user;
@@ -39,12 +39,12 @@ public class UserManager
     public static List<Object[]> getUserNames(String like)
     {
         if (like == null)
-            return getSession().createQuery("select u.id, u.name from Users u where u.status = :st")
+            return getSession().createQuery("select u.id, u.name from User u where u.status = :st")
                     .setParameter("st", UserStatus.Active)
                     .setMaxResults(10)
                     .setCacheable(true).list();
         else {
-            Query q = getSession().createQuery("select u.id, u.name from Users u where u.status = :st and lower(u.name) like :lk")
+            Query q = getSession().createQuery("select u.id, u.name from User u where u.status = :st and lower(u.name) like :lk")
                     .setParameter("st", UserStatus.Active)
                     .setParameter("lk", "%" + like.toLowerCase() + "%")
                     .setMaxResults(10);

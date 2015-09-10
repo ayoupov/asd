@@ -86,13 +86,4 @@ public class Tiles extends Controller
         return ok("rebuild started");
     }
 
-    public static Result seed()
-    {
-        try {
-            Disseminator.main(null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return ok("seed started");
-    }
 }

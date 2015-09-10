@@ -22,6 +22,7 @@ import javax.persistence.*;
  * Time: 23:43
  */
 @Entity
+@Table(name = "address")
 @Embeddable
 public class Address
 {

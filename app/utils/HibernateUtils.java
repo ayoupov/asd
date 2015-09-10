@@ -7,10 +7,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 import models.address.Diocese;
 import models.address.Geometrified;
 import models.address.Metropolie;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
@@ -56,6 +53,12 @@ public class HibernateUtils
         // get method which invoked getSession()
 
         return session;
+    }
+
+    public static void closeSession() throws HibernateException
+    {
+        Session session = ourSessionFactory.getCurrentSession();
+        session.flush();
     }
 
     public static Serializable save(Object object)

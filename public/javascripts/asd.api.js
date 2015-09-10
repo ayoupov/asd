@@ -127,10 +127,10 @@ function populateArticles(data) {
     $articles.isotope('remove', $(".extra-articles"));
     //$("#more-articles-thumb").hide();
     $(data.data).each(function (a, item) {
-        var cover = item.cover;
+        var cover = (item.coverImage) ? item.coverImage.path : "";
         var hover = item.hover;
         var title = item.title;
-        var lead = item.lead;
+        var desc = item.coverDescription;
         var id = item.id;
         var $item = $('<div/>').addClass('article thumb').attr('id', 'article_' + id
         )
@@ -142,7 +142,7 @@ function populateArticles(data) {
             $('<div/>').addClass('content face-content').append(
                 $('<div/>').addClass('header').html(title)
             ).append(
-                $('<div/>').addClass('description').html(lead + ' Wczes')
+                $('<div/>').addClass('description').html(desc + '<br> Wczes')
             )
         ).append(
             $('<div/>').addClass('hover-content').append(

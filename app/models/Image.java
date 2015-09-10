@@ -15,6 +15,7 @@ import static utils.HibernateUtils.save;
  * Time: 23:47
  */
 @Entity
+@Table(name = "image")
 public class Image
 {
     @Id

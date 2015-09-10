@@ -35,8 +35,8 @@ public class GridImage extends ComplexSubstitute
 
         int to = opts.getTo();
         int from = opts.getFrom();
-        int width = (to - from + 1) * (colWidth + colGutterWidth) - colGutterWidth;
-        marginLeft = (from - 2) * (colWidth + colGutterWidth);
+        int width = (to - from + 1) * (colWidth + colGutterWidth) + colGutterWidth;
+        marginLeft = (from - 2) * (colWidth + colGutterWidth) - colGutterWidth;
         String imageStyle = String.format("style='width: %dpx; margin-left: %dpx;' ", width, marginLeft);
 
         return String.format(

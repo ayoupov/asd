@@ -7,6 +7,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,6 +16,7 @@ import javax.persistence.Id;
  * Time: 13:02
  */
 @Entity
+@Table(name = "metropolie")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Metropolie implements Geometrified
 {

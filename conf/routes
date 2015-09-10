@@ -40,7 +40,7 @@ POST        /story/update                          controllers.MediaContents.upd
 
 GET         /admin/reindex                         controllers.Admin.reindex
 GET         /admin/retile                          controllers.Tiles.rebuild
-GET         /admin/seed                            controllers.Tiles.seed
+GET         /admin/seed/:part                      controllers.Admin.seed(part : String)
 GET         /admin/sieve                           controllers.Admin.sieve
 GET         /admin/parse                           controllers.Admin.parse
 GET         /admin/parse_add                       controllers.Admin.parseAdd

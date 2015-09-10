@@ -28,29 +28,50 @@ import static utils.seed.GeographySeeds.seedGeography;
  */
 public class Disseminator
 {
-    public static void main(String[] args) throws IOException
+    private static final String dataDir = ServerProperties.getValue("asd.seed.data.folder");
+
+    public static void fullSeed() throws IOException
     {
-        String dataDir = ServerProperties.getValue("asd.seed.data.folder");
-//        beginTransaction();
-//        seedUsers();
-//        commitTransaction();
-//        beginTransaction();
-//        MetropolieProcessor mp = new MetropolieProcessor();
-//        seedGeography(dataDir + "gis/metropolies_10percent", mp);
-//        commitTransaction();
-//        beginTransaction();
-//        DioceseProcessor dp = new DioceseProcessor();
-//        seedGeography(dataDir + "gis/diecezje_wgs84_10percent", dp);
-//        commitTransaction();
-//        beginTransaction();
-//        DekanatProcessor dekp = new DekanatProcessor();
-//        seedGeography(dataDir + "gis/dekanaty_wgs84_10percent", dekp);
-//        commitTransaction();
+        userSeed();
+        geoSeed();
+        churchSeed();
+        contentSeed();
+    }
+
+    public static void contentSeed()
+    {
+        beginTransaction();
+        seedMockContent();
+        commitTransaction();
+    }
+
+    public static void churchSeed() throws IOException
+    {
         beginTransaction();
         seedChurches(dataDir + "churches.csv");
         commitTransaction();
+    }
+
+    public static void userSeed()
+    {
         beginTransaction();
-        seedMockContent();
+        seedUsers();
+        commitTransaction();
+    }
+
+    public static void geoSeed() throws IOException
+    {
+        beginTransaction();
+        MetropolieProcessor mp = new MetropolieProcessor();
+        seedGeography(dataDir + "gis/metropolies_10percent", mp);
+        commitTransaction();
+        beginTransaction();
+        DioceseProcessor dp = new DioceseProcessor();
+        seedGeography(dataDir + "gis/diecezje_wgs84_10percent", dp);
+        commitTransaction();
+        beginTransaction();
+        DekanatProcessor dekp = new DekanatProcessor();
+        seedGeography(dataDir + "gis/dekanaty_wgs84_10percent", dekp);
         commitTransaction();
     }
 
@@ -94,7 +115,7 @@ public class Disseminator
         }
     }
 
-    private static void seedUsers()
+    public static void seedUsers()
     {
         UserManager.getAutoUser();
         User storyUser1 = new User("Story writer 1", UserRole.User, UserStatus.Active, "asd:story1");

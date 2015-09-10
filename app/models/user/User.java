@@ -1,9 +1,6 @@
 package models.user;
 
-import org.hibernate.annotations.Table;
-
 import javax.persistence.*;
-import java.io.Serializable;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,7 +8,8 @@ import java.io.Serializable;
  * Date: 03.07.2015
  * Time: 23:50
  */
-@Entity(name="Users")
+@Entity
+@Table(name = "users")
 public class User
 {
     @Id

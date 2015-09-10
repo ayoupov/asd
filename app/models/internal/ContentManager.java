@@ -196,7 +196,7 @@ public class ContentManager
         Session session = getSession();
         List<User> users = session.createQuery(
                 "select distinct u " +
-                        "from Users u where " +
+                        "from User u where " +
                         "u.name like :fname " +
                         "order by u.id")
                 .setParameter("fname", "%" + filter.getNameFilter() + "%")
@@ -227,7 +227,7 @@ public class ContentManager
         Session session = getSession();
         Long res = (Long) session.createQuery(
                 "select count(*) " +
-                        "from Users u ")
+                        "from User u ")
                 .uniqueResult();
         return res.intValue();
     }
@@ -306,7 +306,7 @@ public class ContentManager
 
     public static long getTotalUsers()
     {
-        return (long) getSession().createQuery("select count(*) from Users u").setCacheable(true).uniqueResult();
+        return (long) getSession().createQuery("select count(*) from User u").setCacheable(true).uniqueResult();
     }
 
     public static long getTotalMediaContent(MediaContentType mct)

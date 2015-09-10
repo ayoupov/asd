@@ -2,6 +2,7 @@ package models;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,6 +11,7 @@ import javax.persistence.Id;
  * Time: 23:52
  */
 @Entity
+@Table(name = "architect")
 public class Architect
 {
     @Id

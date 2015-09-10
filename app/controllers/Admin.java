@@ -20,6 +20,7 @@ import utils.map.BadIdsSieve;
 import utils.map.Processor;
 import utils.map.Snapshoter;
 import utils.media.bbcode.BBCodeTest;
+import utils.seed.Disseminator;
 import views.html.admin;
 
 import java.io.IOException;
@@ -143,4 +144,32 @@ public class Admin extends Controller
         }
         return ok("parsed");
     }
+
+    public static Result seed(String part)
+    {
+        try {
+            switch (part) {
+                case "users":
+                    Disseminator.userSeed();
+                    break;
+                case "churches":
+                    Disseminator.churchSeed();
+                    break;
+                case "geo":
+                    Disseminator.geoSeed();
+                    break;
+                case "content":
+                    Disseminator.contentSeed();
+                    break;
+                case "all":
+                default:
+                    Disseminator.fullSeed();
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ok("seed started");
+    }
+
 }

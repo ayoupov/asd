@@ -14,7 +14,7 @@ public class ServerProperties
     public static final String APP_NAME = "asd";
     public static final String PROD_APP_NAME = "asd.prod";
 
-    public static final boolean PRODUCTION_MODE = false;
+    public static final boolean PRODUCTION_MODE = "true".equals(System.getProperty("production.mode"));
 
     private void init() throws IOException
     {
