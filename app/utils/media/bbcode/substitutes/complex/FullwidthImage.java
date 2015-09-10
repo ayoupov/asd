@@ -1,5 +1,6 @@
 package utils.media.bbcode.substitutes.complex;
 
+import utils.ServerProperties;
 import utils.media.bbcode.BBCodeParser;
 import utils.media.bbcode.substitutes.FullwidthSubstitute;
 import utils.media.bbcode.substitutes.SubstituteAnnotation;
@@ -27,10 +28,11 @@ public class FullwidthImage extends FullwidthSubstitute
     {
         opts = ImageOptionsFactory.getOptions(matcher.group(1));
         opts.setCaption(matcher.group(2));
+        String src = opts.getSrc() == null ? ServerProperties.getValue("asd.editor.nosrc.image") : opts.getSrc();
 
         return String.format(
-                "<img src='%s' class='ui image full-width' alt='%s'>",
-                opts.getSrc(), opts.getCaption());
+                "<img src='%s' data-image='%s' class='ui image full-width content-image' alt='%s'>",
+                src, src, opts.getCaption());
     }
 
     @Override
@@ -52,7 +54,7 @@ public class FullwidthImage extends FullwidthSubstitute
         String postfix = super.getPostfix();
         if (caption != null && !"".equals(caption.trim()))
             return postfix +
-                    String.format("<span class='content-image-caption'  style='margin-left: -120px;'>%s</span>", caption);
+                    String.format("<span class='content-image-caption'  style='margin-left: -120px;'>%s</span><br>", caption);
         else
             return postfix;
     }

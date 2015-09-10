@@ -23,6 +23,10 @@ var toolData = {
         tooltip: 'new line',
         insert: '[br/]'
     },
+    gap: {
+        tooltip: 'gap in px',
+        insert: '[gap=?]'
+    },
     numlist: {
         tooltip: 'numbered list',
         insert: '[list=1]![/list]'
@@ -88,6 +92,7 @@ function newToolbar(editor) {
         "<span class='editor-tool' data-ref='italic'><i>italic</i></span>" +
         "<span class='editor-tool' data-ref='p'>paragraph</span>" +
         "<span class='editor-tool' data-ref='br'>newline</span>" +
+        "<span class='editor-tool' data-ref='gap'>gap</span>" +
         "<span class='editor-tool' data-ref='numlist'>numlist</span>" +
         "<span class='editor-tool' data-ref='alphalist'>alphalist</span>" +
         "<span class='editor-tool' data-ref='unorderedlist'>unorderedlist</span>" +

@@ -179,8 +179,9 @@ td.passport-data-filler {
     margin-left: auto;
     margin-right: auto;
     margin-top: 60px;
+    /* these two options are inserted in head */
     /*background: url(../images/44_cover.jpg) center;*/
-    background-size: cover;
+    /*background-size: cover;*/
 }
 
 .content-title {

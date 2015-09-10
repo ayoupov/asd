@@ -43,11 +43,6 @@ public class CoubOptions extends ImageOptions
         return muted;
     }
 
-    public int getHeight()
-    {
-        return height;
-    }
-
     public String getAutostart()
     {
         return autostart;
@@ -99,29 +94,6 @@ public class CoubOptions extends ImageOptions
             this.startWithHD = startWithHD.group(1);
     }
 
-    public void setHeight(Matcher height)
-    {
-        if (height.find())
-            this.height = safeInt(height.group(1), 300);
-    }
-
-//    @Override
-//    public int getFrom()
-//    {
-//        return from;
-//    }
-//
-//    @Override
-//    public int getTo()
-//    {
-//        return to;
-//    }
-//
-//    @Override
-//    public String getSrc()
-//    {
-//        return src;
-//    }
 
     @Override
     public String toString()

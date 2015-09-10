@@ -17,17 +17,32 @@ public class ImageOptions
     protected int to = 8;
     protected String src;
     protected String caption;
+    protected int height = 300;
     protected static final Pattern fromPattern = Pattern.compile("from=([1-8])");
     protected static final Pattern toPattern = Pattern.compile("to=([1-8])");
     protected static final Pattern srcPattern = Pattern.compile("src=\\{(.+?)\\}");
-    protected static final Pattern heightPattern = Pattern.compile("height=(\\d+?)");
-
+    protected static final Pattern heightPattern = Pattern.compile("height=(\\d+)");
+    protected boolean heightSet = false;
 
     public ImageOptions(String optionCapture)
     {
         setFrom(fromPattern.matcher(optionCapture));
         setTo(toPattern.matcher(optionCapture));
         setSrc(srcPattern.matcher(optionCapture));
+        setHeight(heightPattern.matcher(optionCapture));
+    }
+
+    public void setHeight(Matcher mHeight)
+    {
+        if (mHeight.find()) {
+            this.heightSet = true;
+            this.height = safeInt(mHeight.group(1), 300);
+        }
+    }
+
+    public int getHeight()
+    {
+        return height;
     }
 
     public void setFrom(Matcher mFrom)
@@ -73,4 +88,8 @@ public class ImageOptions
         return caption;
     }
 
+    public boolean heightSet()
+    {
+        return heightSet;
+    }
 }

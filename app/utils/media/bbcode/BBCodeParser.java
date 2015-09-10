@@ -76,5 +76,12 @@ public class BBCodeParser
 
     public static class BBCodeRenderState
     {
+        private int currentId = 0;
+
+        public int nextId()
+        {
+            currentId++;
+            return currentId;
+        }
     }
 }

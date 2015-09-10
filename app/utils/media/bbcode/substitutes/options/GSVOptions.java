@@ -26,12 +26,6 @@ public class GSVOptions extends ImageOptions
         this.setHeading(headingPattern.matcher(optionCapture));
     }
 
-    public void setHeight(Matcher height)
-    {
-        if (height.find())
-            this.height = safeInt(height.group(1), 300);
-    }
-
     public int getHeight()
     {
         return height;

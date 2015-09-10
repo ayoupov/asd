@@ -24,7 +24,6 @@ public class GridImage extends ComplexSubstitute
     private static final Pattern pattern = Pattern.compile("\\[image\\s(.*?)](.*?)\\[\\/image]");
     protected static final int colWidth = 100;
     protected static final int colGutterWidth = 20;
-    private static final int initLeftMargin = 20;
     protected int marginLeft = 0;
 
     @Override
@@ -39,13 +38,11 @@ public class GridImage extends ComplexSubstitute
         marginLeft = (from - 2) * (colWidth + colGutterWidth) - colGutterWidth;
         String imageStyle = String.format("style='width: %dpx; margin-left: %dpx;' ", width, marginLeft);
 
+        String src = opts.getSrc() == null ? ServerProperties.getValue("asd.editor.nosrc.image") : opts.getSrc();
         return String.format(
-                "<img src='%s' alt='%s' %s>",
-                opts.getSrc() == null ? ServerProperties.getValue("asd.editor.nosrc.image") : opts.getSrc(),
+                "<img src='%s' data-image='%s' alt='%s' class='content-image' %s>",
+                src, src,
                 opts.getCaption(), imageStyle);
-//        return String.format(
-//                "<img src='%s' class='ui image' alt='%s' %s>",
-//                opts.getSrc(), opts.getCaption(), imageStyle);
     }
 
     @Override
@@ -69,7 +66,7 @@ public class GridImage extends ComplexSubstitute
     @Override
     protected String getPostfix()
     {
-        return String.format("<br><span class='content-image-caption' style='margin-left: %dpx;'>%s</span>",
+        return String.format("<br><span class='content-image-caption' style='margin-left: %dpx;'>%s</span><br>",
                 marginLeft, getOptions().getCaption());
     }
 

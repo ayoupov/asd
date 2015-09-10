@@ -8,6 +8,7 @@ $(document).ready(function () {
     changeSearchPrompt();
     resizeContentFunc();
     anchorFix();
+    galleries();
 });
 
 var resizeContentFunc = function () {
@@ -51,5 +52,38 @@ function anchorFix() {
                 return false;
             }
         }
+    });
+}
+
+var DEFAULT_GALL_OPTS =
+{
+    gallery_autoplay: true,
+    gallery_play_interval: 30000,
+    gallery_carousel: true,
+    gallery_debug_errors: true
+};
+
+function galleries() {
+    $(".content-gallery").each(function (a, gallery) {
+        var gallOpts = DEFAULT_GALL_OPTS;
+        var $gall = $(gallery);
+        if ($gall.hasClass('full-width'))
+            $.extend(gallOpts,
+                {
+                    gallery_width: "100%",
+                    gallery_max_width: "100%"
+                });
+        else {
+            var w = $gall.css('width');
+            $.extend(gallOpts,
+                {
+                    gallery_width: w,
+                    gallery_max_width: w
+                });
+            var h = $gall.css('height');
+            if (h && parseFloat(h) > 0)
+                $.extend(gallOpts, {gallery_height: h});
+        }
+        $gall.unitegallery(gallOpts);
     });
 }

@@ -1,6 +1,12 @@
-@import utils.web.RenderUtils
 @import utils.ServerProperties
+@import utils.web.RenderUtils
 @(content: MediaContent)
+@coverImage() = @{
+    if(content.coverImage != null)
+        content.coverImage.path
+    else
+        ServerProperties.getValue("asd.editor.nosrc.image")
+}
 <!DOCTYPE html>
 <html lang="pl">
     <head>
@@ -8,6 +14,7 @@
             @parts.commonhead()
             @parts.contenthead()
             @parts.metas()
+            @parts.style(".content-cover-image", "background: url(" + coverImage() + ") center; background-size: cover")
     </head>
     <body>
         @parts.likesInit()
@@ -16,7 +23,7 @@
             <div class="content-main-wrapper">
             @sociallinks()
             </div>
-            <div class="content-cover-image" style="background: url(@{if(content.coverImage != null) content.coverImage.path else ServerProperties.getValue("asd.editor.nosrc.image")}) center">
+            <div class="content-cover-image">
                 <div class="content-title">
                 @content.title
                 </div>
