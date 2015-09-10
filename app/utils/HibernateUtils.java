@@ -32,7 +32,9 @@ public class HibernateUtils
     static {
         try {
             Configuration configuration = new Configuration();
-            configuration.configure(ServerProperties.PRODUCTION_MODE ? "hibernate.prod.cfg.xml" : "hibernate.cfg.xml");
+            String hibConfigRes = ServerProperties.isInProduction() ? "hibernate.prod.cfg.xml" : "hibernate.cfg.xml";
+            System.out.println("hibConfigRes = " + hibConfigRes);
+            configuration.configure(hibConfigRes);
             Reflections reflections = new Reflections("models");
 
             Set<Class<?>> classes = reflections.getTypesAnnotatedWith(javax.persistence.Entity.class);

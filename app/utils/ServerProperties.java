@@ -14,15 +14,25 @@ public class ServerProperties
     public static final String APP_NAME = "asd";
     public static final String PROD_APP_NAME = "asd.prod";
 
-    public static final boolean PRODUCTION_MODE = "true".equals(System.getProperty("production.mode"));
+    private static boolean productionMode;
 
     private void init() throws IOException
     {
-        String propsToLoad = ((PRODUCTION_MODE) ? PROD_APP_NAME : APP_NAME) + ".properties";
+//        System.out.println("System.getProperties() = " + System.getProperties());
+//        System.out.println(System.getProperty("production.mode"));
+        productionMode = System.getProperty("production.mode") != null;
+        System.out.println("productionMode = " + productionMode);
+        String propsToLoad = ((productionMode) ? PROD_APP_NAME : APP_NAME) + ".properties";
+        System.out.println("propsToLoad = " + propsToLoad);
         InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(propsToLoad);
         full = new Properties();
         full.load(in);
         in.close();
+    }
+
+    public static boolean isInProduction()
+    {
+        return productionMode;
     }
 
     public static ServerProperties getInstance()

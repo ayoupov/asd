@@ -20,7 +20,7 @@ public class BibLinkRev extends AbstractSimpleSubstitute
     @Override
     public String getTag()
     {
-        return "biblinkfwd";
+        return "biblinkrev";
     }
 
     @Override
