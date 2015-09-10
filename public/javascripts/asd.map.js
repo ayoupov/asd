@@ -1,12 +1,8 @@
-var apidebug = true, usemap = true;
-
 var feature_paths = {
     metropolies: '/assets/metropolies_wgs84_10percent.topojson',
     diecezje: '/assets/diecezje_wgs84_10percent.topojson',
     dekanaty: '/assets/dekanaty_wgs84_10percent.topojson'
 };
-
-var debughost = 'localhost:9000', prodhost = '46.101.181.135';
 
 var metropStyle = function (feature) {
     return {
@@ -168,7 +164,8 @@ function addChurchContents() {
         "fillOpacity": 0.5
     };
 
-    var geojsonURL = 'http://' + (apidebug ? debughost : prodhost) + '/tiles/c/{z}/{x}/{y}.json';
+    var port = location.port;
+    var geojsonURL = 'http://' + location.hostname + (port != "" ? ":" + port : "") + '/tiles/c/{z}/{x}/{y}.json';
     churchesLayer = new L.TileLayer.GeoJSON(geojsonURL, {
             clipTiles: true,
             unique: function (feature) {

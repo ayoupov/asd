@@ -43,7 +43,7 @@ function anchorFix() {
             var target = $(this.hash);
             target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
             if (target.length) {
-                if (target.hasClass('biblink-fwd-ref'))
+                if (target.hasClass('biblink'))
                     menuOffset = $menu.height();
                 $('html,body').animate({
                     scrollTop: target.offset().top - menuOffset
