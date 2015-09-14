@@ -63,6 +63,10 @@ var toolData = {
         tooltip: 'insert image (image=fullwidth ignores from and to)',
         insert: '[image src={?} from=? to=?]!Caption[/image]'
     },
+    gallery: {
+        tooltip: 'insert gallery (gallery=fullwidth ignores from and to), you have to provide height',
+        insert: '[gallery src={!} from=? to=? height=?][/gallery]'
+    },
     coub: {
         tooltip: 'insert coub (coub=fullwidth ignores from and to), src is the coub id',
         insert: '[coub src={?} from=? to=? height=? autostart=? originalsize=? muted=? allowfullscreen=? hd=?]!Caption[/coub]'
@@ -102,6 +106,7 @@ function newToolbar(editor) {
         "<span class='editor-tool' data-ref='quote'>quote</span>" +
         "<span class='editor-tool' data-ref='afterwords'>afterwords</span>" +
         "<span class='editor-tool' data-ref='link'>link</span>" +
+        "<span class='editor-tool' data-ref='gallery'>gallery</span>" +
         "<span class='editor-tool' data-ref='image'>image</span>" +
         "<span class='editor-tool' data-ref='coub'>coub</span>" +
         "<span class='editor-tool' data-ref='gsv'>gsv</span>" +

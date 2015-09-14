@@ -12,8 +12,11 @@ function newFileManager(mctype, id) {
 }
 
 function fillFM(data) {
+    var $wrapper = $(".fm-items", $fm);
+    if ($wrapper.length == 0)
+        $wrapper = $("<div class='fm-items'/>").appendTo($fm);
     $(data).each(function (a, item) {
-        $fm.append(addFileItem(item));
+        $wrapper.append(addFileItem(item));
     });
 }
 

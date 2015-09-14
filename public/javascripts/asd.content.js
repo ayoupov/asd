@@ -68,11 +68,16 @@ function galleries() {
         var gallOpts = DEFAULT_GALL_OPTS;
         var $gall = $(gallery);
         if ($gall.hasClass('full-width'))
+        {
             $.extend(gallOpts,
                 {
                     gallery_width: "100%",
                     gallery_max_width: "100%"
                 });
+            var h = $gall.css('height');
+            if (h && parseFloat(h) > 0)
+                $.extend(gallOpts, {gallery_height: h});
+        }
         else {
             var w = $gall.css('width');
             $.extend(gallOpts,
@@ -84,6 +89,6 @@ function galleries() {
             if (h && parseFloat(h) > 0)
                 $.extend(gallOpts, {gallery_height: h});
         }
-        $gall.unitegallery(gallOpts);
+        $("#" + $gall.attr("id")).unitegallery(gallOpts);
     });
 }

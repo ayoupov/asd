@@ -20,7 +20,7 @@ public class FullwidthGallery extends FullwidthSubstitute
 {
 
     private ImageOptions opts;
-    private static final Pattern pattern = Pattern.compile("\\[gallery=fullwidth\\s*?(.*?)](.*?)\\[\\/gallery]", Pattern.DOTALL);
+    private static final Pattern pattern = Pattern.compile("\\[gallery=fullwidth\\s(.*?)](.*?)\\[\\/gallery]", Pattern.DOTALL);
 
     @Override
     protected String getProcessed(StringBuffer sb, Matcher matcher, BBCodeParser.BBCodeRenderState state)
@@ -28,7 +28,7 @@ public class FullwidthGallery extends FullwidthSubstitute
         opts = ImageOptionsFactory.getOptions(matcher.group(1));
         String opt = "";
         if (opts.heightSet())
-            opt += String.format("style='height: %d;'", opts.getHeight());
+            opt += String.format("style='height: %dpx;'", opts.getHeight());
 
         return String.format("<div id='gallery_%d' class='content-gallery full-width' %s>%s</div>", state.nextId(), opt, matcher.group(2));
     }
