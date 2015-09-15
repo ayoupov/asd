@@ -14,7 +14,8 @@ $(document).ready(function () {
 var resizeContentFunc = function () {
     var wwidth = $(window).width();
     $contentTitle.css({
-        left: (wwidth - $contentTitle.width()) / 2 + "px"
+        left: (wwidth - $contentTitle.width()) / 2 + "px",
+        top : (560 - $contentTitle.height() - 100) + "px"
     });
 };
 

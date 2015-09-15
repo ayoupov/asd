@@ -197,9 +197,20 @@ function populateArticles(data) {
             hoverContent.hide();
         }
     });
-    $('.article:not(.extra-articles)').on('click', function () {
+    $('.article:not(.extra-articles)').off('click').on('click', function () {
         window.open('/article/' + getId($(this)));
     });
+    hackStories();
+}
+
+var transitionOnceFlag = false;
+function hackStories()
+{
+    // hack to move to stories slide
+    if (location.hash == "#slide-stories" && !transitionOnceFlag) {
+        transitionOnceFlag = true;
+        $("a.slide-stories").click();
+    }
 }
 
 function appendArticleApi(when) {
@@ -259,6 +270,10 @@ function populateStories(data) {
         appendStoryApi();
     }
     $stories.isotope();
+    $('.story:not(.extra-stories)').off('click').on('click', function () {
+        window.open('/story/' + getId($(this)));
+    });
+
 }
 
 function appendStoryApi(when) {
