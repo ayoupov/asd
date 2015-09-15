@@ -187,10 +187,13 @@ td.passport-data-filler {
 .content-title {
     position: absolute;
     color: white;
-    top: 480px;
+    /*top: 480px;*/
+    bottom: 100px;
+    max-width: 940px;
     font-size: 31pt;
     font-weight: bold;
     font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
+    text-align: center;
 }
 
 /*.content-header.menu {*/

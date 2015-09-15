@@ -15,7 +15,6 @@ import java.io.File;
  */
 public class Thumber
 {
-    private static final ResampleOp resample200x150 = new ResampleOp(200,150);
 
     public static String thumbName(File file)
     {
@@ -31,7 +30,19 @@ public class Thumber
         try {
             BufferedImage image = ImageIO.read(file);
             System.out.println("In file: " + file);
-            BufferedImage thumbImage = resample200x150.filter(image, null);
+            int thumbWidthMax = 200;
+            int thumbHeightMax = 200;
+            ResampleOp resampleOp;
+
+            int imageHeight = image.getHeight();
+            int imageWidth = image.getWidth();
+            float imageRatio = ((float)imageHeight) / ((float) imageWidth);
+            if (imageRatio < 1.0) // case height is less than width
+                resampleOp = new ResampleOp(thumbWidthMax, (int) (thumbHeightMax * imageRatio));
+            else
+            // 200 / imageWidth = scaledratio
+                resampleOp = new ResampleOp((int) (thumbWidthMax / imageRatio), thumbHeightMax);
+            BufferedImage thumbImage = resampleOp.filter(image, null);
             File output = new File(thumbName(file));
             if (ImageIO.write(thumbImage, "png", output))
                 System.out.println("Thumb written: " + output);

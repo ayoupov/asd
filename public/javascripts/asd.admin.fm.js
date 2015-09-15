@@ -26,7 +26,7 @@ function addFileItem(item) {
 
     var $item = $("<div class='fm-item'/>").append($("<div class='fm-item-path'>").html(path));
     if (thumb)
-        $item.append($("<img/>").attr('src', thumb));
+        $item.append($("<img class='ui image'/>").attr('src', thumb));
 
     $item.on('click', function () {
         var target = "text";
