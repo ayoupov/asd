@@ -31,7 +31,7 @@ object FileManager extends Controller {
           picture.ref.moveTo(outFile, replace = true)
           val setReadableSuccess = outFile.setReadable(true,false)
           val desc = s"uploaded to $outFile with setReadable success [$setReadableSuccess]"
-          println(desc)
+          if (!ServerProperties.isInProduction) println(desc)
           Thumber.rethumb(outFile)
           val image = new Image(desc, webPath)
           HibernateUtils.beginTransaction()

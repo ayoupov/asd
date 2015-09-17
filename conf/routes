@@ -29,6 +29,11 @@ GET         /search/churches/:q                    controllers.Search.churchesBy
 POST        /search/:stype/:q                      controllers.Search.mediaContentByText(q: String, stype: String)
 GET         /search/:stype/:q                      controllers.Search.mediaContentByText(q: String, stype: String)
 
+# security
+
+GET         /auth/tw/check                         controllers.Twitter.verifyCredentials
+GET         /auth/tw                               controllers.Twitter.auth
+
 # secure, role must be >= User
 
 
@@ -47,7 +52,7 @@ GET         /admin/parse                           controllers.Admin.parse
 GET         /admin/parse_add                       controllers.Admin.parseAdd
 GET         /admin/snapshotify                     controllers.Admin.snapshotify
 GET         /admin/snapsome                        controllers.Admin.snapshotifySome
-GET         /admin/testparse2                       controllers.Admin.checkParse2
+GET         /admin/testparse2                      controllers.Admin.checkParse2
 GET         /admin/                                controllers.Admin.index
 GET         /admin                                 controllers.Admin.index
 

@@ -30,8 +30,8 @@ public class Thumber
         try {
             BufferedImage image = ImageIO.read(file);
             System.out.println("In file: " + file);
-            int thumbWidthMax = 200;
-            int thumbHeightMax = 200;
+            int thumbWidthMax = 215;
+            int thumbHeightMax = 215;
             ResampleOp resampleOp;
 
             int imageHeight = image.getHeight();

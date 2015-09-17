@@ -111,4 +111,16 @@ public class HibernateUtils
 //        ourSessionFactory.close();
 //        getSession().close();
     }
+
+    public static boolean delete(Class cl, Serializable id)
+    {
+        boolean res = true;
+        try {
+            getSession().delete(get(cl, id));
+        } catch (Exception e)
+        {
+            res = false;
+        }
+        return res;
+    }
 }

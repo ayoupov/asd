@@ -1,6 +1,5 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.Image;
 import models.MediaContent;
@@ -166,6 +165,21 @@ public class MediaContents extends Controller
         return ok(result);
     }
 
+    public static Result remove(String ctype, long mcid)
+    {
+        ObjectNode result = Json.newObject();
+        beginTransaction();
+        result.put("entity", ctype);
+        result.put("id", mcid);
+        boolean deleted = delete(MediaContent.class, mcid);
+        result.put("success", deleted);
+        commitTransaction();
+        if (deleted)
+            return ok(result);
+        else
+            return internalServerError(result);
+    }
+
     private static Image findImage(String path)
     {
         Image i = ContentManager.findImageByPath(path);
@@ -181,8 +195,7 @@ public class MediaContents extends Controller
         String q = request().getQueryString("q");
         List<Object[]> users = UserManager.getUserNames(q);
         List<Map<String, Object>> out = new ArrayList<>();
-        for (Object[] arr : users)
-        {
+        for (Object[] arr : users) {
             Map<String, Object> map = new HashMap<>();
             map.put("value", arr[0]);
             map.put("text", arr[1]);
