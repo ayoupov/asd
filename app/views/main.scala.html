@@ -1,5 +1,5 @@
 @import utils.ServerProperties
-@(churchCount: Long)
+@(churchCount: Long, currentChurch : Church)
 
 <!DOCTYPE html>
 
@@ -20,6 +20,9 @@
             @parts.main.mainslide2()
             @parts.main.mainslide3()
             @parts.main.mainslide4(ServerProperties.getValue("facebook.url"))
+            <div class="passport-hidden ui modal">
+            @parts.passport(currentChurch)
+            </div>
         </div>
     </body>
 </html>

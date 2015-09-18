@@ -112,6 +112,8 @@ public class Church
     @Column(name = "approved_dt")
     public Date approvedDT;
 
+    public String website;
+
     // only for internal update!
     public Church(String extID, String name, Address address)
     {
@@ -326,5 +328,15 @@ public class Church
     public void setApprovedDT(Date approvedDT)
     {
         this.approvedDT = approvedDT;
+    }
+
+    public String getWebsite()
+    {
+        return website;
+    }
+
+    public void setWebsite(String website)
+    {
+        this.website = website;
     }
 }

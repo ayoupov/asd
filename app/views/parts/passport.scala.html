@@ -1,0 +1,89 @@
+@(church: Church = null, from : String)
+<script src="javascripts/asd.passport.js"></script>
+<div id="fb-root"></div>
+<script>(function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "//connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v2.4&appId=475989659250668";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<script>!function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+    if (!d.getElementById(id)) {
+        js = d.createElement(s);
+        js.id = id;
+        js.src = p + '://platform.twitter.com/widgets.js';
+        fjs.parentNode.insertBefore(js, fjs);
+    }
+}(document, 'script', 'twitter-wjs');</script>
+<div id="passport">
+    <nav id="passportmenu-top" class="ui secondary pointing menu blurred">
+        <div class="left item social-wrapper">
+            <div class="fb-like" data-href="@from#church_@church.getId" data-layout="button_count" data-action="like"
+            data-show-faces="true" data-share="false"></div>
+            <a href="https://twitter.com/share" class="twitter-share-button" data-lang="pl">Tweetnij</a>
+        </div>
+        <div class="right item">
+            <div class="close-button"></div>
+        </div>
+    </nav>
+    <div class="passport-title">@church.getName</div>
+    <!-- todo! -->
+    <div class="passport-image-wrapper">
+        <div class="passport-main-image"><img class="ui image" src="../irrelevant/images/church_passport.png"></div>
+        <div class="passport-image-gallery"></div>
+    </div>
+
+    <table class="passport-data-wrapper">
+        <tr>
+            <td class="passport-field">address</td>
+            <td class="passport-value">@church.getAddress.getUnfolded</td>
+            <td class="passport-data-filler"></td>
+        </tr>
+        <tr>
+            <td class="passport-field">construction date</td>
+            <td class="passport-value">@church.getConstructionStart - @church.getConstructionEnd</td>
+            <td class="passport-data-filler"></td>
+        </tr>
+        <tr>
+            <td class="passport-field">architects</td>
+            <td class="passport-value">@church.getArchitects.toString</td>
+            <td class="passport-data-filler"></td>
+        </tr>
+        <tr>
+            <td class="passport-field">website</td>
+            <td class="passport-value"><a target="_blank" href="@church.getWebsite">@church.getWebsite</a></td>
+            <td class="passport-data-filler"></td>
+        </tr>
+    </table>
+    <div class="passport-stories-wrapper">
+        <div class="church-has-stories">
+            <h1>Stories added by the users</h1>
+        </div>
+        <div class="church-stories"></div>
+        <div class="add-story-wrapper-outer">
+            <div class="add-story-wrapper">
+                <div class="add-story-inner">
+                    <div class="add-story-plus"></div>
+                    <div class="add-story-button">doday swoje wspomnienie</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav id="passportmenu-bottom" class="ui secondary pointing menu blurred">
+        <div class="left item social-wrapper">
+            <div class="fb-like" data-href="@from#church_@church.getId" data-layout="button_count" data-action="like"
+            data-show-faces="true" data-share="false"></div>
+            <a href="https://twitter.com/share" class="twitter-share-button" data-lang="pl">Tweetnij</a>
+        </div>
+        <div class="right item">
+            <div class="close-button"></div>
+        </div>
+    </nav>
+    <div class="passport-edit-button">
+        <div class="alarm-sign"></div>
+        <div class="passport-edit-text">report data mistakes</div>
+    </div>
+</div>
