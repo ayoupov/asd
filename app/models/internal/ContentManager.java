@@ -1,6 +1,7 @@
 package models.internal;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.feth.play.module.pa.user.AuthUser;
 import models.Church;
 import models.Image;
 import models.MediaContent;
@@ -372,6 +373,11 @@ public class ContentManager
                 "select i from Image i " +
                         "where i.path = :p")
                 .setParameter("p", path).uniqueResult();
+    }
+
+    public static User findUserByAuthIdentity(AuthUser user)
+    {
+        return null;
     }
 
 //    public static List<User> parseUserList(Set<Long> userList )

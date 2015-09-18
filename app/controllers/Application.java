@@ -3,11 +3,14 @@ package controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.feth.play.module.pa.PlayAuthenticate;
 import com.vividsolutions.jts.geom.Point;
 import models.MediaContentType;
 import models.internal.ContentManager;
+import models.user.User;
 import play.libs.Json;
 import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Result;
 import play.twirl.api.Html;
 import utils.serialize.PointConverter;
@@ -67,4 +70,21 @@ public class Application extends Controller
         response().setHeader("Cache-Control", "no-transform,public,max-age=3600,s-maxage=3600");
         return ok(result);
     }
+
+    public static final String FLASH_MESSAGE_KEY = "message";
+    public static final String FLASH_ERROR_KEY = "error";
+
+    public static Result oAuthDenied(final String providerKey) {
+        com.feth.play.module.pa.controllers.Authenticate.noCache(response());
+        flash(FLASH_ERROR_KEY,
+                "You need to accept the OAuth connection in order to use this website!");
+        return redirect(routes.Application.index());
+    }
+
+    public static User getLocalUser(final Http.Session session) {
+        final User localUser = ContentManager.findUserByAuthIdentity(PlayAuthenticate
+                .getUser(session));
+        return localUser;
+    }
+
 }

@@ -31,8 +31,6 @@ GET         /search/:stype/:q                      controllers.Search.mediaConte
 
 # security
 
-GET         /auth/tw/check                         controllers.Twitter.verifyCredentials
-GET         /auth/tw                               controllers.Twitter.auth
 
 # secure, role must be >= User
 

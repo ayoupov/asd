@@ -1,6 +1,10 @@
 package models.user;
 
+import models.LinkedAccount;
+import play.data.validation.Constraints;
+
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,8 +20,14 @@ public class User
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
 
-    @Column(unique = true)
-    public String socialId;   // external id
+//    @Column(unique = true)
+//    public String socialId;   // external id
+
+    @Constraints.Email
+    // if you make this unique, keep in mind that users *must* merge/link their
+    // accounts then on signup with additional providers
+    // @Column(unique = true)
+    public String email;
 
     public String name;
 
@@ -25,26 +35,20 @@ public class User
 
     public UserStatus status;
 
-    public User(String name, UserRole role, UserStatus status, String socialId)
+    public boolean emailValidated;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    public List<LinkedAccount> linkedAccounts;
+
+    public User(String name, UserRole role, UserStatus status)
     {
         this.name = name;
         this.role = role;
         this.status = status;
-        this.socialId = socialId;
     }
 
     public User()
     {
-    }
-
-    public void setSocialId(String id)
-    {
-        this.socialId = socialId;
-    }
-
-    public String getSocialId()
-    {
-        return socialId;
     }
 
     public String getName()
@@ -92,8 +96,12 @@ public class User
     {
         return "User{" +
                 "id=" + id +
-                ", socialId='" + socialId + '\'' +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    public List<LinkedAccount> getLinkedAccounts()
+    {
+        return linkedAccounts;
     }
 }

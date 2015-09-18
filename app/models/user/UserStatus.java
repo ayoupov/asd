@@ -9,5 +9,5 @@ package models.user;
 public enum UserStatus
 {
     Active,
-    Blocked
+    DEACTIVATED, Blocked
 }
