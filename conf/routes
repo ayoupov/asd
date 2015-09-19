@@ -3,14 +3,15 @@
 # ~~~~
 
 # Home page
-GET         /                                      controllers.Application.index
+GET         /                                      controllers.Application.index(id: String = null)
+GET         /church/:id                            controllers.Application.index(id: String)
+GET         /church/passport/:id                   controllers.Churches.byId(id: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                          controllers.Assets.at(path="/public", file)
 
 GET         /tiles/:layer/:z/:x/:y.:ext            controllers.Tiles.tile(layer: String, z: Integer, x: Integer, y: Integer, ext: String)
 
-GET         /church/:id                            controllers.Churches.byId(id: String)
 # use html or none to get rendered page, json -- to simple data, has to be restricted to role >= moderator
 GET         /article/:id.:ext                      controllers.MediaContents.byTypeAndId(ctype: String = "article", id: Long, ext: String )
 GET         /story/:id.:ext                        controllers.MediaContents.byTypeAndId(ctype: String = "story", id: Long, ext: String)

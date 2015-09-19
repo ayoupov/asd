@@ -52,10 +52,12 @@ public class Tiles extends Controller
                     Object[] row = (Object[]) f;
                     Long id = (Long) row[0];
                     String extID = (String) row[1];
+                    String name = (String) row[2];
                     ObjectNode props = Json.newObject();
                     props.put("id", id);
                     props.put("ext_id", extID);
-                    Geometry point = (Geometry) row[2];
+                    props.put("name", name);
+                    Geometry point = (Geometry) row[3];
                     ObjectNode node = Json.newObject();
                     node.put("type", "Feature");
                     node.put("geometry", Json.toJson(point));

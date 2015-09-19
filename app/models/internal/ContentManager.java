@@ -16,6 +16,7 @@ import org.hibernate.Session;
 import org.hibernate.spatial.GeometryType;
 import org.hibernate.spatial.dialect.mysql.MySQLSpatial56Dialect;
 import org.hibernate.type.StandardBasicTypes;
+import play.mvc.Http;
 import utils.serialize.PointConverter;
 
 import java.util.ArrayList;
@@ -377,6 +378,18 @@ public class ContentManager
 
     public static User findUserByAuthIdentity(AuthUser user)
     {
+        return null;
+    }
+
+    public static Church getChurch(Http.Request request)
+    {
+        // todo: extract from path
+        String[] churches = request.queryString().get("church");
+        if (churches != null)
+        {
+            long id = safeLong(churches, 0);
+            return (Church) getSession().get(Church.class, id);
+        }
         return null;
     }
 

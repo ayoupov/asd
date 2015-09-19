@@ -1,4 +1,5 @@
-@(church: Church = null, from : String)
+@import play.libs.Json
+@(church: Church = null, from: String)
 <script src="javascripts/asd.passport.js"></script>
 <div id="fb-root"></div>
 <script>(function (d, s, id) {
@@ -21,7 +22,7 @@
 <div id="passport">
     <nav id="passportmenu-top" class="ui secondary pointing menu blurred">
         <div class="left item social-wrapper">
-            <div class="fb-like" data-href="@from#church_@church.getId" data-layout="button_count" data-action="like"
+            <div class="fb-like" data-href="" data-layout="button_count" data-action="like"
             data-show-faces="true" data-share="false"></div>
             <a href="https://twitter.com/share" class="twitter-share-button" data-lang="pl">Tweetnij</a>
         </div>
@@ -29,8 +30,8 @@
             <div class="close-button"></div>
         </div>
     </nav>
-    <div class="passport-title">@church.getName</div>
-    <!-- todo! -->
+    <div class="passport-title">@{if (church != null) church.getName else ""}</div>
+        <!-- todo! -->
     <div class="passport-image-wrapper">
         <div class="passport-main-image"><img class="ui image" src="../irrelevant/images/church_passport.png"></div>
         <div class="passport-image-gallery"></div>
@@ -39,22 +40,22 @@
     <table class="passport-data-wrapper">
         <tr>
             <td class="passport-field">address</td>
-            <td class="passport-value">@church.getAddress.getUnfolded</td>
+            <td class="passport-value church-address">@{if (church != null) church.getAddress.getUnfolded else ""}</td>
             <td class="passport-data-filler"></td>
         </tr>
         <tr>
             <td class="passport-field">construction date</td>
-            <td class="passport-value">@church.getConstructionStart - @church.getConstructionEnd</td>
+            <td class="passport-value church-construction">@{if (church != null) church.getConstructionStart + " - " + church.getConstructionEnd else ""}</td>
             <td class="passport-data-filler"></td>
         </tr>
         <tr>
             <td class="passport-field">architects</td>
-            <td class="passport-value">@church.getArchitects.toString</td>
+            <td class="passport-value church-architects">@{if (church != null) church.getArchitects.toString else ""}</td>
             <td class="passport-data-filler"></td>
         </tr>
         <tr>
             <td class="passport-field">website</td>
-            <td class="passport-value"><a target="_blank" href="@church.getWebsite">@church.getWebsite</a></td>
+            <td class="passport-value church-website">@{if (church != null) <a target="_blank" href="@church.getWebsite">@church.getWebsite</a> else ""}</td>
             <td class="passport-data-filler"></td>
         </tr>
     </table>
@@ -74,7 +75,7 @@
     </div>
     <nav id="passportmenu-bottom" class="ui secondary pointing menu blurred">
         <div class="left item social-wrapper">
-            <div class="fb-like" data-href="@from#church_@church.getId" data-layout="button_count" data-action="like"
+            <div class="fb-like" data-href="" data-layout="button_count" data-action="like"
             data-show-faces="true" data-share="false"></div>
             <a href="https://twitter.com/share" class="twitter-share-button" data-lang="pl">Tweetnij</a>
         </div>
@@ -87,3 +88,17 @@
         <div class="passport-edit-text">report data mistakes</div>
     </div>
 </div>
+<script>
+    function fillPassport(church)
+    {
+
+    }
+</script>
+@if(church != null) {
+    <script>
+        $(document).ready(function(){
+           $('fb-like').data('href', '@from/church/@church.getId');
+           fillPassport(JSON.parse('@Json.toJson(church)'));
+        });
+    </script>
+}

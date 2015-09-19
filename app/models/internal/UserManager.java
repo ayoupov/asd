@@ -28,7 +28,8 @@ public class UserManager
 {
     public static User getAutoUser()
     {
-        User user = getAuthUserFind(AutoIdentity.getInstance()).get(0);
+        List<User> authUserFind = getAuthUserFind(AutoIdentity.getInstance());
+        User user = (authUserFind != null && authUserFind.size() > 0) ? authUserFind.get(0) : null;
         if (user == null)
         {
             user = createUser(AutoIdentity.getInstance());
@@ -76,9 +77,10 @@ public class UserManager
 //                .eq("linkedAccounts.providerUserId", identity.getId())
 //                .eq("linkedAccounts.providerKey", identity.getProvider());
         return getSession()
-                .createQuery("select u from User u left outer join LinkedAccount la " +
-                        "on u.linkedAccounts " +
-                        "where la.providerUserId = :puid and la.providerKey = :pk")
+                .createQuery("select u from User u, LinkedAccount la " +
+                        "where la.providerUserId = :puid " +
+                        "and la.providerKey = :pk " +
+                        "and la member of u.linkedAccounts ")
                 .setParameter("puid", identity.getId())
                 .setParameter("pk", identity.getProvider())
                 .list();
@@ -89,7 +91,9 @@ public class UserManager
         if (identity == null) {
             return null;
         }
-        return getAuthUserFind(identity).get(0);
+        List<User> authUserFind = getAuthUserFind(identity);
+        User user = (authUserFind != null && authUserFind.size() > 0) ? authUserFind.get(0) : null;;
+        return user;
     }
 
     public static void mergeUsers(User thisUser, final User otherUser)

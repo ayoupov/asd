@@ -4,7 +4,8 @@ var api =
     'get articles': '/articles/{ids}',
     'get stories': '/stories/{ids}',
     'get article': '/article/{id}',
-    'get story': '/story/{id}'
+    'get story': '/story/{id}',
+    'get church passport' : '/church/passport/{id}'
 };
 
 // ss = starStories, sa = starArticles, ds = dateStories, da = dateArticles

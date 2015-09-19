@@ -170,7 +170,7 @@ public class GeographyManager
     {
         Session session = getSession();
         List res = session.createQuery(
-                "select c.id as id, c.extID as extID, a.geometry as geometry " +
+                "select c.id as id, c.extID as extID, c.name as name, a.geometry as geometry " +
                         "from Church c, Address a " +
                         "where c.address = a and ST_CONTAINS(:geom, a.geometry) = 1")
                 .setParameter("geom",  geometry)

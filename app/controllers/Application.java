@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.feth.play.module.pa.PlayAuthenticate;
 import com.vividsolutions.jts.geom.Point;
+import models.Church;
 import models.MediaContentType;
 import models.internal.ContentManager;
 import models.user.User;
@@ -33,13 +34,14 @@ public class Application extends Controller
         alsoGeometryMapper.registerModule(module);
     }
 
-    public static Result index()
+    public static Result index(String churchId)
     {
         beginTransaction();
         // add other static data
         long churchCount = ContentManager.getChurchCount();
+        Church currentChurch = ContentManager.getChurch(churchId);
         commitTransaction();
-        Html content = index.render(churchCount);
+        Html content = index.render(churchCount, currentChurch);
         return ok(content);
     }
 
@@ -78,7 +80,8 @@ public class Application extends Controller
         com.feth.play.module.pa.controllers.Authenticate.noCache(response());
         flash(FLASH_ERROR_KEY,
                 "You need to accept the OAuth connection in order to use this website!");
-        return redirect(routes.Application.index());
+        // todo: church back?
+        return redirect(routes.Application.index(null));
     }
 
     public static User getLocalUser(final Http.Session session) {

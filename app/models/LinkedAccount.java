@@ -2,12 +2,12 @@ package models;
 
 import models.user.User;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
-public class LinkedAccount
+@Table(name = "account")
+public class LinkedAccount implements Serializable
 {
 
     /**
@@ -16,6 +16,7 @@ public class LinkedAccount
     private static final long serialVersionUID = 1L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
 
     @ManyToOne

@@ -21,7 +21,7 @@
             @parts.main.mainslide3()
             @parts.main.mainslide4(ServerProperties.getValue("facebook.url"))
             <div class="passport-hidden ui modal">
-            @parts.passport(currentChurch)
+            @parts.passport(currentChurch, routes.Application.index(null).absoluteURL())
             </div>
         </div>
     </body>
