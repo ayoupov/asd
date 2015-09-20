@@ -1,6 +1,6 @@
 @import play.libs.Json
 @(church: Church = null, from: String)
-<script src="javascripts/asd.passport.js"></script>
+<script src="@routes.Assets.at("javascripts/asd.passport.js")"></script>
 <div id="fb-root"></div>
 <script>(function (d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
@@ -30,7 +30,7 @@
             <div class="close-button"></div>
         </div>
     </nav>
-    <div class="passport-title">@{if (church != null) church.getName else ""}</div>
+    <div class="passport-title church-name"></div>
         <!-- todo! -->
     <div class="passport-image-wrapper">
         <div class="passport-main-image"><img class="ui image" src="../irrelevant/images/church_passport.png"></div>
@@ -40,22 +40,22 @@
     <table class="passport-data-wrapper">
         <tr>
             <td class="passport-field">address</td>
-            <td class="passport-value church-address">@{if (church != null) church.getAddress.getUnfolded else ""}</td>
+            <td class="passport-value church-address"></td>
             <td class="passport-data-filler"></td>
         </tr>
         <tr>
             <td class="passport-field">construction date</td>
-            <td class="passport-value church-construction">@{if (church != null) church.getConstructionStart + " - " + church.getConstructionEnd else ""}</td>
+            <td class="passport-value church-construction"></td>
             <td class="passport-data-filler"></td>
         </tr>
         <tr>
             <td class="passport-field">architects</td>
-            <td class="passport-value church-architects">@{if (church != null) church.getArchitects.toString else ""}</td>
+            <td class="passport-value church-architects"></td>
             <td class="passport-data-filler"></td>
         </tr>
         <tr>
             <td class="passport-field">website</td>
-            <td class="passport-value church-website">@{if (church != null) <a target="_blank" href="@church.getWebsite">@church.getWebsite</a> else ""}</td>
+            <td class="passport-value church-website"></td>
             <td class="passport-data-filler"></td>
         </tr>
     </table>
@@ -91,14 +91,17 @@
 <script>
     function fillPassport(church)
     {
-
+        console.log(church);
+        $(".church-name").html(church.name);
+        $(".church-address").html(church.address.unfolded);
+        $(".church-website").html('<a target="_blank" href="' + church.website + '">'+church.website +'</a>');
     }
 </script>
 @if(church != null) {
     <script>
         $(document).ready(function(){
            $('fb-like').data('href', '@from/church/@church.getId');
-           fillPassport(JSON.parse('@Json.toJson(church)'));
+           fillPassport(JSON.parse($('<div/>').html('@Json.toJson(church).toString').text()));
         });
     </script>
 }

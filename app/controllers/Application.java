@@ -40,6 +40,7 @@ public class Application extends Controller
         // add other static data
         long churchCount = ContentManager.getChurchCount();
         Church currentChurch = ContentManager.getChurch(churchId);
+        System.out.println("currentChurch = " + currentChurch);
         commitTransaction();
         Html content = index.render(churchCount, currentChurch);
         return ok(content);
