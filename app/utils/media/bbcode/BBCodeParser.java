@@ -52,10 +52,9 @@ public class BBCodeParser
             }
         }
         // debug print
-        for (Map.Entry<SubstitutePriority, Set<Substitute>> entry : prioritizedSubstitutes.entrySet())
-        {
-            Set<String> tags = entry.getValue().stream().map(Substitute::getTag).collect(Collectors.toSet());
-            System.out.println(entry.getKey() + " : " + tags);
+        for (SubstitutePriority priority : order) {
+            Set<String> tags = prioritizedSubstitutes.get(priority).stream().map(Substitute::getTag).collect(Collectors.toSet());
+            System.out.println(priority + " : " + tags);
         }
     }
 
@@ -63,8 +62,7 @@ public class BBCodeParser
     {
         String result = input;
         BBCodeRenderState state = new BBCodeRenderState();
-        for (SubstitutePriority priority : order)
-        {
+        for (SubstitutePriority priority : order) {
             Set<Substitute> substitutes = prioritizedSubstitutes.get(priority);
             for (Substitute substitute : substitutes) {
                 System.out.println("substitute = " + substitute.getTag());
