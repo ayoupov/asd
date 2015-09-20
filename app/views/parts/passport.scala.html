@@ -1,4 +1,3 @@
-@import play.libs.Json
 @(church: Church = null, from: String)
 <script src="@routes.Assets.at("javascripts/asd.passport.js")"></script>
 <div id="fb-root"></div>
@@ -101,7 +100,8 @@
     <script>
         $(document).ready(function(){
            $('fb-like').data('href', '@from/church/@church.getId');
-           fillPassport(JSON.parse($('<div/>').html('@Json.toJson(church).toString').text()));
+           if (currentChurch)
+            fillPassport(currentChurch);
         });
     </script>
 }

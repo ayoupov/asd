@@ -3,11 +3,12 @@ package utils.media.bbcode;
 import org.reflections.Reflections;
 import utils.media.bbcode.substitutes.Substitute;
 import utils.media.bbcode.substitutes.SubstituteAnnotation;
+import utils.media.bbcode.substitutes.SubstitutePriority;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,9 +19,15 @@ import java.util.regex.Pattern;
 public class BBCodeParser
 {
 
-    private static Set<Substitute> substitutes = new HashSet<>();
+//    private static Set<Substitute> substitutes = new HashSet<>();
+
+    private static List<SubstitutePriority> order = new ArrayList<>();
+    private static Map<SubstitutePriority, Set<Substitute>> prioritizedSubstitutes = new HashMap<>();
 
     static {
+        order.add(SubstitutePriority.HIGH);
+        order.add(SubstitutePriority.MEDIUM);
+        order.add(SubstitutePriority.LOW);
         init();
     }
 
@@ -32,37 +39,50 @@ public class BBCodeParser
         for (Class<?> clazz : classes) {
             try {
                 Substitute substitute = (Substitute) clazz.newInstance();
-                substitutes.add(substitute);
-                substitute.getTag();
-                System.out.println("Registered substitute: " + clazz + " [" + substitute.getTag() + "]");
+                SubstitutePriority priority = substitute.getPriority();
+                Set<Substitute> subs = prioritizedSubstitutes.get(priority);
+                if (subs == null)
+                    subs = new HashSet<Substitute>();
+                subs.add(substitute);
+                prioritizedSubstitutes.put(priority, subs);
+//                System.out.println("Registered substitute: " + clazz + " [" + substitute.getTag() + "]");
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("Failed to register: " + clazz);
             }
         }
-
+        // debug print
+        for (Map.Entry<SubstitutePriority, Set<Substitute>> entry : prioritizedSubstitutes.entrySet())
+        {
+            Set<String> tags = entry.getValue().stream().map(Substitute::getTag).collect(Collectors.toSet());
+            System.out.println(entry.getKey() + " : " + tags);
+        }
     }
 
     public static String parse(String input)
     {
         String result = input;
         BBCodeRenderState state = new BBCodeRenderState();
-        for (Substitute substitute : substitutes) {
-            System.out.println("substitute = " + substitute.getTag());
-            Pattern pattern = substitute.getPattern();
-            String replacement = substitute.getReplacement();
-            Matcher matcher = pattern.matcher(result);
-            StringBuffer sb = new StringBuffer();
-            while (matcher.find()) {
-                String found = matcher.group().trim();
-                if (!"".equals(found) && !"\n".equals(found))
-                    System.out.println("Processing: " + found);
-                if (!substitute.isSimple())
-                    replacement = substitute.process(sb, matcher, state);
-                matcher.appendReplacement(sb, replacement);
+        for (SubstitutePriority priority : order)
+        {
+            Set<Substitute> substitutes = prioritizedSubstitutes.get(priority);
+            for (Substitute substitute : substitutes) {
+                System.out.println("substitute = " + substitute.getTag());
+                Pattern pattern = substitute.getPattern();
+                String replacement = substitute.getReplacement();
+                Matcher matcher = pattern.matcher(result);
+                StringBuffer sb = new StringBuffer();
+                while (matcher.find()) {
+                    String found = matcher.group().trim();
+                    if (!"".equals(found) && !"\n".equals(found))
+                        System.out.println("Processing: " + found);
+                    if (!substitute.isSimple())
+                        replacement = substitute.process(sb, matcher, state);
+                    matcher.appendReplacement(sb, replacement);
+                }
+                matcher.appendTail(sb);
+                result = sb.toString();
             }
-            matcher.appendTail(sb);
-            result = sb.toString();
         }
         applyState(result, state);
         return result;

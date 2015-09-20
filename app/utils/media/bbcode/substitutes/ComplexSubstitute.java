@@ -35,4 +35,11 @@ public abstract class ComplexSubstitute implements Substitute
     }
 
     protected abstract String getProcessed(StringBuffer sb, Matcher matcher, BBCodeParser.BBCodeRenderState state);
+
+    @Override
+    public SubstitutePriority getPriority()
+    {
+        return SubstitutePriority.LOW;
+    }
+
 }

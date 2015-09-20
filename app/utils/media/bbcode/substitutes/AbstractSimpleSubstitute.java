@@ -24,4 +24,10 @@ public abstract class AbstractSimpleSubstitute implements Substitute
     {
         return "";
     }
+
+    @Override
+    public SubstitutePriority getPriority()
+    {
+        return SubstitutePriority.MEDIUM;
+    }
 }

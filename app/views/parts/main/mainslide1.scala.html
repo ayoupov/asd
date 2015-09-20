@@ -1,4 +1,5 @@
-@(churchCount : Long)
+@import play.libs.Json
+@(churchCount : Long, church: Church)
 <div id="slide-map" class="slide wrapped violet slide-map">
     <div id="map"></div>
     <div id="about" class="ui golden sticky">
@@ -15,3 +16,8 @@
         <div class="about-shrunk-content hidden">o&nbsp;projekcie</div>
     </div>
 </div>
+@if(church != null) {
+    <script>
+        var currentChurch = JSON.parse($('<div/>').html('@Json.toJson(church).toString').text());
+    </script>
+}

@@ -46,7 +46,7 @@ var mapInit = function (geostats) {
     var opts = {
         loadingControl: true
     };
-    map = L.mapbox.map('map', 'ayoupov.09a5336b', opts).setView([52.36, 18.45], 6);
+    map = L.mapbox.map('map', 'ayoupov.09a5336b', opts).setView([52.36, 18.45], 7);
     // relocate attribution
     $('.leaflet-control-attribution').css(
         {
@@ -58,7 +58,7 @@ var mapInit = function (geostats) {
     $('.mapbox-logo').css('padding-right', '10px');
 
     map.options.doubleClickZoom = true;
-    map.options.minZoom = 6;
+    map.options.minZoom = 7;
     map.scrollWheelZoom.disable();
 
     addChurchContents();
@@ -124,6 +124,7 @@ var mapInit = function (geostats) {
     });
 
     map.fire('zoomend');
+    mapPostLoad();
 };
 
 var churchIcon = L.icon(
@@ -189,4 +190,26 @@ function addChurchContents() {
             }
         }
     );
+}
+
+var POPUP_ON_LOAD_ONCE = true;
+
+function navigateTo(church) {
+    //churchesLayer.on('ready', function () {
+    churchesLayer.geojsonLayer.on('layeradd', function (evt) {
+        var marker = evt.layer;
+        if (marker.feature.properties.ext_id == church.extID) {
+            marker.openPopup();
+            if (POPUP_ON_LOAD_ONCE)
+                churchesLayer.geojsonLayer.off('layeradd');
+        }
+    });
+    // todo: produces exception : Uncaught TypeError: Cannot read property 'min' of undefined
+    // seems ^^^ from geojsonLayer
+    map.setView(church.address.geometry, 16);
+}
+
+function mapPostLoad() {
+    if (currentChurch !== undefined)
+        navigateTo(currentChurch);
 }

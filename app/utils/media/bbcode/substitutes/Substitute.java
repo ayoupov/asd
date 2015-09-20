@@ -22,4 +22,6 @@ public interface Substitute
     String process(StringBuffer sb, Matcher matcher, BBCodeParser.BBCodeRenderState state);
 
     boolean isSimple();
+
+    SubstitutePriority getPriority();
 }
