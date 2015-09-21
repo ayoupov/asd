@@ -7,10 +7,10 @@
     <head>
         <meta charset="UTF-8">
         <title>Architektura Siódmego Dnia</title>
-            @parts.commonhead()
-            @parts.maphead()
-            @parts.indexhead()
-            @parts.metas()
+            @parts.heads.commonhead()
+            @parts.heads.maphead()
+            @parts.heads.indexhead()
+            @parts.heads.metas()
     </head>
     <body>
         <div class="wrapper">
@@ -20,7 +20,7 @@
             @parts.main.mainslide2()
             @parts.main.mainslide3()
             @parts.main.mainslide4(ServerProperties.getValue("facebook.url"))
-            <div class="passport-hidden ui modal">
+            <div class="ui modal passport-wrapper">
             @parts.passport(currentChurch, routes.Application.index(null).absoluteURL())
             </div>
         </div>

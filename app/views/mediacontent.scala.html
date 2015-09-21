@@ -11,9 +11,9 @@
 <html lang="pl">
     <head>
         <meta charset="UTF-8">
-            @parts.commonhead()
-            @parts.contenthead()
-            @parts.metas()
+            @parts.heads.commonhead()
+            @parts.heads.contenthead()
+            @parts.heads.metas()
             @parts.style(".content-cover-image", "background: url(" + coverImage() + ") center; background-size: cover")
     </head>
     <body>
