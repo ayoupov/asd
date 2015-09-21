@@ -59,6 +59,7 @@ var mapInit = function (geostats) {
 
     map.options.doubleClickZoom = true;
     map.options.minZoom = 7;
+    map.options.maxZoom = 18;
     map.scrollWheelZoom.disable();
 
     addChurchContents();
@@ -96,41 +97,51 @@ var mapInit = function (geostats) {
     addLayerCounters(metroCountersLayer, geostats.metro);
     addLayerCounters(dioCounterLayer, geostats.dio);
 
-    map.on('zoomend ', function (e) {
-        if (map.getZoom() < 8) {
-            map.removeLayer(dioCounterLayer);
-            map.removeLayer(diecezjeLayer);
-            map.addLayer(metropoliesLayer);
-            map.addLayer(metroCountersLayer);
-        }
-        else if (map.getZoom() >= 8) {
-            if (map.getZoom() < 10) {
-                map.addLayer(dioCounterLayer);
-                map.addLayer(diecezjeLayer);
-            }
-            map.removeLayer(metroCountersLayer);
-            map.removeLayer(metropoliesLayer);
-        }
-        if (map.getZoom() < 10) {
-            map.removeLayer(dekanatyLayer);
-            map.removeLayer(churchesLayer);
-        }
-        else if (map.getZoom() >= 10) {
-            map.removeLayer(dioCounterLayer);
-            map.removeLayer(diecezjeLayer);
-            map.addLayer(dekanatyLayer);
-            map.addLayer(churchesLayer);
-        }
-    });
+    map.on('zoomanim', layerChanges);
 
-    map.fire('zoomend');
+    //map.fire('zoomanim');
+    layerChanges();
     mapPostLoad();
+};
+
+var layerChanges = function (e) {
+    var zoom;
+    if (!e || !e.zoom) zoom = map.getZoom();
+    else zoom = e.zoom;
+
+    if (zoom < 8) {
+        map.removeLayer(dioCounterLayer);
+        map.removeLayer(diecezjeLayer);
+        if (!map.hasLayer(metropoliesLayer)) map.addLayer(metropoliesLayer);
+        if (!map.hasLayer(metroCountersLayer)) map.addLayer(metroCountersLayer);
+    }
+    else {
+        map.removeLayer(metroCountersLayer);
+        map.removeLayer(metropoliesLayer);
+    }
+
+    if (zoom < 11) {
+        map.removeLayer(churchesLayer);
+        map.removeLayer(dekanatyLayer);
+        if (zoom >= 8) {
+            if (!map.hasLayer(dioCounterLayer)) map.addLayer(dioCounterLayer);
+            if (!map.hasLayer(diecezjeLayer)) map.addLayer(diecezjeLayer);
+        }
+    }
+    else {
+        map.removeLayer(dioCounterLayer);
+        map.removeLayer(diecezjeLayer);
+        if (!map.hasLayer(dekanatyLayer)) map.addLayer(dekanatyLayer);
+        if (!map.hasLayer(churchesLayer)) map.addLayer(churchesLayer);
+    }
 };
 
 var churchIcon = L.icon(
     {
         iconUrl: '/assets/images/church_marker.png',
-        iconSize: [43, 59]
+        iconSize: [43, 59],
+        iconAnchor: [22, 59],
+        popupAnchor: [0, -59]
     });
 
 function addLayerCounters(layer, data) {
@@ -168,10 +179,12 @@ function addChurchContents() {
     var port = location.port;
     var geojsonURL = 'http://' + location.hostname + (port != "" ? ":" + port : "") + '/tiles/c/{z}/{x}/{y}.json';
     churchesLayer = new L.TileLayer.GeoJSON(geojsonURL, {
-            clipTiles: true,
+            //clipTiles: true,
             unique: function (feature) {
                 return feature.properties.id;
-            }
+            },
+            minZoom: 10,
+            maxZoom: 18
         }, {
             style: style,
             pointToLayer: function (feature, latlng) {
@@ -206,10 +219,11 @@ function navigateTo(church) {
     });
     // todo: produces exception : Uncaught TypeError: Cannot read property 'min' of undefined
     // seems ^^^ from geojsonLayer
-    map.setView(church.address.geometry, 16);
+    map.setView(church.address.geometry, 14);
+    layerChanges();
 }
 
 function mapPostLoad() {
-    if (currentChurch !== undefined)
+    if (typeof currentChurch !== "undefined")
         navigateTo(currentChurch);
 }

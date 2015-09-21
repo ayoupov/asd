@@ -58,6 +58,7 @@ public class Tiles extends Controller
                     props.put("ext_id", extID);
                     props.put("name", name);
                     Geometry point = (Geometry) row[3];
+//                    props.put("point", Json.toJson(point));
                     ObjectNode node = Json.newObject();
                     node.put("type", "Feature");
                     node.put("geometry", Json.toJson(point));

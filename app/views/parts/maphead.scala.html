@@ -1,10 +1,22 @@
+@import utils.ServerProperties
 @()
 
 <!-- map rel -->
-<script src='https://api.tiles.mapbox.com/mapbox.js/v2.2.2/mapbox.js'></script>
-<link href='https://api.tiles.mapbox.com/mapbox.js/v2.2.2/mapbox.css' rel='stylesheet'/>
-<script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.2.0/leaflet-omnivore.min.js'></script>
+@*<script src="http://cdn.leafletjs.com/leaflet-1.0.0-b1/leaflet.js"></script>*@
+<script src='https://api.mapbox.com/mapbox.js/v2.2.2/mapbox.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/v2.2.2/mapbox.css' rel='stylesheet' />
+@*<script src="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.js"></script>*@
+@*<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.css" />*@
+@*<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-1.0.0-b1/leaflet.css" />*@
 
+@*<script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.2.0/leaflet-omnivore.min.js'></script>*@
+@{
+    if(ServerProperties.isInProduction) {
+            Html("<script src='" + routes.Assets.at("javascripts/leaflet-omnivore.min.js") + "'></script>")
+    } else {
+        Html("<script src='" + routes.Assets.at("javascripts/leaflet-omnivore.js") + "'></script>")
+    }
+}
 <link rel="stylesheet" href="@routes.Assets.at("stylesheets/Control.Loading.css")" />
 
 <script src="@routes.Assets.at("javascripts/Control.Loading.js")"></script>
