@@ -170,3 +170,11 @@ td.passport-data-filler {
 .passport-wrapper{
     width: 960px; /* todo: add important? */
 }
+
+.ui.modal {
+    z-index: 1010 !important;
+}
+
+.ui.dimmer {
+    z-index: 1009 !important;
+}

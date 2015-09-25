@@ -91,9 +91,6 @@
     <script>
         $(document).ready(function(){
            $('fb-like').data('href', '@from/church/@church.getId');
-           $('.close-button').on('click', function(){
-                $passportWrapper.modal('hide');
-           });
            if (currentChurch)
             fillPassport(currentChurch);
         });

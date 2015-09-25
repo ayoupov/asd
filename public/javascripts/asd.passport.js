@@ -5,19 +5,22 @@ $(document).ready(function () {
     $passbtn = $('.passport-edit-button');
     $(window).on('resize', fixUI);
     fixUI();
-
+    $(".close-button").on('click', function () {
+        $passportWrapper.modal('hide');
+    });
+    $passportWrapper.modal({onHidden : function () {
+        removeHash();
+    }})
 });
 
-function fixUI()
-{
-    $passbtn.css({left : (($passportWrapper.width() - $passbtn.width()) / 2) + "px"});
+function fixUI() {
+    $passbtn.css({left: (($passportWrapper.width() - $passbtn.width()) / 2) + "px"});
 }
 
-function fillPassport(church)
-{
+function fillPassport(church) {
     console.log(church);
     $(".church-name").html(church.name);
     $(".church-address").html(church.address.unfolded);
     var website = church.website != null ? church.website : "";
-    $(".church-website").html('<a target="_blank" href="' + website + '">'+ website +'</a>');
+    $(".church-website").html('<a target="_blank" href="' + website + '">' + website + '</a>');
 }

@@ -37,3 +37,9 @@ function prepad(val)
 {
     return (val <10 ? '0' : '');
 }
+
+function removeHash()
+{
+    history.replaceState("", document.title, window.location.pathname
+        + window.location.search);
+}
