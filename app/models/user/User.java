@@ -37,8 +37,7 @@ public class User
 
     public boolean emailValidated;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name="user_accounts")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="user")
     public List<LinkedAccount> linkedAccounts;
 
     public User(String name, UserRole role, UserStatus status)

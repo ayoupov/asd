@@ -1,4 +1,4 @@
-var $map, $menu, $slide1, $slide2, $slide3, $slide4, $prompt, $links, $about;
+var $map, $menu, $slide1, $slide2, $slide3, $slide4, $prompt, $links, $about, $passportWrapper;
 var $articles, $stories, $dateStories;
 
 var initSelectorCache = function () {
@@ -14,6 +14,7 @@ var initSelectorCache = function () {
     $articles = $(".articles");
     $stories = $(".stories");
     $dateStories = $("#stories-by-date");
+    $passportWrapper = $(".passport-wrapper");
 };
 
 $(document).ready(function () {

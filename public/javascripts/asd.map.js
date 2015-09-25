@@ -102,6 +102,12 @@ var mapInit = function (geostats) {
     //map.fire('zoomanim');
     layerChanges();
     mapPostLoad();
+
+    map.on('popupopen', function (popup) {
+        $("a.open-passport", $(popup.target._container)).on('click', function () {
+            openPassport(getId($(this)))
+        });
+    });
 };
 
 var layerChanges = function (e) {
@@ -192,13 +198,11 @@ function addChurchContents() {
             },
             onEachFeature: function (feature, layer) {
                 if (feature.properties) {
-                    var popupString = '<div class="popup">';
-                    for (var k in feature.properties) {
-                        var v = feature.properties[k];
-                        popupString += k + ': ' + v + '<br />';
-                    }
-                    popupString += '</div>';
+                    var popupString = getPopup(feature, layer);
                     layer.bindPopup(popupString);
+                    layer.on({
+                        click: whenClicked
+                    });
                 }
             }
         }
@@ -212,9 +216,12 @@ function navigateTo(church) {
     churchesLayer.geojsonLayer.on('layeradd', function (evt) {
         var marker = evt.layer;
         if (marker.feature.properties.ext_id == church.extID) {
-            marker.openPopup();
-            if (POPUP_ON_LOAD_ONCE)
+            if (POPUP_ON_LOAD_ONCE) {
                 churchesLayer.geojsonLayer.off('layeradd');
+                marker.openPopup();
+                if (location.hash == "#passport")
+                    openPassport(church.extID);
+            }
         }
     });
     // todo: produces exception : Uncaught TypeError: Cannot read property 'min' of undefined
@@ -226,4 +233,33 @@ function navigateTo(church) {
 function mapPostLoad() {
     if (typeof currentChurch !== "undefined")
         navigateTo(currentChurch);
+}
+
+function getPopup(feature, layer) {
+    var popupString = '<div class="popup">';
+    popupString += feature.properties.name;
+    popupString += '<br/>';
+    popupString += '<a href="#passport" class="open-passport" id="passport_' + feature.properties.ext_id + '">Details</a>';
+    popupString += '</div>';
+    return popupString;
+}
+
+function openPassport(id) {
+    $passportWrapper.api({
+        on: 'now',
+        action: 'get church passport',
+        method: 'GET',
+        urlData : {id : id},
+        onSuccess: function (data) {
+            fillPassport(data);
+            $passportWrapper.modal('show');
+            fixUI();
+        }
+    });
+}
+
+function whenClicked(e) {
+    var port = location.port;
+    var id = e.target.feature.properties.ext_id;
+    window.history.pushState({}, "", "http://" + location.hostname + (port != "" ? ":" + port : "") + "/church/" + id);
 }

@@ -33,7 +33,7 @@
 
 #menu {
     border-bottom-width: 1px;
-    z-index: 1001;
+    z-index: 800;
     height: 60px;
     margin: 0;
     padding: 0;
@@ -500,7 +500,3 @@ div.holder-border {
     font-size: 18pt;
     line-height: 68px;
 }
-
-/* passport */
-
-

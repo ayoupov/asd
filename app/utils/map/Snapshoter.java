@@ -34,7 +34,7 @@ public class Snapshoter
             BufferedReader br = new BufferedReader(new FileReader(what));
             String line;
             while ((line = br.readLine()) != null) {
-                if (ids.add(line.trim()))
+                if (!ids.add(line.trim()))
                     System.out.println(line + " already was here!");;
             }
             br.close();

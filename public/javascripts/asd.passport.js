@@ -10,5 +10,14 @@ $(document).ready(function () {
 
 function fixUI()
 {
-    $passbtn.css({left : (($(window).width() - $passbtn.width()) / 2) + "px"});
+    $passbtn.css({left : (($passportWrapper.width() - $passbtn.width()) / 2) + "px"});
+}
+
+function fillPassport(church)
+{
+    console.log(church);
+    $(".church-name").html(church.name);
+    $(".church-address").html(church.address.unfolded);
+    var website = church.website != null ? church.website : "";
+    $(".church-website").html('<a target="_blank" href="' + website + '">'+ website +'</a>');
 }

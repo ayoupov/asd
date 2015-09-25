@@ -32,7 +32,7 @@
     <div class="passport-title church-name"></div>
         <!-- todo! -->
     <div class="passport-image-wrapper">
-        <div class="passport-main-image"><img class="ui image" src="../irrelevant/images/church_passport.png"></div>
+        <div class="passport-main-image"><img class="ui image" src="/assets/images/church_passport.png"></div>
         <div class="passport-image-gallery"></div>
     </div>
 
@@ -87,19 +87,13 @@
         <div class="passport-edit-text">report data mistakes</div>
     </div>
 </div>
-<script>
-    function fillPassport(church)
-    {
-        console.log(church);
-        $(".church-name").html(church.name);
-        $(".church-address").html(church.address.unfolded);
-        $(".church-website").html('<a target="_blank" href="' + church.website + '">'+church.website +'</a>');
-    }
-</script>
 @if(church != null) {
     <script>
         $(document).ready(function(){
            $('fb-like').data('href', '@from/church/@church.getId');
+           $('.close-button').on('click', function(){
+                $passportWrapper.modal('hide');
+           });
            if (currentChurch)
             fillPassport(currentChurch);
         });

@@ -10,12 +10,14 @@ import models.user.UserRole;
 import models.user.UserStatus;
 import org.hibernate.Query;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import static utils.HibernateUtils.getSession;
+import static utils.HibernateUtils.save;
 import static utils.HibernateUtils.saveOrUpdate;
 
 /**
@@ -80,7 +82,7 @@ public class UserManager
                 .createQuery("select u from User u, LinkedAccount la " +
                         "where la.providerUserId = :puid " +
                         "and la.providerKey = :pk " +
-                        "and la member of u.linkedAccounts ")
+                        "and la.user = u ")
                 .setParameter("puid", identity.getId())
                 .setParameter("pk", identity.getProvider())
                 .list();
@@ -111,10 +113,17 @@ public class UserManager
 
     public static User createUser(final AuthUser authUser)
     {
+        return createUser(authUser, UserRole.User);
+    }
+
+    public static User createUser(final AuthUser authUser, UserRole role)
+    {
         final User user = new User();
         user.setStatus(UserStatus.Active);
+        user.setRole(role);
+        LinkedAccount account = createLinkedAccount(authUser);
         user.linkedAccounts = Collections.singletonList(
-                createLinkedAccount(authUser));
+                account);
 
         if (authUser instanceof EmailIdentity) {
             final EmailIdentity identity = (EmailIdentity) authUser;
@@ -133,7 +142,10 @@ public class UserManager
             }
         }
 
-        saveOrUpdate(user);
+        Serializable id = save(user);
+        user.setId((Long) id);
+        account.setUser(user);
+        saveOrUpdate(account);
         return user;
     }
 
@@ -158,8 +170,11 @@ public class UserManager
     {
         // should update linked accounts list and store it
         final User u = findByAuthUserIdentity(oldUser);
-		u.linkedAccounts.add(createLinkedAccount(newUser));
+        LinkedAccount account = createLinkedAccount(newUser);
+        u.linkedAccounts.add(account);
+        account.setUser(u);
 		saveOrUpdate(u);
+        saveOrUpdate(account);
     }
 
     public static User findByEmail(final String email)
