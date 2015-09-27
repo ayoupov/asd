@@ -57,6 +57,7 @@ public class Church
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
 
+    @Column(name="ext_id")
     public String extID;
 
     public int version;
@@ -75,7 +76,9 @@ public class Church
      */
     public boolean enabled;
 
+    @Column(name="cons_start")
     public Integer constructionStart;
+    @Column(name="cons_end")
     public Integer constructionEnd;
 
     @IndexedEmbedded

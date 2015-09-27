@@ -23,7 +23,9 @@ public class LinkedAccount implements Serializable
     @JoinColumn(name="user_id", referencedColumnName = "id")
     public User user;
 
+    @Column(name="provider_user_id")
     public String providerUserId;
+    @Column(name="provider_name")
     public String providerKey;
 
     public static long getSerialVersionUID()
@@ -69,5 +71,12 @@ public class LinkedAccount implements Serializable
     public void setProviderKey(String providerKey)
     {
         this.providerKey = providerKey;
+    }
+
+
+    @Override
+    public String toString()
+    {
+        return providerKey;
     }
 }

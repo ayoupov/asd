@@ -28,34 +28,42 @@ public class MediaContent
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
 
+    @Column(name = "content_type")
     public MediaContentType contentType;
+
     @Field
     @Type(type = "text")
     public String text;
+
     @Field
     @Type(type = "text")
     public String lead;
+
+    @Column(name = "cover_description")
     @Field
     public String coverDescription;
+
     @Field
     public String title;
+
     @Field
     public Boolean starred;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "cover_image_id")
     public Image coverImage;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    public Set<Image> images;
-
+    //    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    public Set<Image> images;
     @Column(name = "added_dt")
     public Date addedDT;
 
-    @JoinColumn(name = "added_by")
     @OneToOne
+    @JoinColumn(name = "added_by")
     public User addedBy;
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @JoinTable(name="content_authors")
     public List<User> authors;
 
     @Column(name = "approved_dt")
@@ -221,15 +229,15 @@ public class MediaContent
         this.coverImage = coverImage;
     }
 
-    public Set<Image> getImages()
-    {
-        return images;
-    }
-
-    public void setImages(Set<Image> images)
-    {
-        this.images = images;
-    }
+//    public Set<Image> getImages()
+//    {
+//        return images;
+//    }
+//
+//    public void setImages(Set<Image> images)
+//    {
+//        this.images = images;
+//    }
 
     @Override
     public String toString()

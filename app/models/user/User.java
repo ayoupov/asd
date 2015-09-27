@@ -1,6 +1,8 @@
 package models.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import models.LinkedAccount;
+import models.MediaContent;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -35,10 +37,17 @@ public class User
 
     public UserStatus status;
 
-    public boolean emailValidated;
+    @Column(name="email_validated")
+    @JsonIgnore
+    public Boolean emailValidated;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="user")
+    @JsonIgnore
     public List<LinkedAccount> linkedAccounts;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="authors")
+    @JsonIgnore
+    public List<MediaContent> authorOf;
 
     public User(String name, UserRole role, UserStatus status)
     {
@@ -103,5 +112,40 @@ public class User
     public List<LinkedAccount> getLinkedAccounts()
     {
         return linkedAccounts;
+    }
+
+    public String getEmail()
+    {
+        return email;
+    }
+
+    public void setEmail(String email)
+    {
+        this.email = email;
+    }
+
+    public boolean isEmailValidated()
+    {
+        return emailValidated;
+    }
+
+    public void setEmailValidated(boolean emailValidated)
+    {
+        this.emailValidated = emailValidated;
+    }
+
+    public void setLinkedAccounts(List<LinkedAccount> linkedAccounts)
+    {
+        this.linkedAccounts = linkedAccounts;
+    }
+
+    public List<MediaContent> getAuthorOf()
+    {
+        return authorOf;
+    }
+
+    public void setAuthorOf(List<MediaContent> authorOf)
+    {
+        this.authorOf = authorOf;
     }
 }

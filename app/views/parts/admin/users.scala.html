@@ -8,7 +8,6 @@
         <thead>
             <tr>
                 <th>User</th>
-                <th>Internal id</th>
                 <th>External id</th>
                 <th>Role</th>
                 <th>A</th>
@@ -20,7 +19,6 @@
         @for(u <- users) {
             <tr>
                 <td>@u.getName</td>
-                <td>@u.getId</td>
                 <td>@u.getLinkedAccounts</td>
                 <td>@u.getRole</td>
                 <td>@ContentManager.articlesByUser(u)</td>

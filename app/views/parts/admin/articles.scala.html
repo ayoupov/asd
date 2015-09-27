@@ -20,21 +20,29 @@
             <tr id="article_@a.getId">
                 <td>@a.getTitle</td>
                 <td>@a.getAuthors.map(x => x.getName).mkString(", ")</td>
-                <td class="noedit"><input type="datetime" value="@DateTimeConverter.sdf.format(a.getApprovedDT)"></td>
-                <td class="noedit"><input type="checkbox" @{if (a.getStarred) "checked"}></td>
+                <td class="noedit"><input type="datetime" value="@{
+                    if(a.getApprovedDT != null) {
+                        DateTimeConverter.sdf.format(a.getApprovedDT)
+                    }
+                }">
+                </td>
+                <td class="noedit"><input type="checkbox" @{
+                    if(a.getStarred) "checked"
+                }>
+                </td>
                 <td class="noedit"><a href="@routes.MediaContents.byTypeAndId("article", a.getId, "html")" target="_blank">→</a></td>
             </tr>
         }
-        <tfoot>
-            <tr>
-                <th colspan="3">
-                        <!--<div class="ui left floated search input">-->
-                        <!--<input type="text" placeholder="Filter by">-->
-                        <!--</div>-->
-                    @parts.admin.paginator(filter, "articles")
-                </th>
-            </tr>
-        </tfoot>
+            <tfoot>
+                <tr>
+                    <th colspan="3">
+                            <!--<div class="ui left floated search input">-->
+                            <!--<input type="text" placeholder="Filter by">-->
+                            <!--</div>-->
+                        @parts.admin.paginator(filter, "articles")
+    </th>
+    </tr>
+    </tfoot>
 
     </table>
 </div>

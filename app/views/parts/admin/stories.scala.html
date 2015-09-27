@@ -13,7 +13,7 @@
         @for(s <- stories) {
         <tr id="story_@s.getId">
             <td>@s.getTitle</td>
-            <td>@s.getAddedBy.getName</td>
+            <td>@{if(s.getAddedBy != null) s.getAddedBy.getName}</td>
             <td><input type="checkbox" @{if (s.getStarred) "checked"}></td>
             <td><input type="button" value="@{if(s.getApprovedDT == null)  "approve" else "disapprove"}"></td>
         </tr>

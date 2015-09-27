@@ -7,7 +7,6 @@ import models.internal.UserManager;
 import models.user.User;
 import models.user.UserRole;
 import models.user.UserStatus;
-import utils.HibernateUtils;
 import utils.ServerProperties;
 import utils.seed.geo.DekanatProcessor;
 import utils.seed.geo.DioceseProcessor;
@@ -78,12 +77,12 @@ public class Disseminator
 
     private static void seedMockContent()
     {
-        User user = UserManager.getAutoUser();
+        User asdRobot = UserManager.getAutoUser();
         List<User> authors = new ArrayList<>();
         User articleUser1 = UserManager.findByEmail("article1@internal");
-        User articleUser2 = UserManager.findByEmail("article2@asd.name");
-        User storyUser1 = UserManager.findByEmail("story1@asd.name");
-        User storyUser2 = UserManager.findByEmail("story2@asd.name");
+        User articleUser2 = UserManager.findByEmail("article2@internal");
+        User storyUser1 = UserManager.findByEmail("story1@internal");
+        User storyUser2 = UserManager.findByEmail("story2@internal");
         authors.add(articleUser1);
         authors.add(articleUser2);
         String t = "[padder/]Powstanie kombinatu metalurgicznego i miasta nowa Huta pod Krakowem zostało postanowione przez rząd PRL 17    maja 1947. Miasto miało wyrażać ducha myśli socjalistycznej - w planie widać wyraźne inspiracje    Magnitogorskiem - ówczesnym radzieckim wzorcem ośrodka przemysłowego. Symetryczne, osiowe założenie    kompozycyjne wypełnione zostało prostymi, klasycznymi budynkami, parkami i socjalistycznymi ośrodkami    kultury -  miejsca na kościół w planie  oczywiście  nie było.[image textsizeplus]/assets/images/Poland-1.png[/image]Abstrakcyjna idea stworzenia idealnego robotniczego miasta, szybko zderzyła się z tradycyjną polską    rzeczywistością. Przez pierwsze 10 lat przez Nową Hutę przewinęło się około 200 tysięcy ludzi - większość    przyjechała z przesiąkniętej obyczajem wsi. Brak kościoła był dojmujący - dla wielu zajmował przecież    centralne miejsce w życiu. Był on bowiem odwiecznym miejscem mszy, spowiedzi i innych zwyczajów    definiujących rytm życia. Niezbudowanie w Hucie kościoła miało wkrótce stać się problemem, którego skali nie    przewidział nikt.<br>[image mainfullwidth]/assets/images/Poland-1.png[/image]W 1957, w zawierusze związanej z końcem stalinizmu, miasto uzyskało od władz zgodę na budowę kościoła.    Natychmiast w miejscu planowanej budowy postawiono i wyświęcono krzyż. [excerpt]Milicja użyła broni palnej,\u0003aresztowano ok 500 osób,\u0003a skazano 87[/excerpt]Zaledwie dwa lata później  zgodę    cofnięto, pieniądze na budowę skonfiskowano a komitet budowy kościoła rozwiązano. Miarka przebrała się 26. kwietnia 1960 roku, gdy krakowski Komitet Miejski PZPR podjął decyzję o likwidacji krzyża.  Przerodziło się    to w protest, a następnie w regularne walki uliczne, podczas których zdemolowano siedzibę władz    administracyjnych dzielnicy, milicja użyła broni palnej, aresztowano ok 500 osób, a skazano 87. Krzyż    ostatecznie pozostał, ale zamiast kościoła zbudowano równie potrzebną szkołę - obrazek doskonale ilustrujący    stan zawieszenia broni pomiędzy państwem i Kościołem.[image]/assets/images/world4.png[/image]\n" +
@@ -92,16 +91,28 @@ public class Disseminator
         String l = "Najbardziej wyrazistym przykładem Architektury Siódmego Dnia jest kościół Arka Pana w    Nowej Hucie. Jak w doskonałym scenariuszu filmowym, w historii powstania kościoła łączą się silne wątki:    czytelna walka o symbole, zaangażowanie najznakomitszych osobistości, krwawy przebieg konfliktu i jakość    architektoniczna wzniesionej w efekcie świątyni.";
         String ttl = "Kamień z kosmosu";
         boolean starred = true;
-        MediaContent goodArticle = new MediaContent(MediaContentType.Article, t, l, ttl, starred, authors, user);
-        HibernateUtils.save(goodArticle);
+        MediaContent goodArticle = new MediaContent(MediaContentType.Article, t, l, ttl, starred, authors, articleUser1);
+        List<MediaContent> authorsOf = articleUser1.getAuthorOf();
+        if (authorsOf == null)
+            authorsOf = new ArrayList<>();
+        authorsOf.add(goodArticle);
+        articleUser1.authorOf = authorsOf;
+        save(goodArticle);
+        saveOrUpdate(articleUser1);
 
         for (int i = 0; i < 10; i++) {
             String text = "Test article text #" + i;
             String lead = "Test article lead #" + i;
             String title = "Testity article test title (" + i + ")";
 
-            MediaContent mc = new MediaContent(MediaContentType.Article, text, lead, title, (i > 5), authors, user);
-            HibernateUtils.save(mc);
+            MediaContent mc = new MediaContent(MediaContentType.Article, text, lead, title, (i > 5), authors, articleUser2);
+            List<MediaContent> authorsOfArticles = articleUser2.getAuthorOf();
+            if (authorsOfArticles == null)
+                authorsOfArticles = new ArrayList<>();
+            authorsOfArticles.add(mc);
+            articleUser2.authorOf = authorsOfArticles;
+            save(mc);
+            saveOrUpdate(articleUser2);
         }
         authors = new ArrayList<>();
         authors.add(storyUser1);
@@ -111,8 +122,8 @@ public class Disseminator
             String lead = "Test story lead #" + i;
             String title = "Testity story test title (" + i + ")";
 
-            MediaContent mc = new MediaContent(MediaContentType.Story, text, lead, title, (i > 5), authors, user);
-            HibernateUtils.save(mc);
+            MediaContent mc = new MediaContent(MediaContentType.Story, text, lead, title, (i > 5), authors, storyUser1);
+            save(mc);
         }
     }
 
