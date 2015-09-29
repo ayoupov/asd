@@ -1,5 +1,6 @@
 package models.internal;
 
+import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.user.AuthUser;
 import com.feth.play.module.pa.user.AuthUserIdentity;
 import com.feth.play.module.pa.user.EmailIdentity;
@@ -9,13 +10,15 @@ import models.user.User;
 import models.user.UserRole;
 import models.user.UserStatus;
 import org.hibernate.Query;
+import org.hibernate.id.GUIDGenerator;
+import play.api.mvc.Session;
+import play.mvc.Http;
+import utils.ServerProperties;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import static com.feth.play.module.pa.PlayAuthenticate.getProvider;
 import static utils.HibernateUtils.getSession;
 import static utils.HibernateUtils.save;
 import static utils.HibernateUtils.saveOrUpdate;
@@ -28,6 +31,8 @@ import static utils.HibernateUtils.saveOrUpdate;
  */
 public class UserManager
 {
+    private static Random userHashRandom = new Random(1000003434l);
+
     public static User getAutoUser()
     {
         List<User> authUserFind = getAuthUserFind(AutoIdentity.getInstance());
@@ -100,15 +105,21 @@ public class UserManager
 
     public static void mergeUsers(User thisUser, final User otherUser)
     {
+        System.out.println("Merging " + thisUser + " and " + otherUser);
         List<LinkedAccount> linkedAccounts = thisUser.getLinkedAccounts();
         for (final LinkedAccount acc : otherUser.linkedAccounts) {
-            linkedAccounts.add(createLinkedAccount(acc));
+            LinkedAccount account = createLinkedAccount(acc);
+            account.setUser(thisUser);
+            saveOrUpdate(account);
+            linkedAccounts.add(account);
         }
         // do all other merging stuff here - like resources, etc.
-        // todo: ^^^ !!!
+        // ???
+
         // deactivate the merged user that got added to this one
         otherUser.setStatus(UserStatus.DEACTIVATED);
-        // todo: store both
+        saveOrUpdate(thisUser);
+        saveOrUpdate(otherUser);
     }
 
     public static User createUser(final AuthUser authUser)
@@ -124,6 +135,8 @@ public class UserManager
         LinkedAccount account = createLinkedAccount(authUser);
         user.linkedAccounts = Collections.singletonList(
                 account);
+
+        user.setHash(nextHash());
 
         if (authUser instanceof EmailIdentity) {
             final EmailIdentity identity = (EmailIdentity) authUser;
@@ -148,6 +161,12 @@ public class UserManager
         saveOrUpdate(account);
         return user;
     }
+
+    private static String nextHash()
+    {
+        return UUID.randomUUID().toString().replace("-","");
+    }
+
 
     public static void mergeUsers(final AuthUser oldUser, final AuthUser newUser)
     {
@@ -218,5 +237,48 @@ public class UserManager
         return ret;
     }
 
+    public static User getLocalUser(final Http.Session session)
+    {
+        final User localUser = UserManager.findByAuthUserIdentity(PlayAuthenticate
+                .getUser(session));
+        return localUser;
+    }
+
+
+    /**
+     * rewritten for scala class FileManager
+     **/
+    public static User getLocalUser(final Session session)
+    {
+        final User localUser = UserManager.findByAuthUserIdentity(getUser(session));
+        return localUser;
+    }
+
+    public static AuthUser getUser(Session session)
+    {
+        String provider = session.get("pa.p.id").get();
+        String id = session.get("pa.u.id").get();
+        long expires = getExpiration(session);
+
+        if ((provider != null) && (id != null)) {
+            return getProvider(provider).getSessionAuthUser(id, expires);
+        }
+        return null;
+    }
+
+    private static long getExpiration(Session session)
+    {
+        long expires;
+        if (session.get("pa.u.exp").get() != null) {
+            try {
+                expires = Long.parseLong(session.get("pa.u.exp").get());
+            } catch (NumberFormatException nfe) {
+                expires = -1L;
+            }
+        } else {
+            expires = -1L;
+        }
+        return expires;
+    }
 
 }

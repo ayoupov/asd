@@ -18,12 +18,14 @@ import java.util.List;
 @Table(name = "users")
 public class User
 {
+    private static final String ANONYMOUS_HASH = "000000";
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
 
-//    @Column(unique = true)
-//    public String socialId;   // external id
+    @Column(unique = true)
+    public String hash;
 
     @Constraints.Email
     // if you make this unique, keep in mind that users *must* merge/link their
@@ -39,7 +41,7 @@ public class User
 
     @Column(name="email_validated")
     @JsonIgnore
-    public Boolean emailValidated;
+    public Boolean emailValidated = false;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="user")
     @JsonIgnore
@@ -147,5 +149,30 @@ public class User
     public void setAuthorOf(List<MediaContent> authorOf)
     {
         this.authorOf = authorOf;
+    }
+
+    public String getHash()
+    {
+        return hash;
+    }
+
+    public void setHash(String hash)
+    {
+        this.hash = hash;
+    }
+
+    public Boolean getEmailValidated()
+    {
+        return emailValidated;
+    }
+
+    public void setEmailValidated(Boolean emailValidated)
+    {
+        this.emailValidated = emailValidated;
+    }
+
+    public static String anonymousHash()
+    {
+        return ANONYMOUS_HASH;
     }
 }

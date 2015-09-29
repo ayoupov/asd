@@ -1,0 +1,13 @@
+@import models.user.User
+
+@(user : User)
+
+@if(user == null) {
+<div class="alarm-sign"></div>
+<div class="passport-edit-text">help to improve, login
+    <ul>
+      <li><a href="@routes.Auth.auth("facebook")" class="auth auth-fb"><img src="@routes.Assets.at("images/facebook.png")"></a></li>
+      <li><a href="@routes.Auth.auth("twitter")" class="auth auth-tw"><img src="@routes.Assets.at("images/twitter.png")"></a></li>
+    </ul>
+</div>
+}

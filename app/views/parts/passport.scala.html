@@ -1,4 +1,8 @@
-@(church: Church = null, from: String)
+@import models.user.User
+@(church: Church = null, from: String, user: User)
+@backLink() = @{
+    from + "/church/" + church.getExtID
+}
 <script src="@routes.Assets.at("javascripts/asd.passport.js")"></script>
 <div id="fb-root"></div>
 <script>(function (d, s, id) {
@@ -83,14 +87,15 @@
         </div>
     </nav>
     <div class="passport-edit-button">
-        <div class="alarm-sign"></div>
-        <div class="passport-edit-text">report data mistakes</div>
+        @*<div class="alarm-sign"></div>*@
+        @*<div class="passport-edit-text">report data mistakes</div>*@
+        @parts.auth.loginPassport(user)
     </div>
 </div>
 @if(church != null) {
     <script>
         $(document).ready(function(){
-           $('fb-like').data('href', '@from/church/@church.getId');
+           $('fb-like').data('href', '@backLink');
            if (currentChurch)
             fillPassport(currentChurch);
         });

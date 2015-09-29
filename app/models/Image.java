@@ -1,6 +1,7 @@
 package models;
 
 import models.user.User;
+import models.user.UserRole;
 
 import javax.persistence.*;
 import java.io.File;
@@ -33,6 +34,13 @@ public class Image
     @Column(name = "uploaded_ts")
     public Date uploadedTS;
 
+    @OneToOne
+    @JoinColumn(name = "approved_by")
+    public User approvedBy;
+
+    @Column(name = "approved_ts")
+    public Date approvedTS;
+
     public Image(String description, String path)
     {
         this.description = description;
@@ -43,11 +51,16 @@ public class Image
     {
     }
 
-    public Image(String filename, File file, User user)
+    public Image(String filename, User user)
     {
         path = filename;
         uploadedBy = user;
         uploadedTS = new Date();
+        if (user != null && (user.getRole() == UserRole.Administrator || user.getRole() == UserRole.Moderator))
+        {
+            approvedBy = user;
+            approvedTS = uploadedTS;
+        }
         description = "uploaded by " + user + " at " + uploadedTS;
         save(this);
     }

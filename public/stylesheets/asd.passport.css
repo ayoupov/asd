@@ -76,6 +76,11 @@
     /*float: left;*/
 }
 
+.passport-main-image img {
+    height: 500px;
+    max-height: 500px;
+}
+
 .passport-image-gallery {
     width: 20vw;
     /*float: right;*/

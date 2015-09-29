@@ -376,11 +376,6 @@ public class ContentManager
                 .setParameter("p", path).uniqueResult();
     }
 
-    public static User findUserByAuthIdentity(AuthUser user)
-    {
-        return null;
-    }
-
     public static Church getChurch(Http.Request request)
     {
         // todo: extract from path

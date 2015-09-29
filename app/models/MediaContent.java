@@ -53,6 +53,10 @@ public class MediaContent
     @JoinColumn(name = "cover_image_id")
     public Image coverImage;
 
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "cover_image_thumb_id")
+    public Image coverImageThumb;
+
     //    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 //    public Set<Image> images;
     @Column(name = "added_dt")

@@ -55,20 +55,21 @@ var uiInit = function () {
     window.onresize = resizeFunc;
     changeSearchPrompt();
     bindAPI();
-
+    // set focus to search
+    $prompt.focus();
 };
 
 var changeSearchPrompt = function () {
     var slide = currentSlide();
     if ($prompt.is(":focus")) {
         switch (slide) {
-            case "slide1":
+            case "map":
                 $prompt.attr('placeholder', "Adres lub nazwa kościoła");
                 break;
-            case "slide2":
+            case "articles":
                 $prompt.attr('placeholder', "Słowo do wyszukiwania (articles)");
                 break;
-            case "slide3":
+            case "stories":
                 $prompt.attr('placeholder', "Słowo do wyszukiwania (stories)");
                 break;
         }
@@ -141,7 +142,7 @@ var resizeFunc = function () {
         $prompt.css('width', '224px');
     // center transition arrows
     var $stransition = $('.slide-transition');
-    stransition = $stransition.width();
+    var stransition = $stransition.width();
     $stransition.css({left: (wwidth - stransition) / 2});
 };
 

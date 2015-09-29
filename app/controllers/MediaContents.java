@@ -12,9 +12,13 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
+import play.mvc.Security;
 import utils.DataUtils;
+import utils.ServerProperties;
 import views.html.mediacontent;
 
+import java.io.File;
+import java.io.Serializable;
 import java.util.*;
 
 import static utils.DataUtils.safeBool;
@@ -92,13 +96,12 @@ public class MediaContents extends Controller
         return ok(result);
     }
 
+    @Security.Authenticated(Secured.class)
     public static Result update(String ctype)
     {
         ObjectNode result = Json.newObject();
         Http.RequestBody body = request().body();
-//        System.out.println("body = " + body);
         Map<String, String[]> map = body.asFormUrlEncoded();
-//        System.out.println("map = " + map);
         MediaContentType mct = MediaContentType.fromString(ctype);
 
         beginTransaction();
@@ -144,7 +147,7 @@ public class MediaContents extends Controller
         if (jdesc != null)
             c.setCoverDescription(jdesc);
         if (jcover != null)
-            c.setCoverImage(findImage(jcover));
+            c.setCoverImage(findImage(null, jcover));
         if (jtitle != null)
             c.setTitle(jtitle);
         if (jstarred != null)
@@ -180,13 +183,21 @@ public class MediaContents extends Controller
             return internalServerError(result);
     }
 
-    private static Image findImage(String path)
+    private static Image findImage(Serializable id, String path)
     {
-        Image i = ContentManager.findImageByPath(path);
-        // fallback fs option???
-        if (i == null)
-            return new Image("auto", path);
-        return i;
+        Image i;
+        if (id != null) {
+            i = (Image) get(Image.class, id);
+            if (i != null)
+                return i;
+        }
+        i = ContentManager.findImageByPath(path);
+        if (i != null)
+            return i;
+        // fs fallback option
+        if (new File(ServerProperties.getValue("asd.upload.path") + path).exists())
+            return new Image("fs fallback option", path);
+        return null;
     }
 
     public static Result listAuthors()

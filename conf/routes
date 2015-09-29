@@ -32,9 +32,9 @@ GET         /search/:stype/:q                      controllers.Search.mediaConte
 
 # security
 
-GET         /logout                                com.feth.play.module.pa.controllers.Authenticate.logout
-GET         /auth/:provider                        com.feth.play.module.pa.controllers.Authenticate.authenticate(provider: String)
-GET         /auth/:provider/denied                 controllers.Application.oAuthDenied(provider: String)
+GET         /auth/logout                           controllers.Auth.logout
+GET         /auth/:provider                        controllers.Auth.auth(provider: String)
+GET         /auth/:provider/denied                 controllers.Auth.oAuthDenied(provider: String)
 
 # secure, role must be >= User
 
@@ -61,3 +61,4 @@ GET         /admin                                 controllers.Admin.index
 GET         /stats/count                           controllers.Stats.count
 GET         /stats/test                            controllers.Stats.test
 
+GET         /restricted                            controllers.Restricted.index
