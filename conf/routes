@@ -4,8 +4,11 @@
 
 # Home page
 GET         /                                      controllers.Application.index(id: String = null)
+
+#church content
 GET         /church/:id                            controllers.Application.index(id: String)
 GET         /church/passport/:id                   controllers.Churches.byId(id: String)
+GET         /church/:id/images                     controllers.Churches.images(id:String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                          controllers.Assets.at(path="/public", file)
@@ -37,7 +40,7 @@ GET         /auth/:provider                        controllers.Auth.auth(provide
 GET         /auth/:provider/denied                 controllers.Auth.oAuthDenied(provider: String)
 
 # secure, role must be >= User
-
+POST        /story/new                             controllers.MediaContents.newStory
 
 # secure, role must be >= Moderator
 POST        /files/upload                          controllers.FileManager.upload

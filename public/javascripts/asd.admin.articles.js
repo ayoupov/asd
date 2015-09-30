@@ -7,8 +7,6 @@ var articleEditClick = function () {
         action: 'post update article',
         method: 'POST',
         onSuccess: apiResult,
-        //onSuccess: restorePage,
-        //onSuccess: changeRow,
         serializeForm: true
     });
     $articleForm.appendTo($articleWrapper);

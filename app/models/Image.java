@@ -45,6 +45,7 @@ public class Image
     {
         this.description = description;
         this.path = path;
+        this.uploadedTS = new Date();
     }
 
     public Image()

@@ -172,7 +172,7 @@ td.passport-data-filler {
     margin-right: auto;
 }
 
-.passport-wrapper{
+.passport-wrapper {
     width: 960px; /* todo: add important? */
 }
 
@@ -182,4 +182,21 @@ td.passport-data-filler {
 
 .ui.dimmer {
     z-index: 1009 !important;
+    background-color: rgba(0, 0, 0, 0.6);
 }
+
+.new-story-cover {
+    float: left;
+}
+
+.new-story-cover.active {
+    border: solid #5a38db 1px;
+}
+
+.story-cover-gallery {
+    margin-left: auto;
+    margin-right: auto;
+    width: 802px;
+    height: 100px;
+}
+

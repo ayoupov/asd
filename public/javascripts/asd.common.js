@@ -1,5 +1,5 @@
 var $map, $menu, $slide1, $slide2, $slide3, $slide4, $prompt, $links, $about, $passportWrapper;
-var $articles, $stories, $dateStories;
+var $articles, $stories, $dateStories, $newStoryForm, $newStoryGallery, $passportGalleryWrapper;
 
 var initSelectorCache = function () {
     $map = $("#map");
@@ -15,6 +15,9 @@ var initSelectorCache = function () {
     $stories = $(".stories");
     $dateStories = $("#stories-by-date");
     $passportWrapper = $(".passport-wrapper");
+    $newStoryForm = $(".passport-new-story");
+    $newStoryGallery = $(".story-cover-gallery");
+    $passportGalleryWrapper = $(".passport-image-wrapper");
 };
 
 $(document).ready(function () {

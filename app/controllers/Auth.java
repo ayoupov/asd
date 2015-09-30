@@ -2,12 +2,24 @@ package controllers;
 
 import play.mvc.Controller;
 import play.mvc.Result;
+import utils.ServerProperties;
+
+import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Auth extends Controller
 {
 
     public static final String FLASH_MESSAGE_KEY = "message";
     public static final String FLASH_ERROR_KEY = "error";
+    private static Set<String> allowedHosts = new HashSet<>();
+
+    static {
+        // todo: put in ServerProperties
+        allowedHosts.add("localhost");
+        allowedHosts.add("architektura7dnia.pl");
+    }
 
     public static Result oAuthDenied(final String providerKey)
     {
@@ -35,8 +47,17 @@ public class Auth extends Controller
 
     private static boolean checkAgainstWhitelist(String callbackUrl)
     {
-        // todo: todo:todo
-        return true;
+        return allowedHosts.contains(getHost(callbackUrl));
+    }
+
+    private static String getHost(String url)
+    {
+        try {
+            return new URL(url).getHost();
+        } catch (Exception e)
+        {
+            return null;
+        }
     }
 
     public static Result logout()

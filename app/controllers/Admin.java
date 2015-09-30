@@ -78,7 +78,7 @@ public class Admin extends Controller
             Processor.main(new String[]{dataDir + "doc.kml"});
             return ok("parsed");
         }
-        return forbidden();
+        return forbidden("nope");
     }
 
     public static Result snapshotify() throws IOException, InterruptedException

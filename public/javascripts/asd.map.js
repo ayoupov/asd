@@ -60,7 +60,7 @@ var mapInit = function (geostats) {
     map.options.doubleClickZoom = true;
     map.options.minZoom = 7;
     map.options.maxZoom = 18;
-    map.scrollWheelZoom.disable();
+    //map.scrollWheelZoom.disable();
 
     addChurchContents();
 
@@ -101,7 +101,9 @@ var mapInit = function (geostats) {
 
     //map.fire('zoomanim');
     layerChanges();
-    mapPostLoad();
+
+    // todo: change to proper Coming Back
+    mapPostLoad(authedUser);
 
     map.on('popupopen', function (popup) {
         $("a.open-passport", $(popup.target._container)).on('click', function () {
@@ -230,9 +232,14 @@ function navigateTo(church) {
     layerChanges();
 }
 
-function mapPostLoad() {
-    if (typeof currentChurch !== "undefined")
+function mapPostLoad(comingBack) {
+    if (typeof currentChurch !== "undefined") {
+        if (comingBack) {
+            var port = location.port;
+            window.history.replaceState({}, "", "http://" + location.hostname + (port != "" ? ":" + port : "") + "/church/" + currentChurch.extID + "#passport");
+        }
         navigateTo(currentChurch);
+    }
 }
 
 function getPopup(feature, layer) {
@@ -249,7 +256,7 @@ function openPassport(id) {
         on: 'now',
         action: 'get church passport',
         method: 'GET',
-        urlData : {id : id},
+        urlData: {id: id},
         onSuccess: function (data) {
             fillPassport(data);
             $passportWrapper.modal('show');

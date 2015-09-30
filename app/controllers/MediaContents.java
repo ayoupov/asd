@@ -1,6 +1,7 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import models.Church;
 import models.Image;
 import models.MediaContent;
 import models.MediaContentType;
@@ -21,9 +22,9 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.*;
 
-import static utils.DataUtils.safeBool;
-import static utils.DataUtils.safeLong;
+import static utils.DataUtils.*;
 import static utils.HibernateUtils.*;
+import static utils.media.images.Thumber.thumbName;
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,6 +34,9 @@ import static utils.HibernateUtils.*;
  */
 public class MediaContents extends Controller
 {
+
+    private static String absoluteUploadPath = ServerProperties.getValue("asd.upload.path");
+    private static String relativeUploadPath = ServerProperties.getValue("asd.upload.relative.path");
 
     public static Result byTypeAndId(String ctype, Long id)
     {
@@ -58,32 +62,6 @@ public class MediaContents extends Controller
             return notFound(String.format("MediaContent with id {%s}", id));
     }
 
-
-    // sequencing on algorithms, depending on content type
-//    public static Result thumbs(String ctype, Integer quantity)
-//    {
-//        MediaContentType type = MediaContentType.fromString(ctype);
-//        if (type == null)
-//            return badRequest("Trying to get content with type : " + ctype);
-//        String seqKey = session().get("mcs_starred_key");
-//        System.out.println("seqKey = " + seqKey);
-//        Sequencer mcs = null;
-//        if (seqKey != null)
-//            mcs = (Sequencer) Cache.get(seqKey);
-//        if (mcs == null) {
-//            seqKey = UUID.randomUUID().toString();
-//            mcs = new Sequencer(seqKey, type, SequencerStrategyMode.Starred);
-//        } else
-//            System.out.println("Found sequencer! seq_key: " + seqKey);
-//        List<MediaContent> contents = mcs.get(quantity);
-//        Cache.set(seqKey, mcs);
-//        ObjectNode result = Json.newObject();
-//        result.put("left", mcs.left());
-//        result.put("contents", Json.toJson(contents));
-//        session("mcs_starred_key", seqKey);
-//        return ok(result);
-//    }
-
     public static Result byTypeAndIds(String ctype, String ids) throws RequestException
     {
         ObjectNode result = Json.newObject();
@@ -93,6 +71,51 @@ public class MediaContents extends Controller
         result.put("data", Json.toJson(contents));
         result.put("success", true);
         commitTransaction();
+        return ok(result);
+    }
+
+    @Security.Authenticated(Secured.class)
+    public static Result newStory()
+    {
+        ObjectNode result = Json.newObject();
+        Http.RequestBody body = request().body();
+        Map<String, String[]> map = body.asFormUrlEncoded();
+        beginTransaction();
+        User user = UserManager.getLocalUser(session());
+        String jtext = (map.get("text") != null) ? map.get("text")[0] : null,
+                jcover = (map.get("cover") != null) ? map.get("cover")[0] : null,
+                jtitle = (map.get("title") != null) ? map.get("title")[0] : null,
+                jchurch = (map.get("church") != null) ? map.get("church")[0] : null,
+                jyear = (map.get("year") != null) ? map.get("year")[0] : null;
+        String text = null, title = null, coverPath = null;
+        Integer year = null;
+        Church church = null;
+        if (jtext != null)
+            text = jtext;
+        else
+            return badRequest("text is null");
+        if (jtitle != null)
+            title = jtitle;
+        if (jcover != null) {
+//            coverPath = ServerProperties.getValue("asd.upload.relative.path") + User.anonymousHash() + ("/church_story_" + jcover + ".png");
+            coverPath = User.anonymousHash() + ("/church_story_" + jcover + "_thumb.png");
+            System.out.println("coverPath = " + coverPath);
+        }
+        else return badRequest("cover is null");
+        if (jyear != null)
+            year = safeInt(jyear, 2015);
+//        Image cover = findImage(null, coverPath);
+//        String coverThumbPath = thumbName(new File(coverPath));
+        Image coverThumb = findImage(null, coverPath);
+        if (jchurch != null)
+            church = ContentManager.getChurch(jchurch);
+        else
+            return badRequest("church is absent");
+        MediaContent c = new MediaContent(MediaContentType.Story, text, title, year, null, coverThumb, user, church);
+        c.setId((Long) save(c));
+        commitTransaction();
+        result.put("success", true);
+        result.put("id", c.getId());
         return ok(result);
     }
 
@@ -146,8 +169,12 @@ public class MediaContents extends Controller
             c.setLead(jlead);
         if (jdesc != null)
             c.setCoverDescription(jdesc);
-        if (jcover != null)
-            c.setCoverImage(findImage(null, jcover));
+        if (jcover != null) {
+            c.setCover(findImage(null, jcover));
+            String coverThumbPath = thumbName(new File(jcover));
+            Image coverThumb = findImage(null, coverThumbPath);
+            c.setCoverThumb(coverThumb);
+        }
         if (jtitle != null)
             c.setTitle(jtitle);
         if (jstarred != null)
@@ -191,12 +218,20 @@ public class MediaContents extends Controller
             if (i != null)
                 return i;
         }
+
         i = ContentManager.findImageByPath(path);
         if (i != null)
             return i;
-        // fs fallback option
-        if (new File(ServerProperties.getValue("asd.upload.path") + path).exists())
-            return new Image("fs fallback option", path);
+        // fallback option 1
+
+        i = ContentManager.findImageByPath(relativeUploadPath + path);
+        if (i != null)
+            return i;
+
+        // fs fallback option 2
+        System.out.println("searching for an image with path: " + (absoluteUploadPath + path));
+        if (new File(absoluteUploadPath + path).exists())
+            return new Image("fs fallback option", relativeUploadPath + path);
         return null;
     }
 

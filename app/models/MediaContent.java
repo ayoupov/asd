@@ -9,9 +9,9 @@ import org.hibernate.search.annotations.Indexed;
 import utils.serialize.DateTimeConverter;
 
 import javax.persistence.*;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -46,16 +46,18 @@ public class MediaContent
     @Field
     public String title;
 
+    private Integer year;
+
     @Field
     public Boolean starred;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "cover_image_id")
-    public Image coverImage;
+    public Image cover;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "cover_image_thumb_id")
-    public Image coverImageThumb;
+    public Image coverThumb;
 
     //    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 //    public Set<Image> images;
@@ -67,7 +69,7 @@ public class MediaContent
     public User addedBy;
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(name="content_authors")
+    @JoinTable(name = "content_authors")
     public List<User> authors;
 
     @Column(name = "approved_dt")
@@ -77,6 +79,27 @@ public class MediaContent
     @OneToOne
     @JoinColumn(name = "approved_by")
     public User approvedBy;
+
+    @ManyToMany(mappedBy = "media")
+    public List<Church> churches;
+
+    public MediaContent(MediaContentType contentType, String text, String title, Integer year, Image cover, Image coverThumb, User addedBy, Church church)
+    {
+        this.contentType = contentType;
+        this.text = text;
+        this.title = title;
+        this.year = year;
+        this.cover = cover;
+        this.coverThumb = coverThumb;
+        this.authors = Collections.singletonList(addedBy);
+        this.addedBy = addedBy;
+        this.addedDT = new Date();
+        if (addedBy != null && (addedBy.role == UserRole.Administrator || addedBy.role == UserRole.Moderator)) {
+            approvedBy = addedBy;
+            approvedDT = addedDT;
+        }
+        this.churches = Collections.singletonList(church);
+    }
 
     public MediaContent(MediaContentType contentType, String text, String lead, String title, Boolean starred, List<User> authors, User addedBy)
     {
@@ -223,14 +246,14 @@ public class MediaContent
         this.coverDescription = coverDescription;
     }
 
-    public Image getCoverImage()
+    public Image getCover()
     {
-        return coverImage;
+        return cover;
     }
 
-    public void setCoverImage(Image coverImage)
+    public void setCover(Image coverImage)
     {
-        this.coverImage = coverImage;
+        this.cover = coverImage;
     }
 
 //    public Set<Image> getImages()
@@ -250,5 +273,20 @@ public class MediaContent
                 "id=" + id +
                 ", title='" + title + '\'' +
                 '}';
+    }
+
+    public Integer getYear()
+    {
+        return year;
+    }
+
+    public void setYear(Integer year)
+    {
+        this.year = year;
+    }
+
+    public void setCoverThumb(Image coverThumb)
+    {
+        this.coverThumb = coverThumb;
     }
 }

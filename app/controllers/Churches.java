@@ -39,4 +39,15 @@ public class Churches extends Controller
         commitTransaction();
         return ok(Json.toJson(versions));
     }
+
+    public static Result images(String id)
+    {
+        beginTransaction();
+        Church church = ContentManager.getChurch(id);
+        commitTransaction();
+        if (church != null)
+            return ok(Json.toJson(church.getImages()));
+        else
+            return notFound(String.format("Church with id {%s}", id));
+    }
 }

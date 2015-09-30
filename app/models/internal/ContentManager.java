@@ -370,6 +370,8 @@ public class ContentManager
     public static Image findImageByPath(String path)
     {
         System.out.println("searching for an image with path: " + path);
+        if (path == null)
+            return null;
         return (Image) getSession().createQuery(
                 "select i from Image i " +
                         "where i.path = :p")

@@ -2,8 +2,8 @@
 @import utils.web.RenderUtils
 @(content: MediaContent)
 @coverImage() = @{
-    if(content.coverImage != null)
-        content.coverImage.path
+    if(content.cover != null)
+        content.cover.path
     else
         ServerProperties.getValue("asd.editor.nosrc.image")
 }

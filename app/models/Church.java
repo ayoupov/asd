@@ -98,7 +98,8 @@ public class Church
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public Set<Image> images;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name="church_media")
     public Set<MediaContent> media;
 
     @OneToOne

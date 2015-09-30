@@ -36,8 +36,11 @@
     <div class="passport-title church-name"></div>
         <!-- todo! -->
     <div class="passport-image-wrapper">
-        <div class="passport-main-image"><img class="ui image" src="/assets/images/church_passport.png"></div>
-        <div class="passport-image-gallery"></div>
+        <div class="passport-image-gallery">
+            @for(image <- church.getImages){
+                <img src="@image.path">
+            }
+        </div>
     </div>
 
     <table class="passport-data-wrapper">
@@ -62,18 +65,39 @@
             <td class="passport-data-filler"></td>
         </tr>
     </table>
-    <div class="passport-stories-wrapper">
-        <div class="church-has-stories">
-            <h1>Stories added by the users</h1>
-        </div>
-        <div class="church-stories"></div>
-        <div class="add-story-wrapper-outer">
-            <div class="add-story-wrapper">
-                <div class="add-story-inner">
-                    <div class="add-story-plus"></div>
-                    <div class="add-story-button">doday swoje wspomnienie</div>
+    <div class="passport-stories">
+        <div class="passport-stories-wrapper">
+            <div class="church-has-stories">
+                <h1>Stories added by the users</h1>
+            </div>
+            <div class="church-stories"></div>
+            <div class="add-story-wrapper-outer">
+                <div class="add-story-wrapper">
+                    <div class="add-story-inner">
+                        <div class="add-story-plus"></div>
+                        <div class="add-story-button">doday swoje wspomnienie</div>
+                    </div>
                 </div>
             </div>
+        </div>
+        <div class="passport-new-story">
+            <form action="@routes.MediaContents.newStory" method="POST" class="ui form">
+                <div>Blah-blah</div>
+                <input type="hidden" value="@church.getExtID" name="church" id="story-church-id">
+                <label for="story-title">Title of story</label>
+                <input type="text" class="ui input" id="story-title" name="title" placeholder="Title">
+                <label for="story-year">Year story happened</label>
+                <input type="text" class="ui input" id="story-year" name="year" placeholder="2015">
+                <label for="story-text">Story text</label>
+                <textarea class="ui textarea" id="story-text" name="text" placeholder="What's your story?"></textarea>
+                <input type="hidden" value="" name="cover" id="story-cover-id">
+                <div class="story-cover-gallery-wrapper">
+                    <div class="story-cover-gallery">
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <input type="button" value="Send" class="ui submit button">
+            </form>
         </div>
     </div>
     <nav id="passportmenu-bottom" class="ui secondary pointing menu blurred">
@@ -86,18 +110,25 @@
             <div class="close-button"></div>
         </div>
     </nav>
-    <div class="passport-edit-button">
-        @*<div class="alarm-sign"></div>*@
-        @*<div class="passport-edit-text">report data mistakes</div>*@
-        @parts.auth.loginPassport(user)
-    </div>
+    @*<div class="passport-edit-button">*@
+    @*<div class="alarm-sign"></div>*@
+    @*<div class="passport-edit-text">report data mistakes</div>*@
+    @* @parts.auth.loginPassport(user) *@
+    @*</div>*@
 </div>
-@if(church != null) {
-    <script>
+<script>
+    @if(user != null) {
+        var authedUser = true;
+    } else {
+        var authedUser = false;
+    }
+</script>
+<script>
+    @if(church != null) {
         $(document).ready(function(){
-           $('fb-like').data('href', '@backLink');
+           $('fb-like').data('href', '@backLink()');
            if (currentChurch)
-            fillPassport(currentChurch);
-        });
-    </script>
-}
+              fillPassport(currentChurch);
+           });
+    }
+</script>
