@@ -4064,7 +4064,8 @@ function UniteGalleryMain(){
 				 //fill arrItems
 				 // ayoupov hack
 				 var objItems = g_objWrapper.children('img');
-				 
+				 //var objItems = g_objWrapper.children('img,iframe');
+
 				 fillItemsArray(objItems);
 				 loadAPIs();
 				 

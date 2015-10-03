@@ -8,6 +8,7 @@ import utils.ServerProperties;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,7 @@ import java.util.Map;
  */
 public class Processor
 {
-    private static String dataDir = ServerProperties.getValue("asd.seed.data.folder");
+    public static String dataDir = ServerProperties.getValue("asd.seed.data.folder");
 
     public static void main(String[] args) throws IOException, InterruptedException
     {
@@ -53,6 +54,23 @@ public class Processor
         }
 
         write(coords, addresses);
+    }
+
+    public static void noGeocode(String kml) throws IOException
+    {
+        Map<KMLParser.Church, KMLParser.Coordinates> coords = KMLParser.parse(kml);
+        OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(dataDir + "churches_no_geocode.csv"), "UTF-8");
+        String header = "ID|Ext_ID|Name|Lat|Lng|Address\n";
+        osw.write(header);
+        int i = 1;
+        for (Map.Entry<KMLParser.Church, KMLParser.Coordinates> entry : coords.entrySet())
+        {
+            KMLParser.Church church = entry.getKey();
+            KMLParser.Coordinates coordinates = entry.getValue();
+            osw.write(i + "|" + church.id + "|" + church.name + "|" + coordinates.lat + "|" + coordinates.lng + "||\n");
+            i++;
+        }
+        osw.close();
     }
 
     public static void write(Map<KMLParser.Church, KMLParser.Coordinates> coords, Map<KMLParser.Church, String> addresses) throws IOException

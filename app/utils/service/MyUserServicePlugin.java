@@ -1,4 +1,4 @@
-package service;
+package utils.service;
 
 import com.feth.play.module.pa.service.UserServicePlugin;
 import com.feth.play.module.pa.user.AuthUser;

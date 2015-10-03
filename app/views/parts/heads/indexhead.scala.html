@@ -1,3 +1,4 @@
+@import utils.ServerProperties
 @()
 <script src="@routes.Assets.at("javascripts/jquery-rotate-2.3.js")"></script>
 <script src="@routes.Assets.at("javascripts/jquery.history.js")"></script>
@@ -7,6 +8,4 @@
 
 <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/asd.passport.css")">
 <!-- passport galleries -->
-<script src="@routes.Assets.at("javascripts/unitegallery.js")"></script>
-<script src="@routes.Assets.at("javascripts/ug-theme-compact.js")"></script>
-<link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/unite-gallery.css")">
+<script src="https://maps.googleapis.com/maps/api/js?key=@ServerProperties.getValue("google.api.key")"></script>

@@ -64,4 +64,8 @@ public class Auth extends Controller
     {
         return com.feth.play.module.pa.controllers.Authenticate.logout();
     }
+
+    public static Result pwdprot() {
+        return ok(views.html.pwdprot.render());
+    }
 }

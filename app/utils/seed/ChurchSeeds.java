@@ -2,6 +2,7 @@ package utils.seed;
 
 import models.Church;
 import models.address.Address;
+import utils.map.Processor;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -20,6 +21,12 @@ public class ChurchSeeds
 {
     private final static boolean debug = false;
 //    private final static boolean debug = true;
+
+    public static void seedChurchesExt(String path) throws IOException
+    {
+        Processor.noGeocode(Processor.dataDir + "doc.kml");
+        seedChurches(path, null);
+    }
 
     public static void seedChurches(String path) throws IOException
     {
@@ -49,7 +56,13 @@ public class ChurchSeeds
                     }
                     if (onlyOneID != null && !extId.equals(onlyOneID))
                         continue;
-                    String unfolded = (!"".equals(split[5])) ? unwrap(split[5]) : null;
+                    String unfolded = null;
+                    try {
+                        if (split.length > 5)
+                            unfolded = (!"".equals(split[5])) ? unwrap(split[5]) : null;
+                    } catch (Exception e) {
+                        unfolded = null;
+                    }
                     Address address = new Address(Double.parseDouble(unwrap(split[3])),
                             Double.parseDouble(unwrap(split[4])),
                             unfolded

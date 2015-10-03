@@ -1,0 +1,41 @@
+@import utils.ServerProperties
+
+<head>
+    <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=@ServerProperties.getValue("google.api.key")"></script>
+    <script>
+    $(document).ready(function()
+    {
+        $.getJSON("/admin/getchurches", {},
+            process);
+    });
+    </script>
+    <script>
+    function process(churches)
+    {
+        var time = 1000;
+        $(churches).each(function (a, church)
+        {
+            var center = new google.maps.LatLng(church.address.geometry[0], church.address.geometry[1]);
+            var streetViewService = new google.maps.StreetViewService();
+            var maxDistanceFromCenter = 50; //meters
+            setTimeout(
+                function()
+                {
+                    streetViewService.getPanoramaByLocation(center, maxDistanceFromCenter, function (streetViewPanoramaData, status)
+                    {
+                        if (status === google.maps.StreetViewStatus.OK) {
+                            console.log('Ok with ' + church.extID)
+                        } else {
+                            $("<div>").html(church.extID + "<br>").appendTo($("body"));
+                            console.log(status + ' with ' + church.extID)
+                        }
+                    });
+                },
+                time);
+                time += 1200;
+        });
+    }
+    </script>
+</head>
+<body></body>

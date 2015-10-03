@@ -20,6 +20,20 @@ public class GeocodeUtils
     final static Geocoder geocoder = new Geocoder();
 
 
+    public static GeocodeResponse geocode(Point point)
+    {
+        LatLng ll = new LatLng(point.getCoordinate().y + "", point.getCoordinate().x + "");
+        try {
+            GeocoderRequestBuilder grb = new GeocoderRequestBuilder().setLocation(ll).setLanguage("pl");
+            GeocoderRequest greq = grb.getGeocoderRequest();
+            return geocoder.geocode(greq);
+        } catch (Exception e)
+        {
+            return null;
+        }
+    }
+
+
     public static String getAddress(Point point)
     {
         LatLng ll = new LatLng(point.getCoordinate().x + "", point.getCoordinate().y + "");

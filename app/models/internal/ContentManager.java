@@ -6,6 +6,7 @@ import models.Church;
 import models.Image;
 import models.MediaContent;
 import models.MediaContentType;
+import models.address.Address;
 import models.internal.search.filters.ChurchFilter;
 import models.internal.search.filters.QueryFilter;
 import models.internal.search.filters.UserFilter;
@@ -388,6 +389,11 @@ public class ContentManager
             return (Church) getSession().get(Church.class, id);
         }
         return null;
+    }
+
+    public static List<Address> getEmptyAddresses(int howMany)
+    {
+        return getSession().createQuery("from Address where unfolded is null").setMaxResults(howMany).list();
     }
 
 //    public static List<User> parseUserList(Set<Long> userList )

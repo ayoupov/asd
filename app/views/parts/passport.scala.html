@@ -1,4 +1,5 @@
 @import models.user.User
+@import utils.ServerProperties
 @(church: Church = null, from: String, user: User)
 @backLink() = @{
     from + "/church/" + church.getExtID
@@ -37,9 +38,11 @@
         <!-- todo! -->
     <div class="passport-image-wrapper">
         <div class="passport-image-gallery">
-            @for(image <- church.getImages){
+        @if(church != null) {
+            @for(image <- church.getImages) {
                 <img src="@image.path">
-            }
+                }
+        }
         </div>
     </div>
 
@@ -83,7 +86,7 @@
         <div class="passport-new-story">
             <form action="@routes.MediaContents.newStory" method="POST" class="ui form">
                 <div>Blah-blah</div>
-                <input type="hidden" value="@church.getExtID" name="church" id="story-church-id">
+                <input type="hidden" value="" name="church" id="story-church-id">
                 <label for="story-title">Title of story</label>
                 <input type="text" class="ui input" id="story-title" name="title" placeholder="Title">
                 <label for="story-year">Year story happened</label>
@@ -122,13 +125,14 @@
     } else {
         var authedUser = false;
     }
+    var googleApiKey = "@ServerProperties.getValue("google.api.key")";
 </script>
 <script>
     @if(church != null) {
         $(document).ready(function(){
            $('fb-like').data('href', '@backLink()');
-           if (currentChurch)
-              fillPassport(currentChurch);
-           });
-    }
+//                   if (currentChurch)
+//                      fillPassport(currentChurch);
+                   });
+            }
 </script>

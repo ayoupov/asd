@@ -5,15 +5,24 @@
 # Home page
 GET         /                                      controllers.Application.index(id: String = null)
 
+# Map static resources from the /public folder to the /assets URL path
+GET         /assets/*file                          controllers.Assets.at(path="/public", file)
+GET         /robots.txt                            controllers.Assets.at(path="/public", file="robots.txt")
+
+GET         /tiles/:layer/:z/:x/:y.:ext            controllers.Tiles.tile(layer: String, z: Integer, x: Integer, y: Integer, ext: String)
+
+#
+GET         /content/summary                       controllers.Application.summary
+GET         /content/authors/                      controllers.MediaContents.listAuthors
+GET         /stats/count                           controllers.Stats.count
+GET         /stats/test                            controllers.Stats.test
+
+GET         /content/churches/revisions/:id        controllers.Churches.revsById(id: String)
+
 #church content
 GET         /church/:id                            controllers.Application.index(id: String)
 GET         /church/passport/:id                   controllers.Churches.byId(id: String)
 GET         /church/:id/images                     controllers.Churches.images(id:String)
-
-# Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                          controllers.Assets.at(path="/public", file)
-
-GET         /tiles/:layer/:z/:x/:y.:ext            controllers.Tiles.tile(layer: String, z: Integer, x: Integer, y: Integer, ext: String)
 
 # use html or none to get rendered page, json -- to simple data, has to be restricted to role >= moderator
 GET         /article/:id.:ext                      controllers.MediaContents.byTypeAndId(ctype: String = "article", id: Long, ext: String )
@@ -22,11 +31,6 @@ GET         /article/:id                           controllers.MediaContents.byT
 GET         /story/:id                             controllers.MediaContents.byTypeAndId(ctype: String = "story", id: Long, ext: String = "html")
 GET         /articles/:ids                         controllers.MediaContents.byTypeAndIds(ctype: String = "article", ids: String)
 GET         /stories/:ids                          controllers.MediaContents.byTypeAndIds(ctype: String = "story", ids: String)
-
-GET         /content/summary                       controllers.Application.summary
-GET         /content/authors/                      controllers.MediaContents.listAuthors
-GET         /content/churches/revisions/:id        controllers.Churches.revsById(id: String)
-
 
 POST        /search/churches/:q                    controllers.Search.churchesByNameAndAddress(q: String)
 GET         /search/churches/:q                    controllers.Search.churchesByNameAndAddress(q: String)
@@ -61,7 +65,7 @@ GET         /admin/testparse2                      controllers.Admin.checkParse2
 GET         /admin/                                controllers.Admin.index
 GET         /admin                                 controllers.Admin.index
 
-GET         /stats/count                           controllers.Stats.count
-GET         /stats/test                            controllers.Stats.test
-
 GET         /restricted                            controllers.Restricted.index
+
+GET         /admin/temp                            controllers.Admin.temp()
+GET         /admin/getchurches                     controllers.Admin.getChurches

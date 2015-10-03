@@ -18,6 +18,7 @@ import java.util.List;
 
 import static utils.HibernateUtils.*;
 import static utils.seed.ChurchSeeds.seedChurches;
+import static utils.seed.ChurchSeeds.seedChurchesExt;
 import static utils.seed.GeographySeeds.seedGeography;
 
 /**
@@ -34,8 +35,15 @@ public class Disseminator
     {
         userSeed();
         geoSeed();
-        churchSeed();
+        churchSeedExt();
         contentSeed();
+    }
+
+    private static void churchSeedExt() throws IOException
+    {
+        beginTransaction();
+        seedChurchesExt(dataDir + "churches_no_geocode.csv");
+        commitTransaction();
     }
 
     public static void contentSeed()
@@ -133,19 +141,19 @@ public class Disseminator
         User storyUser1 = UserManager.createUser(new MockIdentity("story1", "Story writer 1"));
         storyUser1.setRole(UserRole.User);
         storyUser1.setStatus(UserStatus.Active);
-        save(storyUser1);
+        saveOrUpdate(storyUser1);
         User storyUser2 = UserManager.createUser(new MockIdentity("story2", "Story writer 2"));
         storyUser2.setRole(UserRole.User);
         storyUser2.setStatus(UserStatus.Active);
-        save(storyUser2);
+        saveOrUpdate(storyUser2);
         User articleUser1 = UserManager.createUser(new MockIdentity("article1", "Article writer 1"));
         articleUser1.setRole(UserRole.User);
         articleUser1.setStatus(UserStatus.Active);
-        save(articleUser1);
+        saveOrUpdate(articleUser1);
         User articleUser2 = UserManager.createUser(new MockIdentity("article2", "Article writer 2"));
         articleUser2.setRole(UserRole.User);
         articleUser2.setStatus(UserStatus.Active);
-        save(articleUser2);
+        saveOrUpdate(articleUser2);
     }
 
 }

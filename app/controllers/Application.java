@@ -12,6 +12,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.twirl.api.Html;
 import utils.serialize.PointConverter;
+import utils.web.PasswordProtectionAnnotation;
 import views.html.index;
 
 import java.util.List;
@@ -21,6 +22,7 @@ import static models.internal.UserManager.getLocalUser;
 import static utils.HibernateUtils.beginTransaction;
 import static utils.HibernateUtils.commitTransaction;
 
+@PasswordProtectionAnnotation
 public class Application extends Controller
 {
     static ObjectMapper alsoGeometryMapper;

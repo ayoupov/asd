@@ -1,5 +1,7 @@
 package controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.base.CharMatcher;
 import models.Church;
 import models.MediaContent;
 import models.MediaContentType;
@@ -13,6 +15,7 @@ import models.internal.search.filters.StoryFilter;
 import models.internal.search.filters.UserFilter;
 import models.user.User;
 import models.user.UserRole;
+import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.twirl.api.Html;
@@ -26,6 +29,7 @@ import utils.seed.Disseminator;
 import views.html.admin;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +80,15 @@ public class Admin extends Controller
     {
         if (roleCheck()) {
             Processor.main(new String[]{dataDir + "doc.kml"});
+            return ok("parsed");
+        }
+        return forbidden("nope");
+    }
+
+    public static Result parseNoGeocode() throws IOException, InterruptedException
+    {
+        if (roleCheck()) {
+            Processor.noGeocode(dataDir + "doc.kml");
             return ok("parsed");
         }
         return forbidden("nope");
@@ -209,6 +222,19 @@ public class Admin extends Controller
             return ok("seed started");
         }
         return forbidden();
+    }
+
+    public static Result temp()
+    {
+        return ok(views.html.temp.render());
+    }
+
+    public static Result getChurches()
+    {
+        beginTransaction();
+        JsonNode jsonNode = Json.toJson(ContentManager.getChurches());
+        commitTransaction();
+        return ok(jsonNode);
     }
 
 }

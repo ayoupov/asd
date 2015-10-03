@@ -25,8 +25,9 @@ public class ShapeRegionalDataProvider
 {
     private static Map<Long, Point> diocent = new HashMap<>();
     private static Map<Long, Point> metrocent = new HashMap<>();
-    private static final String diocentFile = ServerProperties.getValue("asd.seed.data.folder") + "gis/die_centroids_wgs84.shp";
-    private static final String metroFile = ServerProperties.getValue("asd.seed.data.folder") + "gis/metro_centroids_wgs84.shp";
+    private static final String dataDir = ServerProperties.getValue("asd.seed.data.folder");
+    private static final String diocentFile = dataDir + "gis/die_centroids_wgs84.shp";
+    private static final String metroFile = dataDir + "gis/metro_centroids_wgs84.shp";
 
     static {
         processMap(diocent, diocentFile);
