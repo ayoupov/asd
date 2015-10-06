@@ -1,8 +1,12 @@
-var $pmbottom, $passbtn;
+var $pmbottom, $passbtn, $churchStories, $addStoryButton, $newStoryWrapper, $titleWrapper;
 
 $(document).ready(function () {
     $pmbottom = $("#passportmenu-bottom");
     $passbtn = $('.passport-edit-button');
+    $churchStories = $(".church-has-stories");
+    $addStoryButton = $(".add-story-button");
+    $newStoryWrapper = $(".passport-new-story");
+    $titleWrapper = $(".passport-title-wrapper");
     $(window).on('resize', fixUI);
     fixUI();
     $(".close-button").on('click', function () {
@@ -18,20 +22,72 @@ $(document).ready(function () {
 
 function fixUI() {
     $passbtn.css({left: (($passportWrapper.width() - $passbtn.width()) / 2) + "px"});
+    $titleWrapper.css({left: (($passportWrapper.width() - $titleWrapper.width()) / 2) + "px"});
 }
 
 function fillPassport(church) {
     console.log(church);
     currentChurch = church;
+    // filling form
     var churchId = currentChurch.extID;
     $(".church-name").html(church.name);
     $(".church-address").html(church.address.unfolded);
     var website = church.website != null ? church.website : "";
-    $(".church-website").html('<a target="_blank" href="' + website + '">' + website + '</a>');
+    if (website != '')
+        $(".church-website").html('<a target="_blank" href="' + website + '">' + website + '</a>');
+    else
+        $(".church-website").html(null);
     // fill in new story data
     $("#story-church-id").val(churchId);
+    $newStoryWrapper.hide();
+    if (userHash)
+    {
+        // change passport for logged in user
+        $addStoryButton.html("dodaj swoje wspomnienie").on('click', toggleNewStoryForm);
+        // todo: add 'upload picture' thumb
+        // add editable icons and bind events
+        $(".editable").each(function(a, item)
+        {
+            var content = $(item).html();
+            if (!content)
+            content = "<div class='passport-data-help'>pomóż nam uzupełnić dane</div>";
+            $(item).html(content + "<div class='passport-value-edit-icon'/>");
+        });
+        $(".passport-value-edit-icon").on('click', toggleEdit);
+    } else
+    {
+        // not logged in settings
+        $addStoryButton.html(getLoginCaption());
+    }
+    if (church.media && church.media.length > 0)
+    {
+        $churchStories.html("Stories and articles").show();
+    }
+    else
+    {
+        $churchStories.hide();
+    }
     initPassportGallery(churchId);
     initStoryGallery();
+}
+
+function toggleNewStoryForm()
+{
+    $(".add-story-wrapper-outer").toggle('slow');
+    $newStoryWrapper.toggle('slow');
+}
+
+function toggleEdit(ev)
+{
+    var elem = $(this).parent();
+    console.log(elem);
+}
+
+function getLoginCaption()
+{
+    return "zaloguj się by dodać swoje wspomnienie " +
+        "<a href='/auth/facebook'><img src='/assets/images/fb.png'></a>" +
+            "<a href='/auth/password'><img src='/assets/images/email.png'></a>";
 }
 
 function initAddStory() {
@@ -73,19 +129,13 @@ function doPassportGallery(data) {
     // append add image thumb
 }
 
-function getCoordsString(ll)
-{
-    return ll[0] + "," + ll[1];
-}
-
 function appendGSV() {
-    //var gsv = $("<div class='passport-gsv'/>");
-    //gsv.appendTo(passportGallery);
 
     var center = new google.maps.LatLng(currentChurch.address.geometry[0], currentChurch.address.geometry[1]);
     var streetViewService = new google.maps.StreetViewService();
     var maxDistanceFromCenter = 50; //meters
     var galleryHeight = 400;
+    var galleryWidth = "80%";
     streetViewService.getPanoramaByLocation(center, maxDistanceFromCenter, function (streetViewPanoramaData, status) {
         if (status === google.maps.StreetViewStatus.OK) {
             //var coords = getCoordsString(currentChurch.address.geometry);
@@ -94,7 +144,7 @@ function appendGSV() {
             var coords = lat + ',' + lng;
             var heading = getHeading(toRad(lat), toRad(lng), toRad(center.lat()), toRad(center.lng()));
             var url = "https://www.google.com/maps/embed/v1/streetview?location="  + coords + "&key=" + googleApiKey + "&heading=" + heading;
-            var gsvElem = "<iframe width='90%' height='" + galleryHeight +
+            var gsvElem = "<iframe width='" + galleryWidth + "' height='" + galleryHeight +
                 "' frameborder='0' style='border:0'" +
                 " src='"+ url +"'></iframe>";
             console.log(gsvElem);

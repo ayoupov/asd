@@ -25,5 +25,16 @@
             @parts.passport(currentChurch, routes.Application.index(null).absoluteURL(), user)
             </div>
         </div>
+        <script>
+        var userHash;
+        @if(user != null) {
+            userHash = '@user.getHash';
+            console.log(userHash);
+        } else {
+            userHash = null;
+            console.log('not authed');
+        }
+        var googleApiKey = "@ServerProperties.getValue("google.api.key")";
+        </script>
     </body>
 </html>

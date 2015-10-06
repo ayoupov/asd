@@ -44,9 +44,9 @@ public class DaemonPlugin extends Plugin
     public void onStop()
     {
         super.onStop();
-        Thread t = tl.get();
+        DaemonThread t = tl.get();
         if (t != null)
-            t.interrupt();
+            t.terminate();
         System.out.println("Geocoder exited...");
     }
 

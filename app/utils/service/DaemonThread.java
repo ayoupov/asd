@@ -63,19 +63,22 @@ public class DaemonThread extends Thread
     {
         state = ThreadState.BUSY;
         int howMany = 100;
+        int counter = 0;
         List<Address> addresses = ContentManager.getEmptyAddresses(howMany);
         for (Address address : addresses) {
             GeocodeResponse gresp = GeocodeUtils.geocode((Point) address.getGeometry());
             if (gresp == null || !GeocoderStatus.OK.equals(gresp.getStatus())) {
                 System.out.println("Daemon.geocode: got " +
                         ((gresp == null) ? " null response" : gresp.getStatus()));
-                if (GeocoderStatus.OVER_QUERY_LIMIT.equals(gresp.getStatus()))
+                if (gresp == null || GeocoderStatus.OVER_QUERY_LIMIT.equals(gresp.getStatus()))
                     break;
             }
             List<GeocoderResult> results = gresp.getResults();
             address.setUnfolded(results.get(0).getFormattedAddress());
             saveOrUpdate(address);
+            counter++;
         }
+        System.out.println("Daemon.geocode: geocoded  " + counter + " churches");
         state = ThreadState.IDLE;
     }
 

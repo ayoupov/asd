@@ -34,8 +34,13 @@
             <div class="close-button"></div>
         </div>
     </nav>
-    <div class="passport-title church-name"></div>
-        <!-- todo! -->
+    <div class="passport-title-wrapper-outer">
+        <div class="passport-title-wrapper">
+            <div class="passport-title church-name"></div>
+            <div class="alarm-sign"></div>
+            @*<img src="@routes.Assets.at("images/alarm_sign.png")" class="alarm-sign">*@
+        </div>
+    </div>
     <div class="passport-image-wrapper">
         <div class="passport-image-gallery">
         @if(church != null) {
@@ -48,50 +53,50 @@
 
     <table class="passport-data-wrapper">
         <tr>
-            <td class="passport-field">address</td>
-            <td class="passport-value church-address"></td>
+            <td class="passport-field">adres</td>
+            <td class="passport-value church-address editable"></td>
             <td class="passport-data-filler"></td>
         </tr>
         <tr>
-            <td class="passport-field">construction date</td>
-            <td class="passport-value church-construction"></td>
+            <td class="passport-field">daty budowy</td>
+            <td class="passport-value church-construction editable"></td>
             <td class="passport-data-filler"></td>
         </tr>
         <tr>
-            <td class="passport-field">architects</td>
-            <td class="passport-value church-architects"></td>
+            <td class="passport-field">architekci</td>
+            <td class="passport-value church-architects editable"></td>
             <td class="passport-data-filler"></td>
         </tr>
         <tr>
-            <td class="passport-field">website</td>
-            <td class="passport-value church-website"></td>
+            <td class="passport-field">strona www</td>
+            <td class="passport-value church-website editable"></td>
             <td class="passport-data-filler"></td>
         </tr>
     </table>
     <div class="passport-stories">
         <div class="passport-stories-wrapper">
             <div class="church-has-stories">
-                <h1>Stories added by the users</h1>
+                <h1>Wspomnienia dodane przez użytkowników</h1>
             </div>
             <div class="church-stories"></div>
             <div class="add-story-wrapper-outer">
                 <div class="add-story-wrapper">
                     <div class="add-story-inner">
                         <div class="add-story-plus"></div>
-                        <div class="add-story-button">doday swoje wspomnienie</div>
+                        <div class="add-story-button"></div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="passport-new-story">
             <form action="@routes.MediaContents.newStory" method="POST" class="ui form">
-                <div>Blah-blah</div>
+                @*<div>Blah-blah</div>*@
                 <input type="hidden" value="" name="church" id="story-church-id">
-                <label for="story-title">Title of story</label>
-                <input type="text" class="ui input" id="story-title" name="title" placeholder="Title">
-                <label for="story-year">Year story happened</label>
+                <label for="story-title">Tytuł</label>
+                <input type="text" class="ui input" id="story-title" name="title" placeholder="Tytuł">
+                <label for="story-year">Rok</label>
                 <input type="text" class="ui input" id="story-year" name="year" placeholder="2015">
-                <label for="story-text">Story text</label>
+                <label for="story-text">Wspomnienie</label>
                 <textarea class="ui textarea" id="story-text" name="text" placeholder="What's your story?"></textarea>
                 <input type="hidden" value="" name="cover" id="story-cover-id">
                 <div class="story-cover-gallery-wrapper">
@@ -113,26 +118,8 @@
             <div class="close-button"></div>
         </div>
     </nav>
-    @*<div class="passport-edit-button">*@
-    @*<div class="alarm-sign"></div>*@
-    @*<div class="passport-edit-text">report data mistakes</div>*@
-    @* @parts.auth.loginPassport(user) *@
-    @*</div>*@
 </div>
 <script>
-    @if(user != null) {
-        var authedUser = true;
-    } else {
-        var authedUser = false;
-    }
-    var googleApiKey = "@ServerProperties.getValue("google.api.key")";
-</script>
-<script>
     @if(church != null) {
-        $(document).ready(function(){
-           $('fb-like').data('href', '@backLink()');
-//                   if (currentChurch)
-//                      fillPassport(currentChurch);
-                   });
-            }
+        $(document).ready(function(){$('fb-like').data('href', '@backLink()');});}
 </script>

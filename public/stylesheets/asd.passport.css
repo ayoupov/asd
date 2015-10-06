@@ -5,6 +5,10 @@
     cursor: pointer;
 }
 
+#passport {
+    min-height: 100vh;
+}
+
 #passportmenu-top .item, #passportmenu-bottom .item {
     height: 40px;
 }
@@ -20,12 +24,48 @@
     top: 0;
 }
 
+.passport-title{
+    float: left;
+}
+
 .alarm-sign {
     height: 34px;
     width: 34px;
+    /*background: black center center no-repeat;*/
     background: black url(/assets/images/alarm_sign.png) center center no-repeat;
     float: left;
-    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.passport-title-wrapper-outer {
+width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.passport-title-wrapper {
+    font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
+    font-size: 32px;
+    font-weight: bold;
+    height: 100px;
+    /*width: 100%;*/
+    text-align: center;
+    vertical-align: middle;
+    padding-top: 32px;
+}
+
+.passport-value-edit-icon {
+    height: 16px;
+    width: 16px;
+    background: url(/assets/images/add_data_passport.png) center center no-repeat;
+    margin-left: 10px;
+    cursor: pointer;
+    float:left;
+}
+
+.passport-data-help
+{
+    float:left;
 }
 
 .passport-edit-text {
@@ -46,17 +86,6 @@
     margin-top: -38px;
     vertical-align: middle;
     cursor: pointer;
-}
-
-.passport-title {
-    font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
-    font-size: 32px;
-    font-weight: bold;
-    height: 100px;
-    width: 100%;
-    text-align: center;
-    vertical-align: middle;
-    padding-top: 32px;
 }
 
 .passport-image-wrapper {

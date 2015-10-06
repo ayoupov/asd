@@ -33,8 +33,6 @@ $(document).ready(function () {
     isotopeThumbs();
     uiInit();
     resizeFunc();
-    //if (usemap)
-    //    mapInit();
 });
 
 var map, customMetropLayer,
@@ -103,7 +101,7 @@ var mapInit = function (geostats) {
     layerChanges();
 
     // todo: change to proper Coming Back
-    mapPostLoad(authedUser);
+    mapPostLoad(userHash);
 
     map.on('popupopen', function (popup) {
         $("a.open-passport", $(popup.target._container)).on('click', function () {
