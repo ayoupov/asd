@@ -59,7 +59,7 @@ public class DaemonThread extends Thread
         }
     }
 
-    private void geocodeAddresses()
+    private void geocodeAddresses() throws InterruptedException
     {
         state = ThreadState.BUSY;
         int howMany = 100;
@@ -67,6 +67,7 @@ public class DaemonThread extends Thread
         List<Address> addresses = ContentManager.getEmptyAddresses(howMany);
         for (Address address : addresses) {
             GeocodeResponse gresp = GeocodeUtils.geocode((Point) address.getGeometry());
+            Thread.sleep(1200l);
             if (gresp == null || !GeocoderStatus.OK.equals(gresp.getStatus())) {
                 System.out.println("Daemon.geocode: got " +
                         ((gresp == null) ? " null response" : gresp.getStatus()));

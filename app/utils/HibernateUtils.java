@@ -66,25 +66,25 @@ public class HibernateUtils
     public static Serializable save(Object object)
     {
         Session session = getSession();
-//        Transaction transaction = session.beginTransaction();
         Serializable res = session.save(object);
-//        transaction.commit();
         return res;
     }
 
     public static void saveOrUpdate(Object object)
     {
         Session session = getSession();
-//        Transaction transaction = session.beginTransaction();
         session.saveOrUpdate(object);
-//        transaction.commit();
+    }
+
+    public static void update(Object object)
+    {
+        Session session = getSession();
+        session.update(object);
     }
 
     public static Object load(Class<?> clazz, Serializable id)
     {
-//        Transaction transaction = getSession().beginTransaction();
         Object obj = getSession().load(clazz, id);
-//        transaction.commit();
         return obj;
     }
 

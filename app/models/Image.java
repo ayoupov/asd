@@ -1,7 +1,9 @@
 package models;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import models.user.User;
 import models.user.UserRole;
+import utils.serialize.DateTimeConverter;
 
 import javax.persistence.*;
 import java.io.File;
@@ -32,6 +34,7 @@ public class Image
     public User uploadedBy;
 
     @Column(name = "uploaded_ts")
+    @JsonSerialize(using = DateTimeConverter.class)
     public Date uploadedTS;
 
     @OneToOne
@@ -39,6 +42,7 @@ public class Image
     public User approvedBy;
 
     @Column(name = "approved_ts")
+    @JsonSerialize(using = DateTimeConverter.class)
     public Date approvedTS;
 
     public Image(String description, String path)

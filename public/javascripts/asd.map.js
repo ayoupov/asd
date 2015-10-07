@@ -1,7 +1,7 @@
 var feature_paths = {
     metropolies: '/assets/metropolies_wgs84_10percent.topojson',
-    diecezje: '/assets/diecezje_wgs84_10percent.topojson',
-    dekanaty: '/assets/dekanaty_wgs84_10percent.topojson'
+    diecezje: '/assets/diecezje_wgs84_10percent.topojson'
+    //dekanaty: '/assets/dekanaty_wgs84_10percent.topojson'
 };
 
 var metropStyle = function (feature) {
@@ -23,6 +23,7 @@ var dieStyle = function (feature) {
 var dekStyle = function (feature) {
     return {
         color: 'white',
+        //color: 'green',
         fillColor: 'transparent',
         weight: 1
     };
@@ -37,7 +38,8 @@ $(document).ready(function () {
 
 var map, customMetropLayer,
     metropoliesLayer, dekanatyLayer, diecezjeLayer, churchesLayer,
-    metroCountersLayer, dioCounterLayer;
+    metroCountersLayer, dioCounterLayer,
+    comingBack = false;
 
 var mapInit = function (geostats) {
     L.mapbox.accessToken = 'pk.eyJ1IjoiYXlvdXBvdiIsImEiOiJjYTc1MDkyY2ZlZDIyOGE3Mjc2NzE1ODk3Yzg0OGRlMSJ9.TLk_UalfiCktwxGqd9kRmg';
@@ -61,6 +63,7 @@ var mapInit = function (geostats) {
     //map.scrollWheelZoom.disable();
 
     addChurchContents();
+    addDekanatsContent();
 
     customMetropLayer = L.geoJson(null, {
         style: metropStyle
@@ -73,7 +76,7 @@ var mapInit = function (geostats) {
     });
 
     var customDieLayer = L.geoJson(null, {style: dieStyle});
-    var customDekLayer = L.geoJson(null, {style: dekStyle});
+    //var customDekLayer = L.geoJson(null, {style: dekStyle});
 
     metropoliesLayer = omnivore.topojson(feature_paths.metropolies, null, customMetropLayer);
     metropoliesLayer.on('dblclick', function (ev) {
@@ -85,11 +88,6 @@ var mapInit = function (geostats) {
         map.fire('dblclick', ev);
     });
 
-    dekanatyLayer = omnivore.topojson(feature_paths.dekanaty, null, customDekLayer);
-    dekanatyLayer.on('dblclick', function (ev) {
-        map.fire('dblclick', ev);
-    });
-
     metroCountersLayer = L.geoJson();
     dioCounterLayer = L.geoJson();
     addLayerCounters(metroCountersLayer, geostats.metro);
@@ -97,11 +95,10 @@ var mapInit = function (geostats) {
 
     map.on('zoomanim', layerChanges);
 
-    //map.fire('zoomanim');
     layerChanges();
 
-    // todo: change to proper Coming Back
-    mapPostLoad(userHash);
+    comingBack = userHash && Cookies.get('auth.cb');
+    mapPostLoad(comingBack);
 
     map.on('popupopen', function (popup) {
         $("a.open-passport", $(popup.target._container)).on('click', function () {
@@ -163,6 +160,31 @@ function addLayerCounters(layer, data) {
             })
         }).addTo(layer);
     });
+}
+
+function addDekanatsContent() {
+
+    var port = location.port;
+    var geojsonURL = 'http://' + location.hostname + (port != "" ? ":" + port : "") + '/tiles/d/{z}/{x}/{y}.json';
+    dekanatyLayer = new L.TileLayer.GeoJSON(geojsonURL, {
+            //clipTiles: true,
+            unique: function (feature) {
+                return feature.properties.id;
+            },
+            minZoom: 10,
+            maxZoom: 18
+        }, {
+            style: dekStyle,
+            onEachFeature: function (feature, layer) {
+                    layer.on({
+                        'dblclick': function (ev) {
+                            map.fire('dblclick', ev);
+                        }
+                    });
+            }
+        }
+    );
+
 }
 
 function addChurchContents() {
@@ -235,6 +257,7 @@ function mapPostLoad(comingBack) {
         if (comingBack) {
             var port = location.port;
             window.history.replaceState({}, "", "http://" + location.hostname + (port != "" ? ":" + port : "") + "/church/" + currentChurch.extID + "#passport");
+            Cookies.remove('auth.cb');
         }
         navigateTo(currentChurch);
     }

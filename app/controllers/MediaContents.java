@@ -15,6 +15,7 @@ import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Security;
 import utils.DataUtils;
+import utils.HibernateUtils;
 import utils.ServerProperties;
 import views.html.mediacontent;
 
@@ -113,6 +114,12 @@ public class MediaContents extends Controller
             return badRequest("church is absent");
         MediaContent c = new MediaContent(MediaContentType.Story, text, title, year, null, coverThumb, user, church);
         c.setId((Long) save(c));
+        Set<MediaContent> media = church.getMedia();
+        if (media == null)
+            media = new LinkedHashSet<>();
+        media.add(c);
+        church.setMedia(media);
+        HibernateUtils.update(church);
         commitTransaction();
         result.put("success", true);
         result.put("id", c.getId());
@@ -155,14 +162,14 @@ public class MediaContents extends Controller
         List<User> jauthors = (map.get("authors") != null) ? ContentManager.parseUserList(map.get("authors")) : null;
         if (jauthors == null)
             jauthors = (map.get("authors[]") != null) ? ContentManager.parseUserList(map.get("authors[]")) : null;
-        System.out.println("jtitle = " + jtitle);
-        System.out.println("jlead = " + jlead);
-        System.out.println("jdesc = " + jdesc);
-        System.out.println("jcover = " + jcover);
-        System.out.println("jtext = " + jtext);
-        System.out.println("jstarred = " + jstarred);
-        System.out.println("jpublishDate = " + jpublishDate);
-        System.out.println("jauthors = " + jauthors);
+//        System.out.println("jtitle = " + jtitle);
+//        System.out.println("jlead = " + jlead);
+//        System.out.println("jdesc = " + jdesc);
+//        System.out.println("jcover = " + jcover);
+//        System.out.println("jtext = " + jtext);
+//        System.out.println("jstarred = " + jstarred);
+//        System.out.println("jpublishDate = " + jpublishDate);
+//        System.out.println("jauthors = " + jauthors);
         if (jtext != null)
             c.setText(jtext);
         if (jlead != null)

@@ -17,17 +17,21 @@ $(document).ready(function () {
             removeHash();
         }
     });
+    // messages
+    $('.message', $passportWrapper).hide();
     initAddStory();
 });
 
 function fixUI() {
     $passbtn.css({left: (($passportWrapper.width() - $passbtn.width()) / 2) + "px"});
-    $titleWrapper.css({left: (($passportWrapper.width() - $titleWrapper.width()) / 2) + "px"});
+    //$titleWrapper.css({left: (($passportWrapper.width() - $titleWrapper.width()) / 2) + "px"});
 }
 
 function fillPassport(church) {
     console.log(church);
     currentChurch = church;
+    // clear form
+    $("td.passport-value").empty();
     // filling form
     var churchId = currentChurch.extID;
     $(".church-name").html(church.name);
@@ -43,14 +47,17 @@ function fillPassport(church) {
     if (userHash)
     {
         // change passport for logged in user
-        $addStoryButton.html("dodaj swoje wspomnienie").on('click', toggleNewStoryForm);
+        $addStoryButton.html("dodaj swoje wspomnienie");
+        $(".add-story-wrapper").off('click').on('click', toggleNewStoryForm);
         // todo: add 'upload picture' thumb
         // add editable icons and bind events
         $(".editable").each(function(a, item)
         {
             var content = $(item).html();
             if (!content)
-            content = "<div class='passport-data-help'>pomóż nam uzupełnić dane</div>";
+                content = "<div class='passport-data-help'>pomóż nam uzupełnić dane</div>";
+            else
+                content ="<div class='passport-data-data'>" + content + "</div>"
             $(item).html(content + "<div class='passport-value-edit-icon'/>");
         });
         $(".passport-value-edit-icon").on('click', toggleEdit);
@@ -73,8 +80,10 @@ function fillPassport(church) {
 
 function toggleNewStoryForm()
 {
-    $(".add-story-wrapper-outer").toggle('slow');
-    $newStoryWrapper.toggle('slow');
+    $(".passport-stories-wrapper").fadeToggle(1000);
+    $newStoryWrapper.fadeToggle(1000);
+    $("#story-title,#story-year").val("");
+    $("#story-text").html("");
 }
 
 function toggleEdit(ev)
@@ -97,11 +106,27 @@ function initAddStory() {
         method: 'POST',
         onSuccess: function (data) {
             console.log(data);
+            toggleNewStoryForm();
+            notifyOk();
+        },
+        onError : function()
+        {
+            //toggleNewStoryForm();
+            notifyError();
         },
         serializeForm: true
     });
 }
 
+function notifyOk()
+{
+    $("#new-story-success-message").show('slow');
+}
+
+function notifyError()
+{
+    $("#new-story-error-message").show('slow');
+}
 
 function initPassportGallery(id) {
     $passportGalleryWrapper.empty().api({
@@ -120,7 +145,7 @@ function doPassportGallery(data) {
     $(passportGallery).on('galleryready', function()
     {
         console.log('creating gallery');
-
+        $passportWrapper.modal('refresh');
     });
     appendGSV();
     $(data).each(function (a, image) {

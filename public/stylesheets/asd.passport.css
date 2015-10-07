@@ -6,7 +6,7 @@
 }
 
 #passport {
-    min-height: 100vh;
+    min-height: 344px;
 }
 
 #passportmenu-top .item, #passportmenu-bottom .item {
@@ -64,6 +64,11 @@ width: 600px;
 }
 
 .passport-data-help
+{
+    float:left;
+}
+
+.passport-data-data
 {
     float:left;
 }

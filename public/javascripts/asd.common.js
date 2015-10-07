@@ -22,4 +22,20 @@ var initSelectorCache = function () {
 
 $(document).ready(function () {
     initSelectorCache();
+    // cookie notification
+    if (!Cookies.get("cookiesnotified")) {
+        var notificationMessage = $("<div class='ui success message cookie-notification' id='cookie-notification'><i class='close icon'></i>" +
+                "<div class='header'>Cookie use notification</div>" +
+            "Nasza strona internetowa używa plików cookies (tzw. ciasteczka) w celach statystycznych oraz funkcjonalnych. " +
+            "Dzięki nim możemy indywidualnie dostosować stronę do twoich potrzeb. Każdy może zaakceptować pliki cookies " +
+            "albo ma możliwość wyłączenia ich w przeglądarce, dzięki czemu nie będą zbierane żadne informacje. " +
+            "Dowiedz się więcej jak je wyłączyć." +
+            "</div>");
+        $(".wrapper").append(notificationMessage);
+        $('.close', notificationMessage).on('click', function()
+        {
+            Cookies.set("cookiesnotified", "true", {expires: 365});
+            notificationMessage.fadeOut(600);
+        });
+    }
 });

@@ -1,5 +1,6 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import models.user.User;
 import models.user.UserRole;
@@ -81,6 +82,7 @@ public class MediaContent
     public User approvedBy;
 
     @ManyToMany(mappedBy = "media")
+    @JsonIgnore
     public List<Church> churches;
 
     public MediaContent(MediaContentType contentType, String text, String title, Integer year, Image cover, Image coverThumb, User addedBy, Church church)

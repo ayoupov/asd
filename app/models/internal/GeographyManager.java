@@ -178,6 +178,20 @@ public class GeographyManager
         return res;
     }
 
+    /* ugly geo check, st_overlaps is not working as intended */
+    public static List findDekanatsByGeometry(Geometry geometry)
+    {
+        Session session = getSession();
+        List res = session.createQuery(
+                "select d.id, d.name, d.geometry " +
+                        "from Dekanat d " +
+//                        "where ST_INTERSECTS(:geom, d.geometry) = 1")
+                        "where ST_CROSSES(:geom, d.geometry) = 1 and ST_WITHIN(:geom, d.geometry) = 0")
+                .setParameter("geom",  geometry)
+                .list();
+        return res;
+    }
+
     public static List findChurchesByEnv(Envelope envelope)
     {
         Session session = getSession();
