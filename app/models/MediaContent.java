@@ -1,18 +1,18 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import models.user.User;
 import models.user.UserRole;
 import org.hibernate.annotations.Type;
+import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 import utils.serialize.DateTimeConverter;
 
 import javax.persistence.*;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,6 +23,8 @@ import java.util.List;
 @Entity
 @Table(name = "content")
 @Indexed
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // dirty hack to avoid serialization of proxies
+//@Analyzer(definition = "polish_def_analyzer")
 public class MediaContent
 {
     @Id
@@ -30,14 +32,17 @@ public class MediaContent
     public Long id;
 
     @Column(name = "content_type")
+    @Field
     public MediaContentType contentType;
 
     @Field
     @Type(type = "text")
+    @Analyzer(definition = "polish_def_analyzer")
     public String text;
 
     @Field
     @Type(type = "text")
+    @Analyzer(definition = "polish_def_analyzer")
     public String lead;
 
     @Column(name = "cover_description")
@@ -45,11 +50,11 @@ public class MediaContent
     public String coverDescription;
 
     @Field
+    @Analyzer(definition = "polish_def_analyzer")
     public String title;
 
     private Integer year;
 
-    @Field
     public Boolean starred;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -71,7 +76,7 @@ public class MediaContent
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "content_authors")
-    public List<User> authors;
+    public Set<User> authors;
 
     @Column(name = "approved_dt")
     @JsonSerialize(using = DateTimeConverter.class)
@@ -83,7 +88,7 @@ public class MediaContent
 
     @ManyToMany(mappedBy = "media")
     @JsonIgnore
-    public List<Church> churches;
+    public Set<Church> churches;
 
     public MediaContent(MediaContentType contentType, String text, String title, Integer year, Image cover, Image coverThumb, User addedBy, Church church)
     {
@@ -93,17 +98,17 @@ public class MediaContent
         this.year = year;
         this.cover = cover;
         this.coverThumb = coverThumb;
-        this.authors = Collections.singletonList(addedBy);
+        this.authors = Collections.singleton(addedBy);
         this.addedBy = addedBy;
         this.addedDT = new Date();
         if (addedBy != null && (addedBy.role == UserRole.Administrator || addedBy.role == UserRole.Moderator)) {
             approvedBy = addedBy;
             approvedDT = addedDT;
         }
-        this.churches = Collections.singletonList(church);
+        this.churches = Collections.singleton(church);
     }
 
-    public MediaContent(MediaContentType contentType, String text, String lead, String title, Boolean starred, List<User> authors, User addedBy)
+    public MediaContent(MediaContentType contentType, String text, String lead, String title, Boolean starred, Set<User> authors, User addedBy)
     {
         this.contentType = contentType;
         this.text = text;
@@ -228,12 +233,12 @@ public class MediaContent
         this.approvedBy = approvedBy;
     }
 
-    public List<User> getAuthors()
+    public Set<User> getAuthors()
     {
         return authors;
     }
 
-    public void setAuthors(List<User> authors)
+    public void setAuthors(Set<User> authors)
     {
         this.authors = authors;
     }

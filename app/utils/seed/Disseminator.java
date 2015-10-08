@@ -14,7 +14,9 @@ import utils.seed.geo.MetropolieProcessor;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import static utils.HibernateUtils.*;
 import static utils.seed.ChurchSeeds.seedChurches;
@@ -86,7 +88,7 @@ public class Disseminator
     private static void seedMockContent()
     {
         User asdRobot = UserManager.getAutoUser();
-        List<User> authors = new ArrayList<>();
+        Set<User> authors = new LinkedHashSet<>();
         User articleUser1 = UserManager.findByEmail("article1@internal");
         User articleUser2 = UserManager.findByEmail("article2@internal");
         User storyUser1 = UserManager.findByEmail("story1@internal");
@@ -100,9 +102,9 @@ public class Disseminator
         String ttl = "Kamień z kosmosu";
         boolean starred = true;
         MediaContent goodArticle = new MediaContent(MediaContentType.Article, t, l, ttl, starred, authors, articleUser1);
-        List<MediaContent> authorsOf = articleUser1.getAuthorOf();
+        Set<MediaContent> authorsOf = articleUser1.getAuthorOf();
         if (authorsOf == null)
-            authorsOf = new ArrayList<>();
+            authorsOf = new LinkedHashSet<>();
         authorsOf.add(goodArticle);
         articleUser1.authorOf = authorsOf;
         save(goodArticle);
@@ -114,15 +116,15 @@ public class Disseminator
             String title = "Testity article test title (" + i + ")";
 
             MediaContent mc = new MediaContent(MediaContentType.Article, text, lead, title, (i > 5), authors, articleUser2);
-            List<MediaContent> authorsOfArticles = articleUser2.getAuthorOf();
+            Set<MediaContent> authorsOfArticles = articleUser2.getAuthorOf();
             if (authorsOfArticles == null)
-                authorsOfArticles = new ArrayList<>();
+                authorsOfArticles = new LinkedHashSet<>();
             authorsOfArticles.add(mc);
             articleUser2.authorOf = authorsOfArticles;
             save(mc);
             saveOrUpdate(articleUser2);
         }
-        authors = new ArrayList<>();
+        authors = new LinkedHashSet();
         authors.add(storyUser1);
         authors.add(storyUser2);
         for (int i = 0; i < 10; i++) {

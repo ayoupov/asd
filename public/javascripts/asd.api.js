@@ -7,7 +7,8 @@ var api =
     'get story': '/story/{id}',
     'get church passport' : '/church/passport/{id}',
     'post new story' : '/story/new',
-    'get church images' : '/church/{id}/images'
+    'get church images' : '/church/{id}/images',
+    'search' : '/search/{$searchable}/{query}'
 };
 
 // ss = starStories, sa = starArticles, ds = dateStories, da = dateArticles
@@ -130,7 +131,7 @@ function populateArticles(data) {
     $articles.isotope('remove', $(".extra-articles"));
     //$("#more-articles-thumb").hide();
     $(data.data).each(function (a, item) {
-        var cover = (item.coverImage) ? item.coverImage.path : "";
+        var cover = (item.coverThumb) ? item.coverThumb.path : "";
         var hover = item.hover;
         var title = item.title;
         var desc = item.coverDescription;
@@ -236,7 +237,7 @@ function populateStories(data) {
     var lastItem = null;
     $stories.isotope('remove', $(".extra-stories"));
     $(data.data).each(function (a, item) {
-        var cover = (item.coverImage) ? item.coverImage.path : "";
+        var cover = (item.coverThumb) ? item.coverThumb.path : "";
         var title = item.title;
         var lead = item.lead;
         var id = item.id;

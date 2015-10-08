@@ -1,5 +1,6 @@
 var $map, $menu, $slide1, $slide2, $slide3, $slide4, $prompt, $links, $about, $passportWrapper;
 var $articles, $stories, $dateStories, $newStoryForm, $newStoryGallery, $passportGalleryWrapper;
+var $searchWrapper;
 
 var initSelectorCache = function () {
     $map = $("#map");
@@ -8,7 +9,8 @@ var initSelectorCache = function () {
     $slide2 = $("#slide-articles");
     $slide3 = $("#slide-stories");
     $slide4 = $("#slide-about");
-    $prompt = $(".prompt");
+    $searchWrapper = $(".ui.search", $menu);
+    $prompt = $(".prompt", $menu);
     $links = $("#links");
     $about = $("#about");
     $articles = $(".articles");

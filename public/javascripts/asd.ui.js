@@ -46,7 +46,8 @@ var uiInit = function () {
         }
     });
     // search prompt changes
-    $('.prompt').on('focus', changeSearchPrompt).on('focusout', changeSearchPrompt);
+    //$('.prompt').on('focus', changeSearchPrompt).on('focusout', changeSearchPrompt);
+    $prompt.on('focus', changeSearchPrompt).on('focusout', changeSearchPrompt);
     // sticky bindings
     $about.on('click', toggleAbout);
     // scroll bindings
@@ -55,6 +56,7 @@ var uiInit = function () {
     window.onresize = resizeFunc;
     changeSearchPrompt();
     bindAPI();
+    initSearch();
     // set focus to search
     $prompt.focus();
 };
@@ -65,12 +67,15 @@ var changeSearchPrompt = function () {
         switch (slide) {
             case "map":
                 $prompt.attr('placeholder', "Adres lub nazwa kościoła");
+                $searchWrapper.data('searchable', 'churches');
                 break;
             case "articles":
                 $prompt.attr('placeholder', "Słowo do wyszukiwania (articles)");
+                $searchWrapper.data('searchable', 'article');
                 break;
             case "stories":
                 $prompt.attr('placeholder', "Słowo do wyszukiwania (stories)");
+                $searchWrapper.data('searchable', 'story');
                 break;
         }
         $prompt.css('font-size', '11pt');
@@ -202,4 +207,43 @@ var isotopeThumbs = function () {
 
 function openContent(contentType, contentId) {
     console.log('api: {' + contentType + ' : ' + contentId + "}");
+}
+
+function initSearch()
+{
+    console.log('initiating search');
+    console.log($prompt);
+    $searchWrapper.search(
+        {
+            apiSettings: {
+                debug : true,
+                verbose : true,
+                action : 'search',
+                onResponse: function(churchResponse) {
+                    var
+                        response = {
+                            results : {"ASDFSD": '3'}
+                        }
+                        ;
+                    // translate asd api response to work with search
+                    $.each(churchResponse.items, function(index, item) {
+                        console.log(item);
+                    });
+                    return response;
+                }
+            },
+            debug : true,
+            verbose : true,
+            minCharacters : 1,
+            type: 'category',
+            minimumCharacters : 1,
+            maxResults : 5,
+            fields : {
+                title           : 'title',       // result title
+                action          : 'action',      // "view more" object name
+                actionText      : 'text',        // "view more" text
+                actionURL       : 'url'          // "view more" url
+            }
+        }
+    );
 }

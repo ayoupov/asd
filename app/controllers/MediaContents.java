@@ -14,17 +14,18 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Security;
+import play.twirl.api.Html;
 import utils.DataUtils;
 import utils.HibernateUtils;
 import utils.ServerProperties;
 import views.html.mediacontent;
 
-import java.io.File;
-import java.io.Serializable;
+import java.io.*;
 import java.util.*;
 
 import static utils.DataUtils.*;
 import static utils.HibernateUtils.*;
+import static utils.ServerProperties.isInProduction;
 import static utils.media.images.Thumber.thumbName;
 
 /**
@@ -39,28 +40,53 @@ public class MediaContents extends Controller
     private static String absoluteUploadPath = ServerProperties.getValue("asd.upload.path");
     private static String relativeUploadPath = ServerProperties.getValue("asd.upload.relative.path");
 
-    public static Result byTypeAndId(String ctype, Long id)
+    static String publicPath = ServerProperties.getValue("asd.public.path");
+
+    public static Result byTypeAndId(String ctype, Long id) throws IOException
     {
         return byTypeAndId(ctype, id, "html");
     }
 
-    public static Result byTypeAndId(String ctype, Long id, String ext)
+    public static Result byTypeAndId(String ctype, Long id, String ext) throws IOException
     {
+        Long givenId = id;
         beginTransaction();
         MediaContentType type = MediaContentType.fromString(ctype);
         if (type == null)
             return badRequest("Trying to get content with type : " + ctype);
-        MediaContent content = (MediaContent) get(MediaContent.class, id);
+        MediaContent content = (MediaContent) get(MediaContent.class, givenId);
         commitTransaction();
         if (content != null) {
             if (!content.contentType.equals(type))
                 return badRequest("Wrong content type: " + type);
             if ("json".equals(ext))
                 return ok(Json.toJson(content));
-            else
-                return ok(mediacontent.render(content));
+            else {
+                // check if static version exists
+                File dir = new File(publicPath + ctype);
+                File mediaFile = new File(dir, givenId + ".html");
+                if (mediaFile.exists())
+                    return ok(mediaFile, true);
+                Html rendered = mediacontent.render(content);
+                saveToFS(dir, mediaFile, rendered);
+                return ok(rendered);
+            }
         } else
             return notFound(String.format("MediaContent with id {%s}", id));
+    }
+
+    private static void saveToFS(File dir, File mediaFile, Html rendered) throws IOException
+    {
+        if (!isInProduction()) {
+            System.out.println("Saving to: ");
+            System.out.println("dir = " + dir);
+            System.out.println("mediaFile = " + mediaFile);
+        }
+        dir.mkdirs();
+        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
+                new FileOutputStream(mediaFile), "UTF-8"));
+        out.write(rendered.toString());
+        out.close();
     }
 
     public static Result byTypeAndIds(String ctype, String ids) throws RequestException
@@ -101,8 +127,7 @@ public class MediaContents extends Controller
 //            coverPath = ServerProperties.getValue("asd.upload.relative.path") + User.anonymousHash() + ("/church_story_" + jcover + ".png");
             coverPath = User.anonymousHash() + ("/church_story_" + jcover + "_thumb.png");
             System.out.println("coverPath = " + coverPath);
-        }
-        else return badRequest("cover is null");
+        } else return badRequest("cover is null");
         if (jyear != null)
             year = safeInt(jyear, 2015);
 //        Image cover = findImage(null, coverPath);
@@ -159,7 +184,7 @@ public class MediaContents extends Controller
                 jtitle = (map.get("title") != null) ? map.get("title")[0] : null;
         Boolean jstarred = (map.get("starred") != null) ? safeBool(map.get("starred")) : false;
         Date jpublishDate = (map.get("approvedDT") != null) ? DataUtils.dateFromReqString(map.get("approvedDT")) : null;
-        List<User> jauthors = (map.get("authors") != null) ? ContentManager.parseUserList(map.get("authors")) : null;
+        Set<User> jauthors = (map.get("authors") != null) ? ContentManager.parseUserList(map.get("authors")) : null;
         if (jauthors == null)
             jauthors = (map.get("authors[]") != null) ? ContentManager.parseUserList(map.get("authors[]")) : null;
 //        System.out.println("jtitle = " + jtitle);

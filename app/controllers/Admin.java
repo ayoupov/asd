@@ -61,7 +61,9 @@ public class Admin extends Controller
     public static Result reindex() throws InterruptedException
     {
         if (roleCheck()) {
+            beginTransaction();
             SearchManager.reindex();
+            commitTransaction();
             return ok("reindexed");
         }
         return forbidden();

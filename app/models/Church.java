@@ -16,6 +16,7 @@ import org.apache.lucene.analysis.charfilter.MappingCharFilterFactory;
 import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
 import org.apache.lucene.analysis.core.StopFilterFactory;
 import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilterFactory;
+import org.apache.lucene.analysis.ngram.EdgeNGramFilterFactory;
 import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
 import org.apache.lucene.analysis.stempel.StempelPolishStemFilterFactory;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -46,7 +47,12 @@ import java.util.Set;
                                 value = "models/internal/search/church_stoplist.properties"),
                         @Parameter(name = "ignoreCase", value = "true")
                 }),
-                @TokenFilterDef(factory = StempelPolishStemFilterFactory.class)
+                @TokenFilterDef(factory = StempelPolishStemFilterFactory.class),
+                @TokenFilterDef(factory = EdgeNGramFilterFactory.class, params =
+                        {
+                                @Parameter(name= "minGramSize", value = "2"),
+                                @Parameter(name= "maxGramSize", value = "8")
+                        })
 
         })
 // todo: ensure availability of objects via search

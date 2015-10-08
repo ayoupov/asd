@@ -85,7 +85,7 @@ public class SearchManager
                 .get();
         Query luceneQuery = queryBuilder.bool()
                 .must(queryBuilder.keyword().onField("contentType").matching(type).createQuery())
-                .must(queryBuilder.keyword().onFields("text", "lead", "caption").matching(q).createQuery())
+                .must(queryBuilder.keyword().onFields("text", "lead", "title").matching(q).createQuery())
                 .createQuery();
         FullTextQuery query = fullTextSession.createFullTextQuery(luceneQuery);
         query.setMaxResults(10);

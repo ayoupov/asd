@@ -10,6 +10,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static utils.ServerProperties.isInProduction;
+
 /**
  * Created with IntelliJ IDEA.
  * User: ayoupov
@@ -65,14 +67,15 @@ public class BBCodeParser
         for (SubstitutePriority priority : order) {
             Set<Substitute> substitutes = prioritizedSubstitutes.get(priority);
             for (Substitute substitute : substitutes) {
-                System.out.println("substitute = " + substitute.getTag());
+                if (!isInProduction())
+                    System.out.println("substitute = " + substitute.getTag());
                 Pattern pattern = substitute.getPattern();
                 String replacement = substitute.getReplacement();
                 Matcher matcher = pattern.matcher(result);
                 StringBuffer sb = new StringBuffer();
                 while (matcher.find()) {
                     String found = matcher.group().trim();
-                    if (!"".equals(found) && !"\n".equals(found))
+                    if (!"".equals(found) && !"\n".equals(found) && !isInProduction())
                         System.out.println("Processing: " + found);
                     if (!substitute.isSimple())
                         replacement = substitute.process(sb, matcher, state);

@@ -36,6 +36,7 @@ public class Search extends Controller
         else
         {
             result.put("churches", Json.toJson(churches));
+            result.put("success", "true");
             return ok(result);
         }
     }
@@ -57,6 +58,7 @@ public class Search extends Controller
         {
             result.put("content", Json.toJson(content));
 //            result.put("excerpt", Json.toJson())
+            result.put("success", "true");
             return ok(result);
         }
     }

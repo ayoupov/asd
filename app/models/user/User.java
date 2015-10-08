@@ -7,6 +7,7 @@ import play.data.validation.Constraints;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -50,7 +51,7 @@ public class User
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="authors")
     @JsonIgnore
-    public List<MediaContent> authorOf;
+    public Set<MediaContent> authorOf;
 
     public User(String name, UserRole role, UserStatus status)
     {
@@ -142,12 +143,12 @@ public class User
         this.linkedAccounts = linkedAccounts;
     }
 
-    public List<MediaContent> getAuthorOf()
+    public Set<MediaContent> getAuthorOf()
     {
         return authorOf;
     }
 
-    public void setAuthorOf(List<MediaContent> authorOf)
+    public void setAuthorOf(Set<MediaContent> authorOf)
     {
         this.authorOf = authorOf;
     }

@@ -20,10 +20,7 @@ import org.hibernate.type.StandardBasicTypes;
 import play.mvc.Http;
 import utils.serialize.PointConverter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static utils.DataUtils.safeLong;
 import static utils.HibernateUtils.getSession;
@@ -267,9 +264,9 @@ public class ContentManager
         return res.intValue();
     }
 
-    public static List<User> parseUserList(String[] strings)
+    public static Set<User> parseUserList(String[] strings)
     {
-        List<User> res = new ArrayList<>();
+        Set<User> res = new LinkedHashSet<>();
         for (String s : strings) {
             long id = safeLong(s, -1);
             if (id > -1)
