@@ -23,6 +23,7 @@
             @parts.main.mainslide4(ServerProperties.getValue("facebook.url"))
             <div class="ui modal passport-wrapper">
             @parts.passport(currentChurch, routes.Application.index(null).absoluteURL(), user)
+            @parts.newchurch(user)
             </div>
         </div>
         <script>

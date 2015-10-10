@@ -1,9 +1,7 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.vividsolutions.jts.geom.Point;
 import models.Church;
 import models.MediaContentType;
 import models.internal.ContentManager;
@@ -11,7 +9,7 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.twirl.api.Html;
-import utils.serialize.PointConverter;
+import utils.serialize.Serializer;
 import utils.web.PasswordProtectionAnnotation;
 import views.html.index;
 
@@ -25,18 +23,11 @@ import static utils.HibernateUtils.commitTransaction;
 @PasswordProtectionAnnotation
 public class Application extends Controller
 {
-    static ObjectMapper alsoGeometryMapper;
-
-    static {
-        alsoGeometryMapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule("PointSerializerModule");
-        module.addSerializer(Point.class, new PointConverter());
-        alsoGeometryMapper.registerModule(module);
-    }
 
     public static Result index(String churchId)
     {
         beginTransaction();
+        Json.setObjectMapper(Serializer.emptyMapper);
         // add other static data
         long churchCount = ContentManager.getChurchCount();
         Church currentChurch = ContentManager.getChurch(churchId);
@@ -50,7 +41,7 @@ public class Application extends Controller
     public static Result summary()
     {
         beginTransaction();
-        Json.setObjectMapper(alsoGeometryMapper);
+        Json.setObjectMapper(Serializer.pointMapper);
         ObjectNode result = Json.newObject();
         // stories and articles
         // stories ids, sorted by starred

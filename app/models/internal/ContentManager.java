@@ -1,11 +1,6 @@
 package models.internal;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.feth.play.module.pa.user.AuthUser;
-import models.Church;
-import models.Image;
-import models.MediaContent;
-import models.MediaContentType;
+import models.*;
 import models.address.Address;
 import models.internal.search.filters.ChurchFilter;
 import models.internal.search.filters.QueryFilter;
@@ -14,11 +9,7 @@ import models.user.User;
 import org.apache.commons.lang3.tuple.Pair;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.spatial.GeometryType;
-import org.hibernate.spatial.dialect.mysql.MySQLSpatial56Dialect;
-import org.hibernate.type.StandardBasicTypes;
 import play.mvc.Http;
-import utils.serialize.PointConverter;
 
 import java.util.*;
 
@@ -391,6 +382,13 @@ public class ContentManager
     public static List<Address> getEmptyAddresses(int howMany)
     {
         return getSession().createQuery("from Address where unfolded is null").setMaxResults(howMany).list();
+    }
+
+    public static Architect getArchitectByName(String name)
+    {
+        return (Architect) getSession().createQuery("from Architect a where a.name = :n")
+                .setParameter("n", name)
+                .uniqueResult();
     }
 
 //    public static List<User> parseUserList(Set<Long> userList )

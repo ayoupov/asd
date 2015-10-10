@@ -15,7 +15,7 @@
     border-bottom: solid 5px black !important;
 }
 
-#menu.menu a {
+#menu.menu a:not(.result) {
     font-family: "Helvetica", "Helvetica Neue Light", sans-serif !important;
     font-size: 18pt !important;
     font-weight: bold !important;

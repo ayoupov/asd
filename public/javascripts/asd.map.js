@@ -233,8 +233,17 @@ function addChurchContents() {
 
 var POPUP_ON_LOAD_ONCE = true;
 
+function navigateFromSearch(id)
+{
+    updateHistoryWithChurch(id, "#passport");
+    openPassport(id, function()
+    {
+        map.setView(currentChurch.address.geometry, 14);
+        layerChanges();
+    });
+}
+
 function navigateTo(church) {
-    //churchesLayer.on('ready', function () {
     churchesLayer.geojsonLayer.on('layeradd', function (evt) {
         var marker = evt.layer;
         if (marker.feature.properties.ext_id == church.extID) {
@@ -246,8 +255,6 @@ function navigateTo(church) {
             }
         }
     });
-    // todo: produces exception : Uncaught TypeError: Cannot read property 'min' of undefined
-    // seems ^^^ from geojsonLayer
     map.setView(church.address.geometry, 14);
     layerChanges();
 }
@@ -272,7 +279,7 @@ function getPopup(feature, layer) {
     return popupString;
 }
 
-function openPassport(id) {
+function openPassport(id, callback) {
     $passportWrapper.api({
         on: 'now',
         action: 'get church passport',
@@ -282,12 +289,21 @@ function openPassport(id) {
             fillPassport(data);
             $passportWrapper.modal('show');
             fixUI();
+            if (callback)
+                callback();
         }
     });
 }
 
 function whenClicked(e) {
-    var port = location.port;
     var id = e.target.feature.properties.ext_id;
-    window.history.pushState({}, "", "http://" + location.hostname + (port != "" ? ":" + port : "") + "/church/" + id);
+    updateHistoryWithChurch(id);
+}
+
+function updateHistoryWithChurch(id, hash)
+{
+    var port = location.port;
+    window.history.pushState({}, "",
+        "http://" + location.hostname + (port != "" ? ":" + port : "") + "/church/" + id +
+        ((hash) ? hash : ""));
 }

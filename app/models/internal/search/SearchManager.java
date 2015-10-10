@@ -68,7 +68,7 @@ public class SearchManager
         Query luceneQuery = queryBuilder.keyword().onFields("name", "address.unfolded").matching(q).createQuery();
 
         FullTextQuery query = fullTextSession.createFullTextQuery(luceneQuery);
-        query.setMaxResults(10);
+        query.setMaxResults(5);
         List<Church> result = query.list();
         return result;
     }

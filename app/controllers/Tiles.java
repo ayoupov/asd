@@ -11,6 +11,7 @@ import play.mvc.Result;
 import utils.ServerProperties;
 import utils.map.TileBuilder;
 import utils.seed.Disseminator;
+import utils.serialize.Serializer;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -33,7 +34,8 @@ public class Tiles extends Controller
 
     public static Result tile(String layer, Integer zoom, Integer x, Integer y, String ext) throws IOException
     {
-        Json.setObjectMapper(new ObjectMapper().registerModule(new GeoJsonModule()));
+//        Json.setObjectMapper(new ObjectMapper().registerModule(new GeoJsonModule()));
+        Json.setObjectMapper(Serializer.entityMapper);
         ObjectNode result = Json.newObject();
         beginTransaction();
         boolean dekanatLayer = false;

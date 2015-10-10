@@ -29,6 +29,7 @@ function fixUI() {
 
 function fillPassport(church) {
     console.log(church);
+    fillSocial();
     currentChurch = church;
     // clear form
     $("td.passport-value").empty();
@@ -36,7 +37,18 @@ function fillPassport(church) {
     var churchId = currentChurch.extID;
     $(".church-name").html(church.name);
     $(".church-address").html(church.address.unfolded);
-    var website = church.website != null ? church.website : "";
+    var churchStart = church.constructionStart ? church.constructionStart : "";
+    var churchEnd = church.constructionEnd ? church.constructionEnd : "";
+    $(".church-construction").html(churchStart + " - " + churchEnd);
+    var churchArchitects = ''; var arcarr = [];
+    if (church.architects && church.architects.length > 0)
+        $(church.architects).each(function(a, item)
+        {
+            arcarr.push(item.name);
+        });
+    churchArchitects = arcarr.join(', ');
+    $(".church-architects").html(churchArchitects);
+    var website = church.website ? church.website : "";
     if (website != '')
         $(".church-website").html('<a target="_blank" href="' + website + '">' + website + '</a>');
     else
@@ -76,6 +88,19 @@ function fillPassport(church) {
     }
     initPassportGallery(churchId);
     initStoryGallery();
+}
+
+function fillSocial()
+{
+    $(".social-wrapper").empty().html(
+        "<div class='fb-like' data-href='" + window.location + "#passport' data-layout='button_count' data-action='like'" +
+    " data-show-faces='true' data-share='false'></div>" +
+    "<a href='https://twitter.com/share' class='twitter-share-button' data-lang='pl'>Tweetnij</a>"
+    );
+    if (FB)
+        FB.XFBML.parse();
+    if (twttr)
+        twttr.widgets.load();
 }
 
 function toggleNewStoryForm()

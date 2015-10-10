@@ -11,7 +11,7 @@ import models.internal.GeographyManager;
 import org.hibernate.annotations.Type;
 import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.search.annotations.Field;
-import utils.serialize.PointConverter;
+import utils.serialize.converters.PointConverter;
 
 import javax.persistence.*;
 

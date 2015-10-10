@@ -8,7 +8,8 @@ var api =
     'get church passport' : '/church/passport/{id}',
     'post new story' : '/story/new',
     'get church images' : '/church/{id}/images',
-    'search' : '/search/{$searchable}/{query}'
+    'search' : '/search/{$searchable}/{query}',
+    'suggest church' : '/church/suggest'
 };
 
 // ss = starStories, sa = starArticles, ds = dateStories, da = dateArticles

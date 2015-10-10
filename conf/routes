@@ -43,6 +43,9 @@ GET         /auth/logout                           controllers.Auth.logout
 GET         /auth/:provider                        controllers.Auth.auth(provider: String)
 GET         /auth/:provider/denied                 controllers.Auth.oAuthDenied(provider: String)
 
+#role??
+POST        /church/suggest                        controllers.Churches.suggest
+
 # secure, role must be >= User
 POST        /story/new                             controllers.MediaContents.newStory
 
@@ -62,6 +65,7 @@ GET         /admin/parse_add                       controllers.Admin.parseAdd
 GET         /admin/snapshotify                     controllers.Admin.snapshotify
 GET         /admin/snapsome                        controllers.Admin.snapshotifySome
 GET         /admin/testparse2                      controllers.Admin.checkParse2
+
 GET         /admin/                                controllers.Admin.index
 GET         /admin                                 controllers.Admin.index
 

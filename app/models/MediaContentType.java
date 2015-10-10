@@ -19,4 +19,15 @@ public enum MediaContentType
             return Story;
         return null;
     }
+
+    @Override
+    public String toString()
+    {
+        switch (this)
+        {
+            case Article: return "article";
+            case Story : return "story";
+        }
+        return "";
+    }
 }

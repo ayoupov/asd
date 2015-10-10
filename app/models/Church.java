@@ -25,6 +25,7 @@ import org.hibernate.search.annotations.Parameter;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
@@ -50,7 +51,7 @@ import java.util.Set;
                 @TokenFilterDef(factory = StempelPolishStemFilterFactory.class),
                 @TokenFilterDef(factory = EdgeNGramFilterFactory.class, params =
                         {
-                                @Parameter(name= "minGramSize", value = "2"),
+                                @Parameter(name= "minGramSize", value = "3"),
                                 @Parameter(name= "maxGramSize", value = "8")
                         })
 
@@ -75,7 +76,7 @@ public class Church
     /**
      * working relates to church status
      */
-    public boolean working;
+//    public boolean working;
 
     /**
      * enabled relates to view availability
@@ -89,16 +90,10 @@ public class Church
 
     @IndexedEmbedded
     @Analyzer(definition = "polish_def_analyzer")
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonIgnore
-    public Set<Synonym> synonyms;
-
-    @IndexedEmbedded
-    @Analyzer(definition = "polish_def_analyzer")
     @OneToOne
     public Address address;
 
-    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     public Set<Architect> architects;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -124,20 +119,26 @@ public class Church
 
     public String website;
 
+    @IndexedEmbedded
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name="synsets")
+    @JsonIgnore
+    public Set<String> synset = new LinkedHashSet<String>();
+
     // only for internal update!
     public Church(String extID, String name, Address address)
     {
-        this(extID, name, false, null, null, address, null, null, null, UserManager.getAutoUser());
+        this(extID, name, null, null, address, null, null, null, UserManager.getAutoUser());
         approvedBy = addedBy;
         approvedDT = new Date();
     }
 
-    public Church(String extID, String name, boolean working, Integer constructionStart, Integer constructionEnd,
+    public Church(String extID, String name, Integer constructionStart, Integer constructionEnd,
                   Address address, Set<Architect> architects, Set<Image> images, Set<MediaContent> media, User addedBy)
     {
         this.extID = extID;
         this.name = name;
-        this.working = working;
+//        this.working = working;
         this.constructionStart = constructionStart;
         this.constructionEnd = constructionEnd;
         this.address = address;
@@ -148,6 +149,7 @@ public class Church
         this.addedBy = addedBy;
         this.addedDT = new Date();
         this.version = 0;
+        this.synset = new LinkedHashSet<>();
     }
 
     public Church()
@@ -210,15 +212,15 @@ public class Church
         this.name = name;
     }
 
-    public boolean isWorking()
-    {
-        return working;
-    }
+//    public boolean isWorking()
+//    {
+//        return working;
+//    }
 
-    public void setWorking(boolean working)
-    {
-        this.working = working;
-    }
+//    public void setWorking(boolean working)
+//    {
+//        this.working = working;
+//    }
 
     public boolean isEnabled()
     {
@@ -248,16 +250,6 @@ public class Church
     public void setConstructionEnd(Integer constructionEnd)
     {
         this.constructionEnd = constructionEnd;
-    }
-
-    public Set<Synonym> getSynonyms()
-    {
-        return synonyms;
-    }
-
-    public void setSynonyms(Set<Synonym> synonyms)
-    {
-        this.synonyms = synonyms;
     }
 
     public Address getAddress()
@@ -348,5 +340,15 @@ public class Church
     public void setWebsite(String website)
     {
         this.website = website;
+    }
+
+    public Set<String> getSynset()
+    {
+        return synset;
+    }
+
+    public void setSynset(Set<String> synset)
+    {
+        this.synset = synset;
     }
 }

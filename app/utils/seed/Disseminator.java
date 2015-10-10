@@ -1,5 +1,6 @@
 package utils.seed;
 
+import com.feth.play.module.pa.providers.oauth2.facebook.FacebookAuthUser;
 import models.MediaContent;
 import models.MediaContentType;
 import models.internal.MockIdentity;
@@ -58,7 +59,8 @@ public class Disseminator
     public static void churchSeed() throws IOException
     {
         beginTransaction();
-        seedChurches(dataDir + "churches.csv");
+//        seedChurches(dataDir + "churches.csv");
+        seedChurchesExt(dataDir + "churches_no_geocode.csv");
         commitTransaction();
     }
 
@@ -156,6 +158,7 @@ public class Disseminator
         articleUser2.setRole(UserRole.User);
         articleUser2.setStatus(UserStatus.Active);
         saveOrUpdate(articleUser2);
+
     }
 
 }

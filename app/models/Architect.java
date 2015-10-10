@@ -1,8 +1,9 @@
 package models;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,10 +16,15 @@ import javax.persistence.Table;
 public class Architect
 {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
 
+    @Column(unique = true, nullable = false)
     public String name;
 
+    @ManyToMany(mappedBy = "architects")
+    @JsonIgnore
+    public Set<Church> churches;
 
     public String getName()
     {
@@ -38,5 +44,24 @@ public class Architect
     public void setId(Long id)
     {
         this.id = id;
+    }
+
+    public Set<Church> getChurches()
+    {
+        return churches;
+    }
+
+    public void setChurches(Set<Church> churches)
+    {
+        this.churches = churches;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Architect{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

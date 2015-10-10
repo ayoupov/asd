@@ -25,6 +25,7 @@ import utils.map.BadIdsSieve;
 import utils.map.Processor;
 import utils.map.Snapshoter;
 import utils.media.bbcode.BBCodeTest;
+import utils.seed.ChurchSeeds;
 import utils.seed.Disseminator;
 import views.html.admin;
 

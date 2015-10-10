@@ -3,10 +3,9 @@ package models;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import models.user.User;
 import models.user.UserRole;
-import utils.serialize.DateTimeConverter;
+import utils.serialize.converters.DateTimeConverter;
 
 import javax.persistence.*;
-import java.io.File;
 import java.util.Date;
 
 import static utils.HibernateUtils.save;

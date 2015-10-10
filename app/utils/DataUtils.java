@@ -1,6 +1,6 @@
 package utils;
 
-import utils.serialize.DateTimeConverter;
+import utils.serialize.converters.DateTimeConverter;
 
 import java.util.Date;
 

@@ -1,14 +1,13 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.Church;
 import models.MediaContent;
 import models.MediaContentType;
 import models.internal.search.SearchManager;
-import org.apache.commons.lang3.tuple.Pair;
 import play.libs.Json;
 import play.mvc.*;
+import utils.serialize.Serializer;
 
 import java.util.List;
 
@@ -23,6 +22,7 @@ import static utils.HibernateUtils.commitTransaction;
  */
 public class Search extends Controller
 {
+
     public static Result churchesByNameAndAddress(String q)
     {
         beginTransaction();
@@ -35,7 +35,8 @@ public class Search extends Controller
         }
         else
         {
-            result.put("churches", Json.toJson(churches));
+            Json.setObjectMapper(Serializer.entityMapper);
+            result.put("results", Json.toJson(churches));
             result.put("success", "true");
             return ok(result);
         }
@@ -56,7 +57,8 @@ public class Search extends Controller
         }
         else
         {
-            result.put("content", Json.toJson(content));
+            Json.setObjectMapper(Serializer.entityMapper);
+            result.put("results", Json.toJson(content));
 //            result.put("excerpt", Json.toJson())
             result.put("success", "true");
             return ok(result);

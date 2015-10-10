@@ -1,16 +1,17 @@
 package controllers;
 
 import models.Church;
+import models.internal.ChurchSuggestion;
 import models.internal.ContentManager;
+import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import utils.serialize.Serializer;
 
 import java.util.List;
 
-import static utils.HibernateUtils.beginTransaction;
-import static utils.HibernateUtils.commitTransaction;
-import static utils.HibernateUtils.get;
+import static utils.HibernateUtils.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,10 +27,25 @@ public class Churches extends Controller
         beginTransaction();
         Church church = ContentManager.getChurch(id);
         commitTransaction();
-        if (church != null)
+        if (church != null) {
+            Json.setObjectMapper(Serializer.emptyMapper);
             return ok(Json.toJson(church));
+        }
         else
             return notFound(String.format("Church with id {%s}", id));
+    }
+
+    public static Result suggest()
+    {
+        Form<ChurchSuggestion> suggestionForm = Form.form(ChurchSuggestion.class);
+        if (!suggestionForm.hasErrors()) {
+            beginTransaction();
+            ChurchSuggestion cs = suggestionForm.bindFromRequest().get();
+            saveOrUpdate(cs);
+            commitTransaction();
+            return ok();
+        } else
+            return badRequest(suggestionForm.errorsAsJson());
     }
 
     public static Result revsById(String id)

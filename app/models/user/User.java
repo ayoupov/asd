@@ -37,8 +37,10 @@ public class User
 
     public String name;
 
+    @JsonIgnore
     public UserRole role;
 
+    @JsonIgnore
     public UserStatus status;
 
     @Column(name="email_validated")

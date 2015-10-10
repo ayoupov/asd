@@ -9,7 +9,7 @@ import org.hibernate.annotations.Type;
 import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
-import utils.serialize.DateTimeConverter;
+import utils.serialize.converters.DateTimeConverter;
 
 import javax.persistence.*;
 import java.util.*;
@@ -295,5 +295,20 @@ public class MediaContent
     public void setCoverThumb(Image coverThumb)
     {
         this.coverThumb = coverThumb;
+    }
+
+    public Image getCoverThumb()
+    {
+        return coverThumb;
+    }
+
+    public Set<Church> getChurches()
+    {
+        return churches;
+    }
+
+    public void setChurches(Set<Church> churches)
+    {
+        this.churches = churches;
     }
 }

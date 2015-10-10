@@ -23,7 +23,7 @@ public class KMLParser
         Church(String name, String id)
         {
             this.id = id;
-            this.name = name;
+            this.name = name.replace("\\n", " ");
         }
 
         @Override
