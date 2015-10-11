@@ -91,7 +91,7 @@ public class Address
     {
         Point point = new Point(new CoordinateArraySequence
                 (new Coordinate[]{new Coordinate(lng, lat)}), new GeometryFactory());
-        Geometry geom = point; // todo: change to envelope?
+        Geometry geom = point;
         Address checked = GeographyManager.check(geom);
         if (checked == null) {
             this.geometry = point;

@@ -11,6 +11,7 @@ import models.user.UserRole;
 import models.user.UserStatus;
 import org.hibernate.Query;
 import org.hibernate.id.GUIDGenerator;
+import play.Logger;
 import play.api.mvc.Session;
 import play.mvc.Http;
 import utils.ServerProperties;
@@ -105,7 +106,7 @@ public class UserManager
 
     public static void mergeUsers(User thisUser, final User otherUser)
     {
-        System.out.println("Merging " + thisUser + " and " + otherUser);
+        Logger.info("Merging users ", thisUser, otherUser);
         List<LinkedAccount> linkedAccounts = thisUser.getLinkedAccounts();
         for (final LinkedAccount acc : otherUser.linkedAccounts) {
             LinkedAccount account = createLinkedAccount(acc);

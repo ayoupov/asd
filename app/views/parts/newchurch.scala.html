@@ -11,11 +11,11 @@
     </nav>
     <div class="new-church-prompt">Nie możesz znaleźć swojego kościoła? Możliwe, że został zbudowany przed wojną, albo po prostu go przeoczyliśmy. Pomóż nam go znaleźć!</div>
     <form action="@routes.Churches.suggest" method="POST" class="ui form">
-        <input type="hidden" value="@user.getHash" name="user" id="church-user-hash">
+        <input type="hidden" value="" name="user" id="church-user-hash" class="new-church-value">
         <label for="church-name">Tytuł</label>
-        <input type="text" class="ui input" id="church-name" name="name" placeholder="name" class="new-church-value">
+        <input type="text" class="ui input new-church-value" id="church-name" name="name" placeholder="name">
         <label for="church-address">Adres</label>
-        <input type="text" class="ui input" id="church-address" name="address" placeholder="adres" class="new-church-value">
+        <input type="text" class="ui input new-church-value" id="church-address" name="address" placeholder="adres">
         <div class="clearfix"></div>
         <input type="button" value="Send church" class="ui submit button">
     </form>

@@ -9,6 +9,7 @@ import models.user.User;
 import org.apache.commons.lang3.tuple.Pair;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import play.Logger;
 import play.mvc.Http;
 
 import java.util.*;
@@ -263,7 +264,7 @@ public class ContentManager
             if (id > -1)
                 res.add((User) getSession().get(User.class, id));
             else
-                System.out.println("Warning! Bad authors detected!");
+                Logger.warn("Warning! Bad authors detected!");
         }
         return res;
     }
@@ -358,7 +359,7 @@ public class ContentManager
 
     public static Image findImageByPath(String path)
     {
-        System.out.println("searching for an image with path: " + path);
+        Logger.info("searching for an image with path: " + path);
         if (path == null)
             return null;
         return (Image) getSession().createQuery(

@@ -15,6 +15,7 @@ import models.internal.search.filters.StoryFilter;
 import models.internal.search.filters.UserFilter;
 import models.user.User;
 import models.user.UserRole;
+import play.Logger;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -37,6 +38,7 @@ import java.util.Map;
 
 import static utils.HibernateUtils.beginTransaction;
 import static utils.HibernateUtils.commitTransaction;
+import static utils.ServerProperties.isInProduction;
 
 /**
  * Created with IntelliJ IDEA.
@@ -55,7 +57,8 @@ public class Admin extends Controller
         beginTransaction();
         User user = UserManager.getLocalUser(session());
         commitTransaction();
-        System.out.println("user = " + user);
+        if (!isInProduction())
+            Logger.info("user = " + user);
         return user != null && (user.getRole() == UserRole.Administrator || user.getRole() == UserRole.Moderator);
     }
 

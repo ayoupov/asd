@@ -25,16 +25,16 @@ public class PasswordProtectionAnnotationAction extends Action<PasswordProtectio
     public F.Promise<Result> call(Http.Context ctx) throws Throwable
     {
         if (ctx.session().get(PWDPROVIDED) != null) {
-            if (debugmode) System.out.println("passed pwd prot");
+//            if (debugmode) System.out.println("passed pwd prot");
             return delegate.call(ctx);
         } else {
             String pwd;
-            if (debugmode) System.out.println(ctx.request());
+//            if (debugmode) System.out.println(ctx.request());
             if ((pwd = ctx.request().getQueryString(PWD)) != null) {
-                if (debugmode) System.out.println("pwd provided = " + pwd);
+//                if (debugmode) System.out.println("pwd provided = " + pwd);
                 if (PROTPWD.equals(pwd)) {
                     ctx.session().put(PWDPROVIDED, "true");
-                    if (debugmode) System.out.println("got into");
+//                    if (debugmode) System.out.println("got into");
                     return delegate.call(ctx);
                 }
             }

@@ -109,6 +109,7 @@ function toggleNewStoryForm()
     $newStoryWrapper.fadeToggle(1000);
     $("#story-title,#story-year").val("");
     $("#story-text").html("");
+    $passportWrapper.modal('refresh');
 }
 
 function toggleEdit(ev)

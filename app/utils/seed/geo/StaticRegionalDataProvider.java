@@ -1,5 +1,6 @@
 package utils.seed.geo;
 
+import play.Logger;
 import utils.ServerProperties;
 
 import java.io.*;
@@ -84,9 +85,9 @@ public class StaticRegionalDataProvider
 
     public static void main(String[] args)
     {
-        System.out.println("metropolias = " + metropolias);
-        System.out.println("diecezje = " + diecezje);
-        System.out.println("dmConn = " + dmConn);
+        Logger.debug("metropolias = " + metropolias);
+        Logger.debug("diecezje = " + diecezje);
+        Logger.debug("dmConn = " + dmConn);
     }
 }
 

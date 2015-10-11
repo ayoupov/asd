@@ -5,6 +5,7 @@ import com.vividsolutions.jts.geom.Point;
 import models.address.Diocese;
 import models.address.Metropolie;
 import org.opengis.feature.simple.SimpleFeature;
+import play.Logger;
 import utils.HibernateUtils;
 import utils.lang.PolishSupport;
 
@@ -36,7 +37,7 @@ public class DioceseProcessor implements ShapeProcessor
 
                 Metropolie metropolie = (Metropolie) HibernateUtils.load(Metropolie.class, connection.get(abbr));
                 if (metropolie == null) {
-                    System.out.println("Metropolie " + connection.get(abbr) + " not found!");
+                    Logger.warn("Metropolie " + connection.get(abbr) + " not found!");
                     break;
                 }
                 Diocese diocese = new Diocese(abbr, name, geometry, centroid, metropolie);
@@ -47,7 +48,7 @@ public class DioceseProcessor implements ShapeProcessor
             }
         }
         if (!res)
-            System.out.println(String.format("Can't find match for %s diocese!", nameFromFeature));
+            Logger.warn(String.format("Can't find match for %s diocese!", nameFromFeature));
         return res;
     }
 

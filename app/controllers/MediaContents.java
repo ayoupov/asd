@@ -9,6 +9,7 @@ import models.internal.ContentManager;
 import models.internal.RequestException;
 import models.internal.UserManager;
 import models.user.User;
+import play.Logger;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Http;
@@ -78,9 +79,9 @@ public class MediaContents extends Controller
     private static void saveToFS(File dir, File mediaFile, Html rendered) throws IOException
     {
         if (!isInProduction()) {
-            System.out.println("Saving to: ");
-            System.out.println("dir = " + dir);
-            System.out.println("mediaFile = " + mediaFile);
+            Logger.info("Saving to: ");
+            Logger.info("dir = " + dir);
+            Logger.info("mediaFile = " + mediaFile);
         }
         dir.mkdirs();
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
@@ -126,7 +127,7 @@ public class MediaContents extends Controller
         if (jcover != null) {
 //            coverPath = ServerProperties.getValue("asd.upload.relative.path") + User.anonymousHash() + ("/church_story_" + jcover + ".png");
             coverPath = User.anonymousHash() + ("/church_story_" + jcover + "_thumb.png");
-            System.out.println("coverPath = " + coverPath);
+//            System.out.println("coverPath = " + coverPath);
         } else return badRequest("cover is null");
         if (jyear != null)
             year = safeInt(jyear, 2015);
@@ -219,7 +220,7 @@ public class MediaContents extends Controller
             c.setId((Long) save(c));
         else
             saveOrUpdate(c);
-        System.out.println("c = " + c);
+        Logger.info("c = " + c);
         commitTransaction();
         result.put("entity", ctype);
         result.put("success", true);
@@ -261,7 +262,7 @@ public class MediaContents extends Controller
             return i;
 
         // fs fallback option 2
-        System.out.println("searching for an image with path: " + (absoluteUploadPath + path));
+        Logger.info("searching for an image with path: " + (absoluteUploadPath + path));
         if (new File(absoluteUploadPath + path).exists())
             return new Image("fs fallback option", relativeUploadPath + path);
         return null;

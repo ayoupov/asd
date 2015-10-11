@@ -43,7 +43,7 @@ public class Stats extends Controller
         ObjectNode res = Json.newObject();
         List<Church> churches = ContentManager.getChurches();
         for (Church church : churches) {
-            System.out.println("church = " + church);
+//            System.out.println("church = " + church);
             Dekanat dek = church.address.getDekanat();
             Integer dekCount = deks.get(dek);
             if (dekCount == null)
@@ -59,7 +59,7 @@ public class Stats extends Controller
             if (metroCount == null)
                 metroCount = 0;
             metros.put(metro, metroCount + 1);
-            System.out.println(" [dek = " + dek + "]");
+//            System.out.println(" [dek = " + dek + "]");
         }
         res.put("deks", Json.toJson(deks));
         res.put("dios", Json.toJson(dios));

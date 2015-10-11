@@ -1,10 +1,10 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.Church;
 import models.MediaContentType;
 import models.internal.ContentManager;
+import play.Logger;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -19,6 +19,7 @@ import java.util.Map;
 import static models.internal.UserManager.getLocalUser;
 import static utils.HibernateUtils.beginTransaction;
 import static utils.HibernateUtils.commitTransaction;
+import static utils.ServerProperties.isInProduction;
 
 @PasswordProtectionAnnotation
 public class Application extends Controller
@@ -31,7 +32,7 @@ public class Application extends Controller
         // add other static data
         long churchCount = ContentManager.getChurchCount();
         Church currentChurch = ContentManager.getChurch(churchId);
-        System.out.println("currentChurch = " + currentChurch);
+        if (!isInProduction()) Logger.info("currentChurch = " + currentChurch);
         Html content = index.render(churchCount, currentChurch, getLocalUser(session()));
         commitTransaction();
         return ok(content);

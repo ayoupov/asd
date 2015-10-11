@@ -8,6 +8,7 @@ import org.geotools.feature.FeatureIterator;
 import org.opengis.feature.Feature;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import play.Logger;
 import utils.ServerProperties;
 
 import java.io.File;
@@ -56,7 +57,7 @@ public class ShapeRegionalDataProvider
                 map.put(id, (Point) simpleFeature.getDefaultGeometry());
             }
             fi.close();
-            System.out.println("initialized map = " + map);
+            Logger.info("initialized map = " + map);
         } catch (Exception e) {
             e.printStackTrace();
         }

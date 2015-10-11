@@ -1,6 +1,7 @@
 package utils.service;
 
 import play.Plugin;
+import play.Logger;
 import utils.ServerProperties;
 
 import static utils.DataUtils.safeLong;
@@ -36,7 +37,7 @@ public class DaemonPlugin extends Plugin
                 throw new Exception("bad parameters in ServerProperties");
             }
         } catch (Exception e) {
-            System.out.println("Unable to start Daemon: " + e.getMessage());
+            Logger.error("Unable to start Daemon: " + e.getMessage());
         }
     }
 
@@ -47,7 +48,7 @@ public class DaemonPlugin extends Plugin
         DaemonThread t = tl.get();
         if (t != null)
             t.terminate();
-        System.out.println("Geocoder exited...");
+        Logger.info("Daemon thread exited...");
     }
 
 }

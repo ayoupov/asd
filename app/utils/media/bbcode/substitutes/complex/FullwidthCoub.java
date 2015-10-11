@@ -26,7 +26,7 @@ public class FullwidthCoub extends FullwidthImage
     protected String getProcessed(StringBuffer sb, Matcher matcher, BBCodeParser.BBCodeRenderState state)
     {
         opts = CoubOptionsFactory.getOptions(matcher.group(1));
-        System.out.println("opts = " + opts);
+//        System.out.println("opts = " + opts);
         opts.setCaption(matcher.group(2));
 
         return String.format(

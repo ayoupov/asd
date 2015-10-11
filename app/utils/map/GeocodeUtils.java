@@ -36,7 +36,7 @@ public class GeocodeUtils
 
     public static String getAddress(Point point)
     {
-        LatLng ll = new LatLng(point.getCoordinate().x + "", point.getCoordinate().y + "");
+        LatLng ll = new LatLng(point.getCoordinate().y + "", point.getCoordinate().x + "");
         String address = null;
         try {
             GeocoderRequestBuilder grb = new GeocoderRequestBuilder().setLocation(ll).setLanguage("pl");

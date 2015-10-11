@@ -41,7 +41,6 @@ public class Auth extends Controller
                     callbackUrl);
         }
 
-        System.out.println("callbackUrl = " + callbackUrl);
         response().setCookie("auth.cb", "yes");
         return com.feth.play.module.pa.controllers.Authenticate.authenticate(provider);
     }

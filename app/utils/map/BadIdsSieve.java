@@ -1,5 +1,7 @@
 package utils.map;
 
+import play.Logger;
+
 import java.io.*;
 import java.util.HashMap;
 
@@ -31,7 +33,7 @@ public class BadIdsSieve
             if (extId == null || "".equals(extId) ||
                     (!extId.matches("\"[A-Z]{2}[-–_][0-9]{3}\"") &&
                     !extId.matches("\"[A-Z]{2}[-–_][0-9]{3}[-–_][0-9]{2}\""))) {
-                System.out.println(extId);
+                Logger.debug("bad id:", extId);
                 writer.write(line);
                 writer.newLine();
             } else {

@@ -164,15 +164,14 @@ function addLayerCounters(layer, data) {
 
 function addDekanatsContent() {
 
-    var port = location.port;
-    var geojsonURL = 'http://' + location.hostname + (port != "" ? ":" + port : "") + '/tiles/d/{z}/{x}/{y}.json';
-    dekanatyLayer = new L.TileLayer.GeoJSON(geojsonURL, {
+    dekanatyLayer = new L.TileLayer.GeoJSON(dekanatTilesURL, {
             //clipTiles: true,
             unique: function (feature) {
                 return feature.properties.id;
             },
             minZoom: 10,
-            maxZoom: 18
+            maxZoom: 18,
+            subdomains : 'abcde'
         }, {
             style: dekStyle,
             onEachFeature: function (feature, layer) {
@@ -204,15 +203,14 @@ function addChurchContents() {
         "fillOpacity": 0.5
     };
 
-    var port = location.port;
-    var geojsonURL = 'http://' + location.hostname + (port != "" ? ":" + port : "") + '/tiles/c/{z}/{x}/{y}.json';
-    churchesLayer = new L.TileLayer.GeoJSON(geojsonURL, {
+    churchesLayer = new L.TileLayer.GeoJSON(churchTilesURL, {
             //clipTiles: true,
             unique: function (feature) {
                 return feature.properties.id;
             },
             minZoom: 10,
-            maxZoom: 18
+            maxZoom: 18,
+            subdomains : 'abcde'
         }, {
             style: style,
             pointToLayer: function (feature, latlng) {
@@ -302,7 +300,6 @@ function whenClicked(e) {
 
 function updateHistoryWithChurch(id, hash)
 {
-    var port = location.port;
     window.history.pushState({}, "",
         "http://" + location.hostname + (port != "" ? ":" + port : "") + "/church/" + id +
         ((hash) ? hash : ""));

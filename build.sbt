@@ -14,4 +14,10 @@ unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/
 
 ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) }
 
+publishArtifact in (Compile, packageDoc) := false
+
+publishArtifact in packageDoc := false
+
+sources in (Compile,doc) := Seq.empty
+
 fork in run := true

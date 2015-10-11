@@ -36,6 +36,14 @@
             console.log('not authed');
         }
         var googleApiKey = "@ServerProperties.getValue("google.api.key")";
+        var port = location.port;
+        @if(ServerProperties.isInProduction) {
+        var churchTilesURL = 'http://{s}.' + location.hostname + (port != "" ? ":" + port : "") + '/tiles/c/{z}/{x}/{y}.json';
+        var dekanatTilesURL = 'http://{s}.' + location.hostname + (port != "" ? ":" + port : "") + '/tiles/d/{z}/{x}/{y}.json';
+        } else {
+        var churchTilesURL = 'http://' + location.hostname + (port != "" ? ":" + port : "") + '/tiles/c/{z}/{x}/{y}.json';
+        var dekanatTilesURL = 'http://' + location.hostname + (port != "" ? ":" + port : "") + '/tiles/d/{z}/{x}/{y}.json';
+        }
         </script>
     </body>
 </html>

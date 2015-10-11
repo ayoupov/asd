@@ -10,6 +10,7 @@ import org.geotools.feature.FeatureIterator;
 import org.opengis.feature.Feature;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import play.Logger;
 import utils.seed.geo.ShapeProcessor;
 
 import java.io.File;
@@ -53,7 +54,7 @@ public class GeographySeeds
             }
 //            store.dispose();
             fi.close();
-            System.out.println(String.format("Seeded %s, success : %d, failed : %d", fileName, success, fail));
+            Logger.info(String.format("Seeded %s, success : %d, failed : %d", fileName, success, fail));
         } catch (Throwable e) {
             e.printStackTrace();
         }

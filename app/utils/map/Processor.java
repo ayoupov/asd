@@ -3,6 +3,7 @@ package utils.map;
 import com.google.code.geocoder.Geocoder;
 import com.google.code.geocoder.GeocoderRequestBuilder;
 import com.google.code.geocoder.model.*;
+import play.Logger;
 import utils.ServerProperties;
 
 import java.io.FileOutputStream;
@@ -40,15 +41,15 @@ public class Processor
                     List<GeocoderResult> results = gresp.getResults();
                     String address = results.get(0).getFormattedAddress();
                     addresses.put(entry.getKey(), address);
-                    System.out.println("address = " + address);
+                    Logger.info("address = " + address);
                 } else {
                     addresses.put(entry.getKey(), "NOT_FOUND!");
-                    System.out.println("status = " + gresp.getStatus().value());
+                    Logger.info("status = " + gresp.getStatus().value());
                 }
             } catch (Exception e)
             {
                 addresses.put(entry.getKey(), "NOT_FOUND!");
-                System.out.println("http error: " + e.getMessage());
+                Logger.error("http error: " + e.getMessage());
             }
             Thread.sleep(200l);
         }

@@ -41,6 +41,7 @@ function initSearch()
 var newChurchInited = false;
 function addNewChurch() {
     $(".new-church-value",$newChurchForm).val("");
+    $("#church-user-hash", $newChurchForm).val(userHash);
     $newChurchForm.modal('show');
     if (!newChurchInited)
         initAddChurch();

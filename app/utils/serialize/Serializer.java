@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.vividsolutions.jts.geom.Point;
 import models.Church;
 import models.MediaContent;
+import play.Logger;
 import play.Plugin;
 import play.libs.Json;
 import utils.serialize.converters.ChurchConverter;
@@ -44,7 +45,7 @@ public class Serializer extends Plugin
     public void onStart()
     {
         super.onStart();
-        System.out.println("Serializer: entityMapper added");
-        Json.setObjectMapper(entityMapper);
+        Logger.info("Serializer: mappers initialized");
+//        Json.setObjectMapper(entityMapper);
     }
 }

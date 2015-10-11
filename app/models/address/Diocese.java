@@ -1,5 +1,6 @@
 package models.address;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 import org.hibernate.annotations.Cache;
@@ -35,6 +36,7 @@ public class Diocese implements Geometrified
     protected Point centroid;
 
     @OneToOne
+    @JsonIgnore
     private Metropolie metropolie;
 
     private boolean archidiocese;

@@ -8,6 +8,7 @@ import models.address.*;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.opengis.geometry.BoundingBox;
+import play.Logger;
 import utils.map.GeocodeUtils;
 import utils.map.TileBuilder;
 
@@ -50,11 +51,11 @@ public class GeographyManager
             result.setUnfolded(unfolded);
         List<Dekanat> dekanats = findDekanats(point);
         if (dekanats.size() > 1) {
-            System.out.println(String.format("Alarma! : %s {%s} is in %d dekanats! ",
+            Logger.warn(String.format("Alarma! : %s {%s} is in %d dekanats! ",
                     unfolded, point.toString(), dekanats.size()));
             for (Dekanat d : dekanats)
             {
-                System.out.println("d = " + d);
+                Logger.warn("which are: ", d);
             }
         }
         result.setDekanat(dekanats.get(0));
@@ -186,7 +187,9 @@ public class GeographyManager
                 "select d.id, d.name, d.geometry " +
                         "from Dekanat d " +
 //                        "where ST_INTERSECTS(:geom, d.geometry) = 1")
-                        "where ST_CROSSES(:geom, d.geometry) = 1 and ST_WITHIN(:geom, d.geometry) = 0")
+                        "where ST_INTERSECTS(:geom, d.geometry) = 1")
+//                        "where ST_CROSSES(:geom, d.geometry) = 1 and ST_WITHIN(:geom, d.geometry) = 0")
+//                        "where ST_OVERLAPS(:geom, d.geometry) = 1")
                 .setParameter("geom",  geometry)
                 .list();
         return res;

@@ -4,6 +4,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 import models.address.Metropolie;
 import org.opengis.feature.simple.SimpleFeature;
+import play.Logger;
 import utils.HibernateUtils;
 import utils.lang.PolishSupport;
 
@@ -31,7 +32,7 @@ public class MetropolieProcessor implements ShapeProcessor
             Long id = entry.getValue();
             if (Objects.equals(id, idFromShape)) {
                 Point centroid = ShapeRegionalDataProvider.getMetropoliaCentroid(idFromShape);
-                System.out.println("centroid = " + centroid);
+                Logger.debug("centroid = " + centroid);
                 Metropolie metropolie = new Metropolie(id, geometry, centroid, name);
                 HibernateUtils.saveOrUpdate(metropolie);
                 res = true;

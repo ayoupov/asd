@@ -1,5 +1,8 @@
 package utils.map;
 
+import play.Logger;
+import utils.ServerProperties;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -35,12 +38,12 @@ public class Snapshoter
             String line;
             while ((line = br.readLine()) != null) {
                 if (!ids.add(line.trim()))
-                    System.out.println(line + " already was here!");;
+                    Logger.warn(line + " already was here!");;
             }
             br.close();
         }
         Map<KMLParser.Church, KMLParser.Coordinates> map = KMLParser.parse(kml);
-        String key = "AIzaSyDj1KZcp0SA3-4hHhkh8aEsbRcJk2iGIXI";
+        String key = ServerProperties.getValue("google.api.key");
         for (Map.Entry<KMLParser.Church, KMLParser.Coordinates> entry : map.entrySet()) {
             KMLParser.Church church = entry.getKey();
             KMLParser.Coordinates coords = entry.getValue();
@@ -63,14 +66,14 @@ public class Snapshoter
                         Thread.sleep(200l);
                         if (!logOnce)
                         {
-                            System.out.println("Did " + id);
+                            Logger.info("Processed " + id);
                             logOnce = true;
                         }
                     }
                 }
             }
         }
-        System.out.println("ids = " + ids);
+        Logger.warn("Some ids left: " + ids);
 
     }
 }

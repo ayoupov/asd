@@ -11,6 +11,7 @@ import org.geotools.feature.LenientFeatureFactoryImpl;
 import org.geotools.geojson.feature.FeatureJSON;
 import org.geotools.geojson.geom.GeometryJSON;
 import org.opengis.feature.Feature;
+import play.Logger;
 import utils.ServerProperties;
 
 import java.io.File;
@@ -45,7 +46,7 @@ public class TileBuilder
         Boolean rewrite = ServerProperties.getValue("tiles.config.rewrite") != null;
         String extent = ServerProperties.getValue(TILES_CONFIG_NSWE_EXTENT);
         BoundingBox featureBox = new BoundingBox(extent);
-        System.out.println("featureBox = " + featureBox);
+        Logger.debug("featureBox = " + featureBox);
         for (String propName : props.stringPropertyNames()) {
             if (propName.startsWith(TILES_MAPPING_PREF)) {
                 String key = propName.substring(TILES_MAPPING_PREF.length());
@@ -54,7 +55,7 @@ public class TileBuilder
                 zooms.put(key, ServerProperties.getIntValue(zoomKey, 10));
             }
         }
-        System.out.println("zooms = " + zooms);
+        Logger.debug("zooms = " + zooms);
         for (int zoom = START_ZOOM; zoom < MAX_ZOOM; zoom++) {
             for (Map.Entry entry : zooms.entrySet()) {
                 if ((Integer) entry.getValue() <= zoom) {
@@ -64,14 +65,14 @@ public class TileBuilder
                     int maxX = featureBox.maxX(zoom);
                     int minY = featureBox.minY(zoom);
                     int maxY = featureBox.maxY(zoom);
-                    System.out.println(String.format("working with %s[%d]: [%d-%d,%d-%d]", layer, zoom, minX, maxX, minY, maxY));
+                    Logger.debug(String.format("working with %s[%d]: [%d-%d,%d-%d]", layer, zoom, minX, maxX, minY, maxY));
                     for (int tileX = minX; tileX <= maxX; tileX++) {
                         for (int tileY = minY; tileY <= maxY; tileY++) {
 
                             String path = whereTo + String.format("/%s/%d/%d", layer, zoom, tileX);
                             String fullPath = path + "/" + tileY + ".geojson";
                             if (!rewrite && new File(fullPath).exists()) {
-                                System.out.println(fullPath + " already here.");
+                                Logger.debug(fullPath + " already here.");
                                 continue;
                             }
                             BoundingBox bb = tile2boundingBox(tileX, tileY, zoom);
@@ -100,7 +101,7 @@ public class TileBuilder
                             if (features != null && features.size() > 0) {
                                 File file = new File(path);
                                 file.mkdirs();
-                                System.out.println("adding " + features.size() + " features");
+                                Logger.debug("adding " + features.size() + " features");
                                 GeometryJSON geojson = new GeometryJSON();
                                 FeatureJSON featureJSON = new FeatureJSON(geojson);
                                 try (FileOutputStream fos = new FileOutputStream(fullPath);) {

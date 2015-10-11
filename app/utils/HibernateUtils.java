@@ -12,6 +12,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.reflections.Reflections;
+import play.Logger;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -33,7 +34,7 @@ public class HibernateUtils
         try {
             Configuration configuration = new Configuration();
             String hibConfigRes = ServerProperties.isInProduction() ? "hibernate.prod.cfg.xml" : "hibernate.cfg.xml";
-            System.out.println("hibConfigRes = " + hibConfigRes);
+            Logger.info("hibConfigRes = " + hibConfigRes);
             configuration.configure(hibConfigRes);
             Reflections reflections = new Reflections("models");
 

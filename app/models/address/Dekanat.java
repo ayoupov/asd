@@ -1,5 +1,6 @@
 package models.address;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vividsolutions.jts.geom.Geometry;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
@@ -22,6 +23,7 @@ public class Dekanat implements Geometrified
     private Long id;
 
     @ManyToOne
+    @JsonIgnore
     private Diocese diocese;
 
     private String name;

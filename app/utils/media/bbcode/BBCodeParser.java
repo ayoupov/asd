@@ -1,6 +1,7 @@
 package utils.media.bbcode;
 
 import org.reflections.Reflections;
+import play.Logger;
 import utils.media.bbcode.substitutes.Substitute;
 import utils.media.bbcode.substitutes.SubstituteAnnotation;
 import utils.media.bbcode.substitutes.SubstitutePriority;
@@ -50,13 +51,13 @@ public class BBCodeParser
 //                System.out.println("Registered substitute: " + clazz + " [" + substitute.getTag() + "]");
             } catch (Exception e) {
                 e.printStackTrace();
-                System.out.println("Failed to register: " + clazz);
+                Logger.error("Failed to register: " + clazz);
             }
         }
         // debug print
         for (SubstitutePriority priority : order) {
             Set<String> tags = prioritizedSubstitutes.get(priority).stream().map(Substitute::getTag).collect(Collectors.toSet());
-            System.out.println(priority + " : " + tags);
+            Logger.info("Registered bbtags " + priority + " : " + tags);
         }
     }
 
@@ -68,7 +69,7 @@ public class BBCodeParser
             Set<Substitute> substitutes = prioritizedSubstitutes.get(priority);
             for (Substitute substitute : substitutes) {
                 if (!isInProduction())
-                    System.out.println("substitute = " + substitute.getTag());
+                    Logger.debug("substitute = " + substitute.getTag());
                 Pattern pattern = substitute.getPattern();
                 String replacement = substitute.getReplacement();
                 Matcher matcher = pattern.matcher(result);
@@ -76,7 +77,7 @@ public class BBCodeParser
                 while (matcher.find()) {
                     String found = matcher.group().trim();
                     if (!"".equals(found) && !"\n".equals(found) && !isInProduction())
-                        System.out.println("Processing: " + found);
+                        Logger.debug("Processing: " + found);
                     if (!substitute.isSimple())
                         replacement = substitute.process(sb, matcher, state);
                     matcher.appendReplacement(sb, replacement);

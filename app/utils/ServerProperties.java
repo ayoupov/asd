@@ -1,5 +1,7 @@
 package utils;
 
+import play.Logger;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -21,9 +23,9 @@ public class ServerProperties
 //        System.out.println("System.getProperties() = " + System.getProperties());
 //        System.out.println(System.getProperty("production.mode"));
         productionMode = System.getProperty("production.mode") != null;
-        System.out.println("productionMode = " + productionMode);
+        Logger.info("productionMode = " + productionMode);
         String propsToLoad = ((productionMode) ? PROD_APP_NAME : APP_NAME) + ".properties";
-        System.out.println("propsToLoad = " + propsToLoad);
+        Logger.info("propsToLoad = " + propsToLoad);
         InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(propsToLoad);
         full = new Properties();
         full.load(in);
@@ -45,7 +47,7 @@ public class ServerProperties
         try {
             init();
         } catch (Exception e) {
-            System.out.println("Unable to load " + APP_NAME + ".properties! Expect bad behavior.");
+            Logger.error("Unable to load " + APP_NAME + ".properties! Expect bad behavior.");
         }
     }
 

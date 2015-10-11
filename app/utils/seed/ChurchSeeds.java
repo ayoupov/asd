@@ -4,6 +4,7 @@ import models.Architect;
 import models.Church;
 import models.address.Address;
 import models.internal.ContentManager;
+import play.Logger;
 import utils.lang.PolishSupport;
 import utils.map.Processor;
 
@@ -113,7 +114,7 @@ public class ChurchSeeds
                     architects.add(architect);
                 }
 
-                System.out.println("parsed: " + this);
+                Logger.info("parsed: " + this);
             }
         }
 
@@ -140,7 +141,7 @@ public class ChurchSeeds
     {
         if (!new File(Processor.dataDir + "churches_no_geocode.csv").exists()) {
             Processor.noGeocode(Processor.dataDir + "doc.kml");
-            System.out.println("Take care of XP-208!");
+            Logger.warn("Take care of XP-208!");
         }
 //        seedChurches(path, null);
         seedChurchesWithData(path, Processor.dataDir + "database.csv");
@@ -164,7 +165,7 @@ public class ChurchSeeds
                     }
                 } catch (Exception e) {
                     dbParseFail++;
-                    System.out.println("dbparsefail: line(" + i + ") = " + line);
+                    Logger.error("dbparsefail: line(" + i + ") = " + line);
                     throw e;
                 }
             }
@@ -187,8 +188,7 @@ public class ChurchSeeds
                     // struct: 0 - id, 1 - "ext_-id", 2 - "name", 3 - "lat", 4 - "lng", 5 - "address (unfolded)"
                     String extId = beautify(unwrap(split[1]));
                     if (extId.length() < 6) {
-                        System.out.println("Failed to seed church:");
-                        System.out.println("line = " + line);
+                        Logger.error("Failed to seed church: ", line);
                         failed++;
                     }
                     String unfolded = null;
@@ -231,8 +231,7 @@ public class ChurchSeeds
                     saveOrUpdate(church);
                     success++;
                 } catch (Exception e) {
-                    System.out.println("Failed to seed church:");
-                    System.out.println("line = " + line);
+                    Logger.error("Failed to seed church: ", line);
                     e.printStackTrace();
                     failed++;
                 }
@@ -241,10 +240,10 @@ public class ChurchSeeds
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(String.format("Seeded %s, success : %d, failed : %d", "churches", success, failed));
-        System.out.println("Meanwhile, database reports of " + dbParseFail + " parse fails.");
-        System.out.println("data misses: (" + dataNotFound.size() + "): " + dataNotFound);
-        System.out.println("db entries left: (" + data.size() + "):" + data);
+        Logger.info(String.format("Seeded %s, success : %d, failed : %d", "churches", success, failed));
+        Logger.info("Meanwhile, database reports of " + dbParseFail + " parse fails.");
+        Logger.info("data misses: (" + dataNotFound.size() + "): " + dataNotFound);
+        Logger.info("db entries left: (" + data.size() + "):" + data);
     }
 
     private static Set<String> createSynonymSet(String synonyms)
@@ -284,8 +283,7 @@ public class ChurchSeeds
                     // struct: 0 - id, 1 - "ext_-id", 2 - "name", 3 - "lat", 4 - "lng", 5 - "address (unfolded)"
                     String extId = beautify(split[1]);
                     if (extId.length() < 6) {
-                        System.out.println("Failed to seed church:");
-                        System.out.println("line = " + line);
+                        Logger.error("Failed to seed church: ",line);
                         failed++;
                     }
                     if (onlyOneID != null && !extId.equals(onlyOneID))
@@ -309,8 +307,7 @@ public class ChurchSeeds
                     saveOrUpdate(church);
                     success++;
                 } catch (Exception e) {
-                    System.out.println("Failed to seed church:");
-                    System.out.println("line = " + line);
+                    Logger.error("Failed to seed church: ", line);
                     e.printStackTrace();
                     failed++;
                 }
@@ -318,7 +315,7 @@ public class ChurchSeeds
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(String.format("Seeded %s, success : %d, failed : %d", "churches", success, failed));
+        Logger.info(String.format("Seeded %s, success : %d, failed : %d", "churches", success, failed));
     }
 
     private static String beautify(String extId)

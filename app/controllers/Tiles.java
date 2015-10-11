@@ -99,6 +99,7 @@ public class Tiles extends Controller
 
     private static List getDekanatFeatures(Geometry g)
     {
+        Json.setObjectMapper(Serializer.entityMapper);
         List features = GeographyManager.findDekanatsByGeometry(g);
         List farr = new ArrayList();
         if (features != null && features.size() > 0) {
@@ -127,7 +128,7 @@ public class Tiles extends Controller
         try {
 //            String whereTo = Assets.minifiedPath(".");
             String whereTo = "d:/prog/asd/public/tiles";
-            System.out.println("whereTo = " + whereTo);
+//            System.out.println("whereTo = " + whereTo);
             TileBuilder.buildTiles(whereTo);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

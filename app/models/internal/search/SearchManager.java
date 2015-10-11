@@ -11,6 +11,7 @@ import org.hibernate.search.FullTextQuery;
 import org.hibernate.search.FullTextSession;
 import org.hibernate.search.Search;
 import org.hibernate.search.query.dsl.QueryBuilder;
+import play.Logger;
 
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
@@ -32,7 +33,7 @@ public class SearchManager
         Session session = getSession();
         FullTextSession fullTextSession = Search.getFullTextSession(session);
         fullTextSession.createIndexer().startAndWait();
-        System.out.println(fullTextSession.getSearchFactory().getStatistics().indexedEntitiesCount().toString());
+        Logger.info(fullTextSession.getSearchFactory().getStatistics().indexedEntitiesCount().toString());
     }
 
     public static void main(String[] args) throws InterruptedException, UnsupportedEncodingException

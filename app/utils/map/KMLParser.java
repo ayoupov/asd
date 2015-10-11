@@ -1,6 +1,7 @@
 package utils.map;
 
 import de.micromata.opengis.kml.v_2_2_0.*;
+import play.Logger;
 
 import java.io.*;
 import java.util.LinkedHashMap;
@@ -113,8 +114,8 @@ public class KMLParser
                     badgeom++;
             }
         }
-        System.out.println(noids + " features have no ids!");
-        System.out.println(badgeom + " features have bad geometry!");
+        Logger.info(noids + " features have no ids!");
+        Logger.info(badgeom + " features have bad geometry!");
         return res;
     }
 

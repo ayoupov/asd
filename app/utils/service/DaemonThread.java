@@ -6,6 +6,7 @@ import com.google.code.geocoder.model.GeocoderStatus;
 import com.vividsolutions.jts.geom.Point;
 import models.address.Address;
 import models.internal.ContentManager;
+import play.Logger;
 import utils.map.GeocodeUtils;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public class DaemonThread extends Thread
 
     public void run()
     {
-        System.out.println("daemon thread started...");
+        Logger.info("Daemon thread started...");
         while (true) {
             try {
                 Thread.sleep(sleeptime);
@@ -69,7 +70,7 @@ public class DaemonThread extends Thread
             GeocodeResponse gresp = GeocodeUtils.geocode((Point) address.getGeometry());
             Thread.sleep(1200l);
             if (gresp == null || !GeocoderStatus.OK.equals(gresp.getStatus())) {
-                System.out.println("Daemon.geocode: got " +
+                Logger.warn("Daemon.geocode: got " +
                         ((gresp == null) ? " null response" : gresp.getStatus()));
                 if (gresp == null || GeocoderStatus.OVER_QUERY_LIMIT.equals(gresp.getStatus()))
                     break;
@@ -79,7 +80,7 @@ public class DaemonThread extends Thread
             saveOrUpdate(address);
             counter++;
         }
-        System.out.println("Daemon.geocode: geocoded  " + counter + " churches");
+        Logger.info("Daemon.geocode: geocoded  " + counter + " churches");
         state = ThreadState.IDLE;
     }
 
