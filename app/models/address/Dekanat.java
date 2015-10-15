@@ -1,6 +1,7 @@
 package models.address;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.vividsolutions.jts.geom.Geometry;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
@@ -29,6 +30,7 @@ public class Dekanat implements Geometrified
     private String name;
 
     @Type(type = "org.hibernate.spatial.GeometryType")
+//    @JsonManagedReference
     private Geometry geometry;
 
     public Dekanat(Diocese diocese, String name, Geometry geometry)

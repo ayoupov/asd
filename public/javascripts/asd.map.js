@@ -236,12 +236,12 @@ function navigateFromSearch(id)
     updateHistoryWithChurch(id, "#passport");
     openPassport(id, function()
     {
-        map.setView(currentChurch.address.geometry, 14);
+        map.setView(currentChurch.geometry, 14);
         layerChanges();
     });
 }
 
-function navigateTo(church) {
+function navigateTo(church, comingBack) {
     churchesLayer.geojsonLayer.on('layeradd', function (evt) {
         var marker = evt.layer;
         if (marker.feature.properties.ext_id == church.extID) {
@@ -249,11 +249,13 @@ function navigateTo(church) {
                 churchesLayer.geojsonLayer.off('layeradd');
                 marker.openPopup();
                 if (location.hash == "#passport")
-                    openPassport(church.extID);
+                    openPassport(church.extID, comingBack ? function(){
+                        toggleNewStoryForm();
+                    } : null);
             }
         }
     });
-    map.setView(church.address.geometry, 14);
+    map.setView(church.geometry, 14);
     layerChanges();
 }
 
@@ -264,7 +266,7 @@ function mapPostLoad(comingBack) {
             window.history.replaceState({}, "", "http://" + location.hostname + (port != "" ? ":" + port : "") + "/church/" + currentChurch.extID + "#passport");
             Cookies.remove('auth.cb');
         }
-        navigateTo(currentChurch);
+        navigateTo(currentChurch, comingBack);
     }
 }
 
@@ -286,7 +288,6 @@ function openPassport(id, callback) {
         onSuccess: function (data) {
             fillPassport(data);
             $passportWrapper.modal('show');
-            fixUI();
             if (callback)
                 callback();
         }

@@ -116,7 +116,7 @@ public class MediaContents extends Controller
                 jchurch = (map.get("church") != null) ? map.get("church")[0] : null,
                 jyear = (map.get("year") != null) ? map.get("year")[0] : null;
         String text = null, title = null, coverPath = null;
-        Integer year = null;
+        String year = null;
         Church church = null;
         if (jtext != null)
             text = jtext;
@@ -125,14 +125,10 @@ public class MediaContents extends Controller
         if (jtitle != null)
             title = jtitle;
         if (jcover != null) {
-//            coverPath = ServerProperties.getValue("asd.upload.relative.path") + User.anonymousHash() + ("/church_story_" + jcover + ".png");
             coverPath = User.anonymousHash() + ("/church_story_" + jcover + "_thumb.png");
-//            System.out.println("coverPath = " + coverPath);
         } else return badRequest("cover is null");
         if (jyear != null)
-            year = safeInt(jyear, 2015);
-//        Image cover = findImage(null, coverPath);
-//        String coverThumbPath = thumbName(new File(coverPath));
+            year = jyear;
         Image coverThumb = findImage(null, coverPath);
         if (jchurch != null)
             church = ContentManager.getChurch(jchurch);

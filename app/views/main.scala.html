@@ -1,4 +1,6 @@
+@import play.libs.Json
 @import utils.ServerProperties
+@import utils.serialize.Serializer
 @import models.user.User
 @(churchCount: Long, currentChurch : Church, user: User)
 
@@ -17,7 +19,7 @@
         <div class="wrapper">
             @staticmenu(true)
             @sociallinks()
-            @parts.main.mainslide1(churchCount, currentChurch)
+            @parts.main.mainslide1(churchCount)
             @parts.main.mainslide2()
             @parts.main.mainslide3()
             @parts.main.mainslide4(ServerProperties.getValue("facebook.url"))
@@ -27,12 +29,14 @@
             </div>
         </div>
         <script>
-        var userHash;
+        var userHash, userName;
         @if(user != null) {
             userHash = '@user.getHash';
+            userName = '@user.getName';
             console.log(userHash);
         } else {
             userHash = null;
+            userName = '';
             console.log('not authed');
         }
         var googleApiKey = "@ServerProperties.getValue("google.api.key")";
@@ -43,6 +47,10 @@
         } else {
         var churchTilesURL = 'http://' + location.hostname + (port != "" ? ":" + port : "") + '/tiles/c/{z}/{x}/{y}.json';
         var dekanatTilesURL = 'http://' + location.hostname + (port != "" ? ":" + port : "") + '/tiles/d/{z}/{x}/{y}.json';
+        }
+        @if(currentChurch != null) {
+        @Json.setObjectMapper(Serializer.shallowChurchMapper)
+        var currentChurch = JSON.parse($('<div/>').html('@Json.toJson(currentChurch).toString').text());
         }
         </script>
     </body>

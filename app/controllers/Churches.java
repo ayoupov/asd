@@ -1,6 +1,7 @@
 package controllers;
 
 import models.Church;
+import models.MediaContent;
 import models.internal.ChurchSuggestion;
 import models.internal.ContentManager;
 import play.data.Form;
@@ -9,7 +10,10 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import utils.serialize.Serializer;
 
+import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static utils.HibernateUtils.*;
 
@@ -21,6 +25,13 @@ import static utils.HibernateUtils.*;
  */
 public class Churches extends Controller
 {
+
+    private static final Set<String> ALLOWED_ENTITIES = new HashSet<>();
+    static {
+        ALLOWED_ENTITIES.add("story");
+        ALLOWED_ENTITIES.add("field");
+        ALLOWED_ENTITIES.add("images");
+    }
 
     public static Result byId(String id)
     {
@@ -65,5 +76,37 @@ public class Churches extends Controller
             return ok(Json.toJson(church.getImages()));
         else
             return notFound(String.format("Church with id {%s}", id));
+    }
+
+    public static Result update()
+    {
+        String[] reqEntity = request().body().asFormUrlEncoded().get("entity");
+        String entity;
+        if (reqEntity == null || reqEntity.length == 0 || !ALLOWED_ENTITIES.contains(entity = reqEntity[0]))
+        {
+            return badRequest();
+        } else
+        {
+            switch(entity)
+            {
+                case "story" : return processStory();
+            }
+        }
+        return TODO;
+    }
+
+    private static Result processStory()
+    {
+        Form<MediaContent> mc = Form.form(MediaContent.class);
+        if (mc.hasErrors())
+        {
+            return internalServerError(mc.errorsAsJson());
+        } else {
+            beginTransaction();
+            MediaContent mediaContent = mc.bindFromRequest(request()).get();
+            Serializable id = save(mediaContent);
+            commitTransaction();
+            return ok("{success:'true',id:'"+id+"'}");
+        }
     }
 }

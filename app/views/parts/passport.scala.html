@@ -1,127 +1,137 @@
 @import models.user.User
 @(church: Church = null, from: String, user: User)
-@backLink() = @{
-    from + "/church/" + church.getExtID
-}
-<script src="@routes.Assets.at("javascripts/asd.passport.js")"></script>
-<div id="fb-root"></div>
+    @backLink() = @{
+        from + "/church/" + church.getExtID
+    }
+    <script src="@routes.Assets.at("javascripts/asd.passport.js")"></script>
+    <div id="fb-root"></div>
     <script>(function (d, s, id){var js, fjs = d.getElementsByTagName(s)[0];if (d.getElementById(id)) return;
     js = d.createElement(s);js.id = id;js.src = '//connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v2.4&appId=475989659250668';
     fjs.parentNode.insertBefore(js, fjs);}(document, 'script', 'facebook-jssdk'));</script>
     <script>!function (d, s, id) {var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
     if (!d.getElementById(id)) {js = d.createElement(s);js.id = id;js.src = p + '://platform.twitter.com/widgets.js';
         fjs.parentNode.insertBefore(js, fjs);}}(document, 'script', 'twitter-wjs');</script>
-<div id="passport">
-    <nav id="passportmenu-top" class="ui secondary pointing menu blurred">
-        <div class="left item social-wrapper">
-            <div class="fb-like" data-href="" data-layout="button_count" data-action="like"
-            data-show-faces="true" data-share="false"></div>
-            <a href="https://twitter.com/share" class="twitter-share-button" data-lang="pl">Tweetnij</a>
-        </div>
-        <div class="right item">
-            <div class="close-button"></div>
-        </div>
-    </nav>
-    <div class="passport-title-wrapper-outer">
-        <div class="passport-title-wrapper">
-            <div class="passport-title church-name"></div>
-            <div class="alarm-sign"></div>
-            @*<img src="@routes.Assets.at("images/alarm_sign.png")" class="alarm-sign">*@
-        </div>
-    </div>
-    <div class="passport-image-wrapper">
-        <div class="passport-image-gallery">
-        @if(church != null) {
-            @for(image <- church.getImages) {
-                <img src="@image.path">
-                }
-        }
-        </div>
-    </div>
+    <div id="passport">
+        <nav id="passportmenu-top" class="ui secondary pointing menu blurred">
+            <div class="left item social-wrapper">
+                <div class="fb-like" data-href="" data-layout="button_count" data-action="like"
+                data-show-faces="true" data-share="false"></div>
+                <a href="https://twitter.com/share" class="twitter-share-button" data-lang="pl">Tweetnij</a>
+            </div>
+            <div class="right item">
+                <div class="close-button"></div>
+            </div>
+        </nav>
 
-    <table class="passport-data-wrapper">
-        <tr>
-            <td class="passport-field">adres</td>
-            <td class="passport-value church-address editable"></td>
-            <td class="passport-data-filler"></td>
-        </tr>
-        <tr>
-            <td class="passport-field">daty budowy</td>
-            <td class="passport-value church-construction editable"></td>
-            <td class="passport-data-filler"></td>
-        </tr>
-        <tr>
-            <td class="passport-field">architekci</td>
-            <td class="passport-value church-architects editable"></td>
-            <td class="passport-data-filler"></td>
-        </tr>
-        <tr>
-            <td class="passport-field">strona www</td>
-            <td class="passport-value church-website editable"></td>
-            <td class="passport-data-filler"></td>
-        </tr>
-    </table>
-    <div class="passport-stories">
-        <div class="passport-stories-wrapper">
-            <div class="church-has-stories">
-                <h1>Wspomnienia dodane przez użytkowników</h1>
-            </div>
-            <div class="church-stories"></div>
-            <div class="add-story-wrapper-outer">
-                <div class="add-story-wrapper">
-                    <div class="add-story-inner">
-                        <div class="add-story-plus"></div>
-                        <div class="add-story-button"></div>
-                    </div>
+        <table class="passport-title-wrapper">
+            <tr><td class="passport-title church-name"></td> <td class="passport-church-name-edit-icon"><div class="alarm-sign"></div></td></tr>
+        </table>
+
+        <div class="passport-gallery">
+            <div class="passport-current-image">
+        </div>
+            <div class="passport-gallery-thumbs">
+        </div>
+        </div>
+
+        <table class="passport-data-wrapper">
+            <tr>
+                <td class="passport-field">adres</td>
+                <td class="passport-value church-address editable"></td>
+                <td class="passport-data-filler"></td>
+            </tr>
+            <tr>
+                <td class="passport-field">daty budowy</td>
+                <td class="passport-value church-construction editable"></td>
+                <td class="passport-data-filler"></td>
+            </tr>
+            <tr>
+                <td class="passport-field">architekci</td>
+                <td class="passport-value church-architects editable"></td>
+                <td class="passport-data-filler"></td>
+            </tr>
+            <tr>
+                <td class="passport-field">strona www</td>
+                <td class="passport-value church-website editable"></td>
+                <td class="passport-data-filler"></td>
+            </tr>
+        </table>
+        <div class="passport-stories">
+            <div class="passport-stories-wrapper">
+                <div class="passport-stories-title">
+                    <h1>Wspomnienia dodane przez użytkowników</h1>
                 </div>
+                <div class="church-stories"></div>
+                <table class="passport-update-button-wrapper">
+                    <tr>
+                        <td><img src="/assets/images/add_story_plus.png" class="passport-update-button-icon"></td>
+                        <td class="passport-update-button">dodaj swoje wspomnienie lub obraz</td>
+                    </tr>
+                </table>
             </div>
         </div>
-        <div class="passport-new-story">
-            <form action="@routes.MediaContents.newStory" method="POST" class="ui form">
-                @*<div>Blah-blah</div>*@
-                <input type="hidden" value="" name="church" id="story-church-id">
-                <label for="story-title">Tytuł</label>
-                <input type="text" class="ui input" id="story-title" name="title" placeholder="Tytuł">
-                <label for="story-year">Rok</label>
-                <input type="text" class="ui input" id="story-year" name="year" placeholder="2015">
-                <label for="story-text">Wspomnienie</label>
-                <textarea class="ui textarea" id="story-text" name="text" placeholder="What's your story?"></textarea>
-                <input type="hidden" value="" name="cover" id="story-cover-id">
-                <div class="story-cover-gallery-wrapper">
-                    <div class="story-cover-gallery">
+
+        <div class="passport-update">
+                <!-- common part 1: auth info -->
+            <form class="common-form ui form">
+                <label for="story-author-name">Autor wspomnienia</label>
+                <input type="text" class="ui input" id="story-author" name="user.name" placeholder="Autor wspomnienia">
+                <label for="story-author-email" class="hide-authed">e-mail</label>
+                <input type="text" class="ui input hide-authed" id="story-author-email" name="user.email" placeholder="e-mail">
+                <input type="hidden" name="user.hash" id="user_hash">
+                <div class="social-login hide-authed" data-provider="facebook"><img class="ui image" src="@routes.Assets.at("images/fb.png")"></div>
+            </form>
+            <div class="ui top attached tabular menu">
+                <a class="item active" data-tab="add-story">Add story</a>
+                <a class="item" data-tab="add-images">Add images</a>
+            </div>
+            <div data-tab="add-story" class="ui tab active">
+                <form action="@routes.MediaContents.newStory" method="POST" class="ui form" data-entity="story">
+                    <input type="hidden" value="" name="church" id="story-church-id">
+                    <label for="story-title">Tytuł</label>
+                    <input type="text" class="ui input" id="story-title" name="title" placeholder="Tytuł">
+                    <label for="story-year">Rok</label>
+                    <input type="text" class="ui input" id="story-year" name="year" placeholder="2015">
+                    <label for="story-text">Wspomnienie</label>
+                    <textarea class="ui textarea" id="story-text" name="text" placeholder="What's your story?"></textarea>
+                    <input type="hidden" value="" name="cover" id="story-cover-id">
+                    <div class="story-cover-gallery-wrapper">
+                        <div class="story-cover-gallery"></div>
                     </div>
-                </div>
-                <div class="clearfix"></div>
+                </form>
+            </div>
+            <div data-tab="add-images" class="ui tab">
+                <form class="ui form" data-entity="images">
+                Images go here
+                </form>
+            </div>
+                <!-- common part 2, TOS etc -->
+            <div class="clearfix"></div>
+            <form class="common-form ui form">
+                <label for="upload-confirmation">I agree</label>
+                <input type="checkbox" id="upload-confirmation" class="ui checkbox"><br>
                 <input type="button" value="Send" class="ui submit button">
             </form>
         </div>
-        <div class="ui success message" id="new-story-success-message">
-            <i class="close icon"></i>
-            <div class="header">
-                Your story
-            </div>
+        <div class="ui success message pointy" id="new-story-success-message">
             Your story has been successfully sent, please wait for our moderators to check it
         </div>
-        <div class="ui error message" id="new-story-error-message">
-            <i class="close icon"></i>
-            <div class="header">
-                Your story
-            </div>
+        <div class="ui error message pointy" id="new-story-error-message">
             Sorry, something went wrong while sending your story
         </div>
+
+        <nav id="passportmenu-bottom" class="ui secondary pointing menu blurred">
+            <div class="left item social-wrapper">
+                <div class="fb-like" data-href="" data-layout="button_count" data-action="like"
+                data-show-faces="true" data-share="false"></div>
+                <a href="https://twitter.com/share" class="twitter-share-button" data-lang="pl">Tweetnij</a>
+            </div>
+            <div class="right item">
+                <div class="close-button"></div>
+            </div>
+        </nav>
     </div>
-    <nav id="passportmenu-bottom" class="ui secondary pointing menu blurred">
-        <div class="left item social-wrapper">
-            <div class="fb-like" data-href="" data-layout="button_count" data-action="like"
-            data-show-faces="true" data-share="false"></div>
-            <a href="https://twitter.com/share" class="twitter-share-button" data-lang="pl">Tweetnij</a>
-        </div>
-        <div class="right item">
-            <div class="close-button"></div>
-        </div>
-    </nav>
-</div>
-<script>
+    <script>
     @if(church != null) {
         $(document).ready(function(){$('fb-like').data('href', '@backLink()');});}
 </script>

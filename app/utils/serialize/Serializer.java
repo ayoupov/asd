@@ -10,6 +10,7 @@ import play.Logger;
 import play.Plugin;
 import play.libs.Json;
 import utils.serialize.converters.ChurchConverter;
+import utils.serialize.converters.MainPageChurchConverter;
 import utils.serialize.converters.MediaContentConverter;
 import utils.serialize.converters.PointConverter;
 
@@ -25,10 +26,15 @@ public class Serializer extends Plugin
     public static ObjectMapper entityMapper;
     public static ObjectMapper emptyMapper;
     public static ObjectMapper pointMapper;
+    public static ObjectMapper shallowChurchMapper;
 
     static
     {
         emptyMapper = new ObjectMapper();
+
+        shallowChurchMapper = new ObjectMapper();
+        shallowChurchMapper.registerModule(new SimpleModule().addSerializer(Church.class, new MainPageChurchConverter()));
+        shallowChurchMapper.registerModule(new SimpleModule().addSerializer(Point.class, new PointConverter()));
 
         pointMapper = new ObjectMapper();
         pointMapper.registerModule(new SimpleModule().addSerializer(Point.class, new PointConverter()));

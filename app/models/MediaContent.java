@@ -53,7 +53,7 @@ public class MediaContent
     @Analyzer(definition = "polish_def_analyzer")
     public String title;
 
-    private Integer year;
+    private String year;
 
     public Boolean starred;
 
@@ -90,7 +90,7 @@ public class MediaContent
     @JsonIgnore
     public Set<Church> churches;
 
-    public MediaContent(MediaContentType contentType, String text, String title, Integer year, Image cover, Image coverThumb, User addedBy, Church church)
+    public MediaContent(MediaContentType contentType, String text, String title, String year, Image cover, Image coverThumb, User addedBy, Church church)
     {
         this.contentType = contentType;
         this.text = text;
@@ -263,15 +263,6 @@ public class MediaContent
         this.cover = coverImage;
     }
 
-//    public Set<Image> getImages()
-//    {
-//        return images;
-//    }
-//
-//    public void setImages(Set<Image> images)
-//    {
-//        this.images = images;
-//    }
 
     @Override
     public String toString()
@@ -282,12 +273,12 @@ public class MediaContent
                 '}';
     }
 
-    public Integer getYear()
+    public String getYear()
     {
         return year;
     }
 
-    public void setYear(Integer year)
+    public void setYear(String year)
     {
         this.year = year;
     }

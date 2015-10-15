@@ -84,6 +84,7 @@ public class Disseminator
         beginTransaction();
         DekanatProcessor dekp = new DekanatProcessor();
         seedGeography(dataDir + "gis/dekanaty_wgs84_10percent", dekp);
+//        seedGeography(dataDir + "gis/dekanaty_wgs84_6percent", dekp);
         commitTransaction();
     }
 

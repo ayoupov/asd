@@ -186,7 +186,6 @@ public class GeographyManager
         List res = session.createQuery(
                 "select d.id, d.name, d.geometry " +
                         "from Dekanat d " +
-//                        "where ST_INTERSECTS(:geom, d.geometry) = 1")
                         "where ST_INTERSECTS(:geom, d.geometry) = 1")
 //                        "where ST_CROSSES(:geom, d.geometry) = 1 and ST_WITHIN(:geom, d.geometry) = 0")
 //                        "where ST_OVERLAPS(:geom, d.geometry) = 1")

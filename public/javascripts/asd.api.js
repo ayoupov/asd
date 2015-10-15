@@ -6,7 +6,7 @@ var api =
     'get article': '/article/{id}',
     'get story': '/story/{id}',
     'get church passport' : '/church/passport/{id}',
-    'post new story' : '/story/new',
+    'update passport' : '/church/passport',
     'get church images' : '/church/{id}/images',
     'search' : '/search/{$searchable}/{query}',
     'suggest church' : '/church/suggest'
@@ -245,9 +245,9 @@ function populateStories(data) {
         var desc = item.coverDescription;
         var $item = $("<div/>").addClass('story thumb').attr('id', 'story_' + id)
             .append(
-            $("<div/>").addClass('image').append(
-                $("<img/>").addClass('ui image').attr("src", cover)
-            ))
+            $("<div/>").addClass('image').css({
+                    background: 'transparent url(' + cover + ') center center no-repeat'
+            }))
             .append(
             $("<div/>").addClass('content').append(
                 $("<div/>").addClass('header').html(title)

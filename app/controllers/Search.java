@@ -5,10 +5,13 @@ import models.Church;
 import models.MediaContent;
 import models.MediaContentType;
 import models.internal.search.SearchManager;
+import play.Logger;
 import play.libs.Json;
-import play.mvc.*;
+import play.mvc.Controller;
+import play.mvc.Result;
 import utils.serialize.Serializer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static utils.HibernateUtils.beginTransaction;
@@ -28,18 +31,25 @@ public class Search extends Controller
         beginTransaction();
         ObjectNode result = Json.newObject();
         result.put("q", q);
-        List<Church> churches = SearchManager.searchChurches(q);
+        List<Church> churches;
+        try {
+            churches =
+                    SearchManager.searchChurches(q);
+        } catch (Exception e) {
+            churches = new ArrayList<>();
+            Logger.error("search: " + e.getMessage());
+        }
         commitTransaction();
-        if (churches == null || churches.size() == 0) {
-            return notFound(result);
-        }
-        else
-        {
-            Json.setObjectMapper(Serializer.entityMapper);
-            result.put("results", Json.toJson(churches));
-            result.put("success", "true");
-            return ok(result);
-        }
+//        if (churches == null || churches.size() == 0) {
+//            return notFound(result);
+//        }
+//        else
+//        {
+        Json.setObjectMapper(Serializer.entityMapper);
+        result.put("results", Json.toJson(churches));
+        result.put("success", "true");
+        return ok(result);
+//        }
     }
 
     public static Result mediaContentByText(String q, String type)
@@ -50,19 +60,25 @@ public class Search extends Controller
         MediaContentType ctype = MediaContentType.fromString(type);
         if (ctype == null)
             return notFound(type);
-        List<MediaContent> content = SearchManager.searchMediaContent(q, ctype);
+        List<MediaContent> content;
+        try {
+            content = SearchManager.searchMediaContent(q, ctype);
+        } catch (Exception e) {
+            content = new ArrayList<>();
+            Logger.error("search: " + e.getMessage());
+        }
         commitTransaction();
-        if (content == null || content.size() == 0) {
-            return notFound(result);
-        }
-        else
-        {
-            Json.setObjectMapper(Serializer.entityMapper);
-            result.put("results", Json.toJson(content));
+//        if (content == null || content.size() == 0) {
+//            return notFound(result);
+//        }
+//        else
+//        {
+        Json.setObjectMapper(Serializer.entityMapper);
+        result.put("results", Json.toJson(content));
 //            result.put("excerpt", Json.toJson())
-            result.put("success", "true");
-            return ok(result);
-        }
+        result.put("success", "true");
+        return ok(result);
+//        }
     }
 
 }
