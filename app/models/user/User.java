@@ -23,37 +23,37 @@ public class User
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public long id;
+    private long id;
 
     @Column(unique = true)
-    public String hash;
+    private String hash;
 
     @Constraints.Email
     // if you make this unique, keep in mind that users *must* merge/link their
     // accounts then on signup with additional providers
     // @Column(unique = true)
     @JsonIgnore
-    public String email;
+    private String email;
 
-    public String name;
-
-    @JsonIgnore
-    public UserRole role;
+    private String name;
 
     @JsonIgnore
-    public UserStatus status;
+    private UserRole role;
+
+    @JsonIgnore
+    private UserStatus status;
 
     @Column(name="email_validated")
     @JsonIgnore
-    public Boolean emailValidated = false;
+    private Boolean emailValidated = false;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="user")
     @JsonIgnore
-    public List<LinkedAccount> linkedAccounts;
+    private List<LinkedAccount> linkedAccounts;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="authors")
     @JsonIgnore
-    public Set<MediaContent> authorOf;
+    private Set<MediaContent> authorOf;
 
     public User(String name, UserRole role, UserStatus status)
     {

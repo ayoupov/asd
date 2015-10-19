@@ -6,8 +6,10 @@ var api =
     'get article': '/article/{id}',
     'get story': '/story/{id}',
     'get church passport' : '/church/passport/{id}',
-    'update passport' : '/church/passport',
+    'add church story' : '/church/story',
     'get church images' : '/church/{id}/images',
+    'add church images' : '/church/images',
+    'update passport field' : '/church/passport/{field}',
     'search' : '/search/{$searchable}/{query}',
     'suggest church' : '/church/suggest'
 };
@@ -106,7 +108,7 @@ function getNext(key, q) {
             break;
     }
     contentCache[key].idx += Math.min(q, pushed);
-    console.log(res.join(','));
+    _debug(res.join(','));
     return res.join(",");
 }
 
@@ -171,7 +173,7 @@ function populateArticles(data) {
         lastItem = $item;
     });
     var whatsleft = contentLeft('sa');
-    //console.log('whatsleft: '  + whatsleft);
+    //_debug('whatsleft: '  + whatsleft);
     if (whatsleft > 0) {
         var $more = $("<div/>").attr('id', 'more-articles-thumb').addClass('extra-articles article thumb center-more grayish').append(
             $('<div/>').addClass('more-wrapper white-bordered').append(
@@ -180,7 +182,7 @@ function populateArticles(data) {
         );
         $more.insertAfter(lastItem);
         $articles.isotope('appended', $more);
-        //console.log('appended more');
+        //_debug('appended more');
         appendArticleApi();
     }
     $articles.isotope();

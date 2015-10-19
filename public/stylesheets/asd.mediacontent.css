@@ -279,3 +279,28 @@ div.content-afterwords-wrapper {
 div.gap {
     width: 100%;
 }
+
+div.content-main-guideline {
+    width: 981px;
+    position: fixed;
+    height: 100vh;
+    border-left: 1px lightseagreen solid;
+}
+
+div.content-gap-guideline {
+    width: 20px;
+    height: 100vh;
+    border-right: 1px aquamarine dashed;
+    float: left;
+}
+
+div.content-gap-guideline.last {
+    border-right: 1px lightseagreen solid !important;
+}
+
+div.content-column-guideline {
+    width: 100px;
+    height: 100vh;
+    border-right: 1px aquamarine dashed;
+    float: left;
+}

@@ -9,6 +9,7 @@ var apiExtension =
     'get json story': '/story/{id}.json',
     'get associated pictures': '/files/list/{id}',
     'post update article': '/article/update',
+    'preview article': '/preview/article',
     'post update story': '/story/update',
     'upload files' : '/files/upload'
 };

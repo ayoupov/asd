@@ -61,6 +61,24 @@
     float: left;
 }
 
+.passport-value-save-icon {
+    height: 16px;
+    width: 16px;
+    background: url(/assets/images/arrow_selector_menu_golden.png) center center no-repeat;
+    margin-left: 10px;
+    cursor: pointer;
+    float: left;
+}
+
+.church-years-input {
+    width: 3em;
+}
+
+.passport-data-edit {
+    background: transparent;
+    border: none;
+}
+
 .passport-data-help {
     float: left;
     color: #949494;
@@ -124,7 +142,11 @@
     font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
 }
 
-td.passport-field {
+.passport-data-actions {
+    display: inline-block;
+}
+
+td.passport-field-caption {
     background-color: #e8e8e8;
     color: #949494;
     width: 37%;
@@ -139,7 +161,7 @@ td.passport-field {
 
 td.passport-value {
     background-color: #f2f2f2;
-    width: 37%;
+    width: 53%;
     text-align: left;
     font-size: 14px;
     padding-bottom: 11px;
@@ -148,7 +170,7 @@ td.passport-value {
 }
 
 td.passport-data-filler {
-    width: 26%;
+    width: 10%;
     background-color: #f2f2f2;
 }
 

@@ -67,8 +67,6 @@ public class Church
     @Column(name="ext_id")
     public String extID;
 
-    public int version;
-
     @Field
     @Analyzer(definition = "polish_def_analyzer")
     public String name;
@@ -148,7 +146,6 @@ public class Church
         this.enabled = true;
         this.addedBy = addedBy;
         this.addedDT = new Date();
-        this.version = 0;
         this.synset = new LinkedHashSet<>();
     }
 
@@ -190,16 +187,6 @@ public class Church
     public void setExtID(String extID)
     {
         this.extID = extID;
-    }
-
-    public int getVersion()
-    {
-        return version;
-    }
-
-    public void setVersion(int version)
-    {
-        this.version = version;
     }
 
     public String getName()

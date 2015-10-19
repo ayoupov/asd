@@ -22,27 +22,27 @@ public class Image
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    private Long id;
 
-    public String description;
+    private String description;
 
-    public String path;
+    private String path;
 
     @OneToOne
     @JoinColumn(name = "uploaded_by")
-    public User uploadedBy;
+    private User uploadedBy;
 
     @Column(name = "uploaded_ts")
     @JsonSerialize(using = DateTimeConverter.class)
-    public Date uploadedTS;
+    private Date uploadedTS;
 
     @OneToOne
     @JoinColumn(name = "approved_by")
-    public User approvedBy;
+    private User approvedBy;
 
     @Column(name = "approved_ts")
     @JsonSerialize(using = DateTimeConverter.class)
-    public Date approvedTS;
+    private Date approvedTS;
 
     public Image(String description, String path)
     {
@@ -72,5 +72,70 @@ public class Image
     public Long getId()
     {
         return id;
+    }
+
+    public void setId(Long id)
+    {
+        this.id = id;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
+    }
+
+    public String getPath()
+    {
+        return path;
+    }
+
+    public void setPath(String path)
+    {
+        this.path = path;
+    }
+
+    public User getUploadedBy()
+    {
+        return uploadedBy;
+    }
+
+    public void setUploadedBy(User uploadedBy)
+    {
+        this.uploadedBy = uploadedBy;
+    }
+
+    public Date getUploadedTS()
+    {
+        return uploadedTS;
+    }
+
+    public void setUploadedTS(Date uploadedTS)
+    {
+        this.uploadedTS = uploadedTS;
+    }
+
+    public User getApprovedBy()
+    {
+        return approvedBy;
+    }
+
+    public void setApprovedBy(User approvedBy)
+    {
+        this.approvedBy = approvedBy;
+    }
+
+    public Date getApprovedTS()
+    {
+        return approvedTS;
+    }
+
+    public void setApprovedTS(Date approvedTS)
+    {
+        this.approvedTS = approvedTS;
     }
 }

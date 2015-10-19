@@ -10,6 +10,8 @@ import models.internal.RequestException;
 import models.internal.UserManager;
 import models.user.User;
 import play.Logger;
+import play.data.DynamicForm;
+import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Http;
@@ -24,7 +26,8 @@ import views.html.mediacontent;
 import java.io.*;
 import java.util.*;
 
-import static utils.DataUtils.*;
+import static utils.DataUtils.safeBool;
+import static utils.DataUtils.safeLong;
 import static utils.HibernateUtils.*;
 import static utils.ServerProperties.isInProduction;
 import static utils.media.images.Thumber.thumbName;
@@ -43,32 +46,31 @@ public class MediaContents extends Controller
 
     static String publicPath = ServerProperties.getValue("asd.public.path");
 
-    public static Result byTypeAndId(String ctype, Long id) throws IOException
+    public static Result byTypeAndId(String ctype, String id) throws IOException
     {
         return byTypeAndId(ctype, id, "html");
     }
 
-    public static Result byTypeAndId(String ctype, Long id, String ext) throws IOException
+    public static Result byTypeAndId(String ctype, String id, String ext) throws IOException
     {
-        Long givenId = id;
         beginTransaction();
         MediaContentType type = MediaContentType.fromString(ctype);
         if (type == null)
             return badRequest("Trying to get content with type : " + ctype);
-        MediaContent content = (MediaContent) get(MediaContent.class, givenId);
+        MediaContent content = ContentManager.getMediaByIdAndAlternative(id);
         commitTransaction();
         if (content != null) {
-            if (!content.contentType.equals(type))
+            if (!content.getContentType().equals(type))
                 return badRequest("Wrong content type: " + type);
             if ("json".equals(ext))
                 return ok(Json.toJson(content));
             else {
                 // check if static version exists
                 File dir = new File(publicPath + ctype);
-                File mediaFile = new File(dir, givenId + ".html");
+                File mediaFile = new File(dir, content.getId() + ".html");
                 if (mediaFile.exists())
                     return ok(mediaFile, true);
-                Html rendered = mediacontent.render(content);
+                Html rendered = mediacontent.render(content, false);
                 saveToFS(dir, mediaFile, rendered);
                 return ok(rendered);
             }
@@ -100,6 +102,62 @@ public class MediaContents extends Controller
         result.put("success", true);
         commitTransaction();
         return ok(result);
+    }
+
+    @Security.Authenticated(Secured.class)
+    public static Result previewGet(String ctype, String id)
+    {
+        File dir = new File(publicPath + "preview/" + ctype);
+        File mediaFile = new File(dir, id + ".html");
+        if (mediaFile.exists())
+            return ok(mediaFile, true);
+        else
+            return badRequest("preview file not found!");
+    }
+
+
+    static String[] MC_WHITELIST = new String[]{"text", "title", "year", "lead", "starred",
+            "coverDescription", "approvedDT", "alternativeId"};
+    static String[] MC_GREYLIST = new String[]{"authors", "authors[]", "cover", "church", "ctype"};
+
+    @Security.Authenticated(Secured.class)
+    public static Result previewPost(String ctype) throws IOException
+    {
+        Form<MediaContent> mcf = Form.form(MediaContent.class).bindFromRequest(MC_WHITELIST);
+        if (mcf.hasErrors())
+            return badRequest(mcf.errorsAsJson());
+        MediaContent content = mcf.get();
+        System.out.println("content = " + Json.toJson(content));
+        beginTransaction();
+        DynamicForm dynamicForm = Form.form().bindFromRequest(request(), MC_GREYLIST);
+        Map<String, String> data = dynamicForm.data();
+
+        // fill in other fields
+        // authors
+        String userList = data.get("authors");
+        if (userList == null)
+            userList = data.get("authors[]");
+        if (userList != null && !"".equals(userList))
+            content.setAuthors(ContentManager.parseUserList(userList.split("\\,")));
+        else
+            content.setAuthors(new HashSet<>());
+        // cover
+        String cover = data.get("cover");
+        if (cover != null) {
+            content.setCover(findImage(null, cover));
+            String coverThumbPath = thumbName(new File(cover));
+            Image coverThumb = findImage(null, coverThumbPath);
+            content.setCoverThumb(coverThumb);
+        }
+        User user = UserManager.getLocalUser(session());
+        String id = user.getHash() + "_" + (new Date().getTime() / 1000);
+        content.setContentType(MediaContentType.fromString(ctype));
+        commitTransaction();
+        Html rendered = mediacontent.render(content, true);
+        File dir = new File(publicPath + "preview/" + ctype);
+        File mediaFile = new File(dir, id + ".html");
+        saveToFS(dir, mediaFile, rendered);
+        return ok(Json.newObject().put("success", true).put("previewId", id));
     }
 
     @Security.Authenticated(Secured.class)
@@ -167,7 +225,7 @@ public class MediaContents extends Controller
         }
         result.put("entity", ctype);
 
-        if (mct != c.contentType) {
+        if (mct != c.getContentType()) {
             commitTransaction();
             result.put("error", "wrong entity type");
             return badRequest(result);
@@ -177,6 +235,7 @@ public class MediaContents extends Controller
         String jtext = (map.get("text") != null) ? map.get("text")[0] : null,
                 jlead = (map.get("lead") != null) ? map.get("lead")[0] : null,
                 jcover = (map.get("cover") != null) ? map.get("cover")[0] : null,
+                jalt = (map.get("alt") != null) ? map.get("alt")[0] : null,
                 jdesc = (map.get("desc") != null) ? map.get("desc")[0] : null,
                 jtitle = (map.get("title") != null) ? map.get("title")[0] : null;
         Boolean jstarred = (map.get("starred") != null) ? safeBool(map.get("starred")) : false;
@@ -184,18 +243,12 @@ public class MediaContents extends Controller
         Set<User> jauthors = (map.get("authors") != null) ? ContentManager.parseUserList(map.get("authors")) : null;
         if (jauthors == null)
             jauthors = (map.get("authors[]") != null) ? ContentManager.parseUserList(map.get("authors[]")) : null;
-//        System.out.println("jtitle = " + jtitle);
-//        System.out.println("jlead = " + jlead);
-//        System.out.println("jdesc = " + jdesc);
-//        System.out.println("jcover = " + jcover);
-//        System.out.println("jtext = " + jtext);
-//        System.out.println("jstarred = " + jstarred);
-//        System.out.println("jpublishDate = " + jpublishDate);
-//        System.out.println("jauthors = " + jauthors);
         if (jtext != null)
             c.setText(jtext);
         if (jlead != null)
             c.setLead(jlead);
+        if (jalt != null)
+            c.setAlt(jalt);
         if (jdesc != null)
             c.setCoverDescription(jdesc);
         if (jcover != null) {
@@ -218,6 +271,12 @@ public class MediaContents extends Controller
             saveOrUpdate(c);
         Logger.info("c = " + c);
         commitTransaction();
+
+        File dir = new File(publicPath + ctype);
+        File mediaFile = new File(dir, c.getId() + ".html");
+        if (mediaFile.exists())
+            mediaFile.delete();
+
         result.put("entity", ctype);
         result.put("success", true);
         result.put("id", c.getId());
@@ -233,9 +292,13 @@ public class MediaContents extends Controller
         boolean deleted = delete(MediaContent.class, mcid);
         result.put("success", deleted);
         commitTransaction();
-        if (deleted)
+        if (deleted) {
+            File dir = new File(publicPath + ctype);
+            File mediaFile = new File(dir, mcid + ".html");
+            if (mediaFile.exists())
+                mediaFile.delete();
             return ok(result);
-        else
+        } else
             return internalServerError(result);
     }
 

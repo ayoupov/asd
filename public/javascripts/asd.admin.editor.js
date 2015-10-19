@@ -25,7 +25,7 @@ var toolData = {
     },
     gap: {
         tooltip: 'gap in px',
-        insert: '[gap=?]'
+        insert: '[gap=!?]'
     },
     numlist: {
         tooltip: 'numbered list',
@@ -136,10 +136,16 @@ function initToolbar() {
                 var curpos = getCursorPos($currentEditor[0]);
                 if (curpos != -1)
                     curpos = curpos.start;
-                var ins = insertText.replace("!", "");
+                var selection = getSelectionText();
+                //var ins = insertText.replace("!", selection ? selection : '');
+                var before = selection ? insertText.substr(0, insertText.indexOf('!')) : insertText.replace("!","");
+                var after = selection ? insertText.substr(insertText.indexOf('!') + 1) : '';
                 //console.log(curpos + " : " + ins + " : " + insertPos);
+                var ins = before;
                 insertAtCaret($currentEditor.attr('id'), ins);
-                setCaretToPos($currentEditor[0], curpos + insertPos);
+                setCaretToPos($currentEditor[0], curpos + insertPos + selection.length);
+                insertAtCaret($currentEditor.attr('id'), after);
+                setCaretToPos($currentEditor[0], curpos + insertPos + selection.length);
             });
         }
     });
@@ -226,4 +232,14 @@ function setSelectionRange(input, selectionStart, selectionEnd) {
 
 function setCaretToPos(input, pos) {
     setSelectionRange(input, pos, pos);
+}
+
+function getSelectionText() {
+    var text = "";
+    if (window.getSelection) {
+        text = window.getSelection().toString();
+    } else if (document.selection && document.selection.type != "Control") {
+        text = document.selection.createRange().text;
+    }
+    return text;
 }

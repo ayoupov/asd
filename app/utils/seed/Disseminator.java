@@ -1,6 +1,5 @@
 package utils.seed;
 
-import com.feth.play.module.pa.providers.oauth2.facebook.FacebookAuthUser;
 import models.MediaContent;
 import models.MediaContentType;
 import models.internal.MockIdentity;
@@ -14,13 +13,10 @@ import utils.seed.geo.DioceseProcessor;
 import utils.seed.geo.MetropolieProcessor;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import static utils.HibernateUtils.*;
-import static utils.seed.ChurchSeeds.seedChurches;
 import static utils.seed.ChurchSeeds.seedChurchesExt;
 import static utils.seed.GeographySeeds.seedGeography;
 
@@ -109,7 +105,7 @@ public class Disseminator
         if (authorsOf == null)
             authorsOf = new LinkedHashSet<>();
         authorsOf.add(goodArticle);
-        articleUser1.authorOf = authorsOf;
+        articleUser1.setAuthorOf(authorsOf);
         save(goodArticle);
         saveOrUpdate(articleUser1);
 
@@ -123,11 +119,11 @@ public class Disseminator
             if (authorsOfArticles == null)
                 authorsOfArticles = new LinkedHashSet<>();
             authorsOfArticles.add(mc);
-            articleUser2.authorOf = authorsOfArticles;
+            articleUser2.setAuthorOf(authorsOfArticles);
             save(mc);
             saveOrUpdate(articleUser2);
         }
-        authors = new LinkedHashSet();
+        authors = new LinkedHashSet<>();
         authors.add(storyUser1);
         authors.add(storyUser2);
         for (int i = 0; i < 10; i++) {

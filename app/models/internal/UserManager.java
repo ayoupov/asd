@@ -108,7 +108,7 @@ public class UserManager
     {
         Logger.info("Merging users ", thisUser, otherUser);
         List<LinkedAccount> linkedAccounts = thisUser.getLinkedAccounts();
-        for (final LinkedAccount acc : otherUser.linkedAccounts) {
+        for (final LinkedAccount acc : otherUser.getLinkedAccounts()) {
             LinkedAccount account = createLinkedAccount(acc);
             account.setUser(thisUser);
             saveOrUpdate(account);
@@ -134,8 +134,7 @@ public class UserManager
         user.setStatus(UserStatus.Active);
         user.setRole(role);
         LinkedAccount account = createLinkedAccount(authUser);
-        user.linkedAccounts = Collections.singletonList(
-                account);
+        user.setLinkedAccounts(Collections.singletonList(account));
 
         user.setHash(nextHash());
 
@@ -144,15 +143,15 @@ public class UserManager
             // Remember, even when getting them from FB & Co., emails should be
             // verified within the application as a security breach there might
             // break your security as well!
-            user.email = identity.getEmail();
-            user.emailValidated = false;
+            user.setEmail(identity.getEmail());
+            user.setEmailValidated(false);
         }
 
         if (authUser instanceof NameIdentity) {
             final NameIdentity identity = (NameIdentity) authUser;
             final String name = identity.getName();
             if (name != null) {
-                user.name = name;
+                user.setName(name);
             }
         }
 
@@ -191,7 +190,7 @@ public class UserManager
         // should update linked accounts list and store it
         final User u = findByAuthUserIdentity(oldUser);
         LinkedAccount account = createLinkedAccount(newUser);
-        u.linkedAccounts.add(account);
+        u.getLinkedAccounts().add(account);
         account.setUser(u);
 		saveOrUpdate(u);
         saveOrUpdate(account);

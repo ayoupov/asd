@@ -115,7 +115,6 @@ public class Tiles extends Controller
 
     private static List getDekanatFeatures(Geometry g)
     {
-        Json.setObjectMapper(Serializer.entityMapper);
         List features = GeographyManager.findDekanatsByGeometry(g);
         List farr = new ArrayList();
         if (features != null && features.size() > 0) {
@@ -129,6 +128,7 @@ public class Tiles extends Controller
                 Geometry geometry = (Geometry) row[2];
                 ObjectNode node = Json.newObject();
                 node.put("type", "Feature");
+                Json.setObjectMapper(Serializer.entityMapper);
                 node.put("geometry", Json.toJson(geometry));
                 node.put("properties", props);
                 farr.add(node);

@@ -29,29 +29,31 @@ public class MediaContent
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public Long id;
+    private Long id;
 
     @Column(name = "content_type")
     @Field
-    public MediaContentType contentType;
+    private MediaContentType contentType;
 
     @Field
     @Type(type = "text")
     @Analyzer(definition = "polish_def_analyzer")
-    public String text;
+    private String text;
 
     @Field
     @Type(type = "text")
     @Analyzer(definition = "polish_def_analyzer")
-    public String lead;
+    private String lead;
 
     @Column(name = "cover_description")
     @Field
-    public String coverDescription;
+    private String coverDescription;
 
     @Field
     @Analyzer(definition = "polish_def_analyzer")
-    public String title;
+    private String title;
+
+    private String alt;
 
     private String year;
 
@@ -59,36 +61,36 @@ public class MediaContent
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "cover_image_id")
-    public Image cover;
+    private Image cover;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "cover_image_thumb_id")
-    public Image coverThumb;
+    private Image coverThumb;
 
     //    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 //    public Set<Image> images;
     @Column(name = "added_dt")
-    public Date addedDT;
+    private Date addedDT;
 
     @OneToOne
     @JoinColumn(name = "added_by")
-    public User addedBy;
+    private User addedBy;
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "content_authors")
-    public Set<User> authors;
+    private Set<User> authors;
 
     @Column(name = "approved_dt")
     @JsonSerialize(using = DateTimeConverter.class)
-    public Date approvedDT;
+    private Date approvedDT;
 
     @OneToOne
     @JoinColumn(name = "approved_by")
-    public User approvedBy;
+    private User approvedBy;
 
     @ManyToMany(mappedBy = "media")
     @JsonIgnore
-    public Set<Church> churches;
+    private Set<Church> churches;
 
     public MediaContent(MediaContentType contentType, String text, String title, String year, Image cover, Image coverThumb, User addedBy, Church church)
     {
@@ -101,7 +103,7 @@ public class MediaContent
         this.authors = Collections.singleton(addedBy);
         this.addedBy = addedBy;
         this.addedDT = new Date();
-        if (addedBy != null && (addedBy.role == UserRole.Administrator || addedBy.role == UserRole.Moderator)) {
+        if (addedBy != null && (addedBy.getRole() == UserRole.Administrator || addedBy.getRole() == UserRole.Moderator)) {
             approvedBy = addedBy;
             approvedDT = addedDT;
         }
@@ -118,7 +120,7 @@ public class MediaContent
         this.authors = authors;
         this.addedBy = addedBy;
         this.addedDT = new Date();
-        if (addedBy != null && (addedBy.role == UserRole.Administrator || addedBy.role == UserRole.Moderator)) {
+        if (addedBy != null && (addedBy.getRole() == UserRole.Administrator || addedBy.getRole() == UserRole.Moderator)) {
             approvedBy = addedBy;
             approvedDT = addedDT;
         }
@@ -301,5 +303,15 @@ public class MediaContent
     public void setChurches(Set<Church> churches)
     {
         this.churches = churches;
+    }
+
+    public String getAlt()
+    {
+        return alt;
+    }
+
+    public void setAlt(String alt)
+    {
+        this.alt = alt;
     }
 }

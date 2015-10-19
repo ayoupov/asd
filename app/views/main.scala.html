@@ -29,13 +29,13 @@
             </div>
         </div>
         <script>
-        var userHash, userName;
+        var userAuthed, userName;
         @if(user != null) {
-            userHash = '@user.getHash';
+            userAuthed = true;
             userName = '@user.getName';
-            console.log(userHash);
+            console.log(userAuthed);
         } else {
-            userHash = null;
+            userAuthed = false;
             userName = '';
             console.log('not authed');
         }

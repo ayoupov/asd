@@ -3,11 +3,15 @@ package controllers;
 import models.Church;
 import models.MediaContent;
 import models.internal.ChurchSuggestion;
+import models.internal.ChurchSuggestionType;
 import models.internal.ContentManager;
+import play.Logger;
+import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Security;
 import utils.serialize.Serializer;
 
 import java.io.Serializable;
@@ -16,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 import static utils.HibernateUtils.*;
+import static utils.ServerProperties.isInProduction;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,13 +30,6 @@ import static utils.HibernateUtils.*;
  */
 public class Churches extends Controller
 {
-
-    private static final Set<String> ALLOWED_ENTITIES = new HashSet<>();
-    static {
-        ALLOWED_ENTITIES.add("story");
-        ALLOWED_ENTITIES.add("field");
-        ALLOWED_ENTITIES.add("images");
-    }
 
     public static Result byId(String id)
     {
@@ -46,27 +44,6 @@ public class Churches extends Controller
             return notFound(String.format("Church with id {%s}", id));
     }
 
-    public static Result suggest()
-    {
-        Form<ChurchSuggestion> suggestionForm = Form.form(ChurchSuggestion.class);
-        if (!suggestionForm.hasErrors()) {
-            beginTransaction();
-            ChurchSuggestion cs = suggestionForm.bindFromRequest().get();
-            saveOrUpdate(cs);
-            commitTransaction();
-            return ok();
-        } else
-            return badRequest(suggestionForm.errorsAsJson());
-    }
-
-    public static Result revsById(String id)
-    {
-        beginTransaction();
-        List<Church> versions = ContentManager.getChurchVersions(id);
-        commitTransaction();
-        return ok(Json.toJson(versions));
-    }
-
     public static Result images(String id)
     {
         beginTransaction();
@@ -78,21 +55,30 @@ public class Churches extends Controller
             return notFound(String.format("Church with id {%s}", id));
     }
 
-    public static Result update()
+    public static Result suggest()
     {
-        String[] reqEntity = request().body().asFormUrlEncoded().get("entity");
-        String entity;
-        if (reqEntity == null || reqEntity.length == 0 || !ALLOWED_ENTITIES.contains(entity = reqEntity[0]))
-        {
-            return badRequest();
+        return processSuggestion(ChurchSuggestionType.NEW_CHURCH, null);
+    }
+
+    public static Result updateField(String field)
+    {
+        return processSuggestion(ChurchSuggestionType.FIELD, field);
+    }
+
+    private static Result processSuggestion(ChurchSuggestionType type, String field)
+    {
+        Form<ChurchSuggestion> suggestionForm = Form.form(ChurchSuggestion.class);
+        if (!suggestionForm.hasErrors()) {
+            beginTransaction();
+            ChurchSuggestion cs = suggestionForm.bindFromRequest().get();
+            cs.setType(type);
+            cs.setField(field);
+            saveOrUpdate(cs);
+            commitTransaction();
+            return ok(Json.newObject().put("success", true));
         } else
-        {
-            switch(entity)
-            {
-                case "story" : return processStory();
-            }
-        }
-        return TODO;
+            return badRequest(suggestionForm.errorsAsJson());
+
     }
 
     private static Result processStory()
@@ -108,5 +94,15 @@ public class Churches extends Controller
             commitTransaction();
             return ok("{success:'true',id:'"+id+"'}");
         }
+    }
+
+    public static Result addStory()
+    {
+        return play.mvc.Results.TODO;
+    }
+
+    public static Result addImages()
+    {
+        return play.mvc.Results.TODO;
     }
 }

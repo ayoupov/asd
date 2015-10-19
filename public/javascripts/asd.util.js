@@ -43,3 +43,23 @@ function removeHash()
     history.replaceState("", document.title, window.location.pathname
         + window.location.search);
 }
+
+function getHeading(f1, l1, f2, l2) {
+    var y = Math.sin(l2 - l1) * Math.cos(f2);
+    var x = Math.cos(f1) * Math.sin(f2) -
+        Math.sin(f1) * Math.cos(f2) * Math.cos(l2 - l1);
+    return toDeg(Math.atan2(y, x));
+}
+
+function toRad(degree) {
+    return (Math.PI * degree) / 180;
+}
+
+function toDeg(rad) {
+    return rad * 180 / Math.PI;
+}
+
+function _debug(obj)
+{
+    console.log(obj);
+}

@@ -1,51 +1,60 @@
 @import utils.ServerProperties
 @import utils.web.RenderUtils
-@(content: MediaContent)
-@coverImage() = @{
-    if(content.cover != null)
-        content.cover.path
-    else
-        ServerProperties.getValue("asd.editor.nosrc.image")
-}
+@(content: MediaContent, preview: Boolean)
+    @coverImage() = @{
+        if(content.getCover != null)
+            content.getCover.getPath
+        else
+            ServerProperties.getValue("asd.editor.nosrc.image")
+    }
 <!DOCTYPE html>
-<html lang="pl">
-    <head>
-        <meta charset="UTF-8">
-            @parts.heads.commonhead()
-            @parts.heads.contenthead()
-            @parts.heads.metas()
-            @parts.style(".content-cover-image", "background: url(" + coverImage() + ") center; background-size: cover")
-    </head>
-    <body>
-        @parts.likesInit()
-        <div class="wrapper">
-            @staticmenu(false)
-            <div class="content-main-wrapper">
-            @sociallinks()
-            </div>
-            <div class="content-cover-image">
-                <div class="content-title">
-                @content.title
-                </div>
-            </div>
-            <div class="content-header-wrapper">
-                <div class="content-main-wrapper content-header-center">
-                    <div class="content-header-date">@RenderUtils.contentDateToString(content.approvedDT)</div>
-                    <div class="content-header-authors-wrapper">
-                    @for(author <- content.authors) {
-                        <div class="content-header-authors">@author.name</div>
-                    }
-                    </div>
-                    <div class="content-header-social-wrapper">
-                    @parts.likes(content.contentType.toString.toLowerCase, content.id)
-                    </div>
-                </div>
-            </div>
-            @if(content.lead != null && "" != content.lead.trim) {
-                <div class='content-lead-wrapper'><div class='content-lead'>
-                @content.lead</div></div>
+    <html lang="pl">
+        <head>
+            <meta charset="UTF-8">
+                @parts.heads.commonhead()
+                @parts.heads.contenthead()
+                @parts.heads.metas()
+                @parts.style(".content-cover-image", "background: url(" + coverImage() + ") center; background-size: cover")
+        </head>
+        <body>
+            @if(!preview) {
+                @parts.likesInit()
             }
-            @parts.media.processed2(content.text)
+        <div class="wrapper">
+            @if(preview){
+                @parts.guidelines()
+            }
+            @staticmenu(false)
+        <div class="content-main-wrapper">
+        @if(!preview) {
+            @sociallinks()
+        }
         </div>
-    </body>
-</html>
+        <div class="content-cover-image">
+            <div class="content-title">
+            @content.getTitle
+            </div>
+        </div>
+        <div class="content-header-wrapper">
+            <div class="content-main-wrapper content-header-center">
+                <div class="content-header-date">@RenderUtils.contentDateToString(content.getApprovedDT)</div>
+                <div class="content-header-authors-wrapper">
+                @for(author <- content.getAuthors) {
+                    <div class="content-header-authors">@author.getName</div>
+                }
+                </div>
+                <div class="content-header-social-wrapper">
+                @if(!preview) {
+                    @parts.likes(content.getContentType.toString.toLowerCase, content.getId)
+                }
+                </div>
+            </div>
+        </div>
+            @if(content.getLead != null && "" != content.getLead.trim) {
+                <div class='content-lead-wrapper'><div class='content-lead'>
+                @content.getLead</div></div>
+            }
+            @parts.media.processed2(content.getText)
+        </div>
+        </body>
+    </html>

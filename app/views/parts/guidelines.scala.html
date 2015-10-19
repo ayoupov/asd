@@ -1,0 +1,29 @@
+@()
+<div class="content-main-guideline">
+    <div class="content-gap-guideline"></div>
+    <div class="content-column-guideline"></div>
+    <div class="content-gap-guideline"></div>
+    <div class="content-column-guideline"></div>
+    <div class="content-gap-guideline"></div>
+    <div class="content-column-guideline"></div>
+    <div class="content-gap-guideline"></div>
+    <div class="content-column-guideline"></div>
+    <div class="content-gap-guideline"></div>
+    <div class="content-column-guideline"></div>
+    <div class="content-gap-guideline"></div>
+    <div class="content-column-guideline"></div>
+    <div class="content-gap-guideline"></div>
+    <div class="content-column-guideline"></div>
+    <div class="content-gap-guideline"></div>
+    <div class="content-column-guideline"></div>
+    <div class="content-gap-guideline last"></div>
+</div>
+<script>$(window).on('resize', guidelineResize);
+var guidelineResize = function(){
+    var wwidth = $(window).width();
+    var $guidelineContainer = $(".content-main-guideline");
+    $guidelineContainer.css({left: (wwidth - $guidelineContainer.width()) / 2});
+};
+$(document).ready(guidelineResize);
+//guidelineResize();
+</script>

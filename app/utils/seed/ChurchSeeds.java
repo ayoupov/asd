@@ -5,7 +5,6 @@ import models.Church;
 import models.address.Address;
 import models.internal.ContentManager;
 import play.Logger;
-import utils.lang.PolishSupport;
 import utils.map.Processor;
 
 import java.io.*;
@@ -23,8 +22,9 @@ import static utils.HibernateUtils.saveOrUpdate;
  */
 public class ChurchSeeds
 {
-//    private final static boolean debug = true;
+    //    private final static boolean debug = true;
     private final static boolean debug = false;
+    private static HashSet<String> skipIDs;
 
     static class ChurchDatabaseEntry
     {
@@ -80,7 +80,7 @@ public class ChurchSeeds
                     firstPart = "0" + firstPart;
                 id = unwrap(split[0]) + "-" + firstPart + secPart;
 
-                eligible = "1".equals(unwrap(split[5]));
+                eligible = "1".equals(unwrap(split[5])) && !skipIDs.contains(id);
 
                 synonyms = unwrap(split[7]);
                 if ("".equals(synonyms))
@@ -151,27 +151,38 @@ public class ChurchSeeds
     {
         // 1. gather db
         Map<String, ChurchDatabaseEntry> data = new HashMap<>();
+        skipIDs = new HashSet<>();
         String line;
         int dbParseFail = 0;
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(txtDatabase), "UTF-8"))) {
-            int i = 0; // line num
+        boolean proceed = true;
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(Processor.dataDir + "church_seed_skip_ids.txt"), "UTF-8"))) {
             while ((line = br.readLine()) != null) {
-                try {
-                    i++;
-                    if (i >= 3) {
-                        ChurchDatabaseEntry entry = new ChurchDatabaseEntry(line);
-                        if (entry.isEligible())
-                            data.put(entry.getId(), entry);
-                    }
-                } catch (Exception e) {
-                    dbParseFail++;
-                    Logger.error("dbparsefail: line(" + i + ") = " + line);
-                    throw e;
-                }
+                skipIDs.add(line);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.error("failed to acquire ids to skip: " + e.getMessage());
+            proceed = false;
         }
+        if (proceed)
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(txtDatabase), "UTF-8"))) {
+                int i = 0; // line num
+                while ((line = br.readLine()) != null && dbParseFail < 20) {
+                    try {
+                        i++;
+                        if (i >= 3) {
+                            ChurchDatabaseEntry entry = new ChurchDatabaseEntry(line);
+                            if (entry.isEligible())
+                                data.put(entry.getId(), entry);
+                        }
+                    } catch (Exception e) {
+                        dbParseFail++;
+                        Logger.error("dbparsefail: line(" + i + ") = " + line);
+                        throw e;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         int success = 0, failed = 0;
         Set<String> dataNotFound = new LinkedHashSet<>();
@@ -190,6 +201,12 @@ public class ChurchSeeds
                     if (extId.length() < 6) {
                         Logger.error("Failed to seed church: ", line);
                         failed++;
+                    }
+                    if (skipIDs.contains(extId))
+                    {
+                        Logger.info("Skipping " + extId);
+                        skipIDs.remove(extId);
+                        continue;
                     }
                     String unfolded = null;
                     try {
@@ -210,14 +227,12 @@ public class ChurchSeeds
                     ChurchDatabaseEntry entry = data.get(extId);
                     if (entry == null) {
                         dataNotFound.add(extId);
-                    } else
-                    {
+                    } else {
                         church.setArchitects(entry.getArchitects());
-                        for (Architect architect : entry.getArchitects())
-                        {
+                        for (Architect architect : entry.getArchitects()) {
                             Set<Church> churches = architect.getChurches();
                             if (churches == null)
-                                churches= new HashSet<>();
+                                churches = new HashSet<>();
                             churches.add(church);
                             architect.setChurches(churches);
                         }
@@ -253,8 +268,7 @@ public class ChurchSeeds
             return res;
 
         String[] split = synonyms.split(",;");
-        for (String s : split)
-        {
+        for (String s : split) {
             res = new LinkedHashSet<>();
             res.add(s);
         }
@@ -283,7 +297,7 @@ public class ChurchSeeds
                     // struct: 0 - id, 1 - "ext_-id", 2 - "name", 3 - "lat", 4 - "lng", 5 - "address (unfolded)"
                     String extId = beautify(split[1]);
                     if (extId.length() < 6) {
-                        Logger.error("Failed to seed church: ",line);
+                        Logger.error("Failed to seed church: ", line);
                         failed++;
                     }
                     if (onlyOneID != null && !extId.equals(onlyOneID))

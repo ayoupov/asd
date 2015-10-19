@@ -17,14 +17,14 @@ public class Architect
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public Long id;
+    private Long id;
 
     @Column(unique = true, nullable = false)
-    public String name;
+    private String name;
 
     @ManyToMany(mappedBy = "architects")
     @JsonIgnore
-    public Set<Church> churches;
+    private Set<Church> churches;
 
     public String getName()
     {

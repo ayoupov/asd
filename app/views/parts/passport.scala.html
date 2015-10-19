@@ -24,7 +24,7 @@
         </nav>
 
         <table class="passport-title-wrapper">
-            <tr><td class="passport-title church-name"></td> <td class="passport-church-name-edit-icon"><div class="alarm-sign"></div></td></tr>
+            <tr><td class="church-name" data-field="name"></td> <td class="church-name-edit-icon"><div class="passport-value-edit-icon"></div></td></tr>
         </table>
 
         <div class="passport-gallery">
@@ -36,23 +36,57 @@
 
         <table class="passport-data-wrapper">
             <tr>
-                <td class="passport-field">adres</td>
-                <td class="passport-value church-address editable"></td>
+                <td class="passport-field-caption">adres</td>
+                <td class="passport-value editable" data-field="address">
+                    <div class="passport-data-data"></div>
+                    <div class='passport-data-help'>pomóż nam uzupełnić dane</div>
+                    <input type="text" class="passport-data-edit" name="address">
+                    <div class="passport-data-actions">
+                        <div class='passport-value-edit-icon'></div>
+                        <div class='passport-value-save-icon'></div>
+                    </div>
+                </td>
                 <td class="passport-data-filler"></td>
             </tr>
             <tr>
-                <td class="passport-field">daty budowy</td>
-                <td class="passport-value church-construction editable"></td>
+                <td class="passport-field-caption">daty budowy</td>
+                <td class="passport-value editable" data-field="years">
+                    <div class="passport-data-data"></div>
+                    <div class='passport-data-help'>pomóż nam uzupełnić dane</div>
+                    <input type="text" class="passport-data-edit church-years-input" name="constructionStart">
+                    <span class="passport-data-edit"> - </span>
+                    <input type="text" class="passport-data-edit church-years-input" name="constructionEnd">
+                    <div class="passport-data-actions">
+                        <div class='passport-value-edit-icon'></div>
+                        <div class='passport-value-save-icon'></div>
+                    </div>
+                </td>
                 <td class="passport-data-filler"></td>
             </tr>
             <tr>
-                <td class="passport-field">architekci</td>
-                <td class="passport-value church-architects editable"></td>
+                <td class="passport-field-caption">architekci</td>
+                <td class="passport-value editable" data-field="architects">
+                    <div class="passport-data-data"></div>
+                    <div class='passport-data-help'>pomóż nam uzupełnić dane</div>
+                    <input type="text" class="passport-data-edit" name="architects">
+                    <div class="passport-data-actions">
+                        <div class='passport-value-edit-icon'></div>
+                        <div class='passport-value-save-icon'></div>
+                    </div>
+                </td>
                 <td class="passport-data-filler"></td>
             </tr>
             <tr>
-                <td class="passport-field">strona www</td>
-                <td class="passport-value church-website editable"></td>
+                <td class="passport-field-caption">strona www</td>
+                <td class="passport-value editable" data-field="website">
+                    <div class="passport-data-data"></div>
+                    <div class='passport-data-help'>pomóż nam uzupełnić dane</div>
+                    <input type="text" class="passport-data-edit" name="website">
+                    <div class="passport-data-actions">
+                        <div class='passport-value-edit-icon'></div>
+                        <div class='passport-value-save-icon'></div>
+                    </div>
+                </td>
                 <td class="passport-data-filler"></td>
             </tr>
         </table>
@@ -109,8 +143,8 @@
             <div class="clearfix"></div>
             <form class="common-form ui form">
                 <label for="upload-confirmation">I agree</label>
-                <input type="checkbox" id="upload-confirmation" class="ui checkbox"><br>
-                <input type="button" value="Send" class="ui submit button">
+                <input type="checkbox" id="upload-confirmation" class="ui checkbox"> <br>
+                <input type="button" value="Send" class="ui submit button story-submit">
             </form>
         </div>
         <div class="ui success message pointy" id="new-story-success-message">

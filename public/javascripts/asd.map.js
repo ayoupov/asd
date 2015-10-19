@@ -97,7 +97,7 @@ var mapInit = function (geostats) {
 
     layerChanges();
 
-    comingBack = userHash && Cookies.get('auth.cb');
+    comingBack = userAuthed && Cookies.get('auth.cb');
     mapPostLoad(comingBack);
 
     map.on('popupopen', function (popup) {
@@ -250,7 +250,9 @@ function navigateTo(church, comingBack) {
                 marker.openPopup();
                 if (location.hash == "#passport")
                     openPassport(church.extID, comingBack ? function(){
-                        toggleNewStoryForm();
+                        togglePassportUpdateForm();
+                        // todo: huh? wait for gsv to load?
+                        $passportGallery.on('galleryready', function () {$passportWrapper.parent().scrollTop($passportUpdate.offset().top);});
                     } : null);
             }
         }

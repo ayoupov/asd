@@ -11,7 +11,7 @@ $(document).ready(function () {
 
     $passportUpdate = $(".passport-update");
     $newStoryGallery = $(".story-cover-gallery");
-    $passportUpdateButton = $(".passport-update-button");
+    $passportUpdateButtonWrapper = $(".passport-update-button-wrapper");
 
     $(".close-button").on('click', function () {
         $passportWrapper.modal('hide');
@@ -25,26 +25,26 @@ $(document).ready(function () {
     // messages
     $('.ui.message', $passportWrapper)
         .off('click')
-        .on('click', function(){
+        .on('click', function () {
             $(this).fadeOut('slow');
         })
         .hide();
 
-    initUpdatePassport();
+    initUpdatePassportApi();
+    initFieldUpdates();
 
     // init tabs
     $('.menu .item', $passportUpdate).tab();
 
     // fill user details once
-    if (userHash) {
-        $("#user_hash").val(userHash);
+    if (userAuthed) {
+        // using userhash is insecure
+        //$("#user_hash").val(userHash);
         if (userName)
             $("#story-author").val(userName).prop('disabled', true);
         $(".hide-authed").hide();
-    } else
-    {
-        $(".social-login").on('click', function()
-        {
+    } else {
+        $(".social-login").on('click', function () {
             window.location = "/auth/" + $(this).data('provider');
         });
     }
@@ -53,52 +53,20 @@ $(document).ready(function () {
 var gsvlock;
 
 function fillPassport(church) {
-    console.log(church);
+    _debug(church);
+    currentChurch = church;
     gsvlock = true;
     fillSocial();
-    currentChurch = church;
-    // clear form
-    $("td.passport-value").empty();
-    // filling form
+    resetEdit();
+    clearAndFill();
+    $passportUpdate.hide();
     var churchId = currentChurch.extID;
-    $(".church-name").html(church.name);
-    $(".church-address").html(church.address.unfolded);
-    var churchStart = church.constructionStart ? church.constructionStart : "";
-    var churchEnd = church.constructionEnd ? church.constructionEnd : "";
-    var constructionValue = churchStart == churchEnd ? churchStart : churchStart + " - " + churchEnd;
-    $(".church-construction").html(constructionValue);
-    var churchArchitects = '';
-    var arcarr = [];
-    if (church.architects && church.architects.length > 0)
-        $(church.architects).each(function (a, item) {
-            arcarr.push(item.name);
-        });
-    churchArchitects = arcarr.join(', ');
-    $(".church-architects").html(churchArchitects);
-    var website = church.website ? church.website : "";
-    if (website != '')
-        $(".church-website").html('<a target="_blank" href="' + website + '">' + website + '</a>');
-    else
-        $(".church-website").html(null);
 
-    // fill in new story data
-    $("#story-church-id").val(churchId);
+    $passportUpdateButtonWrapper.off('click').on('click', togglePassportUpdateForm);
+    $(".passport-stories-wrapper").show();
     $passportUpdate.hide();
 
-    $(".passport-update-button-wrapper").off('click').on('click', toggleNewStoryForm);
-
-    // add editable icons and bind events
-    $(".editable").each(function (a, item) {
-        var content = $(item).html();
-        if (!content)
-            content = "<div class='passport-data-help'>pomóż nam uzupełnić dane</div>";
-        else
-            content = "<div class='passport-data-data'>" + content + "</div>";
-        $(item).html(content + "<div class='passport-value-edit-icon'/>");
-    });
-    $(".passport-value-edit-icon, .passport-church-name-edit-icon").on('click', toggleEdit);
-
-    $passportUpdateButton.html("dodaj swoje wspomnienie lub obraz");
+    $(".passport-update-button").html("dodaj swoje wspomnienie lub obraz");
     if (church.media && church.media.length > 0) {
         $churchStoriesTitle.html("Wspomnienia dodane przez użytkowników").show();
     }
@@ -110,9 +78,63 @@ function fillPassport(church) {
     initStoryGallery();
 }
 
+function resetEdit() {
+    var $elem = $(".editable");
+    $(".passport-data-edit", $elem).hide();
+    $(".passport-data-data", $elem).show();
+    $(".passport-data-help", $elem).hide();
+    $(".passport-data-actions .passport-value-edit-icon", $elem).show();
+    $(".passport-data-actions .passport-value-save-icon", $elem).hide();
+}
+
+function initFieldUpdates() {
+    // bind events
+    $(".passport-value-edit-icon").on('click', toggleEdit);
+}
+
+function clearAndFill() {
+    // clear form
+    $("td.passport-value .passport-data-data").empty();
+    // filling form
+    var churchId = currentChurch.extID;
+    $(".church-name").html(currentChurch.name);
+    $(".passport-value[data-field=address] .passport-data-data").html(currentChurch.address.unfolded);
+    var churchStart = currentChurch.constructionStart ? currentChurch.constructionStart : "";
+    var churchEnd = currentChurch.constructionEnd ? currentChurch.constructionEnd : "";
+    var constructionValue = churchStart == churchEnd ? churchStart : churchStart + " - " + churchEnd;
+    $(".passport-value[data-field=years] .passport-data-data").html(constructionValue);
+    var churchArchitects = '';
+    if (typeof currentChurch.architects === "string") {
+        churchArchitects = currentChurch.architects;
+    } else {
+        var arcarr = [];
+        if (currentChurch.architects && currentChurch.architects.length > 0)
+            $(currentChurch.architects).each(function (a, item) {
+                arcarr.push(item.name);
+            });
+        churchArchitects = arcarr.join(', ');
+    }
+    $(".passport-value[data-field=architects] .passport-data-data").html(churchArchitects);
+    var website = currentChurch.website ? currentChurch.website : "";
+    if (website != '')
+        $(".passport-value[data-field=website] .passport-data-data").html('<a target="_blank" href="' + website + '">' + website + '</a>');
+    else
+        $(".passport-value[data-field=website] .passport-data-data").html(null);
+
+    $(".passport-data-data").each(function (a, item) {
+        var $item = $(item), $helper = $(".passport-data-help", $item.parent());
+        if ($item.html() == '')
+            $helper.show();
+        else
+            $helper.hide();
+    });
+    // fill in new story data
+    $("#story-church-id").val(churchId);
+}
+
 function fillSocial() {
     $(".social-wrapper").empty().html(
-        "<div class='fb-like' data-href='" + window.location + "#passport' data-layout='button_count' data-action='like'" +
+        "<div class='fb-like' data-href='" + window.location + "' data-layout='button_count' data-action='like'" +
         " data-show-faces='true' data-share='false'></div>" +
         "<a href='https://twitter.com/share' class='twitter-share-button' data-lang='pl'>Tweetnij</a>"
     );
@@ -122,11 +144,11 @@ function fillSocial() {
         if (typeof twttr !== 'undefined')
             twttr.widgets.load();
     } catch (e) {
-        console.log('error in social init: ' + e);
+        _debug('error in social init: ' + e);
     }
 }
 
-function toggleNewStoryForm() {
+function togglePassportUpdateForm() {
     $(".passport-stories-wrapper").fadeToggle(1000);
     $passportUpdate.fadeToggle(1000);
     $("#story-title,#story-year").val("");
@@ -135,57 +157,143 @@ function toggleNewStoryForm() {
 }
 
 function toggleEdit(ev) {
-    var elem = $(this).parent();
-    console.log(elem);
+    var elem = ev != null && ($(ev).hasClass('passport-value-save-icon') || $(ev).hasClass('passport-data-edit')) ? ev : this;
+    var $elem = $(elem).closest('.editable') || $(".church-name");
+    _debug($elem);
+    // special case for church name
+    $elem.toggleClass('editing');
+    if ($elem.hasClass('editing')) {
+        if ($elem.hasClass('editable')) {
+            var $currentDataElem = $(".passport-data-data", $elem);
+            $currentDataElem.hide();
+            $(".passport-data-actions .passport-value-edit-icon", $elem).hide();
+            $(".passport-data-help", $elem).hide();
+            $(".passport-data-actions .passport-value-save-icon", $elem).show();
+            switch ($elem.data('field')) {
+                case 'architects' :
+                case 'address' :
+                    $(".passport-data-edit", $elem).val($currentDataElem.html()).show().focus();
+                    break;
+                case 'website' :
+                    $(".passport-data-edit", $elem).val(currentChurch.website).show().focus();
+                    break;
+                case 'years' :
+                    $(".passport-data-edit", $elem).show();
+                    $(".passport-data-edit[name=constructionStart]", $elem).val(currentChurch.constructionStart).focus();
+                    $(".passport-data-edit[name=constructionEnd]", $elem).val(currentChurch.constructionEnd);
+                    break;
+                default :
+                    _debug('huh?');
+            }
+        }
+    } else {
+        if ($elem.hasClass('editable')) {
+            var $currentDataElem = $(".passport-data-edit", $elem);
+            $currentDataElem.hide();
+            $(".passport-data-data", $elem).show();
+            $(".passport-data-actions .passport-value-edit-icon", $elem).show();
+            $(".passport-data-actions .passport-value-save-icon", $elem).hide();
+            switch ($elem.data('field')) {
+                case 'years':
+                case 'architects':
+                case 'website':
+                    $.extend(currentChurch, $currentDataElem.serializeObject());
+                    break;
+                case 'address' :
+                    currentChurch.address.unfolded = $currentDataElem.val();
+                    break;
+                default :
+                    _debug("huh??");
+            }
+            clearAndFill();
+        }
+    }
 }
 
-function initUpdatePassport() {
-    $(".submit.button", $passportUpdate).api({
+var commonFieldApi = {
+    action: 'update passport field',
+    method: 'POST',
+    // todo: change to notification
+    onSuccess: function (data) {
+        _debug(data);
+        toggleEdit($(this));
+    },
+    onError: function (data) {
+        _debug(data);
+        toggleEdit($(this));
+    },
+    beforeSend: adjustFieldSettings
+};
+var iconFieldApi = {on : 'click'};
+$.extend(iconFieldApi, commonFieldApi);
+var inputFieldApi = {on : 'now'};
+$.extend(inputFieldApi, commonFieldApi);
+
+function initUpdatePassportApi() {
+
+    $(".submit.button", $passportUpdate).off('click').api({
         on: 'click',
-        action: 'update passport',
+        action: 'add new story',
         method: 'POST',
         onSuccess: function (data) {
-            console.log(data);
-            toggleNewStoryForm();
+            _debug(data);
+            togglePassportUpdateForm();
             notifyOk();
         },
         // onFailure ??
         onError: function (errorMessage) {
-            //toggleNewStoryForm();
+            //togglePassportUpdateForm();
             notifyError(errorMessage);
         },
-        beforeSend: function(settings){ return gather(settings, $(this));}
+        beforeSend: adjustSettings
     });
+    $(".passport-value-save-icon").off('click').api(iconFieldApi);
+    $("input.passport-data-edit").on('keypress',
+        function (event) {
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if (keycode == '13') {
+                $(this).api(inputFieldApi);
+            }
+            event.stopPropagation();
+        });
 }
 
-function gather(settings, $source)
-{
+function adjustFieldSettings(settings) {
+    var $elem = $(this).closest(".editable");
+    _debug($elem);
+    settings.urlData = {
+        field: $elem.data('field')
+    };
+    settings.data = {
+        extID: currentChurch.extID
+    };
+    $.extend(settings.data, $("input", $elem).serializeObject());
+    return settings;
+}
+
+function adjustSettings(settings) {
+    var isStoryTab = $(".ui.tab.active", $passportUpdate).data('tab') == 'add-story';
+    if (isStoryTab)
+        settings.action = 'add church story';
+    else
+        settings.action = 'add church images';
     var data = {};
-    // sending field or {new story|images}
-    var fieldOnly = $source.hasClass('passport-field-update-button');
     var entity;
-    if (fieldOnly)
-    {
-        entity = 'field';
-        // todo: add fieldname and value to data
-    } else
-    {
-        var $entityForm = $(".ui.tab.active form", $passportUpdate);
-        entity = $entityForm.data('entity');
-        $.extend(data, $entityForm.serializeObject());
-        $.extend(data, $('.common-form').serializeObject());
-    }
+    var $entityForm = $(".ui.tab.active form", $passportUpdate);
+    entity = $entityForm.data('entity');
+    $.extend(data, $entityForm.serializeObject());
+    $.extend(data, $('.common-form').serializeObject());
     data.entity = entity;
     settings.data = data;
     return settings;
 }
 
-function notifyOk() {
-    $("#new-story-success-message").fadeIn('slow');
+function notifyOk(message) {
+    $("#new-story-success-message").html(message).fadeIn('slow');
 }
 
-function notifyError() {
-    $("#new-story-error-message").fadeIn('slow');
+function notifyError(message) {
+    $("#new-story-error-message").html(message).fadeIn('slow');
 }
 
 function initPassportGallery(id) {
@@ -205,7 +313,7 @@ function doPassportGallery(data) {
     $passportGalleryThumbs.appendTo($passportGallery);
 
     $passportGallery.on('galleryready', function () {
-        console.log('gallery ready');
+        _debug('gallery ready');
         if ($('img', $passportGalleryThumbs).length == 0)
             $('.gallery-unit').hide();
         else
@@ -254,33 +362,18 @@ function appendGSV() {
                 var gsvElem = "<iframe width='" + galleryWidth + "' height='" + galleryHeight +
                     "' frameborder='0' style='border:0'" +
                     " src='" + url + "'></iframe>";
-                console.log(gsvElem);
+                _debug(gsvElem);
                 $(gsvElem).appendTo($passportCurrentImage);
                 var $gsvThumbElem = $('<img>').attr({src: '/assets/uploads/000000/gsv_thumb.png'})
                     .data('big-src', '#gsv-special');
                 pushGalleryThumb($gsvThumbElem);
                 $passportCurrentImage.trigger('galleryready');
             } else {
-                console.log('street view returned : ' + status);
+                _debug('street view returned : ' + status);
                 $passportCurrentImage.trigger('galleryready');
             }
         });
     gsvlock = false;
-}
-
-function getHeading(f1, l1, f2, l2) {
-    var y = Math.sin(l2 - l1) * Math.cos(f2);
-    var x = Math.cos(f1) * Math.sin(f2) -
-        Math.sin(f1) * Math.cos(f2) * Math.cos(l2 - l1);
-    return toDeg(Math.atan2(y, x));
-}
-
-function toRad(degree) {
-    return (Math.PI * degree) / 180;
-}
-
-function toDeg(rad) {
-    return rad * 180 / Math.PI;
 }
 
 var STORY_PICS_COUNT = 8;

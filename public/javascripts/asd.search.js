@@ -54,12 +54,12 @@ function initAddChurch() {
         method: 'POST',
         onSuccess: function (data) {
             console.log(data);
-            toggleNewStoryForm();
+            togglePassportUpdateForm();
             notifyChurchOk();
         },
         onError : function()
         {
-            //toggleNewStoryForm();
+            //togglePassportUpdateForm();
             notifyChurchError();
         },
         serializeForm: true

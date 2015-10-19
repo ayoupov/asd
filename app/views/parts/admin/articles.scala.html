@@ -14,7 +14,7 @@
             </tr>
         </thead>
         <tr id="article_0">
-            <td colspan="3">New article</td>
+            <td colspan="5">New article</td>
         </tr>
         @for(a <- articles) {
             <tr id="article_@a.getId">
@@ -30,12 +30,12 @@
                     if(a.getStarred) "checked"
                 }>
                 </td>
-                <td class="noedit"><a href="@routes.MediaContents.byTypeAndId("article", a.getId, "html")" target="_blank">→</a></td>
+                <td class="noedit"><a href="@routes.MediaContents.byTypeAndId("article", a.getId + "", "html")" target="_blank">→</a></td>
             </tr>
         }
             <tfoot>
                 <tr>
-                    <th colspan="3">
+                    <th colspan="5">
                             <!--<div class="ui left floated search input">-->
                             <!--<input type="text" placeholder="Filter by">-->
                             <!--</div>-->

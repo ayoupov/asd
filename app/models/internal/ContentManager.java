@@ -39,7 +39,7 @@ public class ContentManager
             for (String rawId : split) {
                 Long id = Long.parseLong(rawId);
                 MediaContent content = (MediaContent) session.get(MediaContent.class, id);
-                if (content.approvedDT != null || skipApproval)
+                if (content.getApprovedDT() != null || skipApproval)
                     res.add(content); // todo: more verbose in case of unapproved request?
             }
         } catch (Exception e) {
@@ -96,33 +96,30 @@ public class ContentManager
         Church church = (Church) session.createQuery(
                 "select c from Church c " +
                         "where (:sa = TRUE or c.approvedDT is not null) and " +
-                        "c.extID = :id " +
-                        "order by c.version desc"
+                        "c.extID = :id "
         ).setParameter("sa", skipApproval).setParameter("id", id).setMaxResults(1).uniqueResult();
         return church;
     }
 
-    public static List<Church> getChurchVersions(String id)
-    {
-        Session session = getSession();
-        List<Church> churches = session.createQuery(
-                "select c from Church c " +
-                        "where c.extID = :id " +
-                        "order by c.version asc"
-        ).setParameter("id", id).list();
-        return churches;
-    }
+//    public static List<Church> getChurchVersions(String id)
+//    {
+//        Session session = getSession();
+//        List<Church> churches = session.createQuery(
+//                "select c from Church c " +
+//                        "where c.extID = :id " +
+//                        "order by c.version asc"
+//        ).setParameter("id", id).list();
+//        return churches;
+//    }
 
     public static List<Object> getChurchesShort()
     {
         Session session = getSession();
-        List churches = session.createQuery("select distinct c1.id, c1.address.geometry " +
-                "from Church c1, Church c2 " +
+        List churches = session.createQuery("select distinct c.id, c.address.geometry " +
+                "from Church c " +
                 "where " +
-                "c1.extID = c2.extID and " +
-                "c1.version >= c2.version and " +
-                "c1.approvedDT is not null " +
-                "order by c1.version desc, c1.extID").list();
+                "c.approvedDT is not null " +
+                "order by c.extID").list();
         return churches;
     }
 
@@ -133,10 +130,7 @@ public class ContentManager
                 "select distinct c1 " +
                         "from Church c1, Church c2 " +
                         "where " +
-                        "c1.extID = c2.extID and " +
-                        "c1.version >= c2.version and " +
-                        "c1.approvedDT is not null " +
-                        "order by c1.version desc, c1.extID").list();
+                        "c1.approvedDT is not null ").list();
         return churches;
     }
 
@@ -147,11 +141,10 @@ public class ContentManager
                 "select distinct c " +
                         "from Church c where " +
                         "c.name like :fname " +
-                        "order by c.version desc, c.approvedDT")
+                        "order by c.approvedDT")
                 .setParameter("fname", "%" + filter.getNameFilter() + "%")
                 .setMaxResults(filter.getMaxResults())
                 .setFirstResult(filter.getPage() * filter.getMaxResults());
-//        System.out.println("query = " + query + " : " + filter);
         List<Church> churches = query.list();
         return churches;
     }
@@ -274,25 +267,19 @@ public class ContentManager
         String nameFilter = filter.getNameFilter();
         if (nameFilter != null && !"".equals(nameFilter))
             return (long) getSession().createQuery(
-                    "select distinct count(c1) " +
-                            "from Church c1, Church c2 " +
+                    "select distinct count(c) " +
+                            "from Church c " +
                             "where " +
-                            "c1.extID = c2.extID and " +
-                            "c1.version >= c2.version and " +
-                            "c1.name like :fname and " +
-                            "c1.approvedDT is not null " +
-                            "order by c1.version desc, c1.extID"
+                            "c.name like :fname and " +
+                            "c.approvedDT is not null "
             ).setParameter("fname", "%" + filter.getNameFilter() + "%")
                     .uniqueResult();
         else
             return (long) getSession().createQuery(
-                    "select distinct count(c1) " +
-                            "from Church c1, Church c2 " +
+                    "select distinct count(c) " +
+                            "from Church c " +
                             "where " +
-                            "c1.extID = c2.extID and " +
-                            "c1.version >= c2.version and " +
-                            "c1.approvedDT is not null " +
-                            "order by c1.version desc, c1.extID"
+                            "c.approvedDT is not null "
             ).setCacheable(true).uniqueResult();
     }
 
@@ -390,6 +377,15 @@ public class ContentManager
         return (Architect) getSession().createQuery("from Architect a where a.name = :n")
                 .setParameter("n", name)
                 .uniqueResult();
+    }
+
+    public static MediaContent getMediaByIdAndAlternative(String id)
+    {
+        long simpleId = safeLong(id, 0);
+        if (simpleId != 0)
+            return (MediaContent) getSession().get(MediaContent.class, simpleId);
+        return (MediaContent) getSession().createQuery("from MediaContent mc where mc.alt = :aid")
+                .setParameter("aid", id).setCacheable(true).uniqueResult();
     }
 
 //    public static List<User> parseUserList(Set<Long> userList )
