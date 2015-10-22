@@ -85,19 +85,19 @@ public class ContentManager
         return getChurchCount(false);
     }
 
-    public static Church getChurch(String id)
+    public static Church getChurch(String extID)
     {
-        return getChurch(id, false);
+        return getChurch(extID, false);
     }
 
-    public static Church getChurch(String id, boolean skipApproval)
+    public static Church getChurch(String extID, boolean skipApproval)
     {
         Session session = getSession();
         Church church = (Church) session.createQuery(
                 "select c from Church c " +
                         "where (:sa = TRUE or c.approvedDT is not null) and " +
                         "c.extID = :id "
-        ).setParameter("sa", skipApproval).setParameter("id", id).setMaxResults(1).uniqueResult();
+        ).setParameter("sa", skipApproval).setParameter("id", extID).setMaxResults(1).uniqueResult();
         return church;
     }
 
@@ -333,7 +333,7 @@ public class ContentManager
                 .list();
     }
 
-//    @JsonSerialize(using = PointConverter.class)
+    //    @JsonSerialize(using = PointConverter.class)
     private static Object getMetroCount()
     {
         return getSession().createQuery("select m.id, count(c.extID), m.centroid " +
@@ -346,21 +346,20 @@ public class ContentManager
 
     public static Image findImageByPath(String path)
     {
-        Logger.info("searching for an image with path: " + path);
         if (path == null)
             return null;
+        Logger.info("searching for an image with path: " + (path = path.replaceAll("//", "/")));
         return (Image) getSession().createQuery(
                 "select i from Image i " +
                         "where i.path = :p")
-                .setParameter("p", path).uniqueResult();
+                .setParameter("p", path).setMaxResults(1).uniqueResult();
     }
 
     public static Church getChurch(Http.Request request)
     {
         // todo: extract from path
         String[] churches = request.queryString().get("church");
-        if (churches != null)
-        {
+        if (churches != null) {
             long id = safeLong(churches, 0);
             return (Church) getSession().get(Church.class, id);
         }
@@ -385,7 +384,7 @@ public class ContentManager
         if (simpleId != 0)
             return (MediaContent) getSession().get(MediaContent.class, simpleId);
         return (MediaContent) getSession().createQuery("from MediaContent mc where mc.alt = :aid")
-                .setParameter("aid", id).setCacheable(true).uniqueResult();
+                .setParameter("aid", id).setMaxResults(1).setCacheable(true).uniqueResult();
     }
 
 //    public static List<User> parseUserList(Set<Long> userList )

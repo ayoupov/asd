@@ -189,7 +189,7 @@ public class ChurchSeeds
         // 2. do the usual routine + include data from database
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(churchesFromKML), "UTF-8"))) {
             int i = 0; // line num
-            while ((line = br.readLine()) != null && (!debug || i < 50)) {
+            while ((line = br.readLine()) != null && (!debug || i < 50) && failed < 20) {
                 try {
                     i++;
                     if (i == 1)

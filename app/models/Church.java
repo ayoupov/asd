@@ -26,6 +26,7 @@ import org.hibernate.search.annotations.Parameter;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -95,7 +96,8 @@ public class Church
     public Set<Architect> architects;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    public Set<Image> images;
+    @OrderBy("uploadedTS")
+    public List<Image> images;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name="church_media")
@@ -132,7 +134,7 @@ public class Church
     }
 
     public Church(String extID, String name, Integer constructionStart, Integer constructionEnd,
-                  Address address, Set<Architect> architects, Set<Image> images, Set<MediaContent> media, User addedBy)
+                  Address address, Set<Architect> architects, List<Image> images, Set<MediaContent> media, User addedBy)
     {
         this.extID = extID;
         this.name = name;
@@ -259,12 +261,12 @@ public class Church
         this.architects = architects;
     }
 
-    public Set<Image> getImages()
+    public List<Image> getImages()
     {
         return images;
     }
 
-    public void setImages(Set<Image> images)
+    public void setImages(List<Image> images)
     {
         this.images = images;
     }

@@ -129,12 +129,50 @@
 
 .passport-gallery-thumbs {
     float: right;
+    height: 480px;
+    overflow-y: hidden;
 }
 
 .passport-thumb-image {
     width: 140px;
     height: 80px;
-    /*float: right;*/
+    cursor: pointer;
+}
+
+.passport-thumb-image.active {
+    border: 5px white solid;
+}
+
+.passport-gallery-large-image {
+ height: 100%;
+}
+
+.passport-gallery-large-description {
+    height: 20px;
+    position: relative;
+    top: -20px;
+    width: 100%;
+    background-color: rgba(242,242,242,0.6);
+}
+
+.gallery-thumb-arrow-up {
+    width: 140px;
+    height: 80px;
+    cursor: pointer;
+    opacity: 0.6;
+    background: black url(/assets/images/gallery_thumb_up.png) center center no-repeat;
+    position: absolute;
+    top: 156px;
+}
+
+.gallery-thumb-arrow-down {
+    width: 140px;
+    height: 80px;
+    cursor: pointer;
+    opacity: 0.6;
+    background: black url(/assets/images/gallery_thumb_down.png) center center no-repeat;
+    position: absolute;
+    top: 556px;
 }
 
 .passport-data-wrapper {

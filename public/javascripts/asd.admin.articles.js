@@ -114,7 +114,7 @@ function fillArticle(data) {
         $("#title", $articleForm).val(data.title);
         $("#lead", $articleForm).html(data.lead);
         $("#desc", $articleForm).html(data.coverDescription);
-        $("#cover", $articleForm).val((data.coverImage) ? data.coverImage.path : "");
+        $("#cover", $articleForm).val((data.cover) ? data.cover.path : "");
         $("#alternativeId", $articleForm).val(data.alternativeId);
         if (data.starred)
             $("#starred", $articleForm).attr("checked", "checked");

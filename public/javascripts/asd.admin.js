@@ -4,14 +4,14 @@ var $admpages, $editors, $wrappers, $revisions,
 
 var apiExtension =
 {
-    'get church revisions': '/content/churches/revisions/{id}',
     'get json article': '/article/{id}.json',
     'get json story': '/story/{id}.json',
     'get associated pictures': '/files/list/{id}',
     'post update article': '/article/update',
     'preview article': '/preview/article',
     'post update story': '/story/update',
-    'upload files' : '/files/upload'
+    'upload files' : '/files/upload',
+    'remove content' : '/{ctype}/{id}'
 };
 
 var $prevPage;
@@ -25,6 +25,7 @@ function changeRow(data) {
         if (data.entity == "article") {
             var $articles = $("table", $("#articles"));
             var id = data.id;
+            $("#id", $articleForm).val(id);
             var $row = $("#article_" + id);
             var isNew = $row.length == 0;
             if (isNew)
@@ -48,8 +49,11 @@ function changeRow(data) {
                         "/>"))
             );
             $row.append($("<td/>").addClass('noedit').html(
-                    $("<a href='/article/" + id +
-                        "' target='_blank'>→</a>"))
+                    $(
+                        "<a href='/article/" + id + "' target='_blank'>→</a>" +
+                        "<a href='javascript:removeContent('article', " + id + ");'><img src='/assets/images/close_button.png'></a>"
+                    )
+                )
             );
             $("td:not(.noedit)", $row).on('click', articleEditClick);
             if (isNew)
@@ -61,6 +65,21 @@ function changeRow(data) {
         }
     }
 
+}
+
+function removeContent(ctype, id)
+{
+    // todo: alert
+    $.api({
+        action : 'remove content',
+        on :'now',
+        urlData : {
+            ctype: ctype,
+            id: id
+        },
+        method : 'DELETE'
+    });
+    location.reload();
 }
 
 function initAdmSelectorCache() {

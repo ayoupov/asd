@@ -41,15 +41,15 @@ public class FileManagerJava extends Controller
             userHash = user.getHash();
         else userHash = User.anonymousHash();
         commitTransaction();
-        String origpath = FilenameUtils.normalize(ServerProperties.getValue("asd.upload.path") + userHash);
-        String outpath = ServerProperties.getValue("asd.upload.relative.path") + userHash;
+        String origpath = FilenameUtils.normalize(ServerProperties.getValue("asd.upload.path") + "/" + userHash);
+        String outpath = ServerProperties.getValue("asd.upload.relative.path") + "/" + userHash;
         File[] files = new File(origpath).listFiles(originalFileFilter);
         Set<Map<String, String>> fileArr = new LinkedHashSet<>();
         if (files != null && files.length > 0) {
             for (File file : files) {
                 Map<String, String> fileMap = new HashMap<>();
                 fileMap.put("path", outpath + "/" + file.getName());
-                String thumbName = Thumber.thumbName(file);
+                String thumbName = Thumber.thumbName(file, Thumber.ThumbType.EDITORIAL);
                 File thumbFile = new File(thumbName);
                 if (thumbFile.exists())
                     fileMap.put("thumb", outpath + "/" + thumbFile.getName());
@@ -65,7 +65,11 @@ public class FileManagerJava extends Controller
         @Override
         public boolean accept(File dir, String name)
         {
-            return !name.contains("_thumb.");
+            boolean accept = true;
+            for (String ends : Thumber.THUMB_ENDS) {
+                accept &= !name.contains(ends +".");
+            }
+            return accept;
         }
     }
 }

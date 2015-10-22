@@ -28,39 +28,39 @@ public class GeographyManager
     private static final double TOLERANCE = 100 * 1.56961231e-7; // rough magic (meters * earth rad const)
     private static boolean once = false;
 
-    public static Address check(Geometry geometry)
-    {
-        Session session = getSession();
-        Address address = (Address) session.createQuery("select a from Address a " +
-                "where ST_Contains(ST_Buffer(:g, :t), a.geometry) = 1")
-                .setParameter("g", geometry).setParameter("t", TOLERANCE).uniqueResult();
-        return address;
-    }
-
-    public static Address add(Point point, String unfolded)
-    {
-        // 1. reverse geocode -> unfolded
-        // 2. find belonging dekanat
-        // 3. store in geocache
-
-        Address result = new Address();
-        result.setGeometry(point);
-        if (unfolded == null)
-            result.setUnfolded(GeocodeUtils.getAddress(point));
-        else
-            result.setUnfolded(unfolded);
-        List<Dekanat> dekanats = findDekanats(point);
-        if (dekanats.size() > 1) {
-            Logger.warn(String.format("Alarma! : %s {%s} is in %d dekanats! ",
-                    unfolded, point.toString(), dekanats.size()));
-            for (Dekanat d : dekanats)
-            {
-                Logger.warn("which are: ", d);
-            }
-        }
-        result.setDekanat(dekanats.get(0));
-        return result;
-    }
+//    public static Address check(Geometry geometry)
+//    {
+//        Session session = getSession();
+//        Address address = (Address) session.createQuery("select a from Address a " +
+//                "where ST_Contains(ST_Buffer(:g, :t), a.geometry) = 1")
+//                .setParameter("g", geometry).setParameter("t", TOLERANCE).uniqueResult();
+//        return address;
+//    }
+//
+//    public static Address add(Point point, String unfolded)
+//    {
+//        // 1. reverse geocode -> unfolded
+//        // 2. find belonging dekanat
+//        // 3. store in geocache
+//
+//        Address result = new Address();
+//        result.setGeometry(point);
+////        if (unfolded == null)
+////            result.setUnfolded(GeocodeUtils.getAddress(point));
+////        else
+//            result.setUnfolded(unfolded);
+//        List<Dekanat> dekanats = findDekanats(point);
+//        if (dekanats.size() > 1) {
+//            Logger.warn(String.format("Alarma! : %s {%s} is in %d dekanats! ",
+//                    unfolded, point.toString(), dekanats.size()));
+//            for (Dekanat d : dekanats)
+//            {
+//                Logger.warn("which are: ", d);
+//            }
+//        }
+//        result.setDekanat(dekanats.get(0));
+//        return result;
+//    }
 
     public static Dekanat findDekanat(Point point)
     {

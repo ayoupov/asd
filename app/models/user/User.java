@@ -26,6 +26,7 @@ public class User
     private long id;
 
     @Column(unique = true)
+    @JsonIgnore
     private String hash;
 
     @Constraints.Email
@@ -51,7 +52,7 @@ public class User
     @JsonIgnore
     private List<LinkedAccount> linkedAccounts;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="authors")
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "authors")
     @JsonIgnore
     private Set<MediaContent> authorOf;
 

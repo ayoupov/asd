@@ -10,7 +10,7 @@
                 <th>Authors</th>
                 <th>Publish</th>
                 <th>Star</th>
-                <th>Preview</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tr id="article_0">
@@ -30,7 +30,10 @@
                     if(a.getStarred) "checked"
                 }>
                 </td>
-                <td class="noedit"><a href="@routes.MediaContents.byTypeAndId("article", a.getId + "", "html")" target="_blank">→</a></td>
+                <td class="noedit">
+                    <a href="@routes.MediaContents.byTypeAndId("article", a.getId + "", "html")" target="_blank">→</a>
+                    <a href="javascript: removeContent('article', @a.getId);"><img src="@routes.Assets.at("images/close_button.png")"></a>
+                </td>
             </tr>
         }
             <tfoot>

@@ -24,8 +24,8 @@ object FileManager extends Controller {
       val userHash = if (localUser == null) User.anonymousHash() else localUser.getHash
       HibernateUtils.commitTransaction()
 
-      val where = ServerProperties.getValue("asd.upload.path") + userHash
-      val webWhere = ServerProperties.getValue("asd.upload.relative.path") + userHash
+      val where = ServerProperties.getValue("asd.upload.path") + "/" + userHash
+      val webWhere = ServerProperties.getValue("asd.upload.relative.path") + "/" + userHash
       new File(where).mkdirs()
       request.body.files.foreach {
         picture =>
@@ -36,10 +36,12 @@ object FileManager extends Controller {
           val outFile: File = new File(path)
           picture.ref.moveTo(outFile, replace = true)
           val setReadableSuccess = outFile.setReadable(true, false)
-          val desc = s"uploaded to $outFile with setReadable success [$setReadableSuccess]"
+//          val desc = s"uploaded to $outFile with setReadable success [$setReadableSuccess]"
+          val desc = s"default description"
           if (!ServerProperties.isInProduction) println(desc)
           Thumber.rethumb(outFile)
           val image = new Image(desc, webPath)
+          image.setUploadedBy(localUser)
           HibernateUtils.beginTransaction()
           HibernateUtils.save(image)
           HibernateUtils.commitTransaction()

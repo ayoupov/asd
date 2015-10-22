@@ -1,7 +1,9 @@
-var $churchStoriesTitle, $passportUpdateButton, $passportGalleryThumbs,
+var $churchStoriesTitle, $passportUpdateButtonWrapper, $passportGalleryThumbs,
     $passportUpdate, $newStoryGallery, $passportGallery, $passportWrapper;
 
 var $passportCurrentImage;
+
+var $overlayArrowUp, $overlayArrowDown;
 
 $(document).ready(function () {
     $passportWrapper = $(".passport-wrapper");
@@ -84,7 +86,6 @@ function resetEdit() {
     $(".passport-data-data", $elem).show();
     $(".passport-data-help", $elem).hide();
     $(".passport-data-actions .passport-value-edit-icon", $elem).show();
-    $(".passport-data-actions .passport-value-save-icon", $elem).hide();
 }
 
 function initFieldUpdates() {
@@ -224,9 +225,9 @@ var commonFieldApi = {
     },
     beforeSend: adjustFieldSettings
 };
-var iconFieldApi = {on : 'click'};
+var iconFieldApi = {on: 'click'};
 $.extend(iconFieldApi, commonFieldApi);
-var inputFieldApi = {on : 'now'};
+var inputFieldApi = {on: 'now'};
 $.extend(inputFieldApi, commonFieldApi);
 
 function initUpdatePassportApi() {
@@ -305,6 +306,7 @@ function initPassportGallery(id) {
     });
 }
 
+var $galleryItems = [];
 function doPassportGallery(data) {
 
     $passportCurrentImage = $("<div class='passport-current-image gallery-unit' />").hide();
@@ -312,21 +314,83 @@ function doPassportGallery(data) {
     $passportGalleryThumbs = $("<div class='passport-gallery-thumbs gallery-unit' />").hide();
     $passportGalleryThumbs.appendTo($passportGallery);
 
-    $passportGallery.on('galleryready', function () {
+    $passportGallery.off('galleryready').on('galleryready', function () {
         _debug('gallery ready');
-        if ($('img', $passportGalleryThumbs).length == 0)
+        $(data).each(function (a, image) {
+            pushGalleryThumb({
+                src: getThumb(image.path),
+                big: image.path,
+                id: image.id,
+                desc: image.description
+            });
+        });
+        $("<div class='gallery-thumb-arrow-down' />").hide().appendTo($passportGalleryThumbs);
+
+        $overlayArrowUp = $(".gallery-thumb-arrow-up")
+            .off('click').on('click', galleryUp);
+        $overlayArrowDown = $(".gallery-thumb-arrow-down")
+            .off('click').on('click', galleryDown);
+        var $thumbs = $('.passport-thumb-image', $passportGalleryThumbs);
+        if ($thumbs.length == 0)
             $('.gallery-unit').hide();
-        else
+        else {
+            $passportGalleryThumbs.data({idx: 0});
+            $thumbs.off('click').on('click', function () {
+                var $thisThumb = $(this);
+                if (!$thisThumb.hasClass('active')) {
+                    $thumbs.removeClass('active');
+                    $thisThumb.addClass('active');
+                    var $galleryItem = $galleryItems[$thisThumb.data('id')];
+                    $passportCurrentImage.html($galleryItem);
+
+                    var desc = $thisThumb.data('description');
+                    if (desc && desc.trim() != '' && desc != 'gsv')
+                        $passportCurrentImage.append(
+                            $("<div class='passport-gallery-large-description' />").html(desc)
+                        );
+                }
+            });
+            // add arrows and scroll behaviour
+            if ($thumbs.length > 5) {
+                $passportGalleryThumbs.off('thumbscroll').on('thumbscroll', thumbscroll);
+            }
+            $($thumbs[0]).trigger('click');
+            $passportGalleryThumbs.trigger('thumbscroll');
             $('.gallery-unit').show();
+        }
+
         $passportWrapper.modal('refresh');
     });
 
+    $("<div class='gallery-thumb-arrow-up' />").hide().appendTo($passportGalleryThumbs);
     appendGSV();
 
-    $(data).each(function (a, image) {
-        pushGalleryThumb($("<img>").attr({src: getThumb(image.path)})
-            .data('big-src', image.path));
-    });
+}
+
+function thumbscroll() {
+    var $thumbs = $(".passport-thumb-image", $passportGalleryThumbs);
+    var scrollPos = $passportGalleryThumbs.scrollTop();
+    _debug(scrollPos);
+    if (scrollPos > 0)
+        $overlayArrowUp.fadeIn();
+    else
+        $overlayArrowUp.fadeOut();
+    if (scrollPos < ($thumbs.length - 5)*80)
+        $overlayArrowDown.fadeIn();
+    else
+        $overlayArrowDown.fadeOut();
+}
+
+function galleryUp() {
+    var scrollPos = $passportGalleryThumbs.scrollTop();
+    $passportGalleryThumbs.scrollTop(scrollPos - 80);
+    thumbscroll();
+}
+
+function galleryDown() {
+    var scrollPos = $passportGalleryThumbs.scrollTop();
+    $passportGalleryThumbs.scrollTop(scrollPos + 80);
+    thumbscroll();
 }
 
 function getThumb(resourceName) {
@@ -334,13 +398,26 @@ function getThumb(resourceName) {
     var name = splitURI.pop();
     var thumbSplit = name.split('.');
     var ext = thumbSplit.pop();
-    var thumbName = thumbSplit.join('.') + '_thumb.' + ext;
+    var thumbName = thumbSplit.join('.') + '_thumb_ed.' + ext;
     splitURI.push(thumbName);
     return splitURI.join('/');
 }
 
-function pushGalleryThumb($elem) {
-    $passportGalleryThumbs.append($("<div class='passport-thumb-image'>").append($elem));
+function pushGalleryThumb(thumbData) {
+
+    if (thumbData && thumbData.src) {
+        $("<div class='passport-thumb-image'>")
+            .css('background', 'transparent url(' + thumbData.src + ') no-repeat center center')
+            .data({id: thumbData.id, description: thumbData.desc})
+            .appendTo($passportGalleryThumbs);
+
+        var big = thumbData.big;
+        if (thumbData.id == 'gsv')
+            $galleryItems[thumbData.id] = big; // having gsv iframe here
+        else
+            $galleryItems[thumbData.id] = $("<div class='passport-gallery-large-image'/>")
+                .css('background', 'transparent url(' + big + ') no-repeat center center');
+    }
 }
 
 function appendGSV() {
@@ -363,10 +440,15 @@ function appendGSV() {
                     "' frameborder='0' style='border:0'" +
                     " src='" + url + "'></iframe>";
                 _debug(gsvElem);
-                $(gsvElem).appendTo($passportCurrentImage);
-                var $gsvThumbElem = $('<img>').attr({src: '/assets/uploads/000000/gsv_thumb.png'})
-                    .data('big-src', '#gsv-special');
-                pushGalleryThumb($gsvThumbElem);
+                var $gsv = $(gsvElem);
+                $gsv.appendTo($passportCurrentImage);
+                var gsvThumbData = {
+                    src: '/assets/uploads/000000/gsv_thumb.png',
+                    big: $gsv,
+                    id: 'gsv',
+                    desc: 'gsv'
+                };
+                pushGalleryThumb(gsvThumbData);
                 $passportCurrentImage.trigger('galleryready');
             } else {
                 _debug('street view returned : ' + status);

@@ -113,6 +113,20 @@ public class HibernateUtils
 //        getSession().close();
     }
 
+    public static boolean delete(Object o)
+    {
+        boolean res = true;
+        try {
+            getSession().delete(o);
+        } catch (Exception e)
+        {
+            res = false;
+            Logger.error("Cannot delete: ", o, e.getMessage());
+        }
+        return res;
+
+    }
+
     public static boolean delete(Class cl, Serializable id)
     {
         boolean res = true;
@@ -121,6 +135,7 @@ public class HibernateUtils
         } catch (Exception e)
         {
             res = false;
+            Logger.error("Cannot delete: ", cl, id, e.getMessage());
         }
         return res;
     }

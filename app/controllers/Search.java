@@ -45,7 +45,7 @@ public class Search extends Controller
 //        }
 //        else
 //        {
-        Json.setObjectMapper(Serializer.entityMapper);
+        Json.setObjectMapper(Serializer.searchMapper);
         result.put("results", Json.toJson(churches));
         result.put("success", "true");
         return ok(result);
@@ -73,7 +73,7 @@ public class Search extends Controller
 //        }
 //        else
 //        {
-        Json.setObjectMapper(Serializer.entityMapper);
+        Json.setObjectMapper(Serializer.searchMapper);
         result.put("results", Json.toJson(content));
 //            result.put("excerpt", Json.toJson())
         result.put("success", "true");

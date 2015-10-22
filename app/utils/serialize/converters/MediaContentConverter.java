@@ -36,7 +36,7 @@ public class MediaContentConverter extends com.fasterxml.jackson.databind.JsonSe
                                 content.getContentType().toString(),
                                 content.getId() + "",
                                 "html")));
-        json.writeStringField("image", content.getCoverThumb().getPath());
+        json.writeStringField("image", content.getCoverThumbPath());
         String authors = content.getAuthors().stream()
                 .map(User::getName)
                 .collect(Collectors.joining(", "));

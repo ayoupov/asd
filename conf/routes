@@ -30,6 +30,8 @@ GET         /article/:id.:ext                      controllers.MediaContents.byT
 GET         /story/:id.:ext                        controllers.MediaContents.byTypeAndId(ctype: String = "story", id: String, ext: String)
 GET         /article/:id                           controllers.MediaContents.byTypeAndId(ctype: String = "article", id: String, ext: String = "html" )
 GET         /story/:id                             controllers.MediaContents.byTypeAndId(ctype: String = "story", id: String, ext: String = "html")
+DELETE      /article/:id                           controllers.MediaContents.remove(ctype: String = "article", id: Long)
+DELETE      /story/:id                             controllers.MediaContents.remove(ctype: String = "story", id: Long)
 GET         /articles/:ids                         controllers.MediaContents.byTypeAndIds(ctype: String = "article", ids: String)
 GET         /stories/:ids                          controllers.MediaContents.byTypeAndIds(ctype: String = "story", ids: String)
 
@@ -49,9 +51,6 @@ GET         /auth/:provider/denied                 controllers.Auth.oAuthDenied(
 
 #role??
 POST        /church/suggest                        controllers.Churches.suggest
-
-# secure, role must be >= User
-POST        /story/new                             controllers.MediaContents.newStory
 
 # secure, role must be >= Moderator
 POST        /files/upload                          controllers.FileManager.upload

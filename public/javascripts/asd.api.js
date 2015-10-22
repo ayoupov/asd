@@ -134,8 +134,8 @@ function populateArticles(data) {
     $articles.isotope('remove', $(".extra-articles"));
     //$("#more-articles-thumb").hide();
     $(data.data).each(function (a, item) {
-        var cover = (item.coverThumb) ? item.coverThumb.path : "";
-        var hover = item.hover;
+        var cover = (item.coverThumbPath) ? item.coverThumbPath : "";
+        var hover = (item.hoverThumbPath) ? item.hoverThumbPath : "";
         var title = item.title;
         var desc = item.coverDescription;
         var id = item.id;
@@ -143,13 +143,13 @@ function populateArticles(data) {
         )
             .append(
             $('<div/>').addClass('image face-content').append(
-                $('<img/>').addClass('ui image').attr('src', cover)
+                $('<div/>').addClass('face-image').css('background-image', 'url(' + cover + ')')
             )
         ).append(
             $('<div/>').addClass('content face-content').append(
                 $('<div/>').addClass('header').html(title)
             ).append(
-                $('<div/>').addClass('description').html(desc + '<br> Wczes')
+                $('<div/>').addClass('description').html(desc)
             )
         ).append(
             $('<div/>').addClass('hover-content').append(
@@ -240,11 +240,11 @@ function populateStories(data) {
     var lastItem = null;
     $stories.isotope('remove', $(".extra-stories"));
     $(data.data).each(function (a, item) {
-        var cover = (item.coverThumb) ? item.coverThumb.path : "";
+        var cover = (item.coverThumbPath) ? item.coverThumbPath : "";
         var title = item.title;
         var lead = item.lead;
         var id = item.id;
-        var desc = item.coverDescription;
+        var desc = (item.coverDescription) ? item.coverDescription : "";
         var $item = $("<div/>").addClass('story thumb').attr('id', 'story_' + id)
             .append(
             $("<div/>").addClass('image').css({

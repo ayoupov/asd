@@ -1,23 +1,27 @@
 package controllers;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.Church;
 import models.MediaContent;
+import models.MediaContentType;
 import models.internal.ChurchSuggestion;
 import models.internal.ChurchSuggestionType;
 import models.internal.ContentManager;
+import models.internal.UserManager;
+import models.user.User;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Security;
+import utils.HibernateUtils;
 import utils.serialize.Serializer;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static utils.HibernateUtils.*;
 import static utils.ServerProperties.isInProduction;
@@ -96,9 +100,51 @@ public class Churches extends Controller
         }
     }
 
+    @Security.Authenticated(Secured.class)
+    // todo: redo with forms
     public static Result addStory()
     {
-        return play.mvc.Results.TODO;
+        ObjectNode result = Json.newObject();
+        Http.RequestBody body = request().body();
+        Map<String, String[]> map = body.asFormUrlEncoded();
+        beginTransaction();
+        User user = UserManager.getLocalUser(session());
+        String jtext = (map.get("text") != null) ? map.get("text")[0] : null,
+                jcover = (map.get("cover") != null) ? map.get("cover")[0] : null,
+                jtitle = (map.get("title") != null) ? map.get("title")[0] : null,
+                jchurch = (map.get("church") != null) ? map.get("church")[0] : null,
+                jyear = (map.get("year") != null) ? map.get("year")[0] : null;
+        String text = null, title = null, coverPath = null;
+        String year = null;
+        Church church = null;
+        if (jtext != null)
+            text = jtext;
+        else
+            return badRequest("text is null");
+        if (jtitle != null)
+            title = jtitle;
+        if (jcover != null) {
+            coverPath = "/" + User.anonymousHash() + ("/church_story_" + jcover + "_thumb_is.png");
+        } else return badRequest("cover is null");
+        if (jyear != null)
+            year = jyear;
+        String coverThumbPath = MediaContents.relativeUploadPath + coverPath;
+        if (jchurch != null)
+            church = ContentManager.getChurch(jchurch);
+        else
+            return badRequest("church is absent");
+        MediaContent c = new MediaContent(MediaContentType.Story, text, title, year, null, coverThumbPath, user, church);
+        c.setId((Long) save(c));
+        Set<MediaContent> media = church.getMedia();
+        if (media == null)
+            media = new LinkedHashSet<>();
+        media.add(c);
+        church.setMedia(media);
+        HibernateUtils.update(church);
+        commitTransaction();
+        result.put("success", true);
+        result.put("id", c.getId());
+        return ok(result);
     }
 
     public static Result addImages()

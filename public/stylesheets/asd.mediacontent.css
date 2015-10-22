@@ -285,6 +285,7 @@ div.content-main-guideline {
     position: fixed;
     height: 100vh;
     border-left: 1px lightseagreen solid;
+    pointer-events: none;
 }
 
 div.content-gap-guideline {
@@ -292,6 +293,7 @@ div.content-gap-guideline {
     height: 100vh;
     border-right: 1px aquamarine dashed;
     float: left;
+    pointer-events: none;
 }
 
 div.content-gap-guideline.last {
@@ -303,4 +305,5 @@ div.content-column-guideline {
     height: 100vh;
     border-right: 1px aquamarine dashed;
     float: left;
+    pointer-events: none;
 }

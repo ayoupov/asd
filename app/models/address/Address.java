@@ -11,9 +11,13 @@ import models.internal.GeographyManager;
 import org.hibernate.annotations.Type;
 import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.search.annotations.Field;
+import play.Logger;
 import utils.serialize.converters.PointConverter;
 
 import javax.persistence.*;
+import java.util.List;
+
+import static models.internal.GeographyManager.findDekanats;
 
 /**
  * Created with IntelliJ IDEA.
@@ -92,14 +96,17 @@ public class Address
         Point point = new Point(new CoordinateArraySequence
                 (new Coordinate[]{new Coordinate(lng, lat)}), new GeometryFactory());
         Geometry geom = point;
-        Address checked = GeographyManager.check(geom);
-        if (checked == null) {
-            this.geometry = point;
-            checked = GeographyManager.add(point, unfolded);
+        this.geometry = point;
+        List<Dekanat> dekanats = findDekanats(point);
+        if (dekanats.size() > 1) {
+            Logger.warn(String.format("Alarma! : %s {%s} is in %d dekanats! ",
+                    unfolded, point.toString(), dekanats.size()));
+            for (Dekanat d : dekanats) {
+                Logger.warn("which are: ", d);
+            }
         }
-        this.geometry = checked.geometry;
-        this.unfolded = checked.unfolded;
-        this.dekanat = checked.dekanat;
+        this.dekanat = dekanats.get(0);
+
     }
 
     public Address()

@@ -171,7 +171,7 @@ function addDekanatsContent() {
             },
             minZoom: 10,
             maxZoom: 18,
-            subdomains : 'abcde'
+            subdomains : 'abc'
         }, {
             style: dekStyle,
             onEachFeature: function (feature, layer) {
@@ -210,7 +210,7 @@ function addChurchContents() {
             },
             minZoom: 10,
             maxZoom: 18,
-            subdomains : 'abcde'
+            subdomains : 'abc'
         }, {
             style: style,
             pointToLayer: function (feature, latlng) {

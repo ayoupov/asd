@@ -23,15 +23,14 @@
             </div>
         </nav>
 
-        <table class="passport-title-wrapper">
-            <tr><td class="church-name" data-field="name"></td> <td class="church-name-edit-icon"><div class="passport-value-edit-icon"></div></td></tr>
-        </table>
+        @*<table class="passport-title-wrapper">*@
+            @*<tr><td class="church-name" data-field="name"></td> <td class="church-name-edit-icon"><div class="passport-value-edit-icon"></div></td></tr>*@
+        @*</table>*@
+        <div class="passport-title-wrapper church-name"></div>
 
         <div class="passport-gallery">
-            <div class="passport-current-image">
-        </div>
-            <div class="passport-gallery-thumbs">
-        </div>
+            <div class="passport-current-image"></div>
+            <div class="passport-gallery-thumbs"></div>
         </div>
 
         <table class="passport-data-wrapper">
@@ -40,11 +39,7 @@
                 <td class="passport-value editable" data-field="address">
                     <div class="passport-data-data"></div>
                     <div class='passport-data-help'>pomóż nam uzupełnić dane</div>
-                    <input type="text" class="passport-data-edit" name="address">
-                    <div class="passport-data-actions">
-                        <div class='passport-value-edit-icon'></div>
-                        <div class='passport-value-save-icon'></div>
-                    </div>
+                    <div class='passport-value-edit-icon passport-data-help'></div>
                 </td>
                 <td class="passport-data-filler"></td>
             </tr>
@@ -53,13 +48,7 @@
                 <td class="passport-value editable" data-field="years">
                     <div class="passport-data-data"></div>
                     <div class='passport-data-help'>pomóż nam uzupełnić dane</div>
-                    <input type="text" class="passport-data-edit church-years-input" name="constructionStart">
-                    <span class="passport-data-edit"> - </span>
-                    <input type="text" class="passport-data-edit church-years-input" name="constructionEnd">
-                    <div class="passport-data-actions">
-                        <div class='passport-value-edit-icon'></div>
-                        <div class='passport-value-save-icon'></div>
-                    </div>
+                    <div class='passport-value-edit-icon passport-data-help'></div>
                 </td>
                 <td class="passport-data-filler"></td>
             </tr>
@@ -68,11 +57,7 @@
                 <td class="passport-value editable" data-field="architects">
                     <div class="passport-data-data"></div>
                     <div class='passport-data-help'>pomóż nam uzupełnić dane</div>
-                    <input type="text" class="passport-data-edit" name="architects">
-                    <div class="passport-data-actions">
-                        <div class='passport-value-edit-icon'></div>
-                        <div class='passport-value-save-icon'></div>
-                    </div>
+                    <div class='passport-value-edit-icon passport-data-help'></div>
                 </td>
                 <td class="passport-data-filler"></td>
             </tr>
@@ -81,15 +66,12 @@
                 <td class="passport-value editable" data-field="website">
                     <div class="passport-data-data"></div>
                     <div class='passport-data-help'>pomóż nam uzupełnić dane</div>
-                    <input type="text" class="passport-data-edit" name="website">
-                    <div class="passport-data-actions">
-                        <div class='passport-value-edit-icon'></div>
-                        <div class='passport-value-save-icon'></div>
-                    </div>
+                    <div class='passport-value-edit-icon passport-data-help'></div>
                 </td>
                 <td class="passport-data-filler"></td>
             </tr>
         </table>
+
         <div class="passport-stories">
             <div class="passport-stories-wrapper">
                 <div class="passport-stories-title">
@@ -120,7 +102,7 @@
                 <a class="item" data-tab="add-images">Add images</a>
             </div>
             <div data-tab="add-story" class="ui tab active">
-                <form action="@routes.MediaContents.newStory" method="POST" class="ui form" data-entity="story">
+                <form action="@routes.Churches.addStory()" method="POST" class="ui form" data-entity="story">
                     <input type="hidden" value="" name="church" id="story-church-id">
                     <label for="story-title">Tytuł</label>
                     <input type="text" class="ui input" id="story-title" name="title" placeholder="Tytuł">

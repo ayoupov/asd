@@ -12,11 +12,13 @@ import utils.seed.geo.DekanatProcessor;
 import utils.seed.geo.DioceseProcessor;
 import utils.seed.geo.MetropolieProcessor;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static utils.HibernateUtils.*;
+import static utils.seed.ChurchImageSeeds.seedChurchImages;
 import static utils.seed.ChurchSeeds.seedChurchesExt;
 import static utils.seed.GeographySeeds.seedGeography;
 
@@ -32,10 +34,21 @@ public class Disseminator
 
     public static void fullSeed() throws IOException
     {
-        userSeed();
+//        userSeed();
         geoSeed();
         churchSeedExt();
-        contentSeed();
+        imageSeed();
+//        contentSeed();
+    }
+
+    public static void imageSeed() throws IOException
+    {
+        File imageDirFile = new File(dataDir + "asd_church_images");
+        if (!imageDirFile.exists())
+            throw new IOException("no data found: " + imageDirFile);
+        beginTransaction();
+        seedChurchImages(imageDirFile);
+        commitTransaction();
     }
 
     private static void churchSeedExt() throws IOException

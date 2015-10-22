@@ -1,7 +1,7 @@
 package controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import models.Church;
 import models.Image;
 import models.MediaContent;
 import models.MediaContentType;
@@ -19,8 +19,8 @@ import play.mvc.Result;
 import play.mvc.Security;
 import play.twirl.api.Html;
 import utils.DataUtils;
-import utils.HibernateUtils;
 import utils.ServerProperties;
+import utils.media.images.Thumber;
 import views.html.mediacontent;
 
 import java.io.*;
@@ -30,7 +30,8 @@ import static utils.DataUtils.safeBool;
 import static utils.DataUtils.safeLong;
 import static utils.HibernateUtils.*;
 import static utils.ServerProperties.isInProduction;
-import static utils.media.images.Thumber.thumbName;
+import static utils.media.images.Thumber.thumbNameWeb;
+import static utils.serialize.Serializer.emptyMapper;
 
 /**
  * Created with IntelliJ IDEA.
@@ -41,8 +42,8 @@ import static utils.media.images.Thumber.thumbName;
 public class MediaContents extends Controller
 {
 
-    private static String absoluteUploadPath = ServerProperties.getValue("asd.upload.path");
-    private static String relativeUploadPath = ServerProperties.getValue("asd.upload.relative.path");
+    public static String absoluteUploadPath = ServerProperties.getValue("asd.upload.path");
+    public static String relativeUploadPath = ServerProperties.getValue("asd.upload.relative.path");
 
     static String publicPath = ServerProperties.getValue("asd.public.path");
 
@@ -62,9 +63,10 @@ public class MediaContents extends Controller
         if (content != null) {
             if (!content.getContentType().equals(type))
                 return badRequest("Wrong content type: " + type);
-            if ("json".equals(ext))
+            if ("json".equals(ext)) {
+                Json.setObjectMapper(emptyMapper);
                 return ok(Json.toJson(content));
-            else {
+            } else {
                 // check if static version exists
                 File dir = new File(publicPath + ctype);
                 File mediaFile = new File(dir, content.getId() + ".html");
@@ -92,13 +94,13 @@ public class MediaContents extends Controller
         out.close();
     }
 
-    public static Result byTypeAndIds(String ctype, String ids) throws RequestException
+    public static Result byTypeAndIds(String ctype, String ids) throws RequestException, JsonProcessingException
     {
         ObjectNode result = Json.newObject();
         MediaContentType mct = MediaContentType.fromString(ctype);
         beginTransaction();
         List<MediaContent> contents = ContentManager.getByIds(ids);
-        result.put("data", Json.toJson(contents));
+        result.put("data", Json.parse(emptyMapper.writeValueAsString(contents)));
         result.put("success", true);
         commitTransaction();
         return ok(result);
@@ -127,10 +129,11 @@ public class MediaContents extends Controller
         if (mcf.hasErrors())
             return badRequest(mcf.errorsAsJson());
         MediaContent content = mcf.get();
-        System.out.println("content = " + Json.toJson(content));
         beginTransaction();
         DynamicForm dynamicForm = Form.form().bindFromRequest(request(), MC_GREYLIST);
         Map<String, String> data = dynamicForm.data();
+
+        System.out.println("preview data = " + data);
 
         // fill in other fields
         // authors
@@ -145,9 +148,10 @@ public class MediaContents extends Controller
         String cover = data.get("cover");
         if (cover != null) {
             content.setCover(findImage(null, cover));
-            String coverThumbPath = thumbName(new File(cover));
-            Image coverThumb = findImage(null, coverThumbPath);
-            content.setCoverThumb(coverThumb);
+            String coverThumbPath = thumbNameWeb(new File(cover), Thumber.ThumbType.ISOTOPE);
+            content.setCoverThumbPath(coverThumbPath);
+            String hoverThumbPath = thumbNameWeb(new File(cover), Thumber.ThumbType.HOVER);
+            content.setHoverThumbPath(hoverThumbPath);
         }
         User user = UserManager.getLocalUser(session());
         String id = user.getHash() + "_" + (new Date().getTime() / 1000);
@@ -158,52 +162,6 @@ public class MediaContents extends Controller
         File mediaFile = new File(dir, id + ".html");
         saveToFS(dir, mediaFile, rendered);
         return ok(Json.newObject().put("success", true).put("previewId", id));
-    }
-
-    @Security.Authenticated(Secured.class)
-    public static Result newStory()
-    {
-        ObjectNode result = Json.newObject();
-        Http.RequestBody body = request().body();
-        Map<String, String[]> map = body.asFormUrlEncoded();
-        beginTransaction();
-        User user = UserManager.getLocalUser(session());
-        String jtext = (map.get("text") != null) ? map.get("text")[0] : null,
-                jcover = (map.get("cover") != null) ? map.get("cover")[0] : null,
-                jtitle = (map.get("title") != null) ? map.get("title")[0] : null,
-                jchurch = (map.get("church") != null) ? map.get("church")[0] : null,
-                jyear = (map.get("year") != null) ? map.get("year")[0] : null;
-        String text = null, title = null, coverPath = null;
-        String year = null;
-        Church church = null;
-        if (jtext != null)
-            text = jtext;
-        else
-            return badRequest("text is null");
-        if (jtitle != null)
-            title = jtitle;
-        if (jcover != null) {
-            coverPath = User.anonymousHash() + ("/church_story_" + jcover + "_thumb.png");
-        } else return badRequest("cover is null");
-        if (jyear != null)
-            year = jyear;
-        Image coverThumb = findImage(null, coverPath);
-        if (jchurch != null)
-            church = ContentManager.getChurch(jchurch);
-        else
-            return badRequest("church is absent");
-        MediaContent c = new MediaContent(MediaContentType.Story, text, title, year, null, coverThumb, user, church);
-        c.setId((Long) save(c));
-        Set<MediaContent> media = church.getMedia();
-        if (media == null)
-            media = new LinkedHashSet<>();
-        media.add(c);
-        church.setMedia(media);
-        HibernateUtils.update(church);
-        commitTransaction();
-        result.put("success", true);
-        result.put("id", c.getId());
-        return ok(result);
     }
 
     @Security.Authenticated(Secured.class)
@@ -236,7 +194,7 @@ public class MediaContents extends Controller
                 jlead = (map.get("lead") != null) ? map.get("lead")[0] : null,
                 jcover = (map.get("cover") != null) ? map.get("cover")[0] : null,
                 jalt = (map.get("alt") != null) ? map.get("alt")[0] : null,
-                jdesc = (map.get("desc") != null) ? map.get("desc")[0] : null,
+                jdesc = (map.get("coverDescription") != null) ? map.get("coverDescription")[0] : null,
                 jtitle = (map.get("title") != null) ? map.get("title")[0] : null;
         Boolean jstarred = (map.get("starred") != null) ? safeBool(map.get("starred")) : false;
         Date jpublishDate = (map.get("approvedDT") != null) ? DataUtils.dateFromReqString(map.get("approvedDT")) : null;
@@ -251,11 +209,21 @@ public class MediaContents extends Controller
             c.setAlt(jalt);
         if (jdesc != null)
             c.setCoverDescription(jdesc);
-        if (jcover != null) {
-            c.setCover(findImage(null, jcover));
-            String coverThumbPath = thumbName(new File(jcover));
-            Image coverThumb = findImage(null, coverThumbPath);
-            c.setCoverThumb(coverThumb);
+        if (jcover != null && !"".equals(jcover)) {
+            Logger.info("updating cover with " + jcover);
+            Image coverImage = findImage(null, jcover);
+            Logger.info("found: " + coverImage);
+            c.setCover(coverImage);
+            if (coverImage == null)
+                c.setCoverThumbPath(null);
+            else {
+                String coverThumbPath = thumbNameWeb(new File(jcover), Thumber.ThumbType.ISOTOPE);
+                c.setCoverThumbPath(coverThumbPath);
+                System.out.println("coverThumbPath = " + coverThumbPath);
+                String hoverThumbPath = thumbNameWeb(new File(jcover), Thumber.ThumbType.HOVER);
+                System.out.println("hoverThumbPath = " + hoverThumbPath);
+                c.setHoverThumbPath(hoverThumbPath);
+            }
         }
         if (jtitle != null)
             c.setTitle(jtitle);
@@ -283,23 +251,34 @@ public class MediaContents extends Controller
         return ok(result);
     }
 
+    @Security.Authenticated(Secured.class)
     public static Result remove(String ctype, long mcid)
     {
         ObjectNode result = Json.newObject();
         beginTransaction();
         result.put("entity", ctype);
         result.put("id", mcid);
-        boolean deleted = delete(MediaContent.class, mcid);
-        result.put("success", deleted);
+        MediaContent mc = (MediaContent) get(MediaContent.class, mcid);
         commitTransaction();
-        if (deleted) {
-            File dir = new File(publicPath + ctype);
-            File mediaFile = new File(dir, mcid + ".html");
-            if (mediaFile.exists())
-                mediaFile.delete();
-            return ok(result);
-        } else
-            return internalServerError(result);
+        if (mc != null) {
+            mc.getAuthors().iterator().forEachRemaining(user -> {
+                user.getAuthorOf().remove(mc);
+            });
+            beginTransaction();
+            boolean deleted = delete(mc);
+            commitTransaction();
+            result.put("success", deleted);
+            if (deleted) {
+                File dir = new File(publicPath + ctype);
+                File mediaFile = new File(dir, mcid + ".html");
+                if (mediaFile.exists())
+                    mediaFile.delete();
+                return ok(result);
+            } else
+                return internalServerError(result);
+        }
+        else
+            return notFound(result);
     }
 
     private static Image findImage(Serializable id, String path)
@@ -312,18 +291,25 @@ public class MediaContents extends Controller
         }
 
         i = ContentManager.findImageByPath(path);
-        if (i != null)
+        if (i != null) {
+            Logger.info("found");
             return i;
+        }
         // fallback option 1
 
         i = ContentManager.findImageByPath(relativeUploadPath + path);
-        if (i != null)
+        if (i != null) {
+            Logger.info("found fo 1");
             return i;
+        }
 
         // fs fallback option 2
         Logger.info("searching for an image with path: " + (absoluteUploadPath + path));
-        if (new File(absoluteUploadPath + path).exists())
+        File lastHope = new File(absoluteUploadPath + path);
+        if (lastHope.exists() && !lastHope.isDirectory()) {
+            Logger.info("found fo 2");
             return new Image("fs fallback option", relativeUploadPath + path);
+        }
         return null;
     }
 

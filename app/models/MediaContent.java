@@ -47,6 +47,7 @@ public class MediaContent
 
     @Column(name = "cover_description")
     @Field
+    @Type(type = "text")
     private String coverDescription;
 
     @Field
@@ -59,16 +60,14 @@ public class MediaContent
 
     public Boolean starred;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinColumn(name = "cover_image_id")
     private Image cover;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "cover_image_thumb_id")
-    private Image coverThumb;
+    private String coverThumbPath;
 
-    //    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    public Set<Image> images;
+    private String hoverThumbPath;
+
     @Column(name = "added_dt")
     private Date addedDT;
 
@@ -76,7 +75,7 @@ public class MediaContent
     @JoinColumn(name = "added_by")
     private User addedBy;
 
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinTable(name = "content_authors")
     private Set<User> authors;
 
@@ -92,14 +91,14 @@ public class MediaContent
     @JsonIgnore
     private Set<Church> churches;
 
-    public MediaContent(MediaContentType contentType, String text, String title, String year, Image cover, Image coverThumb, User addedBy, Church church)
+    public MediaContent(MediaContentType contentType, String text, String title, String year, Image cover, String coverThumbPath, User addedBy, Church church)
     {
         this.contentType = contentType;
         this.text = text;
         this.title = title;
         this.year = year;
         this.cover = cover;
-        this.coverThumb = coverThumb;
+        this.coverThumbPath = coverThumbPath;
         this.authors = Collections.singleton(addedBy);
         this.addedBy = addedBy;
         this.addedDT = new Date();
@@ -285,16 +284,6 @@ public class MediaContent
         this.year = year;
     }
 
-    public void setCoverThumb(Image coverThumb)
-    {
-        this.coverThumb = coverThumb;
-    }
-
-    public Image getCoverThumb()
-    {
-        return coverThumb;
-    }
-
     public Set<Church> getChurches()
     {
         return churches;
@@ -313,5 +302,25 @@ public class MediaContent
     public void setAlt(String alt)
     {
         this.alt = alt;
+    }
+
+    public String getCoverThumbPath()
+    {
+        return coverThumbPath;
+    }
+
+    public void setCoverThumbPath(String coverThumbPath)
+    {
+        this.coverThumbPath = coverThumbPath;
+    }
+
+    public String getHoverThumbPath()
+    {
+        return hoverThumbPath;
+    }
+
+    public void setHoverThumbPath(String hoverThumbPath)
+    {
+        this.hoverThumbPath = hoverThumbPath;
     }
 }

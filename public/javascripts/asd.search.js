@@ -15,7 +15,7 @@ function initSearch()
                     {
                         url : "javascript:addNewChurch();",
                         text : 'dodaj swój kościół'
-                    }
+                    };
                     return response;
                 }
             },
@@ -41,7 +41,7 @@ function initSearch()
 var newChurchInited = false;
 function addNewChurch() {
     $(".new-church-value",$newChurchForm).val("");
-    $("#church-user-hash", $newChurchForm).val(userHash);
+    //$("#church-user-hash", $newChurchForm).val(userHash);
     $newChurchForm.modal('show');
     if (!newChurchInited)
         initAddChurch();

@@ -57,16 +57,23 @@ public class Image
 
     public Image(String filename, User user)
     {
+        this(filename, user, null);
+    }
+
+    public Image(String filename, User user, String description)
+    {
         path = filename;
         uploadedBy = user;
         uploadedTS = new Date();
-        if (user != null && (user.getRole() == UserRole.Administrator || user.getRole() == UserRole.Moderator))
-        {
+        if (user != null && (user.getRole() == UserRole.Administrator || user.getRole() == UserRole.Moderator)) {
             approvedBy = user;
             approvedTS = uploadedTS;
         }
-        description = "uploaded by " + user + " at " + uploadedTS;
-        save(this);
+        if (description == null)
+            this.description = "uploaded by " + user + " at " + uploadedTS;
+        else
+            this.description = description;
+        this.id = (Long) save(this);
     }
 
     public Long getId()
