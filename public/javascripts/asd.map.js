@@ -1,3 +1,5 @@
+var dekanatsEnabled = false;
+
 var feature_paths = {
     metropolies: '/assets/metropolies_wgs84_10percent.topojson',
     diecezje: '/assets/diecezje_wgs84_10percent.topojson'
@@ -63,7 +65,8 @@ var mapInit = function (geostats) {
     //map.scrollWheelZoom.disable();
 
     addChurchContents();
-    addDekanatsContent();
+    if (dekanatsEnabled)
+        addDekanatsContent();
 
     customMetropLayer = L.geoJson(null, {
         style: metropStyle
@@ -125,7 +128,7 @@ var layerChanges = function (e) {
 
     if (zoom < 11) {
         map.removeLayer(churchesLayer);
-        map.removeLayer(dekanatyLayer);
+        if (dekanatsEnabled) map.removeLayer(dekanatyLayer);
         if (zoom >= 8) {
             if (!map.hasLayer(dioCounterLayer)) map.addLayer(dioCounterLayer);
             if (!map.hasLayer(diecezjeLayer)) map.addLayer(diecezjeLayer);
@@ -134,7 +137,7 @@ var layerChanges = function (e) {
     else {
         map.removeLayer(dioCounterLayer);
         map.removeLayer(diecezjeLayer);
-        if (!map.hasLayer(dekanatyLayer)) map.addLayer(dekanatyLayer);
+        if (dekanatsEnabled) if (!map.hasLayer(dekanatyLayer)) map.addLayer(dekanatyLayer);
         if (!map.hasLayer(churchesLayer)) map.addLayer(churchesLayer);
     }
 };
@@ -171,15 +174,15 @@ function addDekanatsContent() {
             },
             minZoom: 10,
             maxZoom: 18,
-            subdomains : 'abc'
+            subdomains: 'abc'
         }, {
             style: dekStyle,
             onEachFeature: function (feature, layer) {
-                    layer.on({
-                        'dblclick': function (ev) {
-                            map.fire('dblclick', ev);
-                        }
-                    });
+                layer.on({
+                    'dblclick': function (ev) {
+                        map.fire('dblclick', ev);
+                    }
+                });
             }
         }
     );
@@ -210,7 +213,7 @@ function addChurchContents() {
             },
             minZoom: 10,
             maxZoom: 18,
-            subdomains : 'abc'
+            subdomains: 'abc'
         }, {
             style: style,
             pointToLayer: function (feature, latlng) {
@@ -231,12 +234,10 @@ function addChurchContents() {
 
 var POPUP_ON_LOAD_ONCE = true;
 
-function navigateFromSearch(id)
-{
+function navigateFromSearch(id) {
     updateHistoryWithChurch(id, "#passport");
-    openPassport(id, function()
-    {
-        map.setView(currentChurch.geometry, 14);
+    openPassport(id, function () {
+        map.setView(currentChurch.address.geometry, 14);
         layerChanges();
     });
 }
@@ -249,10 +250,13 @@ function navigateTo(church, comingBack) {
                 churchesLayer.geojsonLayer.off('layeradd');
                 marker.openPopup();
                 if (location.hash == "#passport")
-                    openPassport(church.extID, comingBack ? function(){
-                        togglePassportUpdateForm();
+                    openPassport(church.extID, comingBack ? function () {
                         // todo: huh? wait for gsv to load?
-                        $passportGallery.on('galleryready', function () {$passportWrapper.parent().scrollTop($passportUpdate.offset().top);});
+                        $passportWrapper.on('passportready', function () {
+                            togglePassportUpdateForm();
+                            $passportWrapper.off('passportready');
+                            //$passportWrapper.parent().scrollTop($passportUpdate.offset().top);
+                        });
                     } : null);
             }
         }
@@ -301,8 +305,7 @@ function whenClicked(e) {
     updateHistoryWithChurch(id);
 }
 
-function updateHistoryWithChurch(id, hash)
-{
+function updateHistoryWithChurch(id, hash) {
     window.history.pushState({}, "",
         "http://" + location.hostname + (port != "" ? ":" + port : "") + "/church/" + id +
         ((hash) ? hash : ""));

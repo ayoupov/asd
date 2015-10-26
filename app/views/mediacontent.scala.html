@@ -22,7 +22,7 @@
             }
         <div class="wrapper">
             @if(preview){
-                @parts.guidelines()
+                @parts.guidelines(true)
             }
             @staticmenu(false)
         <div class="content-main-wrapper">
@@ -31,6 +31,7 @@
         }
         </div>
         <div class="content-cover-image">
+            <div class="content-cover-image-overlay"></div>
             <div class="content-title">
             @content.getTitle
             </div>

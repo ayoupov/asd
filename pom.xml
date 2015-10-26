@@ -38,6 +38,14 @@
             <url>http://download.java.net/maven/2</url>
         </repository>
         <repository>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <id>oss snapshots</id>
+            <name>Sonatype OSS Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+        <repository>
             <id>Hibernate Spatial repo</id>
             <url>http://www.hibernatespatial.org/repository</url>
         </repository>
@@ -66,14 +74,6 @@
             <id>opengeo</id>
             <name>OpenGeo Maven Repository</name>
             <url>http://repo.opengeo.org</url>
-        </repository>
-        <repository>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <id>oss snapshots</id>
-            <name>Sonatype OSS Snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
     </repositories>
 
@@ -112,10 +112,17 @@
             <version>1.2</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- google services deps -->
         <dependency>
             <groupId>com.google.code.geocoder-java</groupId>
             <artifactId>geocoder-java</artifactId>
             <version>0.16</version>
+        </dependency>
+        <dependency>
+            <groupId>se.walkercrou</groupId>
+            <artifactId>google-places-api-java</artifactId>
+            <version>2.1.2</version>
         </dependency>
 
         <dependency>

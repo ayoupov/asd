@@ -5,24 +5,36 @@
     cursor: pointer;
 }
 
+.right.item .close-button
+{
+    margin-right: 16px;
+}
+
 .passport-wrapper {
-    width: 1000px !important;
-    margin-left: -500px !important;
+    width: 980px !important;
+    margin-left: -490px !important;
 }
 
 #passport {
     min-height: 344px;
-    width: 1000px;
+    width: 980px;
 }
 
 #passportmenu-top .item, #passportmenu-bottom .item {
-    height: 40px;
+    height: 55px;
 }
 
 #passportmenu-bottom {
     bottom: 0;
-    border-top: 2px solid rgba(34, 36, 38, .15);
-    border-bottom: 2px solid transparent !important;
+    border-top: 3px solid rgb(236, 236, 236);
+    border-bottom: none !important;
+    margin: 0 !important;
+}
+
+#passportmenu-top {
+    bottom: 0;
+    border-bottom: 3px solid rgb(236, 236, 236) !important;
+    /*border-bottom: 2px solid transparent !important;*/
     margin: 0 !important;
 }
 
@@ -41,22 +53,21 @@
 
 .passport-title-wrapper {
     font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
-    font-size: 32px;
+    font-size: 38px;
     font-weight: bold;
-    height: 100px;
-    max-width: 720px;
+    height: 100%;
+    max-width: 700px;
     text-align: center;
     vertical-align: middle;
-    padding-top: 32px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 40px auto 28px;
+
 }
 
 .passport-value-edit-icon {
     height: 16px;
     width: 16px;
     background: url(/assets/images/add_data_passport.png) center center no-repeat;
-    margin-left: 10px;
+    margin-right: 10px;
     cursor: pointer;
     float: left;
 }
@@ -74,6 +85,10 @@
     width: 3em;
 }
 
+.passport-table-gap {
+    height: 32px;
+}
+
 .passport-data-edit {
     background: transparent;
     border: none;
@@ -82,10 +97,16 @@
 .passport-data-help {
     float: left;
     color: #949494;
+    cursor: pointer;
 }
 
 .passport-data-data {
     float: left;
+    line-height: 1.3em;
+}
+
+.passport-data-data a {
+    color: #5a38db;
 }
 
 .passport-edit-text {
@@ -109,10 +130,11 @@
 }
 
 .passport-gallery {
-    width: 1000px;
+    width: 980px;
     /*max-width: 960px;*/
     margin-left: auto;
     margin-right: auto;
+    position: relative;
 }
 
 .passport-gallery::after {
@@ -127,20 +149,81 @@
     float: left;
 }
 
-.passport-gallery-thumbs {
+.passport-gallery-gsv {
     float: right;
-    height: 480px;
-    overflow-y: hidden;
+    height: 80px;
+    width: 120px;
 }
 
+.passport-gallery-thumbs {
+    float: right;
+    height: 400px;
+    overflow-y: hidden;
+    position: relative;
+}
+
+.passport-gallery-controls {
+    right: 0;
+    height: 400px;
+    position: absolute;
+    top: 80px;
+}
+
+.passport-gallery-control {
+    height: 80px;
+    width: 120px;
+}
+
+.passport-gallery-control.passthrough {
+    pointer-events: none;
+}
+
+.passport-gallery-control.medium-fill {
+    background-color: rgba(0,0,0,0.5);
+}
+
+.passport-gallery-control {
+    width: 120px;
+    height: 80px;
+}
+
+.passport-gallery-control.bubble-event-control {
+    cursor: pointer;
+}
+
+.gallery-thumb-arrow-up {
+    cursor: pointer;
+    opacity: 0.75;
+    background: black url(/assets/images/gallery_thumb_up.png) center center no-repeat;
+}
+
+.gallery-thumb-arrow-down {
+    cursor: pointer;
+    opacity: 0.75;
+    background: black url(/assets/images/gallery_thumb_down.png) center center no-repeat;
+}
+
+
 .passport-thumb-image {
-    width: 140px;
+    width: 120px;
     height: 80px;
     cursor: pointer;
 }
 
-.passport-thumb-image.active {
+.passport-thumb-image.active:not(.gsv) {
     border: 5px white solid;
+}
+
+.passport-thumb-image.active.gsv {
+    background: transparent url(/assets/uploads/000000/gsv_thumb_hover.png) center center no-repeat;
+}
+
+.passport-thumb-image.inactive.gsv {
+    background: transparent url(/assets/uploads/000000/gsv_thumb_inactive.png) center center no-repeat;
+}
+
+.passport-thumb-image.gsv {
+    background: transparent url(/assets/uploads/000000/gsv_thumb.png) center center no-repeat;
 }
 
 .passport-gallery-large-image {
@@ -155,24 +238,9 @@
     background-color: rgba(242,242,242,0.6);
 }
 
-.gallery-thumb-arrow-up {
-    width: 140px;
-    height: 80px;
-    cursor: pointer;
-    opacity: 0.6;
-    background: black url(/assets/images/gallery_thumb_up.png) center center no-repeat;
-    position: absolute;
-    top: 156px;
-}
-
-.gallery-thumb-arrow-down {
-    width: 140px;
-    height: 80px;
-    cursor: pointer;
-    opacity: 0.6;
-    background: black url(/assets/images/gallery_thumb_down.png) center center no-repeat;
-    position: absolute;
-    top: 556px;
+.passport-gallery-large-description-content {
+    margin-left: 20px;
+    line-height: 1.5em;
 }
 
 .passport-data-wrapper {
@@ -192,9 +260,10 @@ td.passport-field-caption {
     text-transform: uppercase;
     font-size: 9pt;
     padding-bottom: 10px;
-    padding-top: 10px;
+    padding-top: 11px;
     padding-right: 18px;
     letter-spacing: 1px;
+    vertical-align: top;
 }
 
 td.passport-value {
@@ -216,16 +285,16 @@ td.passport-data-filler {
     color: #9d9c9c;
 }
 
-.church-has-stories {
-    height: 100px;
-    text-align: center;
-}
+/*.church-has-stories {*/
+    /*height: 100px;*/
+    /*text-align: center;*/
+/*}*/
 
-.church-has-stories h1 {
-    padding-top: 32px;
-    font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
-    font-size: 24px;
-}
+/*.church-has-stories h1 {*/
+    /*padding-top: 32px;*/
+    /*font-family: "Helvetica", "Helvetica Neue Light", sans-serif;*/
+    /*font-size: 24px;*/
+/*}*/
 
 .add-story-wrapper-outer {
     height: 128px;
@@ -243,9 +312,10 @@ td.passport-data-filler {
 }
 
 .passport-update {
-    max-width: 720px;
+    max-width: 100%;
     margin-left: auto;
     margin-right: auto;
+    margin-top: 70px;
 }
 
 .passport-update-button {
@@ -254,26 +324,49 @@ td.passport-data-filler {
     font-size: 18px;
     font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
     font-weight: bold;
-    padding: 10px 68px 10px 10px;
+    padding: 10px 45px 10px 10px;
 }
 
 .passport-update-button-icon {
     /*background: transparent url(/assets/images/add_story_plus.png) center right no-repeat;*/
     /*width: 34px;*/
     /*height: 34px;*/
-    padding-left: 67px;
+    padding-left: 50px;
     /*padding-right: 10px;*/
     padding-top: 1px;
 }
 
 .passport-update-button-wrapper {
-    max-width: 720px;
+    max-width: 470px;
     text-align: center;
     vertical-align: middle;
     padding-top: 32px;
     border: #e1e1e1 5px solid;
     margin: 32px auto;
     cursor: pointer;
+}
+
+.passport-update-button-wrapper.hover {
+    background-color: #5a38db;
+    border-color: #d0b165;
+}
+
+.passport-update-button-wrapper.hover td{
+    color: white;
+}
+.church-stories
+{
+    max-height: 700px;
+    width: 980px;
+}
+
+.passport-stories-title {
+    max-width: 300px;
+    text-align: center;
+    margin: 44px auto 36px;
+    font-family: Arial, "Helvetica", "Helvetica Neue Light", sans-serif;
+    font-weight: bold;
+    font-size: 24px;
 }
 
 .ui.message.pointy {
@@ -301,10 +394,19 @@ td.passport-data-filler {
     border: solid #5a38db 1px;
 }
 
-.story-cover-gallery {
-    margin-left: auto;
-    margin-right: auto;
-    width: 802px;
-    height: 100px;
+.passport-update input::-webkit-input-placeholder,.passport-update textarea::-webkit-input-placeholder
+{
+    color: #D4D4D4 !important;
 }
 
+.passport-update input:-moz-placeholder,.passport-update textarea:-moz-placeholder { /* Firefox 18- */
+    color: #D4D4D4 !important;
+}
+
+.passport-update input::-moz-placeholder,.passport-update textarea::-moz-placeholder {  /* Firefox 19+ */
+    color: #D4D4D4 !important;
+}
+
+.passport-update input:-ms-input-placeholder,.passport-update textarea:-ms-input-placeholder {
+    color: #D4D4D4 !important;
+}

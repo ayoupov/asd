@@ -79,7 +79,7 @@ function removeContent(ctype, id)
         },
         method : 'DELETE'
     });
-    location.reload();
+    location.reload(true);
 }
 
 function initAdmSelectorCache() {

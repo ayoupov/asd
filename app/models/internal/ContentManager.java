@@ -39,8 +39,10 @@ public class ContentManager
             for (String rawId : split) {
                 Long id = Long.parseLong(rawId);
                 MediaContent content = (MediaContent) session.get(MediaContent.class, id);
-                if (content.getApprovedDT() != null || skipApproval)
-                    res.add(content); // todo: more verbose in case of unapproved request?
+                if (content != null) {
+                    if (content.getApprovedDT() != null || skipApproval)
+                        res.add(content); // todo: more verbose in case of unapproved request?
+                }
             }
         } catch (Exception e) {
             throw new RequestException(e);
@@ -385,6 +387,11 @@ public class ContentManager
             return (MediaContent) getSession().get(MediaContent.class, simpleId);
         return (MediaContent) getSession().createQuery("from MediaContent mc where mc.alt = :aid")
                 .setParameter("aid", id).setMaxResults(1).setCacheable(true).uniqueResult();
+    }
+
+    public static List<Church> getUninternetedChurches()
+    {
+        return getSession().createQuery("from Church c where c.website is null").list();
     }
 
 //    public static List<User> parseUserList(Set<Long> userList )

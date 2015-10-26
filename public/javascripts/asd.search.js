@@ -14,7 +14,7 @@ function initSearch()
                     response["action"] =
                     {
                         url : "javascript:addNewChurch();",
-                        text : 'dodaj swój kościół'
+                        text : 'Nie możesz znaleźć? Dodaj kościół do bazy!'
                     };
                     return response;
                 }
@@ -40,15 +40,13 @@ function initSearch()
 }
 var newChurchInited = false;
 function addNewChurch() {
-    $(".new-church-value",$newChurchForm).val("");
-    //$("#church-user-hash", $newChurchForm).val(userHash);
-    $newChurchForm.modal('show');
+    $suggestionWrapper.modal('show');
     if (!newChurchInited)
         initAddChurch();
 }
 
 function initAddChurch() {
-    $(".submit.button", $newChurchForm).api({
+    $(".submit.button", $suggestionWrapper).api({
         on: 'click',
         action: 'suggest church',
         method: 'POST',

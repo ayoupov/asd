@@ -53,12 +53,12 @@ var uiInit = function () {
     // scroll bindings
     $(window).on('scroll', scrollFunc);
     // and window resize
-    window.onresize = resizeFunc;
+    $(window).on('resize', resizeFunc);
     changeSearchPrompt();
     bindAPI();
     initSearch();
     // set focus to search
-    $prompt.focus();
+    //$prompt.focus();
 };
 
 var changeSearchPrompt = function () {
@@ -66,22 +66,40 @@ var changeSearchPrompt = function () {
     if ($prompt.is(":focus")) {
         switch (slide) {
             case "map":
-                $prompt.attr('placeholder', "Adres lub nazwa kościoła");
+                $prompt.attr('placeholder', "Wpisz nazwę lub adres");
                 $searchWrapper.data('searchable', 'churches');
                 break;
             case "articles":
-                $prompt.attr('placeholder', "Słowo do wyszukiwania (articles)");
+                $prompt.attr('placeholder', "Szukaj w artykułach");
                 $searchWrapper.data('searchable', 'article');
                 break;
             case "stories":
-                $prompt.attr('placeholder', "Słowo do wyszukiwania (stories)");
+                $prompt.attr('placeholder', "Szukaj we wspomnieniach");
                 $searchWrapper.data('searchable', 'story');
                 break;
         }
         $prompt.css('font-size', '11pt');
     } else {
-        $prompt.attr('placeholder', "szukaj");
-        $prompt.css('font-size', '18pt');
+        switch (slide) {
+            case "map":
+                $prompt.attr('placeholder', "znajdź swój kościół");
+                break;
+            default :
+                $prompt.attr('placeholder', "szukaj");
+                break;
+        }
+        if (!$prompt.val())
+            $prompt.css('font-size', '18pt');
+    }
+    switch (slide)
+    {
+        case "map":
+        case "stories":
+        case "articles":
+            $prompt.parent().css('visibility', 'visible');
+            break;
+        default :
+            $prompt.parent().css('visibility', 'hidden');
     }
 };
 
@@ -128,7 +146,7 @@ var resizeFunc = function () {
     var margin = parseFloat($('.media-container').css('margin-left'));
     $(".social-links").css({
         'bottom': menuOffsetTop + 'px',
-        'margin-left' : (margin + 10) + 'px'
+        'margin-left' : (margin + 20) + 'px'
     });
     // resize map (take care of position prop of slide!)
     $map.css({
@@ -149,6 +167,7 @@ var resizeFunc = function () {
     var $stransition = $('.slide-transition');
     var stransition = $stransition.width();
     $stransition.css({left: (wwidth - stransition) / 2});
+    $(".slide-stories-left-filler").width($dateStories.width() + $dateStories.offset().left);
 };
 
 var followMenu = function () {
@@ -174,6 +193,7 @@ var toggleAbout = function (action) {
             angle: 0,
             animateTo: 180
         });
+        $prompt.focus();
     }
     $shrunkContent.toggle(200);
     $content.toggle(200);

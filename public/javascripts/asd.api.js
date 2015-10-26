@@ -5,13 +5,13 @@ var api =
     'get stories': '/stories/{ids}',
     'get article': '/article/{id}',
     'get story': '/story/{id}',
-    'get church passport' : '/church/passport/{id}',
-    'add church story' : '/church/story',
-    'get church images' : '/church/{id}/images',
-    'add church images' : '/church/images',
-    'update passport field' : '/church/passport/{field}',
-    'search' : '/search/{$searchable}/{query}',
-    'suggest church' : '/church/suggest'
+    'get church passport': '/church/passport/{id}',
+    'add church story': '/church/story',
+    'get church images': '/church/{id}/images',
+    'add church images': '/church/images',
+    'update passport field': '/church/passport/{field}',
+    'search': '/search/{$searchable}/{query}',
+    'suggest church': '/church/suggest'
 };
 
 // ss = starStories, sa = starArticles, ds = dateStories, da = dateArticles
@@ -93,89 +93,13 @@ var applySummary = function (response) {
     mapInit(response.data['geostats']);
 };
 
-function getNext(key, q) {
-    var res = [];
-    var pushed = 0;
-    for (var i = 0; i < q; i++) {
-        if (contentLeft(key) > 0) {
-            var id = contentCache[key].ids[contentCache[key].idx + i];
-            if (typeof id !== "undefined") {
-                res.push(id[0]);
-                pushed++;
-            }
-        }
-        else
-            break;
-    }
-    contentCache[key].idx += Math.min(q, pushed);
-    _debug(res.join(','));
-    return res.join(",");
-}
-
-function contentLeft(key) {
-    var left = contentCache[key].ids.length - contentCache[key].idx;
-    return left < 0 ? 0 : left;
-}
-
-function starsort(arr) {
-    var starred = [];
-    var notStarred = [];
-    for (var item in arr) {
-        if (arr[item][1])
-            starred.push(arr[item]);
-        else
-            notStarred.push(arr[item]);
-    }
-    return shuffle(starred).concat(shuffle(notStarred));
-}
-
 function populateArticles(data) {
-    var lastItem = null;
-    $articles.isotope('remove', $(".extra-articles"));
-    //$("#more-articles-thumb").hide();
-    $(data.data).each(function (a, item) {
-        var cover = (item.coverThumbPath) ? item.coverThumbPath : "";
-        var hover = (item.hoverThumbPath) ? item.hoverThumbPath : "";
-        var title = item.title;
-        var desc = item.coverDescription;
-        var id = item.id;
-        var $item = $('<div/>').addClass('article thumb').attr('id', 'article_' + id
-        )
-            .append(
-            $('<div/>').addClass('image face-content').append(
-                $('<div/>').addClass('face-image').css('background-image', 'url(' + cover + ')')
-            )
-        ).append(
-            $('<div/>').addClass('content face-content').append(
-                $('<div/>').addClass('header').html(title)
-            ).append(
-                $('<div/>').addClass('description').html(desc)
-            )
-        ).append(
-            $('<div/>').addClass('hover-content').append(
-                $('<div/>').addClass('cover')
-            ).append(
-                $('<div/>').addClass('back-image').css('background-image', 'url(' + hover + ')')
-            ).append(
-                $('<div/>').addClass('hover-icon').append(
-                    $("<img/>").attr('src', '/assets/images/hover-icon.png')
-                )
-            ).append(
-                $('<div/>').addClass('more-button').html('Czytaj')
-            )
-        ).append(
-            $('<div/>').addClass('shameful-underline violet face-content')
-        ).append(
-            $('<div/>').addClass('shameful-underline white hover-content')
-        );
-        $articles.append($item);
-        $articles.isotope('appended', $item);
-        lastItem = $item;
-    });
+    $articles.isotope('remove', $(".extra-article"));
+    var lastItem = inhabitThumbs($articles, 'article', data.data);
     var whatsleft = contentLeft('sa');
     //_debug('whatsleft: '  + whatsleft);
     if (whatsleft > 0) {
-        var $more = $("<div/>").attr('id', 'more-articles-thumb').addClass('extra-articles article thumb center-more grayish').append(
+        var $more = $("<div/>").attr('id', 'more-article-thumb').addClass('extra-article article thumb center-more grayish').append(
             $('<div/>').addClass('more-wrapper white-bordered').append(
                 $('<div/>').addClass('more').html('Więcej ' + whatsleft)
             )
@@ -204,15 +128,15 @@ function populateArticles(data) {
             hoverContent.hide();
         }
     });
-    $('.article:not(.extra-articles)').off('click').on('click', function () {
-        window.open('/article/' + getId($(this)));
-    });
+    //$('.article:not(.extra-articles)').off('click').on('click', function () {
+    //    window.open('/article/' + getId($(this)));
+    //});
+    bindThumbEvents($articles, 'article');
     hackStories();
 }
 
 var transitionOnceFlag = false;
-function hackStories()
-{
+function hackStories() {
     // hack to move to stories slide
     if (location.hash == "#slide-stories" && !transitionOnceFlag) {
         transitionOnceFlag = true;
@@ -221,7 +145,7 @@ function hackStories()
 }
 
 function appendArticleApi(when) {
-    var $more = $(".extra-articles");
+    var $more = $(".extra-article");
     $more.api(
         {
             action: 'get articles',
@@ -237,37 +161,14 @@ function appendArticleApi(when) {
 }
 
 function populateStories(data) {
-    var lastItem = null;
-    $stories.isotope('remove', $(".extra-stories"));
-    $(data.data).each(function (a, item) {
-        var cover = (item.coverThumbPath) ? item.coverThumbPath : "";
-        var title = item.title;
-        var lead = item.lead;
-        var id = item.id;
-        var desc = (item.coverDescription) ? item.coverDescription : "";
-        var $item = $("<div/>").addClass('story thumb').attr('id', 'story_' + id)
-            .append(
-            $("<div/>").addClass('image').css({
-                    background: 'transparent url(' + cover + ') center center no-repeat'
-            }))
-            .append(
-            $("<div/>").addClass('content').append(
-                $("<div/>").addClass('header').html(title)
-            ).append(
-                $("<div/>").addClass('description').html(desc)
-            )
-        ).append(
-            $("<div/>").addClass('golden shameful-underline')
-        );
 
-        $stories.append($item);
-        $stories.isotope('appended', $item);
-        lastItem = $item;
-    });
+    $stories.isotope('remove', $(".extra-story"));
+
+    var lastItem = inhabitThumbs($stories, 'story', data.data);
 
     var whatsleft = contentLeft('ss');
     if (whatsleft > 0) {
-        var $more = $("<div/>").attr('id', 'more-stories-thumb').addClass('extra-stories story thumb center-more white').append(
+        var $more = $("<div/>").attr('id', 'more-story-thumb').addClass('extra-story story thumb center-more white').append(
             $('<div/>').addClass('more-wrapper grayish-bordered').append(
                 $('<div/>').addClass('more').html('Więcej ' + whatsleft)
             )
@@ -277,14 +178,11 @@ function populateStories(data) {
         appendStoryApi();
     }
     $stories.isotope();
-    $('.story:not(.extra-stories)').off('click').on('click', function () {
-        window.open('/story/' + getId($(this)));
-    });
-
+    bindThumbEvents($stories, 'story');
 }
 
 function appendStoryApi(when) {
-    var $more = $(".extra-stories");
+    var $more = $(".extra-story");
     $more.api(
         {
             action: 'get stories',
@@ -319,9 +217,7 @@ function populateDateStories(data) {
     $(data.data).each(function (a, item) {
         var title = item.title;
         var dt = new Date(item.approvedDT);
-        var dtStr = ((dt.getDay() < 10) ? '0' : '') + dt.getDay() +
-            '/' +
-            ((dt.getMonth() < 10) ? '0' : '') + dt.getMonth() + '/' + dt.getUTCFullYear() % 100;
+        var dtStr = ddmmyy(dt);
         var $item = $("<div/>").addClass('item')
             .append(
             $("<div/>").addClass('asd-item-wrap')
@@ -341,6 +237,11 @@ function populateDateStories(data) {
         );
 
         $dateStories.append($item);
+    });
+    $(".item", $dateStories).hover(function () {
+        $(this).addClass('active');
+    }, function () {
+        $(this).removeClass('active');
     });
 }
 

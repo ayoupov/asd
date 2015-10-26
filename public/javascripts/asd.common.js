@@ -1,6 +1,6 @@
 var $map, $menu, $slide1, $slide2, $slide3, $slide4, $prompt, $links, $about;
 var $articles, $stories, $dateStories;
-var $searchWrapper, $newChurchForm;
+var $searchWrapper, $suggestionWrapper;
 
 var initSelectorCache = function () {
     $map = $("#map");
@@ -16,7 +16,7 @@ var initSelectorCache = function () {
     $articles = $(".articles");
     $stories = $(".stories");
     $dateStories = $("#stories-by-date");
-    $newChurchForm = $(".new-church-form");
+    $suggestionWrapper = $(".suggestion-wrapper");
 };
 
 $(document).ready(function () {

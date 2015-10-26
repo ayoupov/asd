@@ -90,26 +90,29 @@
 
 .left-container {
     float: left;
-    width: 216px;
+    width: 220px;
     background-color: #f2f2f2;
     height: 100%;
     z-index: 20;
+    position: relative;
+    left: 20px;
 }
 
 .right-container {
-    float: right;
-    width: 735px;
+    float: left;
+    width: 720px;
     padding-top: 10px;
     background-color: #e8e8e8;
     z-index: 20;
+    margin-left: 20px;
 }
 
 .thumb {
-    width: 225px;
+    width: 220px;
     height: 330px;
     background-color: white;
     /* gutter */
-    margin: 10px;
+    margin: 10px 0 10px 20px;
     padding: 0;
     cursor: pointer;
 }
@@ -128,18 +131,22 @@
 }
 
 .story .content, .article .content {
-    height: 58%;
+    height: 186px;
+    overflow-y: hidden;
 }
 
 .story .content .header, .article .content .header {
     font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
     font-weight: bold;
     text-transform: uppercase;
-    font-size: 8pt;
+    font-size: 9pt;
     text-align: center;
     background-color: white;
-    padding: 1em;
+    /*padding: 1em;*/
     /*height: 30%;*/
+    margin-top: 20px;
+    margin-left: 26px;
+    margin-right: 26px;
 }
 
 .story .content .description, .article .content .description {
@@ -147,7 +154,11 @@
     font-size: 8pt;
     text-align: center;
     background-color: white;
-    padding-bottom: 0.5em;
+    /*padding-bottom: 0.5em;*/
+    margin-left: 22px;
+    margin-right: 22px;
+    margin-top: 14px;
+    line-height: 1.5em;
     /*height: 70%;*/
 }
 
@@ -255,7 +266,7 @@ div.holder-border {
 }
 
 #about .about-header {
-    font-family: "Helvetica", "Helvetica Neue Light", "Lucida Grande", "Calibri", "Arial", sans-serif;
+    font-family: "Helvetica", "Helvetica Neue Light", "Arial", sans-serif;
     font-size: 26pt;
     font-weight: bold;
     text-transform: uppercase;
@@ -272,7 +283,7 @@ div.holder-border {
     padding-right: 5px;
 }
 
-#about .shameful-underline {
+#about .thumb-stroke {
     background-color: black;
     margin-top: 25px;
     width: 12.5%;
@@ -292,7 +303,7 @@ div.holder-border {
     position: absolute;
     right: 22px;
     bottom: 27px;
-    font-family: "Helvetica", "Helvetica Neue Light", "Lucida Grande", "Calibri", "Arial", sans-serif;
+    font-family: "Helvetica", "Helvetica Neue Light", "Arial", sans-serif;
     color: white;
     font-weight: bold;
     font-size: 18pt;
@@ -310,7 +321,7 @@ div.holder-border {
     filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
 }
 
-.menu .shameful-underline {
+.menu .thumb-stroke {
     background-color: black;
 }
 
@@ -325,6 +336,15 @@ div.holder-border {
 #slide-stories {
     background-color: #e8e8e8;
     padding-top: 70px;
+    position: relative;
+}
+
+.slide-stories-left-filler
+{
+    position: absolute;
+    top: 0;
+    height: 100%;
+    background-color: #f2f2f2;
 }
 
 #slide-about {
@@ -332,11 +352,11 @@ div.holder-border {
     padding-top: 100px;
 }
 
-.hover-content:not(.shameful-underline) {
+.hover-content:not(.thumb-stroke) {
     height: 100%;
 }
 
-.hover-content.shameful-underline {
+.hover-content.thumb-stroke {
     margin-top: -5px;
 }
 
@@ -413,12 +433,12 @@ div.holder-border {
 
 #slide-about .column.role {
     float: left;
-    width: 50%;
+    width: 220px;
 }
 
 #slide-about .column:not(.role) {
     float: right;
-    width: 50%;
+    width: 220px;
 }
 
 #slide-about .row::after {
@@ -434,7 +454,7 @@ div.holder-border {
 
 /* 30 top + 20 from previous row*/
 #slide-about .row.last {
-    padding-top: 30px;
+    /*padding-top: 30px;*/
     display: block;
     padding-bottom: 50px;
 }
@@ -540,4 +560,20 @@ div.holder-border {
     line-height: 68px;
 }
 
-/*.new-church-form*/
+.story .thumb-stroke.face-content {
+    background-color: #d0b165;
+}
+
+.article .thumb-stroke.face-content {
+    background-color: #5a38db;
+}
+
+.article .thumb-stroke.hover-content {
+    background-color: white;
+}
+
+.suggestion-wrapper {
+    width: 980px !important;
+    margin-left: -490px !important;
+    background-color: #f2f2f2 !important;
+}

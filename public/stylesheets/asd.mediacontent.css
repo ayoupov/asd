@@ -6,14 +6,19 @@
 .content-cover-image {
     height: 500px;
     max-height: 500px;
-    /*max-width: 960px;*/
     width: 100%;
     margin-left: auto;
     margin-right: auto;
     margin-top: 60px;
-    /* these two options are inserted in head */
-    /*background: url(../images/44_cover.jpg) center;*/
-    /*background-size: cover;*/
+    position: relative;
+}
+
+.content-cover-image-overlay {
+    height: 100%;
+    width: 100%;
+    background: transparent url(/assets/images/article_cover_overlay.png) center;
+    position: absolute;
+    opacity: 0.5;
 }
 
 .content-title {
@@ -23,7 +28,7 @@
     line-height: 1em;
     font-size: 31pt;
     font-weight: bold;
-    font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
+    font-family: "Helvetica", "Helvetica Neue Light", Arial, sans-serif;
     text-align: center;
 }
 
@@ -278,32 +283,4 @@ div.content-afterwords-wrapper {
 
 div.gap {
     width: 100%;
-}
-
-div.content-main-guideline {
-    width: 981px;
-    position: fixed;
-    height: 100vh;
-    border-left: 1px lightseagreen solid;
-    pointer-events: none;
-}
-
-div.content-gap-guideline {
-    width: 20px;
-    height: 100vh;
-    border-right: 1px aquamarine dashed;
-    float: left;
-    pointer-events: none;
-}
-
-div.content-gap-guideline.last {
-    border-right: 1px lightseagreen solid !important;
-}
-
-div.content-column-guideline {
-    width: 100px;
-    height: 100vh;
-    border-right: 1px aquamarine dashed;
-    float: left;
-    pointer-events: none;
 }

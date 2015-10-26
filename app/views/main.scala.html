@@ -1,22 +1,21 @@
+@import models.user.User
 @import play.libs.Json
 @import utils.ServerProperties
 @import utils.serialize.Serializer
-@import models.user.User
-@(churchCount: Long, currentChurch : Church, user: User)
-
+@(churchCount: Long, currentChurch: Church, user: User)
 <!DOCTYPE html>
-
 <html lang="pl">
     <head>
         <meta charset="UTF-8">
         <title>Architektura Siódmego Dnia</title>
-            @parts.heads.commonhead()
-            @parts.heads.maphead()
-            @parts.heads.indexhead()
-            @parts.heads.metas()
-    </head>
+        @parts.heads.commonhead()
+        @parts.heads.maphead()
+        @parts.heads.indexhead()
+        @parts.heads.metas()
+        </head>
     <body>
         <div class="wrapper">
+            @* @parts.guidelines(true) *@
             @staticmenu(true)
             @sociallinks()
             @parts.main.mainslide1(churchCount)
@@ -24,8 +23,9 @@
             @parts.main.mainslide3()
             @parts.main.mainslide4(ServerProperties.getValue("facebook.url"))
             <div class="ui modal passport-wrapper">
-            @parts.passport(currentChurch, routes.Application.index(null).absoluteURL(), user)
-            @parts.newchurch(user)
+                @* @parts.guidelines(false) *@
+                @parts.passport(currentChurch, user)
+                @parts.suggestion(user)
             </div>
         </div>
         <script>
@@ -34,7 +34,7 @@
             userAuthed = true;
             userName = '@user.getName';
             console.log(userAuthed);
-        } else {
+            } else {
             userAuthed = false;
             userName = '';
             console.log('not authed');
@@ -48,10 +48,9 @@
         var churchTilesURL = 'http://' + location.hostname + (port != "" ? ":" + port : "") + '/tiles/c/{z}/{x}/{y}.json';
         var dekanatTilesURL = 'http://' + location.hostname + (port != "" ? ":" + port : "") + '/tiles/d/{z}/{x}/{y}.json';
         }
-        @if(currentChurch != null) {
-        @Json.setObjectMapper(Serializer.shallowChurchMapper)
-        var currentChurch = JSON.parse($('<div/>').html('@Json.toJson(currentChurch).toString').text());
-        }
+            @if(currentChurch != null) {
+                @Json.setObjectMapper(Serializer.shallowChurchMapper)
+        var currentChurch = @{Html(Json.toJson(currentChurch).toString)};}
         </script>
     </body>
 </html>

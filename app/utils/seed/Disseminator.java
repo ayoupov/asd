@@ -1,12 +1,18 @@
 package utils.seed;
 
+import models.Church;
 import models.MediaContent;
 import models.MediaContentType;
+import models.internal.ContentManager;
 import models.internal.MockIdentity;
 import models.internal.UserManager;
 import models.user.User;
 import models.user.UserRole;
 import models.user.UserStatus;
+import play.Logger;
+import se.walkercrou.places.GooglePlaces;
+import se.walkercrou.places.Photo;
+import se.walkercrou.places.Place;
 import utils.ServerProperties;
 import utils.seed.geo.DekanatProcessor;
 import utils.seed.geo.DioceseProcessor;
@@ -15,6 +21,7 @@ import utils.seed.geo.MetropolieProcessor;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import static utils.HibernateUtils.*;
@@ -38,7 +45,46 @@ public class Disseminator
         geoSeed();
         churchSeedExt();
         imageSeed();
+//        websitesSeed();
 //        contentSeed();
+    }
+
+    public static void websitesSeed()
+    {
+        GooglePlaces client = new GooglePlaces(ServerProperties.getValue("google.api.key"));
+        int radius = 200;
+        int total = 0;
+        beginTransaction();
+        List<Church> churches = ContentManager.getUninternetedChurches();
+        Logger.info(churches.size() + " of uninterneted churches");
+        for (Church church : churches)
+        {
+            List<Place> places = client.getNearbyPlaces(
+                    church.address.getGeometry().getCoordinate().y,
+                    church.address.getGeometry().getCoordinate().x,
+                    radius, 1);
+            Place place;
+            Logger.info(church.getExtID() + " : " + places.size() + " : " + places);
+            if (places.size() > 0 && (place = places.get(0)) != null)
+            {
+                Place detailed = place.getDetails();
+                if (detailed != null) {
+                    String website = detailed.getWebsite();
+                    if (website != null) {
+                        church.setWebsite(website);
+                        saveOrUpdate(church);
+                        total++;
+                        Logger.info(String.format("found site for %s : %s", church.getExtID(), website));
+                    }
+                    List<Photo> photos = detailed.getPhotos();
+                    if (photos != null && photos.size() > 0) {
+                        Logger.info("But found photos, eg: ", photos.get(0).getReference());
+                    }
+                }
+            }
+        }
+        Logger.info("Total websites found: " + total);
+        commitTransaction();
     }
 
     public static void imageSeed() throws IOException

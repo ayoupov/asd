@@ -12,7 +12,9 @@ import utils.media.images.Thumber;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static models.internal.UserManager.getAutoUser;
 import static org.apache.commons.io.FileUtils.copyFile;
@@ -42,16 +44,17 @@ public class ChurchImageSeeds
             String extID = beautify(churchDir.getName());
             Church church = ContentManager.getChurch(extID);
             if (church != null) {
+                Set<String> processedFiles = new HashSet<>();
                 List<Image> churchImages = church.getImages();
                 if (churchImages == null)
                     churchImages = new ArrayList<>();
                 int imageCount = churchImages.size();
+                int thisChurchFileFails = 0;
                 churchCount++;
                 // instead of description.txt, take first .txt file
                 File description = takeFirstTxt(churchDir);
                 if (description != null) {
                     String line;
-                    int thisChurchFileFails = 0;
                     try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(description), "UTF-8"))) {
                         while ((line = br.readLine()) != null) {
                             try {
@@ -64,27 +67,45 @@ public class ChurchImageSeeds
                                 String desc = "";
                                 if (split.length > 1)
                                     desc = split[1];
-                                Pair<File, String> whereFileAndImagePath = createPathAndCopy(imageFile, church.getExtID());
-                                Image image = new Image(whereFileAndImagePath.getRight(), user, desc);
-                                Thumber.rethumb(whereFileAndImagePath.getLeft());
-                                churchImages.add(image);
+                                churchImages.add(processImage(user, church, imageFile, desc));
+                                processedFiles.add(imageFile.getName());
                             } catch (Exception e) {
                                 Logger.error("while parsing: ", e);
                                 thisChurchFileFails++;
                             }
                         }
                     }
-                    if (churchImages.size() > imageCount) {
-                        church.setImages(churchImages);
-                        saveOrUpdate(church);
+                } else Logger.warn("No description file found on " + extID);
+                File[] images = churchDir.listFiles(JpegFileFilter.instance());
+                for (File image : images)
+                {
+                    if (!processedFiles.contains(image.getName())) {
+                        churchImages.add(processImage(user, church, image, null));
+                        processedFiles.add(image.getName());
                     }
-                    if (thisChurchFileFails == 0)
-                        churchSuccess++;
-                } else fileFail++;
+                }
+                if (churchImages.size() > imageCount) {
+                    church.setImages(churchImages);
+                    saveOrUpdate(church);
+                }
+                if (thisChurchFileFails == 0)
+                    churchSuccess++;
+                Logger.info(String.format("%s : added %d images", extID, processedFiles.size()));
+            } else
+            {
+                Logger.error("Church not found: " + extID);
             }
         }
         Logger.info("Seeded images: ");
         Logger.info(String.format("Dirs/Churches/ChurchSuccess/FileFails: %d/%d/%d/%d", dirCount, churchCount, churchSuccess, fileFail));
+    }
+
+    public static Image processImage(User user, Church church, File imageFile, String desc) throws IOException
+    {
+        Pair<File, String> whereFileAndImagePath = createPathAndCopy(imageFile, church.getExtID());
+        Image image = new Image(whereFileAndImagePath.getRight(), user, desc);
+        Thumber.rethumb(whereFileAndImagePath.getLeft(), Thumber.ThumbType.EDITORIAL);
+        return image;
     }
 
     private static File takeFirstTxt(File churchDir)
@@ -109,9 +130,25 @@ public class ChurchImageSeeds
 
     private static Pair<File, String> createPathAndCopy(File imageFile, String extID) throws IOException
     {
-        String updatedFilename = extID + "_" + imageFile.getName();
+        String updatedFilename = extID + "_" + imageFile.getName().replace(' ','_');
         File destFile = new File(where() + "/" + updatedFilename);
         copyFile(imageFile, destFile);
         return Pair.of(destFile, webWhere() + "/" + updatedFilename);
+    }
+
+    private static class JpegFileFilter implements FilenameFilter
+    {
+        private static JpegFileFilter instance = new JpegFileFilter();
+
+        public static FilenameFilter instance()
+        {
+            return instance;
+        }
+
+        @Override
+        public boolean accept(File dir, String name)
+        {
+            return name.endsWith(".jpg");
+        }
     }
 }

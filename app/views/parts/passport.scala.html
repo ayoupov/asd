@@ -1,153 +1,164 @@
 @import models.user.User
-@(church: Church = null, from: String, user: User)
-    @backLink() = @{
-        from + "/church/" + church.getExtID
-    }
-    <script src="@routes.Assets.at("javascripts/asd.passport.js")"></script>
-    <div id="fb-root"></div>
-    <script>(function (d, s, id){var js, fjs = d.getElementsByTagName(s)[0];if (d.getElementById(id)) return;
+@(church: Church = null, user: User)
+<script src="@routes.Assets.at("javascripts/asd.passport.js")"></script>
+<div id="fb-root"></div>
+<script>(function (d, s, id){var js, fjs = d.getElementsByTagName(s)[0];if (d.getElementById(id)) return;
     js = d.createElement(s);js.id = id;js.src = '//connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v2.4&appId=475989659250668';
     fjs.parentNode.insertBefore(js, fjs);}(document, 'script', 'facebook-jssdk'));</script>
-    <script>!function (d, s, id) {var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+<script>!function (d, s, id) {var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
     if (!d.getElementById(id)) {js = d.createElement(s);js.id = id;js.src = p + '://platform.twitter.com/widgets.js';
         fjs.parentNode.insertBefore(js, fjs);}}(document, 'script', 'twitter-wjs');</script>
-    <div id="passport">
-        <nav id="passportmenu-top" class="ui secondary pointing menu blurred">
-            <div class="left item social-wrapper">
-                <div class="fb-like" data-href="" data-layout="button_count" data-action="like"
-                data-show-faces="true" data-share="false"></div>
-                <a href="https://twitter.com/share" class="twitter-share-button" data-lang="pl">Tweetnij</a>
-            </div>
-            <div class="right item">
-                <div class="close-button"></div>
-            </div>
-        </nav>
-
-        @*<table class="passport-title-wrapper">*@
-            @*<tr><td class="church-name" data-field="name"></td> <td class="church-name-edit-icon"><div class="passport-value-edit-icon"></div></td></tr>*@
-        @*</table>*@
-        <div class="passport-title-wrapper church-name"></div>
-
-        <div class="passport-gallery">
-            <div class="passport-current-image"></div>
-            <div class="passport-gallery-thumbs"></div>
+<div id="passport">
+    <nav id="passportmenu-top" class="ui secondary pointing menu blurred">
+        <div class="left item social-wrapper">
+            <div class="fb-like" data-href="" data-layout="button_count" data-action="like"
+            data-show-faces="true" data-share="false"></div>
+            <a href="https://twitter.com/share" class="twitter-share-button" data-lang="pl">Tweetnij</a>
         </div>
-
-        <table class="passport-data-wrapper">
-            <tr>
-                <td class="passport-field-caption">adres</td>
-                <td class="passport-value editable" data-field="address">
-                    <div class="passport-data-data"></div>
-                    <div class='passport-data-help'>pomóż nam uzupełnić dane</div>
-                    <div class='passport-value-edit-icon passport-data-help'></div>
-                </td>
-                <td class="passport-data-filler"></td>
-            </tr>
-            <tr>
-                <td class="passport-field-caption">daty budowy</td>
-                <td class="passport-value editable" data-field="years">
-                    <div class="passport-data-data"></div>
-                    <div class='passport-data-help'>pomóż nam uzupełnić dane</div>
-                    <div class='passport-value-edit-icon passport-data-help'></div>
-                </td>
-                <td class="passport-data-filler"></td>
-            </tr>
-            <tr>
-                <td class="passport-field-caption">architekci</td>
-                <td class="passport-value editable" data-field="architects">
-                    <div class="passport-data-data"></div>
-                    <div class='passport-data-help'>pomóż nam uzupełnić dane</div>
-                    <div class='passport-value-edit-icon passport-data-help'></div>
-                </td>
-                <td class="passport-data-filler"></td>
-            </tr>
-            <tr>
-                <td class="passport-field-caption">strona www</td>
-                <td class="passport-value editable" data-field="website">
-                    <div class="passport-data-data"></div>
-                    <div class='passport-data-help'>pomóż nam uzupełnić dane</div>
-                    <div class='passport-value-edit-icon passport-data-help'></div>
-                </td>
-                <td class="passport-data-filler"></td>
-            </tr>
-        </table>
-
-        <div class="passport-stories">
-            <div class="passport-stories-wrapper">
-                <div class="passport-stories-title">
-                    <h1>Wspomnienia dodane przez użytkowników</h1>
-                </div>
-                <div class="church-stories"></div>
-                <table class="passport-update-button-wrapper">
-                    <tr>
-                        <td><img src="/assets/images/add_story_plus.png" class="passport-update-button-icon"></td>
-                        <td class="passport-update-button">dodaj swoje wspomnienie lub obraz</td>
-                    </tr>
-                </table>
-            </div>
+        <div class="right item">
+            <div class="close-button"></div>
         </div>
+    </nav>
 
-        <div class="passport-update">
-                <!-- common part 1: auth info -->
-            <form class="common-form ui form">
-                <label for="story-author-name">Autor wspomnienia</label>
-                <input type="text" class="ui input" id="story-author" name="user.name" placeholder="Autor wspomnienia">
-                <label for="story-author-email" class="hide-authed">e-mail</label>
-                <input type="text" class="ui input hide-authed" id="story-author-email" name="user.email" placeholder="e-mail">
-                <input type="hidden" name="user.hash" id="user_hash">
-                <div class="social-login hide-authed" data-provider="facebook"><img class="ui image" src="@routes.Assets.at("images/fb.png")"></div>
-            </form>
-            <div class="ui top attached tabular menu">
-                <a class="item active" data-tab="add-story">Add story</a>
-                <a class="item" data-tab="add-images">Add images</a>
-            </div>
-            <div data-tab="add-story" class="ui tab active">
-                <form action="@routes.Churches.addStory()" method="POST" class="ui form" data-entity="story">
-                    <input type="hidden" value="" name="church" id="story-church-id">
-                    <label for="story-title">Tytuł</label>
-                    <input type="text" class="ui input" id="story-title" name="title" placeholder="Tytuł">
-                    <label for="story-year">Rok</label>
-                    <input type="text" class="ui input" id="story-year" name="year" placeholder="2015">
-                    <label for="story-text">Wspomnienie</label>
-                    <textarea class="ui textarea" id="story-text" name="text" placeholder="What's your story?"></textarea>
-                    <input type="hidden" value="" name="cover" id="story-cover-id">
-                    <div class="story-cover-gallery-wrapper">
-                        <div class="story-cover-gallery"></div>
-                    </div>
-                </form>
-            </div>
-            <div data-tab="add-images" class="ui tab">
-                <form class="ui form" data-entity="images">
-                Images go here
-                </form>
-            </div>
-                <!-- common part 2, TOS etc -->
-            <div class="clearfix"></div>
-            <form class="common-form ui form">
-                <label for="upload-confirmation">I agree</label>
-                <input type="checkbox" id="upload-confirmation" class="ui checkbox"> <br>
-                <input type="button" value="Send" class="ui submit button story-submit">
-            </form>
-        </div>
-        <div class="ui success message pointy" id="new-story-success-message">
-            Your story has been successfully sent, please wait for our moderators to check it
-        </div>
-        <div class="ui error message pointy" id="new-story-error-message">
-            Sorry, something went wrong while sending your story
-        </div>
+    @*<table class="passport-title-wrapper">*@
+    @*<tr><td class="church-name" data-field="name"></td> <td class="church-name-edit-icon"><div class="passport-value-edit-icon"></div></td></tr>*@
+    @*</table>*@
+    <div class="passport-title-wrapper church-name"></div>
 
-        <nav id="passportmenu-bottom" class="ui secondary pointing menu blurred">
-            <div class="left item social-wrapper">
-                <div class="fb-like" data-href="" data-layout="button_count" data-action="like"
-                data-show-faces="true" data-share="false"></div>
-                <a href="https://twitter.com/share" class="twitter-share-button" data-lang="pl">Tweetnij</a>
-            </div>
-            <div class="right item">
-                <div class="close-button"></div>
-            </div>
-        </nav>
+    <div class="passport-gallery">
+        <div class="passport-current-image"></div>
+        <div class="passport-gallery-gsv"></div>
+        <div class="passport-gallery-thumbs"></div>
+        <div class="passport-gallery-controls"></div>
     </div>
-    <script>
-    @if(church != null) {
-        $(document).ready(function(){$('fb-like').data('href', '@backLink()');});}
-</script>
+
+    <table class="passport-data-wrapper">
+        <tr class="passport-table-gap">
+            <td class="passport-field-caption"></td>
+            <td class="passport-value"></td>
+            <td class="passport-data-filler"></td>
+        </tr>
+        <tr>
+            <td class="passport-field-caption">adres</td>
+            <td class="passport-value editable" data-field="address">
+                <div class="passport-data-data"></div>
+                <div class='passport-value-edit-icon passport-data-help'></div>
+                <div class='passport-data-help'>pomóż nam uzupełnić dane</div>
+            </td>
+            <td class="passport-data-filler"></td>
+        </tr>
+        <tr>
+            <td class="passport-field-caption">daty budowy</td>
+            <td class="passport-value editable" data-field="years">
+                <div class='passport-value-edit-icon passport-data-help'></div>
+                <div class="passport-data-data"></div>
+                <div class='passport-data-help'>pomóż nam uzupełnić dane</div>
+            </td>
+            <td class="passport-data-filler"></td>
+        </tr>
+        <tr>
+            <td class="passport-field-caption">architekci</td>
+            <td class="passport-value editable" data-field="architects">
+                <div class="passport-data-data"></div>
+                <div class='passport-value-edit-icon passport-data-help'></div>
+                <div class='passport-data-help'>pomóż nam uzupełnić dane</div>
+            </td>
+            <td class="passport-data-filler"></td>
+        </tr>
+        <tr>
+            <td class="passport-field-caption">strona www</td>
+            <td class="passport-value editable" data-field="website">
+                <div class="passport-data-data"></div>
+                <div class='passport-value-edit-icon passport-data-help'></div>
+                <div class='passport-data-help'>pomóż nam uzupełnić dane</div>
+            </td>
+            <td class="passport-data-filler"></td>
+        </tr>
+        <tr class="passport-table-gap">
+            <td class="passport-field-caption"></td>
+            <td class="passport-value"></td>
+            <td class="passport-data-filler"></td>
+        </tr>
+    </table>
+
+    <div class="passport-stories">
+        <div class="passport-stories-wrapper">
+            <div class="passport-stories-title">
+                <h1>Wspomnienia dodane przez użytkowników</h1>
+            </div>
+            <div class="church-stories"></div>
+            <table class="passport-update-button-wrapper">
+                <tr>
+                    <td><img src="/assets/images/add_story_plus.png" class="passport-update-button-icon"></td>
+                    <td class="passport-update-button">DODAJ WSPOMNIENIE LUB ZDJĘCIE</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="passport-update">
+        <div class="ui top attached tabular menu">
+            <a class="item active story-menu-item" data-tab="add-story">Dodawanie wspominienia</a>
+            <a class="item image-menu-item" data-tab="add-images">Dodawanie zdjęć</a>
+        </div>
+        <div data-tab="add-story" class="ui tab active">
+            @parts.passport_common1(user)
+                <!-- add story form -->
+            <form action="@routes.Churches.addStory()" method="POST" class="ui form" data-entity="story">
+                <input type="hidden" value="" name="church" id="story-church-id">
+                <div class="col-3 rightaligned inlinemiddle">
+                    <label for="story-title">Tytuł wspomnienia</label>
+                </div>
+                <div class="col-4">
+                    <input type="text" class="ui input" id="story-title" name="title" placeholder="Wybierz chwytliwy tytuł dla opowiadanej przez siebie historii">
+                </div>
+                <div class="col-1"></div>
+                <div class="gapper-less clearfix"></div>
+                <div class="col-3 rightaligned inlinemiddle">
+                    <label for="story-year">Rok</label>
+                </div>
+                <div class="col-4">
+                    <input type="text" class="ui input" id="story-year" name="year" placeholder="Spróbuj przypomnieć sobie, kiedy dokładnie się to zdarzyło">
+                </div>
+                <div class="col-1"></div>
+                <div class="gapper-less clearfix"></div>
+                <div class="col-3 rightaligned inlinemiddle">
+                    <label for="story-text">TreŚĆ historii</label>
+                </div>
+                <div class="col-4 fullheight">
+                    <textarea class="ui textarea" id="story-text" name="text" placeholder="Projektował kościół?  Pomagałeś przy budowie, znasz fakty, o których nikt już nie pamięta? A może ktoś z Twojej rodziny ma historię do opowiedzenia? Opisz ze szczegółami swoje wspomnienie."></textarea>
+                </div>
+                <div class="col-1"></div>
+                <input type="hidden" value="" name="cover" id="story-cover-id">
+            </form>
+            @parts.passport_common2()
+        </div>
+
+        <div data-tab="add-images" class="ui tab">
+            @parts.passport_common1(user)
+                <!-- images form -->
+            <form class="ui form" data-entity="images">
+            </form>
+                <!-- common part 2, TOS etc -->
+            @parts.passport_common2()
+        </div>
+    </div>
+    <div class="ui success message pointy" id="new-story-success-message">
+        Your story has been successfully sent, please wait for our moderators to check it
+    </div>
+    <div class="ui error message pointy" id="new-story-error-message">
+        Sorry, something went wrong while sending your story
+    </div>
+
+    <nav id="passportmenu-bottom" class="ui secondary pointing menu blurred">
+        <div class="left item social-wrapper">
+            <div class="fb-like" data-href="" data-layout="button_count" data-action="like"
+            data-show-faces="true" data-share="false"></div>
+            <a href="https://twitter.com/share" class="twitter-share-button" data-lang="pl">Tweetnij</a>
+        </div>
+        <div class="right item">
+            <div class="close-button"></div>
+        </div>
+    </nav>
+
+</div>

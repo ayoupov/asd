@@ -20,6 +20,8 @@ import org.apache.lucene.analysis.ngram.EdgeNGramFilterFactory;
 import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
 import org.apache.lucene.analysis.stempel.StempelPolishStemFilterFactory;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.search.annotations.*;
 import org.hibernate.search.annotations.Parameter;
 
@@ -92,14 +94,17 @@ public class Church
     @OneToOne
     public Address address;
 
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @LazyCollection(LazyCollectionOption.FALSE)
     public Set<Architect> architects;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OrderBy("uploadedTS")
     public List<Image> images;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(name="church_media")
     public Set<MediaContent> media;
 

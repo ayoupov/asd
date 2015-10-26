@@ -29,7 +29,7 @@ object FileManager extends Controller {
       new File(where).mkdirs()
       request.body.files.foreach {
         picture =>
-          val filename = picture.filename
+          val filename = picture.filename.replace(' ', '_')
           val contentType = picture.contentType
           val path = s"$where/$filename"
           val webPath = s"$webWhere/$filename"

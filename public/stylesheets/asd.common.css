@@ -73,8 +73,8 @@
     font-style: italic;
 }
 
-.shameful-underline {
-    width: 25%;
+.thumb-stroke {
+    width: 56px;
     height: 5px;
     margin-left: auto;
     margin-right: auto;
@@ -87,4 +87,194 @@
     width: 100%;
     z-index: 9999;
 
+}
+
+div.content-main-guideline {
+    width: 981px;
+    position: fixed;
+    height: 100%;
+    border-left: 1px lightseagreen solid;
+    pointer-events: none;
+    z-index: 5000;
+}
+
+div.content-gap-guideline {
+    width: 20px;
+    height: 100%;
+    border-right: 1px aquamarine dashed;
+    float: left;
+    pointer-events: none;
+}
+
+div.content-gap-guideline.last {
+    border-right: 1px lightseagreen solid !important;
+}
+
+div.content-column-guideline {
+    width: 100px;
+    height: 100%;
+    border-right: 1px aquamarine dashed;
+    float: left;
+    pointer-events: none;
+}
+
+/* custom checkboxes */
+form:not(#foo) > div > input[type='radio'],
+form:not(#foo) > div > input[type='checkbox'] {
+    /* Hide the input, but have it still be clickable */
+    opacity: 0;
+
+    float: left;
+    width: 18px;
+
+}
+
+form:not(#foo) > div > input[type='radio'] + label,
+form:not(#foo) > div > input[type='checkbox'] + label{
+
+    margin: 0;
+    clear: none;
+
+    /* Left padding makes room for image */
+    padding: 5px 0 4px 24px;
+
+    /* Make look clickable because they are */
+    cursor: pointer;
+
+    background: white url(off.png) left center no-repeat;
+}
+
+form:not(#foo) > div > input[type='radio']:checked + label {
+    background-image: url(radio.png);
+}
+form:not(#foo) > div > input[type='checkbox']:checked + label {
+    background-image: url(/assets/images/check.png);
+}
+
+.form-submit {
+    text-transform: uppercase;
+    width: 100%;
+    color: #fff;
+    background-color: #5a38db;
+    border: none;
+    font-family: "Helvetica", "Helvetica Neue Light", "Arial", sans-serif;
+    font-weight: bold;
+}
+
+.passport-update .ui.tabular.menu .item {
+    width: 50%;
+    font-size: 24px;
+    font-weight: bold;
+    font-family: "Helvetica", "Helvetica Neue Light", Arial, sans-serif;
+}
+
+.passport-update .ui.tabular.menu .item:not(.active) {
+    color: #838383;
+}
+
+.passport-update .ui.tab.active {
+    background-color: #f2f2f2;
+    border: none !important;
+    border-radius: 0 !important;
+}
+
+.passport-update .ui.tabular.menu {
+    border: none !important;
+    border-radius: 0 !important;
+}
+
+.passport-update .ui.tabular.menu .item.active {
+    background-color: #f2f2f2;
+    border: none !important;
+    border-radius: 0 !important;
+}
+
+.story-menu-item {
+    display: block !important;
+    text-align: right;
+    border: none;
+    border-radius: 0 !important;
+}
+
+.passport-update div .ui.form label:not(.upload-confirmation-label), #new_church_form label{
+    font-family: "Helvetica", "Helvetica Neue Light", Arial, sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-align: right;
+}
+
+.passport-update div .ui.form input[type=text],.passport-update div .ui.form textarea, #new_church_form input[type=text] {
+    border: none !important;
+    border-radius: initial !important;
+    font-family: "Helvetica", "Helvetica Neue Light", Arial, sans-serif;
+    font-size: 12px;
+}
+
+.passport-update div .ui.form input, .ui.form div input{
+    height: 44px;
+}
+
+div.col-1
+{
+    float: left;
+    width: 100px;
+    margin-left: 20px;
+    height: 44px;
+}
+
+div.col-2
+{
+    float: left;
+    width: 220px;
+    margin-left: 20px;
+    height: 44px;
+}
+
+div.col-3
+{
+    float: left;
+    width: 340px;
+    margin-left: 20px;
+    height: 44px;
+}
+
+div.col-4
+{
+    float: left;
+    width: 460px;
+    margin-left: 20px;
+    height: 44px;
+}
+
+div.rightaligned
+{
+    text-align: right;
+}
+
+div.inlinemiddle
+{
+    line-height: 44px;
+}
+
+div.fullheight
+{
+    height: 100%;
+}
+
+div.gapper
+{
+    width:100%;
+    height: 60px;
+}
+
+div.gapper-less
+{
+    width:100%;
+    height:20px;
+}
+
+.clearfix
+{
+    clear: both;
 }

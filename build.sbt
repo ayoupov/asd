@@ -21,3 +21,5 @@ publishArtifact in packageDoc := false
 sources in (Compile,doc) := Seq.empty
 
 fork in run := true
+
+//updateOptions := updateOptions.value.withCachedResolution(true)

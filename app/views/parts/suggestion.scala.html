@@ -1,0 +1,56 @@
+@import models.user.User
+@(user: User)
+<div class="suggestion-wrapper ui modal">
+    @parts.guidelines(false)
+    <!-- new church specific components -->
+<nav id="new-church-menu-top hide-main" class="ui secondary pointing menu blurred">
+    <div class="left item">
+        <div class="new-church-modal-title">Suggestion</div>
+    </div>
+    <div class="right item">
+        <div class="close-button"></div>
+    </div>
+</nav>
+<div class="new-church-prompt">
+    <div class="col-3"></div>
+    <div class="col-4">
+        Nie możesz znaleźć swojego kościoła? Możliwe, że został zbudowany przed wojną, albo po prostu go przeoczyliśmy. Pomóż nam go znaleźć!</div>
+</div>
+<div class="col-1"></div>
+<form action="@routes.Churches.suggest" method="POST" class="ui form new-church-form" id="new_church_form">
+    <div class="col-3 rightaligned inlinemiddle">
+        <label for="church-name">Tytuł</label>
+    </div>
+    <div class="col-4">
+        <input type="text" class="ui input new-church-value" id="church-name" name="name" placeholder="name">
+    </div>
+    <div class="col-1"></div>
+    <div class="gapper-less clearfix"></div>
+    <div class="col-3 rightaligned inlinemiddle">
+        <label for="church-address">Adres</label>
+    </div>
+    <div class="col-4">
+        <input type="text" class="ui input new-church-value" id="church-address" name="address" placeholder="adres">
+    </div>
+    <div class="col-1"></div>
+    <div class="gapper-less clearfix"></div>
+    <div class="col-3"></div>
+    <div class="col-2"><input type="button" value="Send church" class="form-submit"></div>
+    <div class="col-3"></div>
+    <div class="gapper-less clearfix"></div>
+</form>
+<div class="ui success message" id="new-church-success-message">
+    <i class="close icon"></i>
+    <div class="header">
+        Your church
+    </div>
+    Your church has been successfully sent, please wait for our moderators to check it
+</div>
+<div class="ui error message" id="new-church-error-message">
+    <i class="close icon"></i>
+    <div class="header">
+        Your church
+    </div>
+    Sorry, something went wrong while sending your church
+</div>
+</div>

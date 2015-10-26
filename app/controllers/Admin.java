@@ -220,6 +220,9 @@ public class Admin extends Controller
                     case "churchimages" :
                         Disseminator.imageSeed();
                         break;
+                    case "websites" :
+                        Disseminator.websitesSeed();
+                        break;
                     case "all":
                     default:
                         Disseminator.fullSeed();

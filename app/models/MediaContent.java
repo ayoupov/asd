@@ -38,6 +38,7 @@ public class MediaContent
     @Field
     @Type(type = "text")
     @Analyzer(definition = "polish_def_analyzer")
+    @JsonIgnore
     private String text;
 
     @Field
@@ -80,7 +81,7 @@ public class MediaContent
     private Set<User> authors;
 
     @Column(name = "approved_dt")
-    @JsonSerialize(using = DateTimeConverter.class)
+//    @JsonSerialize(using = DateTimeConverter.class)
     private Date approvedDT;
 
     @OneToOne
