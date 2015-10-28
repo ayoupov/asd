@@ -306,7 +306,7 @@ public class ContentManager
         Map<String, Object> res = new HashMap<>();
         res.put("metro", getMetroCount());
         res.put("dio", getDioCount());
-        res.put("dek", getDekCount());
+//        res.put("dek", getDekCount());
         return res;
     }
 
@@ -327,7 +327,7 @@ public class ContentManager
 //                .addSynchronizedQuerySpace("")
 //                .setCacheable(true)
 //                .list();
-        return getSession().createQuery("select d.id, count(c.extID), d.centroid " +
+        return getSession().createQuery("select d.id, count(c.extID), d.centroid, d.name " +
                 "from Diocese d, Church c " +
                 "where c.address.dekanat.diocese = d and c.approvedDT is not null " +
                 "group by d.id")
@@ -338,7 +338,7 @@ public class ContentManager
     //    @JsonSerialize(using = PointConverter.class)
     private static Object getMetroCount()
     {
-        return getSession().createQuery("select m.id, count(c.extID), m.centroid " +
+        return getSession().createQuery("select m.id, count(c.extID), m.centroid, m.name " +
                 "from Metropolie m, Church c " +
                 "where c.address.dekanat.diocese.metropolie = m and c.approvedDT is not null " +
                 "group by m.id")

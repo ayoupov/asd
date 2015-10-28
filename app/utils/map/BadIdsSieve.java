@@ -69,6 +69,6 @@ public class BadIdsSieve
 
     public static String beautify(String s)
     {
-        return s.replaceAll("[-–_]", "-");
+        return s.replaceAll("[-–_]", "-").replace(" ", "").trim();
     }
 }

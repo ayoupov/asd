@@ -104,7 +104,7 @@ var mapInit = function (geostats) {
     mapPostLoad(comingBack);
 
     map.on('popupopen', function (popup) {
-        $("a.open-passport", $(popup.target._container)).on('click', function () {
+        $("a.open-passport", $(popup.target._container)).off('click').on('click', function () {
             openPassport(getId($(this)))
         });
     });
@@ -150,18 +150,44 @@ var churchIcon = L.icon(
         popupAnchor: [0, -59]
     });
 
+var defaultOffset = new L.point(0, -23);
+
 function addLayerCounters(layer, data) {
     $(data).each(function (a, item) {
         var id = item[0];
         var count = item[1];
         var ll = item[2];
-        L.marker(ll, {
+        var name = item[3];
+        var marker = L.marker(ll, {
             icon: L.divIcon({
                 html: count,
                 iconSize: [78, 78],
                 className: 'church-counter-divicon'
             })
-        }).addTo(layer);
+        });
+        var popupString = "<div class='count-markers-popup'>" + name + "</div>";
+        var popupOpts = {offset: defaultOffset};
+        if (possiblyDesktop) {
+            marker.bindPopup(popupString, $.extend(popupOpts, {closeButton: false}));
+            marker.on('mouseover', function (e) {
+                this.openPopup();
+            });
+            marker.on('mouseout', function (e) {
+                this.closePopup();
+            });
+            marker.on('click', function () {
+                map.setView(marker.getLatLng(), layer == metroCountersLayer ? 8 : 11);
+                layerChanges();
+            });
+        } else {
+            marker.bindPopup(popupString, popupOpts);
+
+            marker.on('click', function () {
+                map.setView(marker.getLatLng(), layer == metroCountersLayer ? 8 : 11);
+                layerChanges();
+            });
+        }
+        marker.addTo(layer);
     });
 }
 
@@ -221,11 +247,37 @@ function addChurchContents() {
             },
             onEachFeature: function (feature, layer) {
                 if (feature.properties) {
-                    var popupString = getPopup(feature, layer);
-                    layer.bindPopup(popupString);
-                    layer.on({
-                        click: whenClicked
-                    });
+                    //var popupString = getPopup(feature, layer);
+                    var popupOpts = {};
+                    var popupString;
+                    if (possiblyDesktop) {
+                        popupString = "<div class='church-popup'>" + feature.properties.name + "</div>";
+                        $.extend(popupOpts, {closeButton: false});
+                        layer.bindPopup(popupString, popupOpts);
+                        layer.on({
+                            click: function (e) {
+                                whenChurchChosen(e);
+                                openPassport(e.target.feature.properties.ext_id, function () {
+                                    map.setView(currentChurch.address.geometry, 14);
+                                    layerChanges();
+                                });
+                            },
+                            mouseover: function (e) {
+                                e.layer.openPopup();
+                                //whenChurchChosen(e);
+                            },
+                            mouseout: function (e) {
+                                e.layer.closePopup();
+                                //replaceHistoryWithChurch();
+                            }
+                        });
+                    } else {
+                        popupString = getPopup(feature, layer);
+                        layer.bindPopup(popupString, popupOpts);
+                        layer.on({
+                            click: whenChurchChosen
+                        });
+                    }
                 }
             }
         }
@@ -269,7 +321,7 @@ function mapPostLoad(comingBack) {
     if (typeof currentChurch !== "undefined") {
         if (comingBack) {
             var port = location.port;
-            window.history.replaceState({}, "", "http://" + location.hostname + (port != "" ? ":" + port : "") + "/church/" + currentChurch.extID + "#passport");
+            replaceHistoryWithChurch(currentChurch.extID, "#passport");
             Cookies.remove('auth.cb');
         }
         navigateTo(currentChurch, comingBack);
@@ -277,7 +329,7 @@ function mapPostLoad(comingBack) {
 }
 
 function getPopup(feature, layer) {
-    var popupString = '<div class="popup">';
+    var popupString = '<div class="church-popup">';
     popupString += feature.properties.name;
     popupString += '<br/>';
     popupString += '<a href="#passport" class="open-passport" id="passport_' + feature.properties.ext_id + '">Details</a>';
@@ -293,6 +345,7 @@ function openPassport(id, callback) {
         urlData: {id: id},
         onSuccess: function (data) {
             fillPassport(data);
+            replaceHistoryWithChurch(currentChurch.extID, "#passport");
             $passportWrapper.modal('show');
             if (callback)
                 callback();
@@ -300,9 +353,18 @@ function openPassport(id, callback) {
     });
 }
 
-function whenClicked(e) {
+function whenChurchChosen(e) {
     var id = e.target.feature.properties.ext_id;
     updateHistoryWithChurch(id);
+}
+
+function replaceHistoryWithChurch(id, hash) {
+    var uri = '';
+    if (id)
+        uri = "/church/" + id;
+    window.history.replaceState({}, "",
+        "http://" + location.hostname + (port != "" ? ":" + port : "") + uri +
+        ((hash) ? hash : ""));
 }
 
 function updateHistoryWithChurch(id, hash) {

@@ -57,11 +57,9 @@ $(document).ready(function () {
 
     // add button hover
 
-    $passportUpdateButtonWrapper.hover(function()
-    {
+    $passportUpdateButtonWrapper.hover(function () {
         $(this).addClass('hover');
-    }, function()
-    {
+    }, function () {
         $(this).removeClass('hover');
     })
 
@@ -353,10 +351,16 @@ function doPassportGallery(galldata) {
             .append($("<div class='passport-gallery-control bubble-event-control' />"))
             .append($("<div class='passport-gallery-control passthrough medium-fill' />"))
             .append($("<div class='passport-gallery-control gallery-thumb-arrow-down' />"))
+            .append($("<div class='passport-gallery-control gallery-thumb-arrow-down-overlay' />"))
+            .append($("<div class='passport-gallery-control gallery-thumb-arrow-up-overlay' />"))
             .hide().appendTo($passportGallery);
 
     $passportGallery.off('galleryready').on('galleryready', function () {
         _debug('gallery ready');
+
+        // populate with empty
+        for (var i = 0; i < 5 - galldata.length; i++)
+            pushEmpty();
 
         $(galldata).each(function (a, image) {
             pushGalleryThumb({
@@ -375,10 +379,6 @@ function doPassportGallery(galldata) {
         $(".bubble-event-control").off('click').on('click', bubbleClick);
         var $thumbs = $('.passport-thumb-image:not(.empty,.inactive)');
 
-        // populate with empty
-        for (var i = 0; i < 5 - galldata.length ; i++)
-            pushEmpty();
-
         var noGSV = $('.passport-thumb-image', $passportGalleryGSV).hasClass('inactive');
         if ($thumbs.length == 0 && noGSV)
             $('.gallery-unit').hide();
@@ -392,12 +392,14 @@ function doPassportGallery(galldata) {
                     $thumbs.removeClass('active');
                     $thisThumb.addClass('active');
                     var $galleryItem = $galleryItems[$thisThumb.data('id')];
+                    var isGSV = $thisThumb.hasClass('gsv');
+                    if (!isGSV)
+                        $galleryItem.off('click').on('click', galleryDown);
                     $passportCurrentImage.html($galleryItem);
 
                     var desc = $thisThumb.data('description');
-                    if (desc != 'gsv') {
-                        if (typeof desc === 'undefined' || desc.trim())
-                        {
+                    if (!isGSV) {
+                        if (typeof desc === 'undefined' || desc == null || desc.trim() == '') {
                             desc = DEF_IMAGE_DESC;
                         }
                         $passportCurrentImage.append(
@@ -417,10 +419,9 @@ function doPassportGallery(galldata) {
             $($thumbs[0]).trigger('click');
             // scroll to the first thumb
 
-            if (galldata.length > 0)
-            {
+            if (galldata.length > 0) {
                 while (!$(".passport-thumb-image", $passportGalleryThumbs).eq(2).hasClass('normal'))
-                  galleryUp();
+                    galleryUp();
             }
 
             if (noGSV)
@@ -436,10 +437,9 @@ function doPassportGallery(galldata) {
     appendGSV();
 }
 
-function pushEmpty()
-{
+function pushEmpty() {
     pushGalleryThumb({
-        src: '/assets/uploads/000000/no_church_thumb.jpg',
+        src: '/assets/images/passport/no_church_thumb.jpg',
         id: null
     });
 }
@@ -451,16 +451,25 @@ function bubbleClick(e) {
 function galleryUp() {
     //var scrollPos = $passportGalleryThumbs.scrollTop();
     //$passportGalleryThumbs.scrollTop(scrollPos - 80);
-    $(".passport-thumb-image:first", $passportGalleryThumbs)
-        .insertAfter($(".passport-thumb-image:last", $passportGalleryThumbs));
+    //while (!$(".passport-thumb-image", $passportGalleryThumbs).eq(2).hasClass('normal'))
+    do {
+        $(".passport-thumb-image:last", $passportGalleryThumbs)
+            .insertBefore($(".passport-thumb-image:first", $passportGalleryThumbs));
+    }
+    while (!$(".passport-thumb-image", $passportGalleryThumbs).eq(2).hasClass('normal'));
     thumbscroll();
 }
 
 function galleryDown() {
     //var scrollPos = $passportGalleryThumbs.scrollTop();
     //$passportGalleryThumbs.scrollTop(scrollPos + 80);
-    $(".passport-thumb-image:last", $passportGalleryThumbs)
-        .insertBefore($(".passport-thumb-image:first", $passportGalleryThumbs));
+    //while (!$(".passport-thumb-image", $passportGalleryThumbs).eq(2).hasClass('normal'))
+    do {
+        $(".passport-thumb-image:first", $passportGalleryThumbs)
+            .insertAfter($(".passport-thumb-image:last", $passportGalleryThumbs));
+    }
+    while (!$(".passport-thumb-image", $passportGalleryThumbs).eq(2).hasClass('normal'));
+
     thumbscroll();
 }
 
@@ -496,6 +505,11 @@ function pushGalleryThumb(thumbData) {
                 .data({id: thumbData.id});
             if (!big)
                 $thisThumb.addClass('inactive');
+            $thisThumb.hover(function () {
+                $(this).addClass('hover');
+            }, function () {
+                $(this).removeClass('hover');
+            });
             $thisThumb
                 .appendTo($passportGalleryGSV);
 
@@ -531,7 +545,8 @@ function appendGSV() {
                 var lng = streetViewPanoramaData.location.latLng.lng();
                 var coords = lat + ',' + lng;
                 var heading = getHeading(toRad(lat), toRad(lng), toRad(center.lat()), toRad(center.lng()));
-                var url = "https://www.google.com/maps/embed/v1/streetview?location=" + coords + "&key=" + googleApiKey + "&heading=" + heading;
+                var url = "https://www.google.com/maps/embed/v1/streetview?location=" + coords
+                    + "&key=" + googleApiKey + "&heading=" + heading + "&fov=100";
                 var gsvElem = "<iframe width='" + galleryWidth + "' height='" + galleryHeight +
                     "' frameborder='0' style='border:0'" +
                     " src='" + url + "'></iframe>";
@@ -539,7 +554,7 @@ function appendGSV() {
                 var $gsv = $(gsvElem);
                 $gsv.appendTo($passportCurrentImage);
                 var gsvThumbData = {
-                    src: '/assets/uploads/000000/gsv_thumb.png',
+                    src: '/assets/images/passport/gsv_thumb.png',
                     big: $gsv,
                     id: 'gsv',
                     desc: 'gsv'
@@ -549,7 +564,7 @@ function appendGSV() {
             } else {
                 _debug('street view returned : ' + status);
                 pushGalleryThumb({
-                    src: '/assets/uploads/000000/gsv_thumb_inactive.png',
+                    src: '/assets/images/passport/gsv_thumb_inactive.png',
                     big: "",
                     id: 'gsv',
                     desc: 'gsv'

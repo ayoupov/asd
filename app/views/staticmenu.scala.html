@@ -1,4 +1,4 @@
-@(isIndex : Boolean)
+@(activeItem : String)
 <nav id="menu" class="ui fixed secondary pointing menu blurred">
     <div class="left item logo-wrapper">
         <div class="logo-wrapper-more item">
@@ -7,9 +7,9 @@
     </div>
 
     <div id="links" class="center aligned item">
-        <a class="@{if (isIndex) {"active"}} golden item slide-map" href="@routes.Application.index(null)#slide-map">mapa</a>
-        <a class="golden item slide-articles" href="@routes.Application.index(null)#slide-articles">kontekst</a>
-        <a class="golden item slide-stories" href="@routes.Application.index(null)#slide-stories">wspomnienia</a>
+        <a class="@{if ("map".equals(activeItem)) {"active"}} golden item slide-map" href="@routes.Application.index(null)#slide-map">mapa</a>
+        <a class="@{if ("article".equals(activeItem)) {"active"}} golden item slide-articles" href="@routes.Application.index(null)#slide-articles">kontekst</a>
+        <a class="@{if ("story".equals(activeItem)) {"active"}} golden item slide-stories" href="@routes.Application.index(null)#slide-stories">wspomnienia</a>
     </div>
 
     <div class="right item">

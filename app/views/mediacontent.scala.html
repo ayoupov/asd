@@ -24,7 +24,7 @@
             @if(preview){
                 @parts.guidelines(true)
             }
-            @staticmenu(false)
+            @staticmenu(content.getContentType.toString)
         <div class="content-main-wrapper">
         @if(!preview) {
             @sociallinks()

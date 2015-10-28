@@ -11,6 +11,7 @@ import models.internal.UserManager;
 import models.user.User;
 import play.Logger;
 import play.data.DynamicForm;
+import controllers.Assets;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -124,7 +125,7 @@ public class Churches extends Controller
         if (jtitle != null)
             title = jtitle;
         if (jcover != null) {
-            coverPath = "/" + User.anonymousHash() + ("/church_story_" + jcover + "_thumb_is.png");
+            coverPath = "/images/passport/church_story_" + jcover + "_thumb_is.png";
         } else return badRequest("cover is null");
         if (jyear != null)
             year = jyear;

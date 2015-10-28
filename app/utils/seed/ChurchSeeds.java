@@ -33,6 +33,17 @@ public class ChurchSeeds
         private String id;
         private boolean eligible;
         private String synonyms;
+        private String name;
+
+        public String getName()
+        {
+            return name;
+        }
+
+        public void setName(String name)
+        {
+            this.name = name;
+        }
 
         public String getSynonyms()
         {
@@ -81,6 +92,8 @@ public class ChurchSeeds
                 id = unwrap(split[0]) + "-" + firstPart + secPart;
 
                 eligible = "1".equals(unwrap(split[5])) && !skipIDs.contains(id);
+
+                name = unwrap(split[6]);
 
                 synonyms = unwrap(split[7]);
                 if ("".equals(synonyms))
@@ -238,6 +251,8 @@ public class ChurchSeeds
                         }
                         church.setConstructionStart(entry.getStartYear() == 0 ? null : entry.getStartYear());
                         church.setConstructionEnd(entry.getEndYear() == 0 ? null : entry.getEndYear());
+                        if (entry.getName() != null && !"".equals(entry.getName()))
+                            church.setName(entry.getName());
                         Set<String> synonymSet = createSynonymSet(entry.getSynonyms());
                         if (synonymSet != null)
                             church.getSynset().addAll(synonymSet);

@@ -2,6 +2,8 @@ var $map, $menu, $slide1, $slide2, $slide3, $slide4, $prompt, $links, $about;
 var $articles, $stories, $dateStories;
 var $searchWrapper, $suggestionWrapper;
 
+var possiblyDesktop, isTouchDevice;
+
 var initSelectorCache = function () {
     $map = $("#map");
     $menu = $("#menu");
@@ -37,4 +39,6 @@ $(document).ready(function () {
             notificationMessage.fadeOut(600);
         });
     }
+    isTouchDevice = 'ontouchstart' in document.documentElement;
+    possiblyDesktop = !isTouchDevice;
 });

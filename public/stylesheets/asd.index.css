@@ -26,7 +26,17 @@
     -o-transform: rotate(270deg);
     /* Internet Explorer */
     filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+}
 
+.church-popup {
+    text-align: center;
+    max-width: 150px;
+}
+
+.count-markers-popup {
+    text-align: center;
+    max-width: 100px;
+    word-wrap: break-word;
 }
 
 .active.golden.item {
@@ -136,7 +146,7 @@
 }
 
 .story .content .header, .article .content .header {
-    font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
     font-weight: bold;
     text-transform: uppercase;
     font-size: 9pt;
@@ -240,15 +250,15 @@ div.holder-border {
 }
 
 #to-slide-articles {
-    background: white url(../images/arrow_down_bw_slides_23.png) center center no-repeat;
+    background: white url(/assets/images/arrow_down_bw_slides_23.png) center center no-repeat;
 }
 
 #to-slide-stories {
-    background: #e8e8e8 url(../images/arrow_down_bw_slides_23.png) center center no-repeat;
+    background: #e8e8e8 url(/assets/images/arrow_down_bw_slides_23.png) center center no-repeat;
 }
 
 #to-slide-about {
-    background: #5a38db url(../images/arrow_down_bw_slides_4.png) center center no-repeat;
+    background: #5a38db url(/assets/images/arrow_down_bw_slides_4.png) center center no-repeat;
 }
 
 .padder {
@@ -266,7 +276,7 @@ div.holder-border {
 }
 
 #about .about-header {
-    font-family: "Helvetica", "Helvetica Neue Light", "Arial", sans-serif;
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
     font-size: 26pt;
     font-weight: bold;
     text-transform: uppercase;
@@ -303,7 +313,8 @@ div.holder-border {
     position: absolute;
     right: 22px;
     bottom: 27px;
-    font-family: "Helvetica", "Helvetica Neue Light", "Arial", sans-serif;
+    /*font-family: "Helvetica", "Helvetica Neue Light", "Arial", sans-serif;*/
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
     color: white;
     font-weight: bold;
     font-size: 18pt;
@@ -413,14 +424,16 @@ div.holder-border {
 }
 
 #slide-about {
-    font-family: "Helvetica", "Helvetica Neue Light", sans-serif !important;
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif !important;
+    /*font-family: "Helvetica", "Helvetica Neue Light", sans-serif !important;*/
     font-size: 15px;
     font-weight: 100;
     color: white;
 }
 
 #slide-about h3 {
-    font-family: "Helvetica", "Helvetica Neue Light", sans-serif !important;
+    /*font-family: "Helvetica", "Helvetica Neue Light", sans-serif !important;*/
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif !important;
     font-size: 48pt;
 }
 
@@ -478,7 +491,8 @@ div.holder-border {
 }
 
 #stories-by-date .item .asd-header {
-    font-family: Helvetica, sans-serif;
+    /*font-family: Helvetica, sans-serif;*/
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
     font-weight: bold;
     text-transform: uppercase;
     font-size: 8pt;
@@ -486,7 +500,8 @@ div.holder-border {
 }
 
 #stories-by-date .item .asd-date {
-    font-family: Helvetica, sans-serif;
+    /*font-family: Helvetica, sans-serif;*/
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
     font-size: 8pt;
     color: #b5b5b5;
     padding: 0 1em 1em;
@@ -519,7 +534,7 @@ div.holder-border {
 #story-controls .story-control-left {
     float: left;
     border-right: 1px solid #f2f2f2;
-    background: #f9f9f9 url(../images/story_control_down.png) no-repeat center center;
+    background: #f9f9f9 url(/assets/images/story_control_down.png) no-repeat center center;
     /*height:200px;*/
     /*width:200px;*/
 }
@@ -527,7 +542,7 @@ div.holder-border {
 #story-controls .story-control-right {
     border-left: 1px solid #f2f2f2;
     float: right;
-    background: #f9f9f9 url(../images/story_control_up.png) no-repeat center center;
+    background: #f9f9f9 url(/assets/images/story_control_up.png) no-repeat center center;
 }
 
 .social-wrapper {

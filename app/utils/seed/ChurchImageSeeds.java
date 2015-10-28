@@ -103,7 +103,7 @@ public class ChurchImageSeeds
     public static Image processImage(User user, Church church, File imageFile, String desc) throws IOException
     {
         Pair<File, String> whereFileAndImagePath = createPathAndCopy(imageFile, church.getExtID());
-        Image image = new Image(whereFileAndImagePath.getRight(), user, desc);
+        Image image = new Image(whereFileAndImagePath.getRight(), user, desc == null ? "" : desc);
         Thumber.rethumb(whereFileAndImagePath.getLeft(), Thumber.ThumbType.EDITORIAL);
         return image;
     }

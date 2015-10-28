@@ -14,6 +14,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static utils.map.BadIdsSieve.beautify;
+
 /**
  * Created with IntelliJ IDEA.
  * User: ayoupov
@@ -68,7 +70,7 @@ public class Processor
         {
             KMLParser.Church church = entry.getKey();
             KMLParser.Coordinates coordinates = entry.getValue();
-            osw.write(i + "|" + church.id + "|" + church.name + "|" + coordinates.lat + "|" + coordinates.lng + "||\n");
+            osw.write(i + "|" + beautify(church.id) + "|" + church.name + "|" + coordinates.lat + "|" + coordinates.lng + "||\n");
             i++;
         }
         osw.close();

@@ -16,14 +16,14 @@
     <body>
         <div class="wrapper">
             @* @parts.guidelines(true) *@
-            @staticmenu(true)
+            @staticmenu("map")
             @sociallinks()
             @parts.main.mainslide1(churchCount)
             @parts.main.mainslide2()
             @parts.main.mainslide3()
             @parts.main.mainslide4(ServerProperties.getValue("facebook.url"))
             <div class="ui modal passport-wrapper">
-                @* @parts.guidelines(false) *@
+                @parts.guidelines(false)
                 @parts.passport(currentChurch, user)
                 @parts.suggestion(user)
             </div>

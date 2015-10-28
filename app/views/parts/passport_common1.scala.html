@@ -16,7 +16,8 @@
         </div>
     }
     @if(user != null) {
-        <div class="col-1"><a href="@routes.Auth.logout()" class="ui button">Not you?</a></div>
+        @*<div class="col-1"><a href="@routes.Auth.logout()" class="not-you-button">Not you?</a></div>*@
+        <div class="col-1"><div class="not-you-button form-button">To nie ty?</div></div>
     }
     <div class="col-1"></div>
     <div class="gapper-less clearfix hide-authed"></div>
@@ -28,8 +29,8 @@
     </div>
     <div class="col-2 hide-authed inlinemiddle">
         <div class="social-login" data-provider="facebook">
-            <img class="ui image" src="@routes.Assets.at("images/fb.png")">
-    <div class="social-login-invite">Zaloguj przez Facebooka</div>
+            <div class="asd-fb-login-button"></div>
+    <div class="social-login-invite form-button">wejdź przez Facebooka</div>
 </div>
 </div>
     <div class="col-1 hide-authed"></div>

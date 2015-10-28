@@ -1,5 +1,5 @@
 .menu input.prompt {
-    font-family: "Helvetica", "Helvetica Neue Light", sans-serif !important;
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
     /*font-size: 18pt !important;*/
     font-weight: bold !important;
     border: none !important;
@@ -16,7 +16,7 @@
 }
 
 #menu.menu a:not(.result) {
-    font-family: "Helvetica", "Helvetica Neue Light", sans-serif !important;
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
     font-size: 18pt !important;
     font-weight: bold !important;
 }
@@ -157,15 +157,15 @@ form:not(#foo) > div > input[type='checkbox']:checked + label {
     color: #fff;
     background-color: #5a38db;
     border: none;
-    font-family: "Helvetica", "Helvetica Neue Light", "Arial", sans-serif;
-    font-weight: bold;
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
+    /*font-weight: bold;*/
 }
 
 .passport-update .ui.tabular.menu .item {
     width: 50%;
     font-size: 24px;
     font-weight: bold;
-    font-family: "Helvetica", "Helvetica Neue Light", Arial, sans-serif;
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
 }
 
 .passport-update .ui.tabular.menu .item:not(.active) {
@@ -197,7 +197,7 @@ form:not(#foo) > div > input[type='checkbox']:checked + label {
 }
 
 .passport-update div .ui.form label:not(.upload-confirmation-label), #new_church_form label{
-    font-family: "Helvetica", "Helvetica Neue Light", Arial, sans-serif;
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
     font-size: 12px;
     text-transform: uppercase;
     font-weight: bold;
@@ -207,7 +207,7 @@ form:not(#foo) > div > input[type='checkbox']:checked + label {
 .passport-update div .ui.form input[type=text],.passport-update div .ui.form textarea, #new_church_form input[type=text] {
     border: none !important;
     border-radius: initial !important;
-    font-family: "Helvetica", "Helvetica Neue Light", Arial, sans-serif;
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
     font-size: 12px;
 }
 
@@ -277,4 +277,19 @@ div.gapper-less
 .clearfix
 {
     clear: both;
+}
+
+.asd-fb-login-button
+{
+    background: white url(/assets/images/fb_login_button.png) center center no-repeat;
+    height: 44px;
+    width: 36px;
+    margin-right: 2px;
+    float: left;
+}
+
+.social-login-invite
+{
+    width: 182px;
+    float: left;
 }
