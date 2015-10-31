@@ -32,7 +32,7 @@ public class FileManagerJava extends Controller
 
     private static final FilenameFilter originalFileFilter = new OriginalFileFilter();
 
-    public static Result list(String path)
+    public static Result list()
     {
         beginTransaction();
         User user = UserManager.getLocalUser(session());

@@ -60,19 +60,19 @@ var toolData = {
         insert: '[afterwords]![/afterwords]'
     },
     image: {
-        tooltip: 'insert image (image=fullwidth ignores from and to)',
+        tooltip: 'insert image (image=fullwidth ignores from and to, gutter=1 adds left and right gutter)',
         insert: '[image src={?} from=? to=?]!Caption[/image]'
     },
     gallery: {
-        tooltip: 'insert gallery (gallery=fullwidth ignores from and to), you have to provide height',
-        insert: '[gallery src={!} from=? to=? height=?][/gallery]'
+        tooltip: 'insert gallery (gallery=fullwidth ignores from and to, gutter=1 adds left and right gutter), you have to provide height',
+        insert: '[gallery from=? to=? height=?]![/gallery]'
     },
     coub: {
-        tooltip: 'insert coub (coub=fullwidth ignores from and to), src is the coub id',
+        tooltip: 'insert coub (coub=fullwidth ignores from and to, gutter=1 adds left and right gutter), src is the coub id',
         insert: '[coub src={?} from=? to=? height=? autostart=? originalsize=? muted=? allowfullscreen=? hd=?]!Caption[/coub]'
     },
     gsv: {
-        tooltip: 'insert google street view (gsv=fullwidth ignores from and to), src is coordinates',
+        tooltip: 'insert google street view (gsv=fullwidth ignores from and to, gutter=1 adds left and right gutter), src is coordinates',
         insert: '[gsv src={?} from=? to=? height=? heading=?]!Caption[/gsv]'
     },
     biblink: {

@@ -28,14 +28,19 @@ function ddmmyy(d)
         d.getUTCFullYear() % 100;
 }
 
-function datenow() {
-    var d = new Date();
+function toEditorDate(d)
+{
     return d.getFullYear() +
         '-' + prepad(d.getUTCMonth() + 1) + (d.getUTCMonth() + 1) +
         '-' + prepad(d.getUTCDate()) + d.getUTCDate() + ' ' +
         prepad(d.getHours()) + d.getHours() + ':' +
         prepad(d.getMinutes()) + d.getMinutes() + ':' +
         prepad(d.getSeconds()) + d.getSeconds();
+}
+
+function datenow() {
+    var d = new Date();
+    return toEditorDate(d);
 }
 
 function prepad(val) {

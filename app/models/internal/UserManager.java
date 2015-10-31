@@ -10,19 +10,16 @@ import models.user.User;
 import models.user.UserRole;
 import models.user.UserStatus;
 import org.hibernate.Query;
-import org.hibernate.id.GUIDGenerator;
 import play.Logger;
 import play.api.mvc.Session;
 import play.mvc.Http;
-import utils.ServerProperties;
+import utils.service.auth.ROT13;
 
 import java.io.Serializable;
 import java.util.*;
 
 import static com.feth.play.module.pa.PlayAuthenticate.getProvider;
-import static utils.HibernateUtils.getSession;
-import static utils.HibernateUtils.save;
-import static utils.HibernateUtils.saveOrUpdate;
+import static utils.HibernateUtils.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -38,8 +35,7 @@ public class UserManager
     {
         List<User> authUserFind = getAuthUserFind(AutoIdentity.getInstance());
         User user = (authUserFind != null && authUserFind.size() > 0) ? authUserFind.get(0) : null;
-        if (user == null)
-        {
+        if (user == null) {
             user = createUser(AutoIdentity.getInstance());
             user.setRole(UserRole.Administrator);
             saveOrUpdate(user);
@@ -100,7 +96,8 @@ public class UserManager
             return null;
         }
         List<User> authUserFind = getAuthUserFind(identity);
-        User user = (authUserFind != null && authUserFind.size() > 0) ? authUserFind.get(0) : null;;
+        User user = (authUserFind != null && authUserFind.size() > 0) ? authUserFind.get(0) : null;
+        ;
         return user;
     }
 
@@ -136,24 +133,33 @@ public class UserManager
         LinkedAccount account = createLinkedAccount(authUser);
         user.setLinkedAccounts(Collections.singletonList(account));
 
-        user.setHash(nextHash());
+//        user.setHash(nextHash());
 
+        String name = null, email = null;
         if (authUser instanceof EmailIdentity) {
             final EmailIdentity identity = (EmailIdentity) authUser;
             // Remember, even when getting them from FB & Co., emails should be
             // verified within the application as a security breach there might
             // break your security as well!
-            user.setEmail(identity.getEmail());
             user.setEmailValidated(false);
+            email = identity.getEmail();
+            if (email != null) {
+                user.setEmail(email);
+            }
         }
 
         if (authUser instanceof NameIdentity) {
             final NameIdentity identity = (NameIdentity) authUser;
-            final String name = identity.getName();
+            name = identity.getName();
             if (name != null) {
                 user.setName(name);
             }
         }
+
+        if (email != null && name != null && authUser instanceof EmailIdentity && authUser instanceof NameIdentity)
+            user.setHash(ROT13.encode(email.replace("@", "") + name));
+        else
+            user.setHash(account.getProviderUserId() + ROT13.encode(account.getProviderKey()));
 
         Serializable id = save(user);
         user.setId((Long) id);
@@ -164,7 +170,7 @@ public class UserManager
 
     private static String nextHash()
     {
-        return UUID.randomUUID().toString().replace("-","");
+        return UUID.randomUUID().toString().replace("-", "");
     }
 
 
@@ -192,7 +198,7 @@ public class UserManager
         LinkedAccount account = createLinkedAccount(newUser);
         u.getLinkedAccounts().add(account);
         account.setUser(u);
-		saveOrUpdate(u);
+        saveOrUpdate(u);
         saveOrUpdate(account);
     }
 

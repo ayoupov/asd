@@ -15,8 +15,13 @@ var resizeContentFunc = function () {
     var wwidth = $(window).width();
     $contentTitle.css({
         left: (wwidth - $contentTitle.width()) / 2 + "px",
-        top : (560 - $contentTitle.height() - 100) + "px"
+        top: (560 - $contentTitle.height() - 100) + "px"
     });
+    //var margin = parseFloat($('.content-main-wrapper').css('margin-left'));
+    $(".social-links").css({
+        'margin-left' : '20px'
+    });
+
 };
 
 var contentType = 'article'; // location.pathname.split('/')[2] ||
@@ -58,18 +63,18 @@ function anchorFix() {
 
 var DEFAULT_GALL_OPTS =
 {
-    gallery_autoplay: true,
-    gallery_play_interval: 30000,
+    gallery_autoplay: false,
     gallery_carousel: true,
-    gallery_debug_errors: true
+    gallery_debug_errors: true,
+    slider_control_zoom: false,
+    slider_enable_arrows: false
 };
 
 function galleries() {
     $(".content-gallery").each(function (a, gallery) {
         var gallOpts = DEFAULT_GALL_OPTS;
         var $gall = $(gallery);
-        if ($gall.hasClass('full-width'))
-        {
+        if ($gall.hasClass('full-width')) {
             $.extend(gallOpts,
                 {
                     gallery_width: "100%",
@@ -90,6 +95,19 @@ function galleries() {
             if (h && parseFloat(h) > 0)
                 $.extend(gallOpts, {gallery_height: h});
         }
-        $("#" + $gall.attr("id")).unitegallery(gallOpts);
+        var $gallery = $("#" + $gall.attr("id"));
+        var thisGalleryAPI = $gallery.unitegallery(gallOpts);
+        $gallery.append($("<div class='content-gallery-arrow content-gallery-arrow-left'></div><div class='content-gallery-arrow content-gallery-arrow-right'></div>"));
+        $(".content-gallery-arrow", $gallery).hover(function () {
+            $(this).addClass('hover');
+        },function () {
+            $(this).removeClass('hover');
+        });
+        $(".content-gallery-arrow-left", $gallery).on('click', function(){
+            thisGalleryAPI.prevItem();
+        });
+        $(".content-gallery-arrow-right", $gallery).on('click', function(){
+            thisGalleryAPI.nextItem();
+        });
     });
 }

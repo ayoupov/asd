@@ -31,8 +31,9 @@ public class GridGallery extends ComplexSubstitute
 
         int to = opts.getTo();
         int from = opts.getFrom();
-        int width = GridUtil.gridWidth(from, to);
-        marginLeft = GridUtil.leftMargin(from, to);
+        boolean gutter = opts.getGutter();
+        int width = GridUtil.gridWidth(from, to, gutter);
+        marginLeft = GridUtil.leftMargin(from, to, gutter);
         String opt = "";
         if (opts.heightSet())
             opt += String.format("height: %spx;", opts.getHeight());

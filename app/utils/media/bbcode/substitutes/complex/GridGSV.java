@@ -31,12 +31,13 @@ public class GridGSV extends GridImage
 
         int to = opts.getTo();
         int from = opts.getFrom();
-        int width = (to - from + 1) * (colWidth + colGutterWidth) - colGutterWidth;
-        marginLeft = (from - 2) * (colWidth + colGutterWidth);
-        String gsvStyle = String.format("style='width: %dpx; margin-left: %dpx;' ", width, marginLeft);
+        boolean gutter = opts.getGutter();
+        int width = GridUtil.gridWidth(from, to, gutter);
+        marginLeft = GridUtil.leftMargin(from, to, gutter);
+        String gsvStyle = String.format("style='width: %dpx; margin-left: %dpx; border:0' ", width, marginLeft);
 
         return String.format(
-                "<iframe height='%d' frameborder='0' style='border:0'" +
+                "<iframe height='%d' frameborder='0' " +
                         " src='https://www.google.com/maps/embed/v1/streetview?key=%s&location=%s&heading=%d' " +
                         "allowfullscreen %s></iframe>",
                 opts.getHeight(), ServerProperties.getValue("google.api.key"),

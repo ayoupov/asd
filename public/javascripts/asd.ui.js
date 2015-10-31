@@ -82,10 +82,12 @@ var changeSearchPrompt = function () {
     } else {
         switch (slide) {
             case "map":
-                $prompt.attr('placeholder', "znajdź swój kościół");
+                //$prompt.attr('placeholder', "znajdź swój kościół");
+                $prompt.attr('placeholder', "");
                 break;
             default :
-                $prompt.attr('placeholder', "szukaj");
+                //$prompt.attr('placeholder', "szukaj");
+                $prompt.attr('placeholder', "");
                 break;
         }
         if (!$prompt.val())

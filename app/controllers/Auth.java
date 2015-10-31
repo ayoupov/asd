@@ -41,7 +41,7 @@ public class Auth extends Controller
                     callbackUrl);
         }
 
-        response().setCookie("auth.cb", "yes");
+        response().setCookie("auth.cb", callbackUrl);
         return com.feth.play.module.pa.controllers.Authenticate.authenticate(provider);
     }
 
@@ -62,6 +62,14 @@ public class Auth extends Controller
 
     public static Result logout()
     {
+        String callbackUrl = request().getHeader("Referer");
+        if (request().method().equals("GET")
+                && callbackUrl != null && !"".equals(callbackUrl) && checkAgainstWhitelist(callbackUrl))
+        {
+            session().put("pa.url.orig",
+                    callbackUrl);
+        }
+        response().setCookie("auth.cb", callbackUrl);
         return com.feth.play.module.pa.controllers.Authenticate.logout();
     }
 

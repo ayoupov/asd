@@ -32,6 +32,7 @@ var dekStyle = function (feature) {
 };
 
 $(document).ready(function () {
+    checkReturn();
     stickify();
     isotopeThumbs();
     uiInit();
@@ -42,6 +43,16 @@ var map, customMetropLayer,
     metropoliesLayer, dekanatyLayer, diecezjeLayer, churchesLayer,
     metroCountersLayer, dioCounterLayer,
     comingBack = false;
+
+function checkReturn()
+{
+    var cb = Cookies.get('auth.cb');
+    if (cb && !userAuthed) {
+        Cookies.remove('auth.cb');
+        Cookies.set('al.cb', true);
+        window.location = cb;
+    }
+}
 
 var mapInit = function (geostats) {
     L.mapbox.accessToken = 'pk.eyJ1IjoiYXlvdXBvdiIsImEiOiJjYTc1MDkyY2ZlZDIyOGE3Mjc2NzE1ODk3Yzg0OGRlMSJ9.TLk_UalfiCktwxGqd9kRmg';
@@ -62,7 +73,6 @@ var mapInit = function (geostats) {
     map.options.doubleClickZoom = true;
     map.options.minZoom = 7;
     map.options.maxZoom = 18;
-    //map.scrollWheelZoom.disable();
 
     addChurchContents();
     if (dekanatsEnabled)
@@ -100,7 +110,7 @@ var mapInit = function (geostats) {
 
     layerChanges();
 
-    comingBack = userAuthed && Cookies.get('auth.cb');
+    comingBack = (userAuthed && Cookies.get('auth.cb')) || (!userAuthed && Cookies.get('al.cb'));
     mapPostLoad(comingBack);
 
     map.on('popupopen', function (popup) {
@@ -108,7 +118,34 @@ var mapInit = function (geostats) {
             openPassport(getId($(this)))
         });
     });
+
+    // map wheel zoom
+    setSiteMode();
+    map.on('click', function() {setMapMode();});
+    map.on('move', function() {setMapMode();});
+    metropoliesLayer.on('click', function () {setMapMode();});
+    metropoliesLayer.on('move', function () {setMapMode();});
+    diecezjeLayer.on('click', function () {setMapMode();});
+    diecezjeLayer.on('move', function () {setMapMode();});
+    $('body,#links > a').click(function(evt){
+        if(evt.target.id == "map")
+            return;
+        if($(evt.target).closest('#map').length)
+            return;
+        setSiteMode();
+    });
+
 };
+
+function setMapMode()
+{
+    map.scrollWheelZoom.enable();
+}
+
+function setSiteMode()
+{
+    map.scrollWheelZoom.disable();
+}
 
 var layerChanges = function (e) {
     var zoom;
@@ -150,7 +187,7 @@ var churchIcon = L.icon(
         popupAnchor: [0, -59]
     });
 
-var defaultOffset = new L.point(0, -23);
+var defaultOffset = new L.point(0, -32);
 
 function addLayerCounters(layer, data) {
     $(data).each(function (a, item) {
@@ -305,7 +342,7 @@ function navigateTo(church, comingBack) {
                     openPassport(church.extID, comingBack ? function () {
                         // todo: huh? wait for gsv to load?
                         $passportWrapper.on('passportready', function () {
-                            togglePassportUpdateForm();
+                            showPassportUpdateForm();
                             $passportWrapper.off('passportready');
                             //$passportWrapper.parent().scrollTop($passportUpdate.offset().top);
                         });
@@ -323,6 +360,7 @@ function mapPostLoad(comingBack) {
             var port = location.port;
             replaceHistoryWithChurch(currentChurch.extID, "#passport");
             Cookies.remove('auth.cb');
+            Cookies.remove('al.cb');
         }
         navigateTo(currentChurch, comingBack);
     }

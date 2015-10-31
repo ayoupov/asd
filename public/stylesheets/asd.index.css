@@ -37,6 +37,9 @@
     text-align: center;
     max-width: 100px;
     word-wrap: break-word;
+    text-transform: capitalize;
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif !important;
+   letter-spacing: 0.4px;
 }
 
 .active.golden.item {
@@ -71,6 +74,13 @@
     height: 60px;
     margin: 0;
     padding: 0;
+}
+
+.search-icon {
+    background: transparent url(/assets/images/search-icon.png) center center no-repeat;
+    height: 21px;
+    width: 21px;
+    margin-bottom: 5px;
 }
 
 
@@ -277,7 +287,7 @@ div.holder-border {
 
 #about .about-header {
     font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
-    font-size: 26pt;
+    font-size: 34px;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -287,7 +297,7 @@ div.holder-border {
 
 #about .about-more {
     font-family: Georgia, sans-serif;
-    font-size: 11pt;
+    font-size: 14px;
     font-style: italic;
     padding-left: 5px;
     padding-right: 5px;
@@ -360,7 +370,7 @@ div.holder-border {
 
 #slide-about {
     background-color: #5a38db;
-    padding-top: 100px;
+    padding-top: 115px;
 }
 
 .hover-content:not(.thumb-stroke) {
@@ -426,7 +436,7 @@ div.holder-border {
 #slide-about {
     font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif !important;
     /*font-family: "Helvetica", "Helvetica Neue Light", sans-serif !important;*/
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 100;
     color: white;
 }
@@ -434,7 +444,8 @@ div.holder-border {
 #slide-about h3 {
     /*font-family: "Helvetica", "Helvetica Neue Light", sans-serif !important;*/
     font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif !important;
-    font-size: 48pt;
+    font-size: 64px;
+    margin-bottom: 40px;
 }
 
 #slide-about .role {
@@ -592,3 +603,10 @@ div.holder-border {
     margin-left: -490px !important;
     background-color: #f2f2f2 !important;
 }
+
+.new-church-submit {
+    height: 56px !important;
+    font-size: 18px;
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
+}
+

@@ -38,7 +38,7 @@ public class MediaContent
     @Field
     @Type(type = "text")
     @Analyzer(definition = "polish_def_analyzer")
-    @JsonIgnore
+//    @JsonIgnore
     private String text;
 
     @Field

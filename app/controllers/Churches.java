@@ -1,6 +1,11 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.feth.play.module.pa.PlayAuthenticate;
+import com.feth.play.module.pa.providers.password.SessionUsernamePasswordAuthUser;
+import com.feth.play.module.pa.user.AuthUser;
+import com.feth.play.module.pa.user.AuthUserIdentity;
+import com.feth.play.module.pa.user.BasicIdentity;
 import models.Church;
 import models.MediaContent;
 import models.MediaContentType;
@@ -9,6 +14,7 @@ import models.internal.ChurchSuggestionType;
 import models.internal.ContentManager;
 import models.internal.UserManager;
 import models.user.User;
+import models.user.UserRole;
 import play.Logger;
 import play.data.DynamicForm;
 import controllers.Assets;
@@ -20,6 +26,7 @@ import play.mvc.Result;
 import play.mvc.Security;
 import utils.HibernateUtils;
 import utils.serialize.Serializer;
+import utils.service.auth.ASDAuthUser;
 
 import java.io.Serializable;
 import java.util.*;
@@ -75,9 +82,11 @@ public class Churches extends Controller
         Form<ChurchSuggestion> suggestionForm = Form.form(ChurchSuggestion.class);
         if (!suggestionForm.hasErrors()) {
             beginTransaction();
+            User user = UserManager.getLocalUser(session());
             ChurchSuggestion cs = suggestionForm.bindFromRequest().get();
             cs.setType(type);
             cs.setField(field);
+            cs.setSuggestedBy(user);
             saveOrUpdate(cs);
             commitTransaction();
             return ok(Json.newObject().put("success", true));
@@ -101,15 +110,23 @@ public class Churches extends Controller
         }
     }
 
-    @Security.Authenticated(Secured.class)
+//    @Security.Authenticated(Secured.class)
     // todo: redo with forms
     public static Result addStory()
     {
+        System.out.println(request().cookies());
         ObjectNode result = Json.newObject();
         Http.RequestBody body = request().body();
         Map<String, String[]> map = body.asFormUrlEncoded();
         beginTransaction();
         User user = UserManager.getLocalUser(session());
+        if (user == null)
+            user = loginEmail();
+        if (user == null) {
+            commitTransaction();
+            return forbidden("alas");
+        }
+
         String jtext = (map.get("text") != null) ? map.get("text")[0] : null,
                 jcover = (map.get("cover") != null) ? map.get("cover")[0] : null,
                 jtitle = (map.get("title") != null) ? map.get("title")[0] : null,
@@ -125,11 +142,11 @@ public class Churches extends Controller
         if (jtitle != null)
             title = jtitle;
         if (jcover != null) {
-            coverPath = "/images/passport/church_story_" + jcover + "_thumb_is.png";
+            coverPath = "/assets/images/passport/church_story_" + jcover + "_thumb_is.png";
         } else return badRequest("cover is null");
         if (jyear != null)
             year = jyear;
-        String coverThumbPath = MediaContents.relativeUploadPath + coverPath;
+        String coverThumbPath = coverPath;
         if (jchurch != null)
             church = ContentManager.getChurch(jchurch);
         else
@@ -150,6 +167,43 @@ public class Churches extends Controller
 
     public static Result addImages()
     {
-        return play.mvc.Results.TODO;
+        beginTransaction();
+        User user = UserManager.getLocalUser(session());
+        if (user == null)
+            user = loginEmail();
+        if (user == null)
+            return forbidden("sorry");
+        commitTransaction();
+        return ok("images ok");
+    }
+
+    private static User loginEmail()
+    {
+        AuthUser authUserFromRequest = getIdentityFromRequest();
+        User user = null;
+        if (authUserFromRequest != null) {
+            user = UserManager.findByAuthUserIdentity(authUserFromRequest);
+            if (user == null) // new user
+            {
+                user = UserManager.createUser(authUserFromRequest, UserRole.User);
+                System.out.println("user = " + user);
+                PlayAuthenticate.storeUser(session(), authUserFromRequest);
+                user = UserManager.getLocalUser(session());
+                System.out.println("user = " + user);
+            }
+        }
+        return user;
+    }
+
+    private static AuthUser getIdentityFromRequest()
+    {
+        System.out.println("request() = " + request());
+        DynamicForm df = Form.form().bindFromRequest();
+        String username = df.get("username");
+        String useremail = df.get("useremail");
+        AuthUser authUser = null;
+        if (username != null && !"".equals(username) && useremail != null && !"".equals(useremail))
+            authUser = new ASDAuthUser(username, "", useremail);
+        return authUser;
     }
 }

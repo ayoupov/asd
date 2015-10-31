@@ -1,0 +1,37 @@
+@()
+
+<form class="ui form entity-form" data-entity="field" method="POST">
+    <input type="hidden" value="" name="extID" id="suggestion-church-id">
+    <div class="col-3"></div>
+    <div class="col-3 suggestion-title">Help us to improve</div>
+    <div class="gapper-less clearfix"></div>
+    <div class="col-3 rightaligned inlinemiddle">
+        <label for="field-select">What would you like to fix?</label>
+    </div>
+    <div class="col-3 fullheight">
+        <select id="field-select" class="suggestion-field-select" name="field">
+            <option value="name" class="suggestion-field">Tytul</option>
+            <option value="address" class="suggestion-field">Adres</option>
+            <option value="years" class="suggestion-field">Construction years</option>
+            <option value="architects" class="suggestion-field">Architects</option>
+            <option value="website" class="suggestion-field">Website</option>
+            <option value="other" class="suggestion-field">Other</option>
+        </select>
+    </div>
+    <div class="col-1"></div>
+    <div class="gapper-less clearfix"></div>
+    <div class="col-3 rightaligned inlinemiddle">
+        <label for="field-value">Field value</label>
+    </div>
+    <div class="col-4 fullheight">
+        <input type="text" id="field-value" value="">
+    </div>
+    <div class="col-1"></div>
+    <div class="gapper-less clearfix"></div>
+    <div class="col-3"></div>
+    <div class="col-3 inlinemiddle">
+        <input type="button" value="@{"Send report"}" class="entity-submit form-submit">
+    </div>
+    <div class="col-2"></div>
+    <div class="gapper clearfix"></div>
+</form>

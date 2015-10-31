@@ -46,15 +46,15 @@ import java.util.Set;
         filters = {
                 @TokenFilterDef(factory = ASCIIFoldingFilterFactory.class),
                 @TokenFilterDef(factory = LowerCaseFilterFactory.class),
-                @TokenFilterDef(factory = StopFilterFactory.class, params = {
+                @TokenFilterDef(factory =  StopFilterFactory.class, params = {
                         @Parameter(name = "words",
                                 value = "models/internal/search/church_stoplist.properties"),
                         @Parameter(name = "ignoreCase", value = "true")
                 }),
-                @TokenFilterDef(factory = StempelPolishStemFilterFactory.class),
-                @TokenFilterDef(factory = EdgeNGramFilterFactory.class, params =
+                @TokenFilterDef(factory = StempelPolishStemFilterFactory.class)
+                ,@TokenFilterDef(factory = EdgeNGramFilterFactory.class, params =
                         {
-                                @Parameter(name= "minGramSize", value = "3"),
+                                @Parameter(name= "minGramSize", value = "5"),
                                 @Parameter(name= "maxGramSize", value = "8")
                         })
 

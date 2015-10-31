@@ -1,5 +1,7 @@
 package models.internal;
 
+import models.user.User;
+import org.hibernate.annotations.Type;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -29,6 +31,8 @@ public class ChurchSuggestion
 
     private Integer constructionEnd;
 
+    private String years;
+
     private String architects;
 
     private String website;
@@ -36,6 +40,13 @@ public class ChurchSuggestion
     private ChurchSuggestionType type;
 
     private String field;
+
+    @OneToOne()
+    @JoinColumn(name = "suggested_by")
+    private User suggestedBy;
+
+    @Type(type = "text")
+    private String other;
 
     public Integer getId()
     {
@@ -135,6 +146,36 @@ public class ChurchSuggestion
     public void setWebsite(String website)
     {
         this.website = website;
+    }
+
+    public String getYears()
+    {
+        return years;
+    }
+
+    public void setYears(String years)
+    {
+        this.years = years;
+    }
+
+    public String getOther()
+    {
+        return other;
+    }
+
+    public void setOther(String other)
+    {
+        this.other = other;
+    }
+
+    public User getSuggestedBy()
+    {
+        return suggestedBy;
+    }
+
+    public void setSuggestedBy(User suggestedBy)
+    {
+        this.suggestedBy = suggestedBy;
     }
 
     @Override

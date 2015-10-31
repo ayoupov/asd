@@ -6,7 +6,7 @@ var apiExtension =
 {
     'get json article': '/article/{id}.json',
     'get json story': '/story/{id}.json',
-    'get associated pictures': '/files/list/{id}',
+    'get associated pictures': '/files/list',
     'post update article': '/article/update',
     'preview article': '/preview/article',
     'post update story': '/story/update',

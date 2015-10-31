@@ -28,14 +28,17 @@ var articleEditClick = function () {
     $(".article-visible").show();
     if (id != 0) {
         $articleForm.api({on: 'now', action: "get json article", urlData: {id: id}, onSuccess: fillArticle});
-        $fm.api({on: 'now', action: 'get associated pictures', urlData: {id: id}, onSuccess: fillFM});
-        applySubmit(id);
+        $fm.api({on: 'now', action: 'get associated pictures', onSuccess: fillFM});
+        applySubmit();
     }
-    else
+    else {
+        $fm.api({on: 'now', action: 'get associated pictures', onSuccess: fillFM});
         fillArticle(null);
+        applySubmit();
+    }
 };
 
-function applySubmit(id)
+function applySubmit()
 {
     $('#fm-form').off('submit').on('submit',(function(e) {
         e.preventDefault();
@@ -50,11 +53,10 @@ function applySubmit(id)
             processData: false,
             success:function(data){
                 console.log("success");
-                recreateArticleFM(id);
+                recreateArticleFM();
             },
             error: function(data){
                 console.log("error");
-
             }
         });
     }));
@@ -64,11 +66,11 @@ function applySubmit(id)
     });
 }
 
-function recreateArticleFM(id) {
+function recreateArticleFM() {
     $fm.empty();
-    $fm.append(newFileManager('article', id));
-    $fm.api({on: 'now', action: 'get associated pictures', urlData: {id: id}, onSuccess: fillFM});
-    applySubmit(id);
+    $fm.append(newFileManager());
+    $fm.api({on: 'now', action: 'get associated pictures', onSuccess: fillFM});
+    applySubmit();
 }
 
 function newArticleForm() {
@@ -119,10 +121,10 @@ function fillArticle(data) {
         if (data.starred)
             $("#starred", $articleForm).attr("checked", "checked");
         else $("#starred", $articleForm).removeAttr("checked");
-        $("#approvedDT", $articleForm).val(data.approvedDT);
+        $("#approvedDT", $articleForm).val(toEditorDate(new Date(data.approvedDT)));
         fillAuthors(data.authors);
         $("#id", $articleForm).val(data.id);
-        $("#text", $articleForm).html(data.text);
+        $("#text", $articleForm).val(data.text);
     }
     $("#authors", $articleForm).tokenize(
         {

@@ -18,11 +18,14 @@ public class ImageOptions
     protected String src;
     protected String caption;
     protected int height = 300;
+    protected boolean gutter = false;
     protected static final Pattern fromPattern = Pattern.compile("from=([1-8])");
     protected static final Pattern toPattern = Pattern.compile("to=([1-8])");
     protected static final Pattern srcPattern = Pattern.compile("src=\\{(.+?)\\}");
     protected static final Pattern heightPattern = Pattern.compile("height=(\\d+)");
     protected boolean heightSet = false;
+    protected static final Pattern gutterPattern = Pattern.compile("gutter=(0|1)");
+
 
     public ImageOptions(String optionCapture)
     {
@@ -30,6 +33,7 @@ public class ImageOptions
         setTo(toPattern.matcher(optionCapture));
         setSrc(srcPattern.matcher(optionCapture));
         setHeight(heightPattern.matcher(optionCapture));
+        setGutter(gutterPattern.matcher(optionCapture));
     }
 
     public void setHeight(Matcher mHeight)
@@ -37,6 +41,13 @@ public class ImageOptions
         if (mHeight.find()) {
             this.heightSet = true;
             this.height = safeInt(mHeight.group(1), 300);
+        }
+    }
+
+    public void setGutter(Matcher gutter)
+    {
+        if (gutter.find()) {
+            this.gutter = gutter.group(1).equals("1");
         }
     }
 
@@ -91,5 +102,10 @@ public class ImageOptions
     public boolean heightSet()
     {
         return heightSet;
+    }
+
+    public boolean getGutter()
+    {
+        return gutter;
     }
 }

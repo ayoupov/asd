@@ -16,7 +16,7 @@
     <div class="col-4">
         Nie możesz znaleźć swojego kościoła? Możliwe, że został zbudowany przed wojną, albo po prostu go przeoczyliśmy. Pomóż nam go znaleźć!</div>
 </div>
-<div class="col-1"></div>
+<div class="gapper-less clearfix"></div>
 <form action="@routes.Churches.suggest" method="POST" class="ui form new-church-form" id="new_church_form">
     <div class="col-3 rightaligned inlinemiddle">
         <label for="church-name">Tytuł</label>
@@ -35,22 +35,8 @@
     <div class="col-1"></div>
     <div class="gapper-less clearfix"></div>
     <div class="col-3"></div>
-    <div class="col-2"><input type="button" value="Send church" class="form-submit"></div>
+    <div class="col-2"><input type="button" value="Send church" class="new-church-submit form-submit"></div>
     <div class="col-3"></div>
     <div class="gapper-less clearfix"></div>
 </form>
-<div class="ui success message" id="new-church-success-message">
-    <i class="close icon"></i>
-    <div class="header">
-        Your church
-    </div>
-    Your church has been successfully sent, please wait for our moderators to check it
-</div>
-<div class="ui error message" id="new-church-error-message">
-    <i class="close icon"></i>
-    <div class="header">
-        Your church
-    </div>
-    Sorry, something went wrong while sending your church
-</div>
 </div>

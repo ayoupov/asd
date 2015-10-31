@@ -10,10 +10,12 @@ var storyEditClick = function () {
     $fm.append(newFileManager('story', id));
     if (id != 0) {
         $storyEditor.api({on: 'now', action: "get json story", urlData: {id: id}, onSuccess: fillStory});
-        $fm.api({on: 'now', action: 'get associated pictures', urlData: {id: id}, onSuccess: fillFM});
+        $fm.api({on: 'now', action: 'get associated pictures', onSuccess: fillFM});
     }
-    else
+    else {
         fillStory(null);
+        $fm.api({on: 'now', action: 'get associated pictures', onSuccess: fillFM});
+    }
 };
 
 function newStoryTemplate() {

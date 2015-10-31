@@ -1,18 +1,19 @@
 @import models.user.User
-@(user: User)
+@(user: User, isStory : Boolean)
 <div class="gapper"></div>
 <!-- common part 1: auth info -->
 <form class="common-form ui form">
     <div class="col-3 rightaligned inlinemiddle">
-        <label for="story-author-name">Autor wspomnienia</label>
+            <label for="uploaded-by">@{if(isStory){"Autor wspomnienia"} else {"Dodal zdjęć"}}</label>
+            @*<label for="uploaded-by">Autor zdjęć</label>*@
     </div>
     @if(user == null) {
         <div class="col-4">
-            <input type="text" class="ui input" id="story-author" name="user.name" placeholder="Imię i nazwisko">
+            <input type="text" class="ui input uploaded-by" name="username" placeholder="Imię i nazwisko">
         </div>
     } else {
         <div class="col-3">
-            <input type="text" class="ui input" id="story-author" name="user.name" placeholder="Imię i nazwisko">
+            <input type="text" class="ui input uploaded-by" name="username" placeholder="Imię i nazwisko">
         </div>
     }
     @if(user != null) {
@@ -25,7 +26,7 @@
         <label for="story-author-email">adres e-mail</label>
     </div>
     <div class="col-2 hide-authed">
-        <input type="text" class="ui input hide-authed" id="story-author-email" name="user.email" placeholder="">
+        <input type="text" class="ui input hide-authed" id="@{if(isStory){"story-author-email"} else {"photo-author-email"}}" name="useremail" placeholder="">
     </div>
     <div class="col-2 hide-authed inlinemiddle">
         <div class="social-login" data-provider="facebook">

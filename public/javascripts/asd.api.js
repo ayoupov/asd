@@ -91,6 +91,7 @@ var applySummary = function (response) {
         on: 'now'
     });
     mapInit(response.data['geostats']);
+    // case of logout and coming back
 };
 
 function populateArticles(data) {
@@ -182,7 +183,7 @@ function populateStories(data) {
 }
 
 function appendStoryApi(when) {
-    var $more = $(".extra-story");
+    var $more = $(".extra-story", $stories);
     $more.api(
         {
             action: 'get stories',

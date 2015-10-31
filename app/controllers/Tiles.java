@@ -36,7 +36,6 @@ public class Tiles extends Controller
     public static Result tile(String layer, Integer zoom, Integer x, Integer y, String ext) throws IOException
     {
 
-        Json.setObjectMapper(Serializer.searchMapper);
         ObjectNode result = Json.newObject();
         boolean dekanatLayer = false;
         if ("c".equals(layer) || (dekanatLayer = "d".equals(layer))) {
@@ -57,6 +56,7 @@ public class Tiles extends Controller
                 farr = getChurchFeatures(g);
             commitTransaction();
             result.put("type", "FeatureCollection");
+            Json.setObjectMapper(Serializer.searchMapper);
             result.put("features", Json.toJson(farr));
             if (dekanatLayer)
                 storeTile(layer, zoom, x, y, result);
@@ -105,6 +105,7 @@ public class Tiles extends Controller
                 Geometry point = (Geometry) row[3];
                 ObjectNode node = Json.newObject();
                 node.put("type", "Feature");
+                Json.setObjectMapper(Serializer.searchMapper);
                 node.put("geometry", Json.toJson(point));
                 node.put("properties", props);
                 farr.add(node);

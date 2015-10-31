@@ -1,38 +1,37 @@
-function initSearch()
-{
+function initSearch() {
     console.log('initiating search');
     console.log($prompt);
     $searchWrapper.search(
         {
             apiSettings: {
-                debug : true,
-                verbose : true,
-                action : 'search',
-                onResponse: function(churchResponse) {
+                debug: true,
+                verbose: true,
+                action: 'search',
+                onResponse: function (churchResponse) {
                     var
                         response = churchResponse;
                     response["action"] =
                     {
-                        url : "javascript:addNewChurch();",
-                        text : 'Nie możesz znaleźć? Dodaj kościół do bazy!'
+                        url: "javascript:addNewChurch();",
+                        text: 'Nie możesz znaleźć? Dodaj kościół do bazy!'
                     };
                     return response;
                 }
             },
-            debug : true,
-            verbose : true,
-            minCharacters : 3,
+            debug: true,
+            verbose: true,
+            minCharacters: 3,
             //type: 'category',
-            maxResults : 5,
-            fields : {
-                title           : 'title',       // result title
-                action          : 'action',      // "view more" object name
-                actionText      : 'text',        // "view more" text
-                actionURL       : 'url'          // "view more" url
+            maxResults: 5,
+            fields: {
+                title: 'title',       // result title
+                action: 'action',      // "view more" object name
+                actionText: 'text',        // "view more" text
+                actionURL: 'url'          // "view more" url
             },
             errors: {
-                error : {
-                    serverError : ""
+                error: {
+                    serverError: ""
                 }
             }
         }
@@ -40,24 +39,24 @@ function initSearch()
 }
 var newChurchInited = false;
 function addNewChurch() {
+    $("input[type=text]",$suggestionWrapper).val('');
     $suggestionWrapper.modal('show');
     if (!newChurchInited)
         initAddChurch();
 }
 
 function initAddChurch() {
-    $(".submit.button", $suggestionWrapper).api({
+    $(".new-church-submit", $suggestionWrapper).api({
         on: 'click',
         action: 'suggest church',
         method: 'POST',
         onSuccess: function (data) {
             console.log(data);
-            togglePassportUpdateForm();
+            showPassportUpdateForm();
             notifyChurchOk();
         },
-        onError : function()
-        {
-            //togglePassportUpdateForm();
+        onError: function () {
+            //showPassportUpdateForm();
             notifyChurchError();
         },
         serializeForm: true
@@ -65,12 +64,12 @@ function initAddChurch() {
     newChurchInited = true;
 }
 
-function notifyChurchOk()
-{
-    $("#new-church-success-message").show('slow');
+function notifyChurchOk() {
+    $("#new-church-success-message").fadeIn('slow').delay(5000).fadeOut('fast', function () {
+        $suggestionWrapper.modal('hide');
+    });
 }
 
-function notifyChurchError()
-{
+function notifyChurchError() {
     $("#new-church-error-message").show('slow');
 }

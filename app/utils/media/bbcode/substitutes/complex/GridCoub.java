@@ -30,8 +30,9 @@ public class GridCoub extends GridImage
 
         int to = opts.getTo();
         int from = opts.getFrom();
-        int width = (to - from + 1) * (colWidth + colGutterWidth) - colGutterWidth;
-        marginLeft = (from - 2) * (colWidth + colGutterWidth);
+        boolean gutter = opts.getGutter();
+        int width = GridUtil.gridWidth(from, to, gutter);
+        marginLeft = GridUtil.leftMargin(from, to, gutter);
         String coubStyle = String.format("style='width: %dpx; margin-left: %dpx;' ", width, marginLeft);
 
         return String.format(

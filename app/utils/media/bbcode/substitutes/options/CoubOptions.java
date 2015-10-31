@@ -21,6 +21,7 @@ public class CoubOptions extends ImageOptions
     private String startWithHD = TRUE;
     private String allowFullScreen = TRUE;
     private String muted = TRUE;
+    private boolean gutter = false;
     protected static final Pattern mutedPattern = Pattern.compile("muted=(true|false)");
     protected static final Pattern autostartPattern = Pattern.compile("autostart=(true|false)");
     protected static final Pattern origsizePattern = Pattern.compile("originalsize=(true|false)");
@@ -36,6 +37,7 @@ public class CoubOptions extends ImageOptions
         this.setOriginalSize(origsizePattern.matcher(optionCapture));
         this.setAllowFullScreen(afsPattern.matcher(optionCapture));
         this.setHeight(heightPattern.matcher(optionCapture));
+        this.setGutter(gutterPattern.matcher(optionCapture));
     }
 
     public String getMuted()
@@ -67,6 +69,13 @@ public class CoubOptions extends ImageOptions
     {
         if (muted.find()) {
             this.muted = muted.group(1);
+        }
+    }
+
+    public void setGutter(Matcher gutter)
+    {
+        if (gutter.find()) {
+            this.gutter = gutter.group(1).equals("1");
         }
     }
 
@@ -107,7 +116,13 @@ public class CoubOptions extends ImageOptions
                 ", muted='" + muted + '\'' +
                 ", from='" + from + '\'' +
                 ", to='" + to + '\'' +
+                ", gutter='" + gutter + '\'' +
                 ", src='" + src + '\'' +
                 '}';
+    }
+
+    public boolean getGutter()
+    {
+        return gutter;
     }
 }

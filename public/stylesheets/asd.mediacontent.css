@@ -81,11 +81,11 @@
 .content-lead {
     margin-top: 3em;
     color: #d0b165;
-    font-family: "Helvetica", "Helvetica Neue Light", sans-serif;
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
     font-weight: bold;
     text-align: center;
     text-transform: uppercase;
-    font-size: 11pt;
+    font-size: 14px;
     line-height: 1.7em;
     letter-spacing: 0.3px;
     width: 460px;
@@ -95,7 +95,8 @@
 }
 
 .content-main {
-    font-size: 11pt;
+    font-size: 14px;
+    line-height: 24px;
     width: 580px;
     margin-left: 140px;
     margin-right: 260px;
@@ -116,13 +117,13 @@ div.content-padder {
     width: 100%;
 }
 
-.content-main h2, .content-main h1 {
-    font-family: Arial, "Helvetica", "Helvetica Neue Light", sans-serif !important;
-    /*margin-left: 140px;*/
+.content-main h2,.content-main h1 {
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif !important;
     margin-bottom: 0;
     margin-top: 0;
-    /*margin-bottom: 50px;*/
-    /*margin-top: 50px;*/
+}
+.content-main h1 {
+    font-size: 24px;
 }
 
 div.content-excerpt {
@@ -132,7 +133,7 @@ div.content-excerpt {
     /*margin-right: 360px;*/
     margin-right: 480px;
     font-family: Georgia, serif !important;
-    font-size: 26pt !important;
+    font-size: 35px !important;
     font-style: italic;
     color: #a0a0a0;
     text-align: center;
@@ -155,7 +156,7 @@ div.content-excerpt {
     margin-left: 100px;
     margin-right: 260px;
     font-family: Georgia, serif;
-    font-size: 26pt;
+    font-size: 35px;
     font-style: italic;
     color: #a0a0a0;
     text-align: left;
@@ -166,7 +167,7 @@ div.content-excerpt {
 .content-quote i {
     font-style: normal;
     font-family: Helvetica, Arial, sans-serif;
-    font-size: 24pt;
+    font-size: 35px;
     margin-bottom: 50px;
 }
 
@@ -243,22 +244,22 @@ img.full-width {
     margin-right: 260px;
     color: #a8a8a8 !important;
     line-height: 1.6em;
-}
 
-/*.content-afterwords-style {*/
-/*color: #a8a8a8 !important;*/
-/*line-height: 1.6em;*/
-/*/!*float: left;*!/*/
-/*}*/
+    font-size: 14px;
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
+    font-weight:200;
+}
 
 .content-afterwords b {
     line-height: 1.6em;
     color: #d0b165;
-    font-size: 8pt;
     text-transform: uppercase;
     float: left;
     margin-right: 4px;
     margin-top: 3px;
+    font-size: 10px;
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
+    font-weight: 100;
 }
 
 div.content-afterwords-wrapper {
@@ -272,7 +273,7 @@ div.content-afterwords-wrapper {
 }
 
 .content-main ol {
-    margin-left: 140px;
+    /*margin-left: 140px;*/
     width: 580px;
     font-style: italic;
 }
@@ -283,4 +284,42 @@ div.content-afterwords-wrapper {
 
 div.gap {
     width: 100%;
+}
+
+#contentmenu-bottom {
+    bottom: 0;
+    border-top: 3px solid rgb(236, 236, 236);
+    border-bottom: none !important;
+    margin: 0 !important;
+}
+
+.content-gallery-arrow {
+    position: absolute;
+    background: transparent repeat-y;
+    height: 100%;
+    width: 50%;
+    z-index: 98;
+    opacity: 0.5;
+}
+
+.content-gallery-arrow-left
+{
+    left:0;
+    top:0;
+}
+
+.content-gallery-arrow-right
+{
+    right:0;
+    top:0;
+}
+
+.content-gallery-arrow-left.hover {
+    background-image : url(/assets/skins/default/slider_arrow_left.png);
+    background-size: contain;
+}
+
+.content-gallery-arrow-right.hover {
+    background-image : url(/assets/skins/default/slider_arrow_right.png);
+    background-size: contain;
 }

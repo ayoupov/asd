@@ -5,8 +5,6 @@ function newFileManager(mctype, id) {
     return $('<form class="ui form" method="POST" class="dropzone" ' +
         'id="fm-form" action="/files/upload" enctype="multipart/form-data">' +
         '<input type="file" name="picture" multiple>' +
-        '<input type="hidden" name="mcid" value="' + id + '">' +
-        '<input type="hidden" name="mctype" value="' + mctype + '">' +
         '<p><input type="button" class="ui submit button" value="upload"></p>' +
         '</form>');
 }

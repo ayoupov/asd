@@ -21,6 +21,7 @@ GET         /stats/test                            controllers.Stats.test
 GET         /church/:id                            controllers.Application.index(id: String)
 GET         /church/passport/:id                   controllers.Churches.byId(id: String)
 POST        /church/passport/:field                controllers.Churches.updateField(field: String)
+POST        /church/suggest                        controllers.Churches.suggest
 POST        /church/story                          controllers.Churches.addStory
 GET         /church/:id/images                     controllers.Churches.images(id:String)
 POST        /church/images                         controllers.Churches.addImages
@@ -49,12 +50,9 @@ GET         /auth/logout                           controllers.Auth.logout
 GET         /auth/:provider                        controllers.Auth.auth(provider: String)
 GET         /auth/:provider/denied                 controllers.Auth.oAuthDenied(provider: String)
 
-#role??
-POST        /church/suggest                        controllers.Churches.suggest
-
 # secure, role must be >= Moderator
 POST        /files/upload                          controllers.FileManager.upload
-GET         /files/list/:path                      controllers.FileManagerJava.list(path : String)
+GET         /files/list                            controllers.FileManagerJava.list
 POST        /article/update                        controllers.MediaContents.update(ctype : String = "article")
 POST        /story/update                          controllers.MediaContents.update(ctype : String = "story")
 

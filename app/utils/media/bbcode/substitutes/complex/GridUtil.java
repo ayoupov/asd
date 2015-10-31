@@ -11,13 +11,19 @@ public class GridUtil
     protected static final int colWidth = 100;
     protected static final int colGutterWidth = 20;
 
-    public static int gridWidth(int from, int to)
+    public static int gridWidth(int from, int to, boolean gutter)
     {
-        return (to - from + 1) * (colWidth + colGutterWidth) + colGutterWidth;
+        if (gutter)
+            return (to - from + 1) * (colWidth + colGutterWidth) + colGutterWidth;
+        else
+            return (to - from + 1) * (colWidth + colGutterWidth) - colGutterWidth;
     }
 
-    public static int leftMargin(int from, int to)
+    public static int leftMargin(int from, int to, boolean gutter)
     {
-        return (from - 2) * (colWidth + colGutterWidth) - colGutterWidth;
+        if (gutter)
+            return (from - 2) * (colWidth + colGutterWidth) - colGutterWidth;
+        else
+            return (from - 2) * (colWidth + colGutterWidth);
     }
 }
