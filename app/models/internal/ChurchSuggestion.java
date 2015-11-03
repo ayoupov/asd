@@ -6,6 +6,7 @@ import play.data.validation.Constraints;
 
 import javax.persistence.*;
 import javax.validation.constraints.Null;
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -40,6 +41,12 @@ public class ChurchSuggestion
     private ChurchSuggestionType type;
 
     private String field;
+
+    private boolean fixed;
+
+    @Column(name = "suggested_on_dt")
+    private Date suggestedOn;
+
 
     @OneToOne()
     @JoinColumn(name = "suggested_by")
@@ -178,6 +185,16 @@ public class ChurchSuggestion
         this.suggestedBy = suggestedBy;
     }
 
+    public Date getSuggestedOn()
+    {
+        return suggestedOn;
+    }
+
+    public void setSuggestedOn(Date suggestedOn)
+    {
+        this.suggestedOn = suggestedOn;
+    }
+
     @Override
     public String toString()
     {
@@ -186,5 +203,15 @@ public class ChurchSuggestion
                 ", extID='" + extID + '\'' +
                 ", field='" + field + '\'' +
                 '}';
+    }
+
+    public boolean isFixed()
+    {
+        return fixed;
+    }
+
+    public void setFixed(boolean fixed)
+    {
+        this.fixed = fixed;
     }
 }

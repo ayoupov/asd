@@ -17,7 +17,7 @@ public class GSVOptions extends ImageOptions
     protected int heading = 0;
     protected boolean gutter = false;
 
-    protected static final Pattern headingPattern = Pattern.compile("heading=(\\d+?)");
+    protected static final Pattern headingPattern = Pattern.compile("heading=(\\d+)");
 
 
     public GSVOptions(String optionCapture)

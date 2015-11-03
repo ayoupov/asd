@@ -57,6 +57,13 @@ public class GridCoub extends GridImage
     }
 
     @Override
+    protected String getPostfix()
+    {
+        return String.format("<span class='content-image-caption' style='margin-left: %dpx;'>%s</span><br>",
+                marginLeft, getOptions().getCaption());
+    }
+
+    @Override
     public ImageOptions getOptions()
     {
         return opts;

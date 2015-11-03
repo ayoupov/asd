@@ -1,0 +1,23 @@
+@(part:String)
+<div class="gapper-less clearfix"></div>
+<div class="col-3 rightaligned inlinemiddle">
+    <label class="image-label-filename image-label" for="_@part-image_1">Dodaj zdjęcie</label>
+</div>
+<div class="col-4">
+    <div class="ui action input">
+        <input type="text" id="_@part-image_1" class="image-name-input" placeholder="Podziel się archiwalnymi zdjęciami, projektami lub szkicami">
+        <label for="@part-image_1" class="ui icon button btn-file">
+            <i class="attach big icon"></i>
+            <input type="file" id="@part-image_1" name="image_1" style="display: none;">
+        </label>
+    </div>
+</div>
+<div class="col-1"></div>
+<div class="gapper-less clearfix"></div>
+<div class="col-3 rightaligned inlinemiddle">
+    <label for="description" class="image-label-desc image-label">Podpis pod zdjęciem</label>
+</div>
+<div class="col-4">
+    <input id="description" type="text" value="" name="description_1" placeholder="Napisz nam co jest na zdjęciu, kto jest autorem i kiedy zostało zrobione">
+</div>
+<div class="col-1 insert-image-after"></div>

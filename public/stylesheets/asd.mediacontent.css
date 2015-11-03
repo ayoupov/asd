@@ -211,6 +211,7 @@ div.full-width {
     font-size: 8pt;
     color: #a8a8a8;
     margin-top: 4px;
+    height: 16px;
 }
 
 img.full-width {
@@ -306,20 +307,26 @@ div.gap {
 {
     left:0;
     top:0;
+    background-position-x : left;
 }
 
 .content-gallery-arrow-right
 {
     right:0;
     top:0;
+    background-position-x : right;
 }
 
-.content-gallery-arrow-left.hover {
+.content-gallery-arrow-left:hover {
     background-image : url(/assets/skins/default/slider_arrow_left.png);
     background-size: contain;
 }
 
-.content-gallery-arrow-right.hover {
+.content-gallery-arrow-right:hover {
     background-image : url(/assets/skins/default/slider_arrow_right.png);
     background-size: contain;
+}
+
+.ug-bullets.ug-skin-default .ug-bullet {
+    height: 14px !important;
 }

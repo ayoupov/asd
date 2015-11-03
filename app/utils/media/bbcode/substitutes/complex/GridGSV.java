@@ -62,5 +62,11 @@ public class GridGSV extends GridImage
         return opts;
     }
 
+    @Override
+    protected String getPostfix()
+    {
+        return String.format("<span class='content-image-caption' style='margin-left: %dpx;'>%s</span><br>",
+                marginLeft, getOptions().getCaption());
+    }
 
 }

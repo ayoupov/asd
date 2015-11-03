@@ -10,6 +10,23 @@
     height: 42px;
 }
 
+.menu-nav {
+    bottom: 0;
+    margin: 0 !important;
+}
+
+.menu-nav-bottom {
+    border-top: 3px solid rgb(236, 236, 236) !important;
+    border-bottom: none !important;
+    position: relative;
+}
+
+.menu-nav-top {
+    border-bottom: 3px solid rgb(236, 236, 236) !important;
+    border-top: none !important;
+    top: 0;
+}
+
 .prompt-wrapper {
     margin-right: 24px !important;
     border-bottom: solid 5px black !important;
@@ -242,12 +259,12 @@ form:not(#foo) > div > input[type='checkbox']:checked + label {
     cursor: pointer;
 }
 
-.passport-update-button-wrapper.hover {
+.passport-update-button-wrapper:hover {
     background-color: #5a38db;
     border-color: #d0b165;
 }
 
-.passport-update-button-wrapper.hover td {
+.passport-update-button-wrapper:hover td {
     color: white;
 }
 
@@ -264,10 +281,12 @@ form:not(#foo) > div > input[type='checkbox']:checked + label {
     font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
     font-weight: bold;
     font-size: 24px;
+    line-height: 1em;
 }
 
-.passport-update div .ui.form label:not(.upload-confirmation-label),
-#new_church_form label,
+.ui.form label:not(.upload-confirmation-label),
+.new-church-form label,
+.feedback-form label,
 .passport-suggest label
 {
     font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
@@ -277,11 +296,12 @@ form:not(#foo) > div > input[type='checkbox']:checked + label {
     text-align: right;
 }
 
-.passport-update div .ui.form input[type=text],
-.passport-update div .ui.form textarea,
-#new_church_form input[type=text],
-.passport-suggest input[type=text],
-.passport-suggest select{
+/*.passport-update div .ui.form input[type=text],*/
+/*.passport-update div .ui.form textarea,*/
+/*#new_church_form input[type=text],*/
+/*.passport-suggest input[type=text],*/
+/*.passport-suggest select{*/
+.ui.form input[type=text],.ui.form textarea, .ui.form select{
     border: none !important;
     border-radius: initial !important;
     font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif !important;
@@ -369,4 +389,12 @@ div.gapper-less
 {
     width: 182px;
     float: left;
+}
+
+.form-title {
+    font-size: 24px;
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 20px;
 }

@@ -4,7 +4,7 @@ import models.Church;
 import models.MediaContent;
 import models.MediaContentType;
 import models.internal.ContentManager;
-import models.internal.MockIdentity;
+import models.internal.identities.MockIdentity;
 import models.internal.UserManager;
 import models.user.User;
 import models.user.UserRole;

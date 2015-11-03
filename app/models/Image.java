@@ -145,4 +145,18 @@ public class Image
     {
         this.approvedTS = approvedTS;
     }
+
+    @Override
+    public String toString()
+    {
+        return "Image{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", path='" + path + '\'' +
+                ", uploadedBy=" + uploadedBy +
+                ", uploadedTS=" + uploadedTS +
+                ", approvedBy=" + approvedBy +
+                ", approvedTS=" + approvedTS +
+                '}';
+    }
 }

@@ -1,0 +1,10 @@
+@import models.user.User
+@import models.internal.LoginTypeSelect
+@(user: User)
+<!-- images form -->
+<form class="ui form entity-form" data-entity="images" method="POST" action="@routes.Churches.addImages()" enctype="multipart/form-data" data-image-part="images">
+    @parts.passport.common_update_head(user, LoginTypeSelect.IMAGES)
+    <input type="hidden" value="" name="church" id="image-church-id">
+    @parts.passport.image_block("images")
+    @parts.passport.common_update_tail(true)
+</form>

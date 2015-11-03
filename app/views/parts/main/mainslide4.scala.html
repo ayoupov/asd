@@ -1,11 +1,11 @@
-@(facebookPage : String)
+@(facebookPage: String)
 
 <!-- credits -->
 <div id="slide-about" class="slide slide-about">
     <a id="to-slide-about" href="#slide-about" class="slide-transition"></a>
 
     <div class="credits-container">
-            <h3>O projekcie</h3>
+        <h3>O projekcie</h3>
 
         <div class="row">
             <p>Trzy tysiące pięćset sześćdziesiąt sześć posoborowych kościołów – choć zdominowało polski
@@ -84,7 +84,9 @@
         </div>
         <div class="row last">
             <div class="column social role">Napisz do nas</div>
-            <div class="column social"><img src="@routes.Assets.at("images/favicon.png")">
+            <div class="column social"><a href="javascript:addFeedback();" class="feedback-anchor">
+                <img src="@routes.Assets.at("images/favicon.png")">
+            </a>
             </div>
         </div>
     </div>

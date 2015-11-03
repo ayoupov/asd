@@ -17,6 +17,7 @@
         <div class="wrapper">
             @* @parts.guidelines(true) *@
             @staticmenu("map")
+            @* @staticmenu2("map") *@
             @sociallinks()
             @parts.main.mainslide1(churchCount)
             @parts.main.mainslide2()
@@ -26,6 +27,7 @@
                @* @parts.guidelines(false) *@
                 @parts.passport.passport(currentChurch, user)
                 @parts.church_suggestion(user)
+                @parts.feedback_form(user)
             </div>
         </div>
         <script>

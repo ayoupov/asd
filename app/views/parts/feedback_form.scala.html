@@ -1,0 +1,37 @@
+@import models.internal.LoginTypeSelect
+@import models.user.User
+@(user: User)
+<div class="feedback-wrapper ui modal">
+  @*  @parts.guidelines(false) *@
+    <!-- new church specific components -->
+<nav id="feedback-menu-top" class="ui secondary pointing menu blurred hide-main menu-nav menu-nav-top">
+    <div class="right item">
+        <div class="close-button"></div>
+    </div>
+</nav>
+<div class="gapper-less clearfix"></div>
+    <div class="feedback-title form-title">
+        Napisz do nas
+    </div>
+<form action="@routes.Feedback.feedback()" method="POST" class="ui form feedback-form" id="feedback_form">
+@parts.passport.common_update_head(user, LoginTypeSelect.FEEDBACK)
+    <div class="gapper-less clearfix"></div>
+<div class="col-3 rightaligned inlinemiddle">
+    <label for="church-comment">Twoja wiadomość</label>
+</div>
+<div class="col-4 fullheight">
+    <textarea class="ui textarea feedback-value" id="feedback-comment" name="comment" placeholder="Wpisz tekst wiadomości"></textarea>
+</div>
+<div class="col-1"></div>
+<div class="gapper-less clearfix"></div>
+<div class="col-3"></div>
+<div class="col-2"><input type="button" value="WYŚLIJ WIADOMOŚĆ" class="feedback-submit form-submit"></div>
+<div class="col-3"></div>
+<div class="gapper clearfix"></div>
+</form>
+<nav id="feedback-menu-bottom" class="ui secondary pointing menu blurred hide-main menu-nav menu-nav-bottom">
+    <div class="right item">
+        <div class="close-button"></div>
+    </div>
+</nav>
+</div>

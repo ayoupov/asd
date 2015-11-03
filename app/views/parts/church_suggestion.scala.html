@@ -1,42 +1,51 @@
 @import models.user.User
 @(user: User)
 <div class="suggestion-wrapper ui modal">
-    @parts.guidelines(false)
+@*    @parts.guidelines(false)            *@
     <!-- new church specific components -->
-<nav id="new-church-menu-top hide-main" class="ui secondary pointing menu blurred">
-    <div class="left item">
-        <div class="new-church-modal-title">Suggestion</div>
+    <nav id="new-church-menu-top" class="ui secondary pointing menu blurred hide-main menu-nav menu-nav-top">
+        <div class="right item">
+            <div class="close-button"></div>
+        </div>
+    </nav>
+    @*<div class="gapper clearfix"></div>*@
+    <div class="new-church-title form-title">
+        Dodaj brakujący kościół
     </div>
-    <div class="right item">
-        <div class="close-button"></div>
-    </div>
-</nav>
-<div class="new-church-prompt">
-    <div class="col-3"></div>
-    <div class="col-4">
-        Nie możesz znaleźć swojego kościoła? Możliwe, że został zbudowany przed wojną, albo po prostu go przeoczyliśmy. Pomóż nam go znaleźć!</div>
-</div>
-<div class="gapper-less clearfix"></div>
-<form action="@routes.Churches.suggest" method="POST" class="ui form new-church-form" id="new_church_form">
-    <div class="col-3 rightaligned inlinemiddle">
-        <label for="church-name">Tytuł</label>
-    </div>
-    <div class="col-4">
-        <input type="text" class="ui input new-church-value" id="church-name" name="name" placeholder="name">
-    </div>
-    <div class="col-1"></div>
-    <div class="gapper-less clearfix"></div>
-    <div class="col-3 rightaligned inlinemiddle">
-        <label for="church-address">Adres</label>
-    </div>
-    <div class="col-4">
-        <input type="text" class="ui input new-church-value" id="church-address" name="address" placeholder="adres">
-    </div>
-    <div class="col-1"></div>
-    <div class="gapper-less clearfix"></div>
-    <div class="col-3"></div>
-    <div class="col-2"><input type="button" value="Send church" class="new-church-submit form-submit"></div>
-    <div class="col-3"></div>
-    <div class="gapper-less clearfix"></div>
-</form>
+    <div class="gapper clearfix"></div>
+    <form action="@routes.Churches.suggest" method="POST" class="ui form new-church-form" id="new_church_form">
+        <div class="col-3 rightaligned inlinemiddle">
+            <label for="church-name">nazwa kościoła</label>
+        </div>
+        <div class="col-4">
+            <input type="text" class="ui input new-church-value" id="church-name" name="name" placeholder="Wpisz nazwę kościoła, który przeoczyliśmy">
+        </div>
+        <div class="col-1"></div>
+        <div class="gapper-less clearfix"></div>
+        <div class="col-3 rightaligned inlinemiddle">
+            <label for="church-address">adres</label>
+        </div>
+        <div class="col-4">
+            <input type="text" class="ui input new-church-value" id="church-address" name="address" placeholder="Podaj co najmniej nazwę miejscowości, w której znajduje się kościół">
+        </div>
+        <div class="col-1"></div>
+        <div class="gapper-less clearfix"></div>
+        <div class="col-3 rightaligned inlinemiddle">
+            <label for="church-comment">komentarz</label>
+        </div>
+        <div class="col-4 fullheight">
+            <textarea class="ui textarea new-church-value" id="church-comment" name="comment" placeholder="Wpisz dodatkowe dane, które pozwolą nam zlokalizować i opisać powojenny kościół, który przeoczyliśmy: daty budowy, architektów, stronę parafii."></textarea>
+        </div>
+        <div class="col-1"></div>
+        <div class="gapper-less clearfix"></div>
+        <div class="col-3"></div>
+        <div class="col-3"><input type="button" value="WYŚLIJ DANE NA TEMAT KOŚCIOŁA" class="new-church-submit form-submit"></div>
+        <div class="col-2"></div>
+        <div class="gapper clearfix"></div>
+    </form>
+    <nav id="new-church-menu-bottom" class="ui secondary pointing menu blurred hide-main menu-nav menu-nav-bottom">
+        <div class="right item">
+            <div class="close-button"></div>
+        </div>
+    </nav>
 </div>

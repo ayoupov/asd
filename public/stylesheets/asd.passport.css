@@ -23,25 +23,6 @@
     height: 55px;
 }
 
-#passportmenu-bottom {
-    bottom: 0;
-    border-top: 3px solid rgb(236, 236, 236);
-    border-bottom: none !important;
-    margin: 0 !important;
-    position: relative;
-}
-
-#passportmenu-top {
-    bottom: 0;
-    border-bottom: 3px solid rgb(236, 236, 236) !important;
-    /*border-bottom: 2px solid transparent !important;*/
-    margin: 0 !important;
-}
-
-#passportmenu-top {
-    top: 0;
-}
-
 .alarm-sign {
     height: 34px;
     width: 34px;
@@ -50,7 +31,6 @@
     margin-left: 10px;
     cursor: pointer;
 }
-
 .passport-title-wrapper {
     font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
     font-size: 38px;
@@ -419,14 +399,6 @@ td.passport-data-filler {
 
 .passport-suggest {
     background-color: #f2f2f2;
-}
-
-.suggestion-title {
-    font-size: 20px;
-    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
-    text-align: center;
-    font-weight: bold;
-    margin-top: 20px;
 }
 
 .passport-suggest select {

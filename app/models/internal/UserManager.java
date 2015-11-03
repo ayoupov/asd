@@ -6,6 +6,7 @@ import com.feth.play.module.pa.user.AuthUserIdentity;
 import com.feth.play.module.pa.user.EmailIdentity;
 import com.feth.play.module.pa.user.NameIdentity;
 import models.LinkedAccount;
+import models.internal.identities.AutoIdentity;
 import models.user.User;
 import models.user.UserRole;
 import models.user.UserStatus;

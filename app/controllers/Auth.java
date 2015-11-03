@@ -69,6 +69,8 @@ public class Auth extends Controller
             session().put("pa.url.orig",
                     callbackUrl);
         }
+        if (callbackUrl == null)
+            callbackUrl = "";
         response().setCookie("auth.cb", callbackUrl);
         return com.feth.play.module.pa.controllers.Authenticate.logout();
     }

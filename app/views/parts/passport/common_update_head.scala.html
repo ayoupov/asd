@@ -1,39 +1,50 @@
+@import models.internal.LoginTypeSelect
 @import models.user.User
-@(user: User, isStory : Boolean)
+@(user: User, loginTypeSelect: LoginTypeSelect)
+@usernameLabel() = @{
+    loginTypeSelect match {
+        case LoginTypeSelect.IMAGES => "Zdjęcia dodał"
+        case LoginTypeSelect.STORY => "Autor wspomnienia"
+        case LoginTypeSelect.FEEDBACK => "Autor komentarza"
+    }
+}
 <div class="gapper"></div>
-<!-- common part 1: auth info -->
-<form class="common-form ui form">
-    <div class="col-3 rightaligned inlinemiddle">
-            <label for="uploaded-by">@{if(isStory){"Autor wspomnienia"} else {"Dodal zdjęć"}}</label>
-            @*<label for="uploaded-by">Autor zdjęć</label>*@
-    </div>
-    @if(user == null) {
-        <div class="col-4">
-            <input type="text" class="ui input uploaded-by" name="username" placeholder="Imię i nazwisko">
-        </div>
-    } else {
-        <div class="col-3">
-            <input type="text" class="ui input uploaded-by" name="username" placeholder="Imię i nazwisko">
-        </div>
-    }
-    @if(user != null) {
-        @*<div class="col-1"><a href="@routes.Auth.logout()" class="not-you-button">Not you?</a></div>*@
-        <div class="col-1"><div class="not-you-button form-button">To nie ty?</div></div>
-    }
-    <div class="col-1"></div>
-    <div class="gapper-less clearfix hide-authed"></div>
-    <div class="col-3 rightaligned inlinemiddle hide-authed">
-        <label for="story-author-email">adres e-mail</label>
-    </div>
-    <div class="col-2 hide-authed">
-        <input type="text" class="ui input hide-authed" id="@{if(isStory){"story-author-email"} else {"photo-author-email"}}" name="useremail" placeholder="">
-    </div>
-    <div class="col-2 hide-authed inlinemiddle">
-        <div class="social-login" data-provider="facebook">
-            <div class="asd-fb-login-button"></div>
-    <div class="social-login-invite form-button">wejdź przez Facebooka</div>
+    <!-- common part 1: auth info -->
+<div class="col-3 rightaligned inlinemiddle">
+    <label for="uploaded-by">@usernameLabel()</label>
+    @*<label for="uploaded-by">Autor zdjęć</label>*@
 </div>
+@if(user == null) {
+    <div class="col-4">
+        <input type="text" class="ui input uploaded-by" name="username" placeholder="Imię i nazwisko">
+    </div>
+} else {
+    <div class="col-3">
+        <input type="text" class="ui input uploaded-by" name="username" placeholder="Imię i nazwisko" value="@user.getName">
+    </div>
+}
+@if(user != null) {
+    @*<div class="col-1"><a href="@routes.Auth.logout()" class="not-you-button">Not you?</a></div>*@
+    <div class="col-1"><div class="not-you-button form-button">TO NIE JA</div></div>
+}
+<div class="col-1"></div>
+<div class="gapper-less clearfix hide-authed"></div>
+<div class="col-3 rightaligned inlinemiddle hide-authed">
+    <label for="story-author-email">adres e-mail</label>
 </div>
-    <div class="col-1 hide-authed"></div>
-    <div class="gapper-less clearfix"></div>
-</form>
+<div class="col-2 hide-authed">
+    <input type="text" class="ui input hide-authed" id="@{
+        if(loginTypeSelect == LoginTypeSelect.IMAGES) {
+            "image-author-email"
+        } else {
+            "story-author-email"
+        }
+    }" name="useremail" placeholder="">
+</div>
+<div class="col-2 hide-authed inlinemiddle">
+    <div class="social-login" data-provider="facebook">
+        <div class="asd-fb-login-button"></div>
+        <div class="social-login-invite form-button">wejdź przez Facebooka</div>
+    </div>
+</div>
+<div class="col-1 hide-authed"></div>

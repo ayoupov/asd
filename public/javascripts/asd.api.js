@@ -6,12 +6,15 @@ var api =
     'get article': '/article/{id}',
     'get story': '/story/{id}',
     'get church passport': '/church/passport/{id}',
-    'add church story': '/church/story',
     'get church images': '/church/{id}/images',
+
+    'search': '/search/{$searchable}/{query}',
+
+    'add church story': '/church/story',
     'add church images': '/church/images',
     'update passport field': '/church/passport/{field}',
-    'search': '/search/{$searchable}/{query}',
-    'suggest church': '/church/suggest'
+    'suggest church': '/church/suggest',
+    'send feedback' : '/feedback'
 };
 
 // ss = starStories, sa = starArticles, ds = dateStories, da = dateArticles
@@ -239,11 +242,11 @@ function populateDateStories(data) {
 
         $dateStories.append($item);
     });
-    $(".item", $dateStories).hover(function () {
-        $(this).addClass('active');
-    }, function () {
-        $(this).removeClass('active');
-    });
+    //$(".item", $dateStories).hover(function () {
+    //    $(this).addClass('active');
+    //}, function () {
+    //    $(this).removeClass('active');
+    //});
 }
 
 // The de-facto unbiased shuffle algorithm is the Fisher-Yates (aka Knuth) Shuffle.

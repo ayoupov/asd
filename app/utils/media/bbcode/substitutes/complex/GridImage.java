@@ -45,9 +45,9 @@ public class GridImage extends ComplexSubstitute
 
         String src = opts.getSrc() == null ? ServerProperties.getValue("asd.editor.nosrc.image") : opts.getSrc();
         return String.format(
-                "<img src='%s' data-image='%s' alt='%s' class='content-image' %s>",
+                "<img src='%s' data-image='%s' alt='%s' data-description='%s' class='content-image' %s>",
                 src, src,
-                opts.getCaption(), imageStyle);
+                opts.getCaption(), opts.getCaption(), imageStyle);
     }
 
     @Override

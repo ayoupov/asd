@@ -1,8 +1,7 @@
-package models.internal;
+package models.internal.identities;
 
 import com.feth.play.module.pa.user.AuthUser;
 import com.feth.play.module.pa.user.BasicIdentity;
-import com.feth.play.module.pa.user.EmailIdentity;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,21 +9,23 @@ import com.feth.play.module.pa.user.EmailIdentity;
  * Date: 18.09.2015
  * Time: 14:08
  */
-public class MockIdentity extends AuthUser implements BasicIdentity
+public class AutoIdentity extends AuthUser implements BasicIdentity
 {
-    private String name;
-    private String id;
+    private static final AutoIdentity instance = new AutoIdentity();
 
-    public MockIdentity(String id, String name)
+    public static AutoIdentity getInstance()
     {
-        this.id = id;
-        this.name = name;
+        return instance;
+    }
+
+    private AutoIdentity()
+    {
     }
 
     @Override
     public String getId()
     {
-        return id;
+        return "robot";
     }
 
     @Override
@@ -36,12 +37,12 @@ public class MockIdentity extends AuthUser implements BasicIdentity
     @Override
     public String getEmail()
     {
-        return id + "@" + getProvider();
+        return "asd.robot@localhost";
     }
 
     @Override
     public String getName()
     {
-        return name;
+        return "ASD Robot";
     }
 }

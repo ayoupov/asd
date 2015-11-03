@@ -7,6 +7,7 @@ import com.feth.play.module.pa.user.AuthUser;
 import com.feth.play.module.pa.user.AuthUserIdentity;
 import com.feth.play.module.pa.user.BasicIdentity;
 import models.Church;
+import models.Image;
 import models.MediaContent;
 import models.MediaContentType;
 import models.internal.ChurchSuggestion;
@@ -25,9 +26,13 @@ import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Security;
 import utils.HibernateUtils;
+import utils.ServerProperties;
+import utils.media.images.Thumber;
 import utils.serialize.Serializer;
+import utils.service.ImageCreator;
 import utils.service.auth.ASDAuthUser;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.*;
 
@@ -87,6 +92,8 @@ public class Churches extends Controller
             cs.setType(type);
             cs.setField(field);
             cs.setSuggestedBy(user);
+            cs.setFixed(false);
+            cs.setSuggestedOn(new Date());
             saveOrUpdate(cs);
             commitTransaction();
             return ok(Json.newObject().put("success", true));
@@ -111,13 +118,12 @@ public class Churches extends Controller
     }
 
 //    @Security.Authenticated(Secured.class)
-    // todo: redo with forms
     public static Result addStory()
     {
-        System.out.println(request().cookies());
+        play.mvc.Http.MultipartFormData body = request().body().asMultipartFormData();
         ObjectNode result = Json.newObject();
-        Http.RequestBody body = request().body();
         Map<String, String[]> map = body.asFormUrlEncoded();
+        System.out.println("map = " + map);
         beginTransaction();
         User user = UserManager.getLocalUser(session());
         if (user == null)
@@ -151,15 +157,49 @@ public class Churches extends Controller
             church = ContentManager.getChurch(jchurch);
         else
             return badRequest("church is absent");
+
         MediaContent c = new MediaContent(MediaContentType.Story, text, title, year, null, coverThumbPath, user, church);
         c.setId((Long) save(c));
         Set<MediaContent> media = church.getMedia();
         if (media == null)
             media = new LinkedHashSet<>();
         media.add(c);
+
         church.setMedia(media);
+
+        List<Http.MultipartFormData.FilePart> files = body.getFiles();
+
+        for (Http.MultipartFormData.FilePart filePart : files)
+        {
+//            String contentType = filePart.getContentType();
+//            // todo: check content type
+
+            File file = filePart.getFile();
+            String description = "";
+            String fileId = filePart.getKey();
+            System.out.println("fileId = " + fileId);
+
+            if (fileId != null) {
+                fileId = fileId.substring(fileId.indexOf('_') + 1);
+                description = map.get("description_" + fileId) != null ? map.get("description_" + fileId)[0] : "";
+            }
+            String filename = filePart.getFilename();
+            Image image = ImageCreator.createImageFromUpload(user, file, filename, description);
+            if (image != null){
+                image.setId((Long) save(image));
+
+                List<Image> churchImages = church.getImages();
+                if (churchImages == null)
+                    churchImages = new ArrayList<>();
+                churchImages.add(image);
+                church.setImages(churchImages);
+            }
+        }
+
         HibernateUtils.update(church);
+
         commitTransaction();
+
         result.put("success", true);
         result.put("id", c.getId());
         return ok(result);
@@ -173,6 +213,13 @@ public class Churches extends Controller
             user = loginEmail();
         if (user == null)
             return forbidden("sorry");
+        Http.MultipartFormData body = request().body().asMultipartFormData();
+        ObjectNode result = Json.newObject();
+        Map<String, String[]> map = body.asFormUrlEncoded();
+        System.out.println("map = " + map);
+        System.out.println("body = " + body);
+//        Image image = new Image(filename, user, description);
+//        System.out.println("image = " + image);
         commitTransaction();
         return ok("images ok");
     }

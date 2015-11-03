@@ -52,7 +52,6 @@ function initAddChurch() {
         method: 'POST',
         onSuccess: function (data) {
             console.log(data);
-            showPassportUpdateForm();
             notifyChurchOk();
         },
         onError: function () {
@@ -61,15 +60,9 @@ function initAddChurch() {
         },
         serializeForm: true
     });
-    newChurchInited = true;
-}
-
-function notifyChurchOk() {
-    $("#new-church-success-message").fadeIn('slow').delay(5000).fadeOut('fast', function () {
+    $(".close-button").off('click').on('click', function () {
         $suggestionWrapper.modal('hide');
     });
-}
 
-function notifyChurchError() {
-    $("#new-church-error-message").show('slow');
+    newChurchInited = true;
 }

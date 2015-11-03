@@ -3,74 +3,76 @@
 # ~~~~
 
 # Home page
-GET         /                                      controllers.Application.index(id: String = null)
+GET           /                                  controllers.Application.index(id: String = null)
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /robots.txt                            controllers.Assets.at(path="/public", file="robots.txt")
-GET         /assets/*file                          controllers.Assets.at(path="/public", file)
+GET           /robots.txt                        controllers.Assets.at(path="/public", file="robots.txt")
+GET           /assets/*file                      controllers.Assets.at(path="/public", file)
 
-GET         /tiles/:layer/:z/:x/:y.:ext            controllers.Tiles.tile(layer: String, z: Integer, x: Integer, y: Integer, ext: String)
+GET           /tiles/:layer/:z/:x/:y.:ext        controllers.Tiles.tile(layer: String, z: Integer, x: Integer, y: Integer, ext: String)
 
 #
-GET         /content/summary                       controllers.Application.summary
-GET         /content/authors/                      controllers.MediaContents.listAuthors
-GET         /stats/count                           controllers.Stats.count
-GET         /stats/test                            controllers.Stats.test
+GET           /content/summary                   controllers.Application.summary
+GET           /content/authors/                  controllers.MediaContents.listAuthors
+GET           /stats/count                       controllers.Stats.count
+GET           /stats/test                        controllers.Stats.test
 
 #church content
-GET         /church/:id                            controllers.Application.index(id: String)
-GET         /church/passport/:id                   controllers.Churches.byId(id: String)
-POST        /church/passport/:field                controllers.Churches.updateField(field: String)
-POST        /church/suggest                        controllers.Churches.suggest
-POST        /church/story                          controllers.Churches.addStory
-GET         /church/:id/images                     controllers.Churches.images(id:String)
-POST        /church/images                         controllers.Churches.addImages
+GET           /church/:id                        controllers.Application.index(id: String)
+GET           /church/passport/:id               controllers.Churches.byId(id: String)
+POST          /church/passport/:field            controllers.Churches.updateField(field: String)
+POST          /church/suggest                    controllers.Churches.suggest
+POST          /church/story                      controllers.Churches.addStory
+GET           /church/:id/images                 controllers.Churches.images(id:String)
+POST          /church/images                     controllers.Churches.addImages
 
 # use html or none to get rendered page, json -- to simple data, has to be restricted to role >= moderator
-GET         /article/:id.:ext                      controllers.MediaContents.byTypeAndId(ctype: String = "article", id: String, ext: String )
-GET         /story/:id.:ext                        controllers.MediaContents.byTypeAndId(ctype: String = "story", id: String, ext: String)
-GET         /article/:id                           controllers.MediaContents.byTypeAndId(ctype: String = "article", id: String, ext: String = "html" )
-GET         /story/:id                             controllers.MediaContents.byTypeAndId(ctype: String = "story", id: String, ext: String = "html")
-DELETE      /article/:id                           controllers.MediaContents.remove(ctype: String = "article", id: Long)
-DELETE      /story/:id                             controllers.MediaContents.remove(ctype: String = "story", id: Long)
-GET         /articles/:ids                         controllers.MediaContents.byTypeAndIds(ctype: String = "article", ids: String)
-GET         /stories/:ids                          controllers.MediaContents.byTypeAndIds(ctype: String = "story", ids: String)
+GET           /article/:id.:ext                  controllers.MediaContents.byTypeAndId(ctype: String = "article", id: String, ext: String )
+GET           /story/:id.:ext                    controllers.MediaContents.byTypeAndId(ctype: String = "story", id: String, ext: String)
+GET           /article/:id                       controllers.MediaContents.byTypeAndId(ctype: String = "article", id: String, ext: String = "html" )
+GET           /story/:id                         controllers.MediaContents.byTypeAndId(ctype: String = "story", id: String, ext: String = "html")
+DELETE        /article/:id                       controllers.MediaContents.remove(ctype: String = "article", id: Long)
+DELETE        /story/:id                         controllers.MediaContents.remove(ctype: String = "story", id: Long)
+GET           /articles/:ids                     controllers.MediaContents.byTypeAndIds(ctype: String = "article", ids: String)
+GET           /stories/:ids                      controllers.MediaContents.byTypeAndIds(ctype: String = "story", ids: String)
 
-POST        /preview/article                    controllers.MediaContents.previewPost(ctype : String = "article")
-GET         /preview/article/:id                    controllers.MediaContents.previewGet(ctype: String = "article", id : String)
+POST          /preview/article                   controllers.MediaContents.previewPost(ctype : String = "article")
+GET           /preview/article/:id               controllers.MediaContents.previewGet(ctype: String = "article", id : String)
 
-POST        /search/churches/:q                    controllers.Search.churchesByNameAndAddress(q: String)
-GET         /search/churches/:q                    controllers.Search.churchesByNameAndAddress(q: String)
-POST        /search/:stype/:q                      controllers.Search.mediaContentByText(q: String, stype: String)
-GET         /search/:stype/:q                      controllers.Search.mediaContentByText(q: String, stype: String)
+POST          /search/churches/:q                controllers.Search.churchesByNameAndAddress(q: String)
+GET           /search/churches/:q                controllers.Search.churchesByNameAndAddress(q: String)
+POST          /search/:stype/:q                  controllers.Search.mediaContentByText(q: String, stype: String)
+GET           /search/:stype/:q                  controllers.Search.mediaContentByText(q: String, stype: String)
+
+POST          /feedback                          controllers.Feedback.feedback
 
 # security
 
-GET         /auth/logout                           controllers.Auth.logout
-GET         /auth/:provider                        controllers.Auth.auth(provider: String)
-GET         /auth/:provider/denied                 controllers.Auth.oAuthDenied(provider: String)
+GET           /auth/logout                       controllers.Auth.logout
+GET           /auth/:provider                    controllers.Auth.auth(provider: String)
+GET           /auth/:provider/denied             controllers.Auth.oAuthDenied(provider: String)
 
 # secure, role must be >= Moderator
-POST        /files/upload                          controllers.FileManager.upload
-GET         /files/list                            controllers.FileManagerJava.list
-POST        /article/update                        controllers.MediaContents.update(ctype : String = "article")
-POST        /story/update                          controllers.MediaContents.update(ctype : String = "story")
+POST          /files/upload                      controllers.FileManager.upload
+GET           /files/list                        controllers.FileManagerJava.list
+POST          /article/update                    controllers.MediaContents.update(ctype : String = "article")
+POST          /story/update                      controllers.MediaContents.update(ctype : String = "story")
 
-GET         /admin/reindex                         controllers.Admin.reindex
-GET         /admin/retile                          controllers.Tiles.rebuild
-GET         /admin/seed                            controllers.Admin.seed(part : String = "all")
-GET         /admin/seed/:part                      controllers.Admin.seed(part : String)
-GET         /admin/sieve                           controllers.Admin.sieve
-GET         /admin/parse                           controllers.Admin.parse
-GET         /admin/parse_add                       controllers.Admin.parseAdd
-GET         /admin/snapshotify                     controllers.Admin.snapshotify
-GET         /admin/snapsome                        controllers.Admin.snapshotifySome
-GET         /admin/testparse2                      controllers.Admin.checkParse2
+GET           /admin/reindex                     controllers.Admin.reindex
+GET           /admin/retile                      controllers.Tiles.rebuild
+GET           /admin/seed                        controllers.Admin.seed(part : String = "all")
+GET           /admin/seed/:part                  controllers.Admin.seed(part : String)
+GET           /admin/sieve                       controllers.Admin.sieve
+GET           /admin/parse                       controllers.Admin.parse
+GET           /admin/parse_add                   controllers.Admin.parseAdd
+GET           /admin/snapshotify                 controllers.Admin.snapshotify
+GET           /admin/snapsome                    controllers.Admin.snapshotifySome
+GET           /admin/testparse2                  controllers.Admin.checkParse2
 
-GET         /admin/                                controllers.Admin.index
-GET         /admin                                 controllers.Admin.index
+GET           /admin/                            controllers.Admin.index
+GET           /admin                             controllers.Admin.index
 
-GET         /restricted                            controllers.Restricted.index
+GET           /restricted                        controllers.Restricted.index
 
-GET         /admin/temp                            controllers.Admin.temp()
-GET         /admin/getchurches                     controllers.Admin.getChurches
+GET           /admin/temp                        controllers.Admin.temp()
+GET           /admin/getchurches                 controllers.Admin.getChurches
