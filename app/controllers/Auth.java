@@ -2,7 +2,6 @@ package controllers;
 
 import play.mvc.Controller;
 import play.mvc.Result;
-import utils.ServerProperties;
 
 import java.net.URL;
 import java.util.HashSet;
@@ -40,8 +39,8 @@ public class Auth extends Controller
             session().put("pa.url.orig",
                     callbackUrl);
         }
-
-        response().setCookie("auth.cb", callbackUrl);
+        if (callbackUrl != null && !"".equals(callbackUrl))
+            response().setCookie("auth.cb", callbackUrl);
         return com.feth.play.module.pa.controllers.Authenticate.authenticate(provider);
     }
 
@@ -54,8 +53,7 @@ public class Auth extends Controller
     {
         try {
             return new URL(url).getHost();
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -75,7 +73,8 @@ public class Auth extends Controller
         return com.feth.play.module.pa.controllers.Authenticate.logout();
     }
 
-    public static Result pwdprot() {
+    public static Result pwdprot()
+    {
         return ok(views.html.pwdprot.render());
     }
 }

@@ -1,46 +1,81 @@
 @(church : Church)
+@hasAddress() = @{church.getAddress != null && church.getAddress.getUnfolded != null && !"".equals(church.getAddress.getUnfolded)}
+@hasYears() = @{church.getConstructionStart != null && church.getConstructionEnd != null && (church.getConstructionEnd * church.getConstructionStart) > 0}
+@hasArchitects() = @{church.getArchitects != null && church.getArchitects.size() > 0}
+@hasWebsite() = @{church.getWebsite != null && !"".equals(church.getWebsite)}
+@namelink() = @{Html(s"<a href='${routes.Application.index(church.getExtID)}#passport'>${church.getName}</a>")}
+@years() = @{s"${church.getConstructionStart} - ${church.getConstructionEnd}"}
+@architects() = @{church.getArchitects.map(a => a.getName)mkString(", ")}
+@website() = @{s"<a target='_blank' href='${church.getWebsite}'>${church.getWebsite}</a>" }
 <table class="passport-data-wrapper">
     <tr class="passport-table-gap">
         <td class="passport-field-caption"></td>
         <td class="passport-value"></td>
         <td class="passport-data-filler"></td>
     </tr>
+    @if(church != null){
     <tr>
-        <td class="passport-field-caption">adres</td>
-        <td class="passport-value editable" data-field="address">
-            <div class="passport-data-data"></div>
-            <div class='passport-value-edit-icon passport-data-help'></div>
-            <div class='passport-data-help'>pomóż nam uzupełnić dane</div>
+        <td class="passport-field-caption">nazwa kościoła</td>
+        <td class="passport-value editable" data-field="name">
+            <div class="passport-data-data">@namelink()</div>
         </td>
         <td class="passport-data-filler"></td>
     </tr>
+    }
+    @if(church != null && hasAddress() || church == null) {
+        <tr>
+            <td class="passport-field-caption">adres</td>
+            <td class="passport-value editable" data-field="address">
+                <div class="passport-data-data">@if(church != null) {@church.getAddress.getUnfolded}</div>
+                @if(church == null) {
+                    <div class='passport-value-edit-icon passport-data-help'></div>
+                    <div class='passport-data-help'>pomóż nam uzupełnić dane</div>
+                }
+            </td>
+            <td class="passport-data-filler"></td>
+        </tr>
+    }
+    @if(church != null && hasYears() || church == null) {
     <tr>
         <td class="passport-field-caption">daty budowy</td>
         <td class="passport-value editable" data-field="years">
+        @if(church == null) {
             <div class='passport-value-edit-icon passport-data-help'></div>
-            <div class="passport-data-data"></div>
-            <div class='passport-data-help'>pomóż nam uzupełnić dane</div>
+        }
+            <div class="passport-data-data">@if(church != null) {@years()}</div>
+            @if(church == null) {
+                <div class='passport-data-help'>pomóż nam uzupełnić dane</div>
+            }
         </td>
         <td class="passport-data-filler"></td>
     </tr>
+    }
+    @if(church != null && hasArchitects() || church == null) {
     <tr>
         <td class="passport-field-caption">architekci</td>
         <td class="passport-value editable" data-field="architects">
-            <div class="passport-data-data"></div>
-            <div class='passport-value-edit-icon passport-data-help'></div>
-            <div class='passport-data-help'>pomóż nam uzupełnić dane</div>
+            <div class="passport-data-data">@if(church != null) {@architects()}</div>
+            @if(church == null) {
+                <div class='passport-value-edit-icon passport-data-help'></div>
+                <div class='passport-data-help'>pomóż nam uzupełnić dane</div>
+            }
         </td>
         <td class="passport-data-filler"></td>
     </tr>
-    <tr>
-        <td class="passport-field-caption">strona www</td>
-        <td class="passport-value editable" data-field="website">
-            <div class="passport-data-data"></div>
-            <div class='passport-value-edit-icon passport-data-help'></div>
-            <div class='passport-data-help'>pomóż nam uzupełnić dane</div>
-        </td>
-        <td class="passport-data-filler"></td>
-    </tr>
+    }
+    @if(church != null && hasWebsite() || church == null) {
+        <tr>
+            <td class="passport-field-caption">strona www</td>
+            <td class="passport-value editable" data-field="website">
+                <div class="passport-data-data">@if(church != null) {@website()}</div>
+                @if(church == null){
+                    <div class='passport-value-edit-icon passport-data-help'></div>
+                    <div class='passport-data-help'>pomóż nam uzupełnić dane</div>
+                }
+            </td>
+            <td class="passport-data-filler"></td>
+        </tr>
+    }
     <tr class="passport-table-gap">
         <td class="passport-field-caption"></td>
         <td class="passport-value"></td>

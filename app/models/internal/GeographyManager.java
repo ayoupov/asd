@@ -62,36 +62,51 @@ public class GeographyManager
 //        return result;
 //    }
 
-    public static Dekanat findDekanat(Point point)
+//    public static Dekanat findDekanat(Point point)
+//    {
+//        Session session = getSession();
+//        Dekanat dekanat = (Dekanat) session.createQuery("select d from Dekanat d where ST_contains(d.geometry, :p) = 1")
+//                .setParameter("p", point).uniqueResult();
+//        return dekanat;
+//    }
+    public static Diocese findDiocese(Point point)
     {
         Session session = getSession();
-        Dekanat dekanat = (Dekanat) session.createQuery("select d from Dekanat d where ST_contains(d.geometry, :p) = 1")
+        Diocese diocese = (Diocese) session.createQuery("select d from Diocese d where ST_contains(d.geometry, :p) = 1")
                 .setParameter("p", point).uniqueResult();
-        return dekanat;
+        return diocese;
     }
 
-    public static List<Dekanat> findDekanats(Point point)
+//    public static List<Dekanat> findDekanats(Point point)
+//    {
+//        Session session = getSession();
+//        List<Dekanat> dekanats = session.createQuery("select d from Dekanat d where ST_contains(d.geometry, :p) = 1")
+//                .setParameter("p", point).list();
+//        return dekanats;
+//    }
+
+    public static List<Diocese> findDioceses(Point point)
     {
         Session session = getSession();
-        List<Dekanat> dekanats = session.createQuery("select d from Dekanat d where ST_contains(d.geometry, :p) = 1")
+        List<Diocese> dioceses = session.createQuery("select d from Diocese d where ST_contains(d.geometry, :p) = 1")
                 .setParameter("p", point).list();
-        return dekanats;
+        return dioceses;
     }
 
-    public static int getChurchesInDekanat(Dekanat dekanat)
-    {
-        if (dekanat == null)
-            return 0;
-        Session session = getSession();
-
-        Long count = (Long) session.createQuery("select count(*) from Dekanat d, Church c " +
-                "where ST_contains(d.geometry, c.address.geometry) = 1 and c.address.dekanat = d")
-                .setCacheable(true)
-                .uniqueResult();
-        if (count == null)
-            return 0;
-        return count.intValue();
-    }
+//    public static int getChurchesInDekanat(Dekanat dekanat)
+//    {
+//        if (dekanat == null)
+//            return 0;
+//        Session session = getSession();
+//
+//        Long count = (Long) session.createQuery("select count(*) from Dekanat d, Church c " +
+//                "where ST_contains(d.geometry, c.address.geometry) = 1 and c.address.dekanat = d")
+//                .setCacheable(true)
+//                .uniqueResult();
+//        if (count == null)
+//            return 0;
+//        return count.intValue();
+//    }
 
     public static int getChurchesInDiocese(Diocese diocese)
     {
@@ -179,13 +194,28 @@ public class GeographyManager
         return res;
     }
 
+//    /* ugly geo check, st_overlaps is not working as intended */
+//    public static List findDekanatsByGeometry(Geometry geometry)
+//    {
+//        Session session = getSession();
+//        List res = session.createQuery(
+//                "select d.id, d.name, d.geometry " +
+//                        "from Dekanat d " +
+//                        "where ST_INTERSECTS(:geom, d.geometry) = 1")
+////                        "where ST_CROSSES(:geom, d.geometry) = 1 and ST_WITHIN(:geom, d.geometry) = 0")
+////                        "where ST_OVERLAPS(:geom, d.geometry) = 1")
+//                .setParameter("geom",  geometry)
+//                .list();
+//        return res;
+//    }
+
     /* ugly geo check, st_overlaps is not working as intended */
-    public static List findDekanatsByGeometry(Geometry geometry)
+    public static List findDiocesesByGeometry(Geometry geometry)
     {
         Session session = getSession();
         List res = session.createQuery(
                 "select d.id, d.name, d.geometry " +
-                        "from Dekanat d " +
+                        "from Diocese d " +
                         "where ST_INTERSECTS(:geom, d.geometry) = 1")
 //                        "where ST_CROSSES(:geom, d.geometry) = 1 and ST_WITHIN(:geom, d.geometry) = 0")
 //                        "where ST_OVERLAPS(:geom, d.geometry) = 1")

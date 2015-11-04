@@ -3,7 +3,6 @@ package controllers;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.vividsolutions.jts.geom.Point;
 import models.Church;
-import models.address.Dekanat;
 import models.address.Diocese;
 import models.address.Metropolie;
 import models.internal.ContentManager;
@@ -37,19 +36,19 @@ public class Stats extends Controller
 
     public static ObjectNode doCount()
     {
-        Map<Dekanat, Integer> deks = new HashMap<>();
+//        Map<Dekanat, Integer> deks = new HashMap<>();
         Map<Diocese, Integer> dios = new HashMap<>();
         Map<Metropolie, Integer> metros = new HashMap<>();
         ObjectNode res = Json.newObject();
         List<Church> churches = ContentManager.getChurches();
         for (Church church : churches) {
 //            System.out.println("church = " + church);
-            Dekanat dek = church.address.getDekanat();
-            Integer dekCount = deks.get(dek);
-            if (dekCount == null)
-                dekCount = 0;
-            deks.put(dek, dekCount + 1);
-            Diocese dio = dek.getDiocese();
+//            Dekanat dek = church.address.getDekanat();
+//            Integer dekCount = deks.get(dek);
+//            if (dekCount == null)
+//                dekCount = 0;
+//            deks.put(dek, dekCount + 1);
+            Diocese dio = church.address.getDiocese();
             Integer dioCount = dios.get(dio);
             if (dioCount == null)
                 dioCount = 0;
@@ -61,19 +60,19 @@ public class Stats extends Controller
             metros.put(metro, metroCount + 1);
 //            System.out.println(" [dek = " + dek + "]");
         }
-        res.put("deks", Json.toJson(deks));
+//        res.put("deks", Json.toJson(deks));
         res.put("dios", Json.toJson(dios));
         res.put("metros", Json.toJson(metros));
         return res;
     }
 
-    public static Result test()
-    {
-        beginTransaction();
-        Church church = ContentManager.getChurch("TK-282");
-        Dekanat d = GeographyManager.findDekanat((Point) church.address.getGeometry());
-        System.out.println("d = " + d);
-        commitTransaction();
-        return ok("t");
-    }
+//    public static Result test()
+//    {
+//        beginTransaction();
+//        Church church = ContentManager.getChurch("TK-282");
+//        Dekanat d = GeographyManager.findDekanat((Point) church.address.getGeometry());
+//        System.out.println("d = " + d);
+//        commitTransaction();
+//        return ok("t");
+//    }
 }

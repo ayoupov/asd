@@ -310,13 +310,13 @@ public class ContentManager
         return res;
     }
 
-    private static Object getDekCount()
-    {
-        return getSession()
-                .createQuery("select dek.id, count(c.extID) from Dekanat dek, Church c " +
-                        "where c.address.dekanat = dek and c.approvedDT is not null " +
-                        "group by dek.id").setCacheable(true).list();
-    }
+//    private static Object getDekCount()
+//    {
+//        return getSession()
+//                .createQuery("select dek.id, count(c.extID) from Dekanat dek, Church c " +
+//                        "where c.address.dekanat = dek and c.approvedDT is not null " +
+//                        "group by dek.id").setCacheable(true).list();
+//    }
 
     private static Object getDioCount()
     {
@@ -329,7 +329,7 @@ public class ContentManager
 //                .list();
         return getSession().createQuery("select d.id, count(c.extID), d.centroid, d.name " +
                 "from Diocese d, Church c " +
-                "where c.address.dekanat.diocese = d and c.approvedDT is not null " +
+                "where c.address.diocese = d and c.approvedDT is not null " +
                 "group by d.id")
                 .setCacheable(true)
                 .list();
@@ -340,7 +340,7 @@ public class ContentManager
     {
         return getSession().createQuery("select m.id, count(c.extID), m.centroid, m.name " +
                 "from Metropolie m, Church c " +
-                "where c.address.dekanat.diocese.metropolie = m and c.approvedDT is not null " +
+                "where c.address.diocese.metropolie = m and c.approvedDT is not null " +
                 "group by m.id")
                 .setCacheable(true)
                 .list();

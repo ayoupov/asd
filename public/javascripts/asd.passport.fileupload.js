@@ -43,6 +43,12 @@ var fileselect = function (event, numFiles, label, size) {
     }
 };
 
+function resetFileInputs($elem)
+{
+    $(".image-block-generated", $elem).remove();
+    updateLabels($elem);
+}
+
 function updateLabels($elem)
 {
     var $descLabels = $('label.image-label-desc', $elem), $fnameLabels = $("label.image-label-filename", $elem);
@@ -107,10 +113,10 @@ function getNextImageBlockElem(part)
     {
         return '<input type="file" id="' + createId() + '" style="display: none;">'
     }
-    return $('<div class="gapper-less clearfix"></div><div class="col-3 rightaligned inlinemiddle">' + gnibeLabel() +
+    return $('<div class="image-block image-block-generated"><div class="gapper-less clearfix"></div><div class="col-3 rightaligned inlinemiddle">' + gnibeLabel() +
         '</div><div class="col-4"><div class="ui action input">' + gnibeTextInput() +
         gnibeFileLabelPart() + '<i class="attach big icon"></i>' + gnibeFileInput() + '</label></div></div>' +
         '<div class="col-1"></div><div class="gapper-less clearfix"></div><div class="col-3 rightaligned inlinemiddle">' +
         '<label class="image-label image-label-desc" for="' + createDescId() + '">Podpis pod zdjęciem</label></div>' +
-        '<div class="col-4"><input id="' + createDescId() + '" type="text" value="" name="' + createDescName() + '" placeholder="Napisz nam co jest na zdjęciu, kto jest autorem i kiedy zostało zrobione"></div><div class="col-1 insert-image-after"></div>');
+        '<div class="col-4"><input id="' + createDescId() + '" type="text" value="" name="' + createDescName() + '" placeholder="Napisz nam co jest na zdjęciu, kto jest autorem i kiedy zostało zrobione"></div><div class="col-1 insert-image-after"></div></div>');
 }

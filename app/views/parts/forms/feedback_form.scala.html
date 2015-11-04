@@ -15,7 +15,7 @@
         Napisz do nas
     </div>
 <form action="@routes.Feedback.feedback()" method="POST" class="ui form feedback-form" id="feedback_form">
-@parts.passport.common_update_head(user, LoginTypeSelect.FEEDBACK)
+@parts.forms.common_update_head(user, LoginTypeSelect.FEEDBACK)
     <div class="gapper-less clearfix"></div>
 <div class="col-3 rightaligned inlinemiddle">
     <label for="church-comment">Twoja wiadomość</label>
@@ -25,9 +25,7 @@
 </div>
 <div class="col-1"></div>
 <div class="gapper-less clearfix"></div>
-<div class="col-3"></div>
-<div class="col-2"><input type="button" value="WYŚLIJ WIADOMOŚĆ" class="feedback-submit form-submit"></div>
-<div class="col-3"></div>
+    @parts.forms.submit_buttons("WYŚLIJ WIADOMOŚĆ", "feedback-submit form-submit")
 <div class="gapper clearfix"></div>
 </form>
 <nav id="feedback-menu-bottom" class="ui secondary pointing menu blurred hide-main menu-nav menu-nav-bottom">

@@ -17,7 +17,7 @@ import utils.serialize.converters.PointConverter;
 import javax.persistence.*;
 import java.util.List;
 
-import static models.internal.GeographyManager.findDekanats;
+import static models.internal.GeographyManager.findDioceses;
 
 /**
  * Created with IntelliJ IDEA.
@@ -41,7 +41,8 @@ public class Address
     @Analyzer(definition = "polish_def_analyzer")
     @OneToOne
     @JsonIgnore
-    private Dekanat dekanat;
+//    private Dekanat dekanat;
+    private Diocese diocese;
 
     @Field
     private String unfolded;
@@ -66,14 +67,25 @@ public class Address
         this.geometry = geometry;
     }
 
-    public Dekanat getDekanat()
+//    public Dekanat getDekanat()
+//    {
+//        return dekanat;
+//    }
+//
+//    public void setDekanat(Dekanat dekanat)
+//    {
+//        this.dekanat = dekanat;
+//    }
+
+
+    public Diocese getDiocese()
     {
-        return dekanat;
+        return diocese;
     }
 
-    public void setDekanat(Dekanat dekanat)
+    public void setDiocese(Diocese diocese)
     {
-        this.dekanat = dekanat;
+        this.diocese = diocese;
     }
 
     public String getUnfolded()
@@ -97,15 +109,24 @@ public class Address
                 (new Coordinate[]{new Coordinate(lng, lat)}), new GeometryFactory());
         Geometry geom = point;
         this.geometry = point;
-        List<Dekanat> dekanats = findDekanats(point);
-        if (dekanats.size() > 1) {
+//        List<Dekanat> dekanats = findDioceses(point);
+//        if (dekanats.size() > 1) {
+//            Logger.warn(String.format("Alarma! : %s {%s} is in %d dekanats! ",
+//                    unfolded, point.toString(), dekanats.size()));
+//            for (Dekanat d : dekanats) {
+//                Logger.warn("which are: ", d);
+//            }
+//        }
+//        this.dekanat = dekanats.get(0);
+        List<Diocese> dioceses = findDioceses(point);
+        if (dioceses.size() > 1) {
             Logger.warn(String.format("Alarma! : %s {%s} is in %d dekanats! ",
-                    unfolded, point.toString(), dekanats.size()));
-            for (Dekanat d : dekanats) {
+                    unfolded, point.toString(), dioceses.size()));
+            for (Diocese d : dioceses) {
                 Logger.warn("which are: ", d);
             }
         }
-        this.dekanat = dekanats.get(0);
+        this.diocese = dioceses.get(0);
 
     }
 
@@ -117,12 +138,11 @@ public class Address
     public String constructChurchId()
     {
         String dioId = "";
-        Diocese diocese = dekanat.getDiocese();
         if (diocese != null) {
             dioId = diocese.getId();
         } else dioId = "??";
-        int getDekanatCount = GeographyManager.getChurchesInDekanat(dekanat);
-        return dioId + "-" + String.format("%03d", dekanat.getId()) + "-" + String.format("%03d", getDekanatCount + 1);
+        int getDekanatCount = GeographyManager.getChurchesInDiocese(diocese);
+        return dioId + "-" + String.format("%03d", getDekanatCount + 1);
     }
 
     @Override

@@ -49,10 +49,8 @@ public class Tiles extends Controller
             TileBuilder.BoundingBox bb = tile2boundingBox(x, y, zoom);
             Envelope envelope = new Envelope(bb.east, bb.west, bb.north, bb.south);
             Geometry g = factory.toGeometry(envelope);
-            List farr;
-            if (dekanatLayer)
-                farr = getDekanatFeatures(g);
-            else
+            List farr = new ArrayList();
+            if (!dekanatLayer)
                 farr = getChurchFeatures(g);
             commitTransaction();
             result.put("type", "FeatureCollection");
@@ -114,29 +112,29 @@ public class Tiles extends Controller
         return farr;
     }
 
-    private static List getDekanatFeatures(Geometry g)
-    {
-        List features = GeographyManager.findDekanatsByGeometry(g);
-        List farr = new ArrayList();
-        if (features != null && features.size() > 0) {
-            for (Object f : features) {
-                Object[] row = (Object[]) f;
-                Long id = (Long) row[0];
-                String name = (String) row[1];
-                ObjectNode props = Json.newObject();
-                props.put("id", id);
-                props.put("name", name);
-                Geometry geometry = (Geometry) row[2];
-                ObjectNode node = Json.newObject();
-                node.put("type", "Feature");
-                Json.setObjectMapper(Serializer.searchMapper);
-                node.put("geometry", Json.toJson(geometry));
-                node.put("properties", props);
-                farr.add(node);
-            }
-        }
-        return farr;
-    }
+//    private static List getDekanatFeatures(Geometry g)
+//    {
+//        List features = GeographyManager.findDekanatsByGeometry(g);
+//        List farr = new ArrayList();
+//        if (features != null && features.size() > 0) {
+//            for (Object f : features) {
+//                Object[] row = (Object[]) f;
+//                Long id = (Long) row[0];
+//                String name = (String) row[1];
+//                ObjectNode props = Json.newObject();
+//                props.put("id", id);
+//                props.put("name", name);
+//                Geometry geometry = (Geometry) row[2];
+//                ObjectNode node = Json.newObject();
+//                node.put("type", "Feature");
+//                Json.setObjectMapper(Serializer.searchMapper);
+//                node.put("geometry", Json.toJson(geometry));
+//                node.put("properties", props);
+//                farr.add(node);
+//            }
+//        }
+//        return farr;
+//    }
 
     public static Result rebuild()
     {

@@ -57,9 +57,16 @@
             }
             @parts.media.processed2(content.getText)
         </div>
-        <nav id="contentmenu-bottom" class="ui secondary pointing menu blurred">
-            @parts.social_bands()
-        </nav>
+            <div class="mediacontent-church-data">
+                @parts.passport.datatable(content.getDedicatedChurch)
+            </div>
+            <div class="content-main-wrapper">
+                <div class="content-main">
+                    <nav id="contentmenu-bottom" class="ui secondary pointing menu blurred">
+                        @parts.social_bands()
+                    </nav>
+                </div>
+            </div>
             @parts.mediacontent_thumbs()
         </body>
     </html>

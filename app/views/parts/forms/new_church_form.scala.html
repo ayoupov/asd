@@ -39,9 +39,7 @@
         </div>
         <div class="col-1"></div>
         <div class="gapper-less clearfix"></div>
-        <div class="col-3"></div>
-        <div class="col-3"><input type="button" value="WYŚLIJ DANE NA TEMAT KOŚCIOŁA" class="new-church-submit form-submit"></div>
-        <div class="col-2"></div>
+        @parts.forms.submit_buttons("WYŚLIJ DANE NA TEMAT KOŚCIOŁA", "new-church-submit form-submit")
         <div class="gapper clearfix"></div>
     </form>
     <nav id="new-church-menu-bottom" class="ui secondary pointing menu blurred hide-main menu-nav menu-nav-bottom">

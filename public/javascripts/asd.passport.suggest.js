@@ -69,5 +69,27 @@ function initSuggestForm($elem) {
             }
             $field.attr('placeholder', placeholderValue);
         }).trigger('change');
+    // init cancel buttons
+    $('.cancel-button', $passportSuggestForm).on('click', function()
+    {
+        hidePassportSuggestForm();
+    });
+
 }
+
+function adjustSuggestionSettings(settings) {
+    settings.action = 'update passport field';
+    var fieldName = $(".suggestion-field-select", $passportSuggestForm).val();
+    settings.urlData = {field: fieldName};
+    var data = {};
+    var entity;
+    var $entityForm = $(".entity-form", $passportSuggestForm);
+    entity = $entityForm.data('entity');
+    $.extend(data, $entityForm.serializeObject());
+    data.entity = entity;
+    data[fieldName] = $("#field-value").val();
+    settings.data = data;
+    return settings;
+}
+
 

@@ -69,46 +69,6 @@
     height: 32px;
 }
 
-.passport-data-edit {
-    background: transparent;
-    border: none;
-}
-
-.passport-data-help {
-    float: left;
-    color: #949494;
-    cursor: pointer;
-}
-
-.passport-data-data {
-    float: left;
-    line-height: 1.3em;
-}
-
-.passport-data-data a {
-    color: #5a38db;
-}
-
-.passport-edit-text {
-    text-transform: uppercase;
-    white-space: nowrap;
-    color: #d1d1d1;
-    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
-    font-weight: bold;
-    font-size: 18px;
-    margin-top: 7px;
-    padding-left: 44px;
-}
-
-.passport-edit-button {
-    position: absolute;
-    z-index: 50;
-    /*min-width:300px;*/
-    margin-top: -38px;
-    vertical-align: middle;
-    cursor: pointer;
-}
-
 .passport-gallery {
     width: 980px;
     /*max-width: 960px;*/
@@ -233,56 +193,6 @@
 .passport-gallery-large-description-content {
     margin-left: 20px;
     line-height: 1.5em;
-}
-
-.passport-data-wrapper {
-    width: 100%;
-    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
-}
-
-.passport-data-actions {
-    display: inline-block;
-}
-
-td.passport-field-caption {
-    background-color: #e8e8e8;
-    color: #949494;
-    width: 360px;
-    text-align: right;
-    text-transform: uppercase;
-    font-size: 9pt;
-    padding-bottom: 10px;
-    padding-top: 11px;
-    padding-right: 20px;
-    letter-spacing: 1px;
-    vertical-align: top;
-}
-
-td.passport-value {
-    background-color: #f2f2f2;
-    width: 360px;
-    text-align: left;
-    font-size: 14px;
-    padding-bottom: 11px;
-    padding-top: 7px;
-    padding-left: 20px;
-}
-
-td.passport-data-filler {
-    width: 260px;
-    background-color: #f2f2f2;
-}
-
-.passport-edit-value {
-    color: #9d9c9c;
-}
-
-
-.passport-update {
-    max-width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 70px;
 }
 
 .ui.message.pointy {

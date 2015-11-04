@@ -94,6 +94,7 @@ public class MediaContent
 
     @OneToOne
     @JoinColumn(name = "dedicated_church")
+    @JsonIgnore
     private Church dedicatedChurch;
 
     public MediaContent(MediaContentType contentType, String text, String title, String year, Image cover, String coverThumbPath, User addedBy, Church church)

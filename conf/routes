@@ -15,7 +15,6 @@ GET           /tiles/:layer/:z/:x/:y.:ext        controllers.Tiles.tile(layer: S
 GET           /content/summary                   controllers.Application.summary
 GET           /content/authors/                  controllers.MediaContents.listAuthors
 GET           /stats/count                       controllers.Stats.count
-GET           /stats/test                        controllers.Stats.test
 
 #church content
 GET           /church/:id                        controllers.Application.index(id: String)

@@ -17,7 +17,7 @@
 
     @parts.passport.gallery()
 
-    @parts.passport.datatable(church)
+    @parts.passport.datatable(null)
 
     @parts.mediacontent_thumbs()
 
@@ -30,10 +30,10 @@
             @parts.messages("new-story")
         </div>
         <div data-tab="add-story" class="ui tab active">
-            @parts.passport.new_story_form(user)
+            @parts.forms.new_story_form(user)
         </div>
         <div data-tab="add-images" class="ui tab">
-            @parts.passport.images_form(user)
+            @parts.forms.images_form(user)
         </div>
     </div>
 
@@ -42,7 +42,7 @@
             @parts.messages("suggestion")
         </div>
         <div class="gapper-less clearfix"></div>
-        @parts.passport.suggest_form()
+        @parts.forms.suggest_form()
     </div>
 
     <nav id="passportmenu-bottom" class="ui secondary pointing menu blurred menu-nav menu-nav-bottom">

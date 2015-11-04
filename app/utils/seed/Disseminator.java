@@ -14,7 +14,6 @@ import se.walkercrou.places.GooglePlaces;
 import se.walkercrou.places.Photo;
 import se.walkercrou.places.Place;
 import utils.ServerProperties;
-import utils.seed.geo.DekanatProcessor;
 import utils.seed.geo.DioceseProcessor;
 import utils.seed.geo.MetropolieProcessor;
 
@@ -136,11 +135,11 @@ public class Disseminator
         DioceseProcessor dp = new DioceseProcessor();
         seedGeography(dataDir + "gis/diecezje_wgs84_10percent", dp);
         commitTransaction();
-        beginTransaction();
-        DekanatProcessor dekp = new DekanatProcessor();
-        seedGeography(dataDir + "gis/dekanaty_wgs84_10percent", dekp);
+//        beginTransaction();
+//        DekanatProcessor dekp = new DekanatProcessor();
+//        seedGeography(dataDir + "gis/dekanaty_wgs84_10percent", dekp);
 //        seedGeography(dataDir + "gis/dekanaty_wgs84_6percent", dekp);
-        commitTransaction();
+//        commitTransaction();
     }
 
     private static void seedMockContent()
