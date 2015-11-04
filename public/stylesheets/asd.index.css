@@ -622,3 +622,9 @@ div.holder-border {
     font-size: 18px;
     font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
 }
+
+.upload-confirmation-label a
+{
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
+    color: #5a38db;
+}

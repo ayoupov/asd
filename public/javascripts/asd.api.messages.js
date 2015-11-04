@@ -10,18 +10,24 @@ function notifyFeedbackError() {
 
 function notifyOk(message, callback) {
     if ($passportSuggestForm.is(":visible")) {
+
         var $ssm = $("#suggestion-success-message");
         $(".message-header", $passportSuggestForm).html('Twój komentarz został wysłany!');
         message = 'Dziękujemy za pomoc, czytamy wszystkie komentarze i na bierząco aktualizujemy dane';
         notifyUpdateResult($ssm, message, callback);
+
     } else {
+
         var part = $(".ui.tab.active form").data('entity');
         if (part == 'story') {
+
             var $nssm = $("#new-story-success-message");
             $(".message-header", $nssm).html('Twoje wspomnienie zostało wysłane!');
             message = 'Moderator przeczyta ja i opublikuje w ciągu 48 godzin';
             notifyUpdateResult($nssm, message, callback);
+
         } else {
+
             var $ism = $("#images-success-message");
             $(".message-header", $ism).html(currentImageCounts['images'] == 1 ? 'Twoje zdjęcie zostało wysłane!' : 'Twoje zdjęcia zostały wysłane!');
             message = 'Moderator zweryfikuje je i opublikuje w ciągu 48 godzin';

@@ -24,14 +24,21 @@ public class ImageCreator
         String path = where + "/" + filename;
         String webPath = webWhere + "/" + filename;
         File outFile = new File(path);
-        if (outFile.delete() && file.renameTo(outFile)) {
+        File parent = new File(where);
+        if (!parent.exists())
+            parent.mkdirs();
+        if (outFile.exists())
+            outFile.delete();
+        if (file.renameTo(outFile)) {
             Thumber.rethumb(outFile, Thumber.ThumbType.EDITORIAL, Thumber.ThumbType.HOVER, Thumber.ThumbType.ISOTOPE);
             boolean setReadableSuccess = outFile.setReadable(true, false);
+            System.out.println("creator: description = " + description);
+            System.out.println("creator: webPath = " + webPath);
             Image image = new Image(description, webPath);
             image.setUploadedBy(user);
             return image;
         } else {
-            String warning = "didn't moved file " + filename + " to " + outFile;
+            String warning = "didn't move file " + filename + " to " + outFile;
             Logger.warn(warning);
             return null;
         }

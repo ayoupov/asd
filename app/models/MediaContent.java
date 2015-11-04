@@ -92,6 +92,10 @@ public class MediaContent
     @JsonIgnore
     private Set<Church> churches;
 
+    @OneToOne
+    @JoinColumn(name = "dedicated_church")
+    private Church dedicatedChurch;
+
     public MediaContent(MediaContentType contentType, String text, String title, String year, Image cover, String coverThumbPath, User addedBy, Church church)
     {
         this.contentType = contentType;
@@ -108,6 +112,7 @@ public class MediaContent
             approvedDT = addedDT;
         }
         this.churches = Collections.singleton(church);
+        this.dedicatedChurch = church;
     }
 
     public MediaContent(MediaContentType contentType, String text, String lead, String title, Boolean starred, Set<User> authors, User addedBy)
@@ -323,5 +328,15 @@ public class MediaContent
     public void setHoverThumbPath(String hoverThumbPath)
     {
         this.hoverThumbPath = hoverThumbPath;
+    }
+
+    public Church getDedicatedChurch()
+    {
+        return dedicatedChurch;
+    }
+
+    public void setDedicatedChurch(Church dedicatedChurch)
+    {
+        this.dedicatedChurch = dedicatedChurch;
     }
 }
