@@ -2,9 +2,9 @@ var $churchStoriesTitle, $churchStories, $passportUpdateButtonWrapper,
     $passportGalleryThumbs, $passportGalleryControls, $passportGalleryGSV,
     $passportUpdate, $passportGallery, $passportWrapper, $passportSuggestForm;
 
-var $passportCurrentImage;
+var $passportCurrentImage, $overlayArrowUp, $overlayArrowDown;
 
-var $overlayArrowUp, $overlayArrowDown;
+var globalTOSConfirmed = Cookies.get("tos-confirmed");
 
 // todo: remove crutch
 var DEF_IMAGE_DESC = 'Autor: Igor Snopek';
@@ -52,6 +52,7 @@ function fillPassport(church) {
     clearAndFillDataTable();
     $passportUpdate.hide();
     var churchId = currentChurch.extID;
+    $("input.church-id-hidden").val(currentChurch.extID);
 
     $passportUpdateButtonWrapper.off('click').on('click', showPassportUpdateForm).show();
     $(".passport-stories-wrapper").show();
@@ -63,9 +64,9 @@ function fillPassport(church) {
 
     churchMedia = filterMedia(church.media);
     churchMediaIndex = 0;
+    $churchStories.empty();
     if (churchMedia && churchMedia.length > 0) {
         $churchStoriesTitle.html("Wspomnienia dodane przez użytkowników").show();
-        $churchStories.empty();
         inhabitNext();
         $churchStories.isotope();
         bindThumbEvents($churchStories, 'story');
@@ -134,6 +135,19 @@ function initPassportUI() {
     $('.passport-update-message').hide();
 
     fileInputTweak();
+
+    $(".upload-confirmation").on('change', function()
+    {
+        var checked = $(this).is(':checked');
+        if (checked) {
+            globalTOSConfirmed = true;
+            Cookies.set("tos-confirmed", "true", {expires: 365});
+        }
+        else {
+            globalTOSConfirmed = false;
+            Cookies.remove("tos-confirmed");
+        }
+    })
 }
 
 function resetEdit() {
@@ -242,12 +256,16 @@ function resetForm($form) {
     resetFileInputs($form);
     $form[0].reset();
     // fill in new story data
-    $("input.church-id-hidden", $form).val(currentChurch.extID);
+    $("input.church-id-hidden").val(currentChurch.extID);
     if (userAuthed) {
         if (userName)
             $(".uploaded-by", $form).val(userName).prop('disabled', true);
     }
     initStoryRandomPicture();
+    if (globalTOSConfirmed)
+        $('.upload-confirmation', $form).attr('checked', 'checked');
+    else
+        $('.upload-confirmation', $form).removeAttr('checked');
 }
 
 function initUpdatePassportApi() {

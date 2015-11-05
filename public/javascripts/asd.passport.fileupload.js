@@ -33,8 +33,9 @@ var fileselect = function (event, numFiles, label, size) {
 
             $attachmentName.removeAttr('name'); // cancel upload file.
         } else {
-            $('#_' + $attachmentName.attr('id')).val(label);
+            $('#_' + $attachmentName.attr('id')).val(label).attr('disabled', 'disabled');
             addNewImageBlock($attachmentName.closest('.ui.form'));
+
         }
     } else {
         notifyError('Prześlij plik w formacie <strong>png, jpg, jpeg</strong> lub <strong>gif</strong>');
@@ -43,23 +44,29 @@ var fileselect = function (event, numFiles, label, size) {
     }
 };
 
-function resetFileInputs($elem)
-{
+function resetFileInputs($elem) {
     $(".image-block-generated", $elem).remove();
     updateLabels($elem);
 }
 
-function updateLabels($elem)
-{
+function updateLabels($elem) {
     var $descLabels = $('label.image-label-desc', $elem), $fnameLabels = $("label.image-label-filename", $elem);
     $descLabels.html('');
     $fnameLabels.html('');
     $fnameLabels.last().html('Dodaj zdjęcie');
     $descLabels.last().html('Podpis pod zdjęciem');
+    if ($elem.data('entity') == 'images') {
+        if ($(".image-block", $elem).length > 1)
+        {
+            $(".entity-submit").val("DODAJ SWOJE ZDJĘCIA");
+        } else
+        {
+            $(".entity-submit").val("DODAJ SWOJE ZDJĘCIE");
+        }
+    }
 }
 
-function addNewImageBlock($elem)
-{
+function addNewImageBlock($elem) {
     var $insertElem = $elem.find(".insert-image-after").eq(0);
     var $newImageBlock = getNextImageBlockElem($elem.data('image-part'));
     $('.btn-file :file', $newImageBlock).on('fileselect', fileselect);
@@ -71,10 +78,8 @@ function addNewImageBlock($elem)
 
 var currentImageCounts = {};
 
-function getNextImageBlockElem(part)
-{
-    if (!currentImageCounts[part])
-    {
+function getNextImageBlockElem(part) {
+    if (!currentImageCounts[part]) {
         currentImageCounts[part] = 1;
     }
 
@@ -82,37 +87,34 @@ function getNextImageBlockElem(part)
     currentImageCount++;
     currentImageCounts[part] = currentImageCount;
 
-    function createId()
-    {
+    function createId() {
         return part + '-image_' + currentImageCount;
     }
 
-    function createDescId()
-    {
+    function createDescId() {
         return part + '-description_' + currentImageCount;
     }
 
-    function createDescName()
-    {
+    function createDescName() {
         return 'description_' + currentImageCount;
     }
 
-    function gnibeLabel()
-    {
+    function gnibeLabel() {
         return '<label class="image-label image-label-filename" for="_' + createId() + '">Dodaj kolejne zdjęcie</label>';
     }
-    function gnibeTextInput()
-    {
-        return '<input type="text" id="_' + createId() +'" class="image-name-input" placeholder="Podziel się archiwalnymi zdjęciami, projektami lub szkicami">';
+
+    function gnibeTextInput() {
+        return '<input type="text" id="_' + createId() + '" class="image-name-input" placeholder="Podziel się archiwalnymi zdjęciami, projektami lub szkicami">';
     }
-    function gnibeFileLabelPart()
-    {
+
+    function gnibeFileLabelPart() {
         return '<label for="' + createId() + '" class="ui icon button btn-file">';
     }
-    function gnibeFileInput()
-    {
+
+    function gnibeFileInput() {
         return '<input type="file" id="' + createId() + '" style="display: none;">'
     }
+
     return $('<div class="image-block image-block-generated"><div class="gapper-less clearfix"></div><div class="col-3 rightaligned inlinemiddle">' + gnibeLabel() +
         '</div><div class="col-4"><div class="ui action input">' + gnibeTextInput() +
         gnibeFileLabelPart() + '<i class="attach big icon"></i>' + gnibeFileInput() + '</label></div></div>' +

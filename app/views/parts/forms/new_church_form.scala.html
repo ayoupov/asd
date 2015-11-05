@@ -13,7 +13,7 @@
     <div class="col-4 new-church-title form-title">
         Dodaj brakujący kościół
     </div>
-    <div class="gapper clearfix"></div>
+    <div class="gapper-less clearfix"></div>
     <form action="@routes.Churches.suggest" method="POST" class="ui form new-church-form" id="new_church_form">
         <div class="col-3 rightaligned inlinemiddle">
             <label for="church-name">nazwa kościoła</label>
@@ -39,7 +39,7 @@
         </div>
         <div class="col-1"></div>
         <div class="gapper-less clearfix"></div>
-        @parts.forms.submit_buttons("WYŚLIJ DANE NA TEMAT KOŚCIOŁA", "new-church-submit form-submit")
+        @parts.forms.submit_buttons(false, "WYŚLIJ DANE NA TEMAT KOŚCIOŁA", "new-church-submit form-submit")
         <div class="gapper clearfix"></div>
     </form>
     <nav id="new-church-menu-bottom" class="ui secondary pointing menu blurred hide-main menu-nav menu-nav-bottom">

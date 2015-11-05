@@ -31,16 +31,31 @@ function focusOnField() {
     $("#field-value", $passportSuggestForm).focus();
 }
 
+var suggestionOnceInited = false, suggestionDropdown;
+
 function initSuggestForm($elem) {
     var targetField = $elem.parent().data('field');
+    if (!suggestionOnceInited) {
+        suggestionUIInit();
+        suggestionOnceInited = true;
+    }
+    //$('select option[value="' + targetField + '"]', $passportSuggestForm).prop('selected', true);
+    //$('select', $passportSuggestForm).dropdown('set selected', targetField);
+    suggestionDropdown.find("[data-value='" + targetField + "']").trigger("click");
+    // init cancel buttons
+    $('.cancel-button', $passportSuggestForm).on('click', function () {
+        hidePassportSuggestForm();
+    });
+
+}
+
+function suggestionUIInit() {
     var $field = $("#field-value", $passportSuggestForm);
-    // select option
-    $('select option[value="' + targetField + '"]', $passportSuggestForm).prop('selected', true);
-    $("select.suggestion-field-select", $passportSuggestForm)
-        .off('change')
-        .on('change', function () {
-            var v;
-            var field = $(this).find(':selected').val();
+    suggestionDropdown = $('select', $passportSuggestForm).dropdown({
+        transition: 'slide down',
+        duration: 0,
+        onChange: function (value, text, $choice) {
+            var field = value;
             if (field == "website") {
                 v = currentChurch.website;
             } else if (field == "name") {
@@ -52,34 +67,34 @@ function initSuggestForm($elem) {
             // fill field value
             $field.val(v);
             var placeholderValue = '';
-            switch (field)
-            {
-                case 'name' : placeholderValue = 'Napisz do nas, jeśli zauważyłeś błędy w nazwie kościoła lub znasz nazwę alternatywną';
+            switch (field) {
+                case 'name' :
+                    placeholderValue = 'Napisz do nas, jeśli zauważyłeś błędy w nazwie kościoła lub znasz nazwę alternatywną';
                     break;
-                case 'address' : placeholderValue = 'Napisz do nas, jeśli zauważyłeś błędy adresowe';
+                case 'address' :
+                    placeholderValue = 'Napisz do nas, jeśli zauważyłeś błędy adresowe';
                     break;
-                case 'years' : placeholderValue = 'Pomóż nam uzupełnić lub poprawić nieprawidłowe daty budowy kościoła';
+                case 'years' :
+                    placeholderValue = 'Pomóż nam uzupełnić lub poprawić nieprawidłowe daty budowy kościoła';
                     break;
-                case 'architects' : placeholderValue = 'Pomóż nam dowiedzieć się, kto projektował kościół. Napisz do nas, jeśli przypadkiem pominęliśmy jednego z projektantów lub nieprawidłowo napisaliśmy nazwisko';
+                case 'architects' :
+                    placeholderValue = 'Pomóż nam dowiedzieć się, kto projektował kościół. Napisz do nas, jeśli przypadkiem pominęliśmy jednego z projektantów lub nieprawidłowo napisaliśmy nazwisko';
                     break;
-                case 'website' : placeholderValue = 'Napisz do nas, jeśli znasz aktualny adres strony WWW parafii';
+                case 'website' :
+                    placeholderValue = 'Napisz do nas, jeśli znasz aktualny adres strony WWW parafii';
                     break;
-                case 'other' : placeholderValue = 'Podziel się z nami innymi spostrzeżeniami na temat bazy danych na stronie';
+                case 'other' :
+                    placeholderValue = 'Podziel się z nami innymi spostrzeżeniami na temat bazy danych na stronie';
                     break;
             }
             $field.attr('placeholder', placeholderValue);
-        }).trigger('change');
-    // init cancel buttons
-    $('.cancel-button', $passportSuggestForm).on('click', function()
-    {
-        hidePassportSuggestForm();
+        }
     });
-
 }
 
 function adjustSuggestionSettings(settings) {
     settings.action = 'update passport field';
-    var fieldName = $(".suggestion-field-select", $passportSuggestForm).val();
+    var fieldName = suggestionDropdown.dropdown('get value');
     settings.urlData = {field: fieldName};
     var data = {};
     var entity;
