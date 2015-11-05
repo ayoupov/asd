@@ -394,16 +394,10 @@ public class ContentManager
         return getSession().createQuery("from Church c where c.website is null").list();
     }
 
-//    public static List<User> parseUserList(Set<Long> userList )
-//    {
-//        Session session = getSession();
-//        List<User> users = session.createQuery("from Users u where u.id in (:list)").setParameter("list", userList).list();
-//        return users;
-//    }
-//
-//    public static List<User> parseUserList(String[] strings)
-//    {
-//        String idList = StringUtils.join(strings, ",");
-//        return parseUserList(idList);
-//    }
+    public static List<MediaContent> getMediaContent(MediaContentType contentType)
+    {
+        return getSession().createQuery("select mc " +
+                "from MediaContent mc where mc.contentType = :mct")
+        .setParameter("mct", contentType).setCacheable(true).list();
+    }
 }

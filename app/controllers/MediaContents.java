@@ -26,6 +26,7 @@ import views.html.mediacontent;
 import java.io.*;
 import java.util.*;
 
+import static models.internal.UserManager.getLocalUser;
 import static utils.DataUtils.safeBool;
 import static utils.DataUtils.safeLong;
 import static utils.HibernateUtils.*;
@@ -73,7 +74,7 @@ public class MediaContents extends Controller
                 if (mediaFile.exists())
                     return ok(mediaFile, true);
                 Html rendered = mediacontent.render(content, false);
-                saveToFS(dir, mediaFile, rendered);
+//                saveToFS(dir, mediaFile, rendered);
                 return ok(rendered);
             }
         } else
@@ -153,7 +154,7 @@ public class MediaContents extends Controller
             String hoverThumbPath = thumbNameWeb(new File(cover), Thumber.ThumbType.HOVER);
             content.setHoverThumbPath(hoverThumbPath);
         }
-        User user = UserManager.getLocalUser(session());
+        User user = getLocalUser(session());
         String id = user.getHash() + "_" + (new Date().getTime() / 1000);
         content.setContentType(MediaContentType.fromString(ctype));
         commitTransaction();
@@ -173,6 +174,7 @@ public class MediaContents extends Controller
         MediaContentType mct = MediaContentType.fromString(ctype);
 
         beginTransaction();
+        User user = getLocalUser(session());
         long id = safeLong(map.get("id"), 0);
         boolean isNew = id == 0;
         MediaContent c;
@@ -180,6 +182,7 @@ public class MediaContents extends Controller
             c = (MediaContent) get(MediaContent.class, id);
         else {
             c = new MediaContent(mct);
+            c.setAddedBy(user);
         }
         result.put("entity", ctype);
 
@@ -219,9 +222,9 @@ public class MediaContents extends Controller
             else {
                 String coverThumbPath = thumbNameWeb(new File(jcover), Thumber.ThumbType.ISOTOPE);
                 c.setCoverThumbPath(coverThumbPath);
-                System.out.println("coverThumbPath = " + coverThumbPath);
+//                System.out.println("coverThumbPath = " + coverThumbPath);
                 String hoverThumbPath = thumbNameWeb(new File(jcover), Thumber.ThumbType.HOVER);
-                System.out.println("hoverThumbPath = " + hoverThumbPath);
+//                System.out.println("hoverThumbPath = " + hoverThumbPath);
                 c.setHoverThumbPath(hoverThumbPath);
             }
         }
@@ -231,8 +234,10 @@ public class MediaContents extends Controller
             c.setStarred(jstarred);
         if (jauthors != null)
             c.setAuthors(jauthors);
-        if (jpublishDate != null)
+        if (jpublishDate != null) {
             c.setApprovedDT(jpublishDate);
+            c.setApprovedBy(user);
+        }
         if (isNew)
             c.setId((Long) save(c));
         else

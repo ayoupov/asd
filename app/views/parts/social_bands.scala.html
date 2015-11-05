@@ -1,9 +1,15 @@
-@()
+@(needMistakes: Boolean)
 <div class="left item social-wrapper">
     <div class="fb-like" data-href="" data-layout="button_count" data-action="like"
     data-show-faces="true" data-share="false"></div>
     <a href="https://twitter.com/share" class="twitter-share-button" data-lang="pl">Tweetnij</a>
 </div>
+@if(needMistakes) {
+    <div class="center aligned item report-mistakes-wrapper">
+        <div class="report-mistakes-alarm"></div>
+        <div class="report-mistakes-button">ZGŁOŚ BŁĘDY W BAZIE DANYCH</div>
+    </div>
+}
 <div class="right item">
     <div class="close-button"></div>
 </div>

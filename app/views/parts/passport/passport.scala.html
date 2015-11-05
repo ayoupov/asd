@@ -11,7 +11,7 @@
         fjs.parentNode.insertBefore(js, fjs);}}(document, 'script', 'twitter-wjs');</script>
 <div id="passport">
     <nav id="passportmenu-top" class="ui secondary pointing menu blurred menu-nav menu-nav-top">
-        @parts.social_bands()
+        @parts.social_bands(false)
     </nav>
     <div class="passport-title-wrapper church-name"></div>
 
@@ -27,7 +27,7 @@
             <a class="item image-menu-item" data-tab="add-images">Dodawanie zdjęć</a>
         </div>
         <div class="passport-update-message-wrapper">
-            @parts.messages("new-story")
+            @parts.messages("new-story", "Twoje wspomnienie zostało wysłane!")
         </div>
         <div data-tab="add-story" class="ui tab active">
             @parts.forms.new_story_form(user)
@@ -39,14 +39,14 @@
 
     <div class="passport-suggest">
         <div class="passport-update-message-wrapper">
-            @parts.messages("suggestion")
+            @parts.messages("suggestion", "Twój komentarz został wysłany!")
         </div>
         <div class="gapper-less clearfix"></div>
         @parts.forms.suggest_form()
     </div>
 
     <nav id="passportmenu-bottom" class="ui secondary pointing menu blurred menu-nav menu-nav-bottom">
-        @parts.social_bands()
+        @parts.social_bands(true)
     </nav>
 
 </div>

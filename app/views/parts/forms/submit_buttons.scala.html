@@ -1,17 +1,17 @@
 @(needCancel: Boolean, buttonCaption: String, buttonClasses: String)
 @if(needCancel) {
-    <div class="col-2"></div>
+    <div class="col-3"></div>
     <div class="col-3 inlinemiddle">
         <input type="button" value="@buttonCaption" class="@buttonClasses">
     </div>
     <div class="col-1">
-        <input type="button" value="Cancel" class="cancel-button">
+        <input type="button" value="anuluj" class="cancel-button">
     </div>
-    <div class="col-2"></div>
+    <div class="col-1"></div>
 } else {
-<div class="col-2"></div>
+<div class="col-3"></div>
 <div class="col-3 inlinemiddle">
     <input type="button" value="@buttonCaption" class="@buttonClasses">
 </div>
-<div class="col-3"></div>
+<div class="col-2"></div>
 }

@@ -4,8 +4,6 @@
 }
 
 .content-cover-image {
-    height: 500px;
-    max-height: 500px;
     width: 100%;
     margin-left: auto;
     margin-right: auto;
@@ -13,7 +11,20 @@
     position: relative;
 }
 
-.content-cover-image-overlay {
+.content-cover-image-article {
+    height: 500px;
+    max-height: 500px;
+    background-size: cover;
+    background-position: center center;
+}
+
+.content-cover-image-story {
+    height: 265px;
+    max-height: 265px;
+    background: #5938da no-repeat center 25%;
+}
+
+.content-cover-image-article .content-cover-image-overlay {
     height: 100%;
     width: 100%;
     background: transparent url(/assets/images/article_cover_overlay.png) center;

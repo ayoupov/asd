@@ -1,6 +1,7 @@
 var $churchStoriesTitle, $churchStories, $passportUpdateButtonWrapper,
     $passportGalleryThumbs, $passportGalleryControls, $passportGalleryGSV,
-    $passportUpdate, $passportGallery, $passportWrapper, $passportSuggestForm;
+    $passportUpdate, $passportGallery, $passportWrapper, $passportSuggestForm,
+    $reportMistakesWrapper;
 
 var $passportCurrentImage, $overlayArrowUp, $overlayArrowDown;
 
@@ -11,16 +12,18 @@ var DEF_IMAGE_DESC = 'Autor: Igor Snopek';
 
 $(document).ready(function () {
     $passportWrapper = $(".passport-wrapper");
-    $passportGallery = $(".passport-gallery");
+    $passportGallery = $(".passport-gallery", $passportWrapper);
 
-    $churchStoriesTitle = $(".passport-stories-title");
-    $churchStories = $(".church-stories");
+    $churchStoriesTitle = $(".passport-stories-title", $passportWrapper);
+    $churchStories = $(".church-stories", $passportWrapper);
 
-    $passportUpdate = $(".passport-update");
+    $passportUpdate = $(".passport-update", $passportWrapper);
     //$newStoryGallery = $(".story-cover-gallery");
-    $passportUpdateButtonWrapper = $(".passport-update-button-wrapper");
+    $passportUpdateButtonWrapper = $(".passport-update-button-wrapper", $passportWrapper);
 
-    $passportSuggestForm = $(".passport-suggest");
+    $passportSuggestForm = $(".passport-suggest", $passportWrapper);
+
+    $reportMistakesWrapper = $(".report-mistakes-wrapper", $passportWrapper).hide();
 
     // fill user details once
     if (userAuthed) {
@@ -116,6 +119,18 @@ function initPassportUI() {
     $(".close-button", $passportWrapper).on('click', function () {
         $passportWrapper.modal('hide');
     });
+
+    $passportWrapper.on('passportready', function()
+    {
+        suggestionUIInit();
+
+        $reportMistakesWrapper.show().on('click', function () {
+            showPassportSuggestForm();
+            suggestionDropdown.find("[data-value='name']").trigger("click");
+            suggestionChangeFunc('name');
+        });
+    });
+
     $passportWrapper.modal({
         onHidden: function () {
             removeHash();
@@ -127,8 +142,7 @@ function initPassportUI() {
     $('.menu .item', $passportUpdate).tab();
 
     // init cancel buttons
-    $('.cancel-button', $passportUpdate).on('click', function()
-    {
+    $('.cancel-button', $passportUpdate).on('click', function () {
         hidePassportUpdateForm();
     });
 
@@ -136,8 +150,7 @@ function initPassportUI() {
 
     fileInputTweak();
 
-    $(".upload-confirmation").on('change', function()
-    {
+    $(".upload-confirmation").on('change', function () {
         var checked = $(this).is(':checked');
         if (checked) {
             globalTOSConfirmed = true;
@@ -158,8 +171,7 @@ function resetEdit() {
     $(".passport-value-edit-icon", $elem).show();
 }
 
-function getCurrentForm()
-{
+function getCurrentForm() {
     var $thisTab = $(".ui.tab.active", $passportUpdate);
     return $(".entity-form", $thisTab);
 }
@@ -230,8 +242,7 @@ function fillSocial() {
 function showPassportUpdateForm() {
     $(".passport-stories-wrapper").fadeToggle(800);
     $passportUpdate.slideUp(800);
-    $passportUpdate.fadeIn(800, function()
-    {
+    $passportUpdate.fadeIn(800, function () {
         $passportWrapper.modal('refresh');
         _scrollTo($passportWrapper.parent(), $("#passportmenu-bottom"), 900);
     });
@@ -276,7 +287,7 @@ function initUpdatePassportApi() {
     var fieldUpdateApi = {
         method: 'POST',
         onSuccess: function (data) {
-            notifySuggestionOk("Dziękujemy za pomoc, czytamy wszystkie komentarze i na bierząco aktualizujemy dane", hidePassportSuggestForm);
+            notifySuggestionOk("Dziękujemy za pomoc, czytamy wszystkie<br>komentarze i na bierząco aktualizujemy dane", hidePassportSuggestForm);
         },
         onError: function (errorMessage) {
             notifySuggestionError(errorMessage);
@@ -299,7 +310,7 @@ var customUpdateWithImages = function (e) {
 
     var $thisTab = $(".ui.tab.active", $passportUpdate);
     var isStoryTab = $thisTab.data('tab') == 'add-story';
-    var url = (isStoryTab) ? '/church/story': '/church/images';
+    var url = (isStoryTab) ? '/church/story' : '/church/images';
     var entity;
     var $entityForm = getCurrentForm();
 
@@ -307,12 +318,11 @@ var customUpdateWithImages = function (e) {
     //grab all form data
     var formData = new FormData();
     var data = $entityForm.serializeObject();
-    for ( var key in data ) {
+    for (var key in data) {
         formData.append(key, data[key]);
     }
     // append files
-    $("input:file[name]", $entityForm).each(function(a, item)
-    {
+    $("input:file[name]", $entityForm).each(function (a, item) {
         formData.append($(item).attr('name'), item.files[0]);
     });
 
@@ -328,7 +338,7 @@ var customUpdateWithImages = function (e) {
             resetForm($entityForm);
             notifyOk(data.message, hidePassportUpdateForm);
         },
-        error : function (errorMessage) {
+        error: function (errorMessage) {
             //showPassportUpdateForm();
             notifyError(errorMessage);
         }
@@ -558,13 +568,15 @@ function appendGSV() {
 
     var center = new google.maps.LatLng(currentChurch.address.geometry[0], currentChurch.address.geometry[1]);
     var streetViewService = new google.maps.StreetViewService();
-    var maxDistanceFromCenter = 50; //meters
+    var distances = [100, 50];
     var galleryHeight = 480;
     var galleryWidth = 860;
-    if (gsvlock)
-        streetViewService.getPanoramaByLocation(center, maxDistanceFromCenter, function (streetViewPanoramaData, status) {
+
+    function approximateGSVDistances() {
+        var distance = distances.pop();
+        streetViewService.getPanoramaByLocation(center, distance, function (streetViewPanoramaData, status) {
             if (status === google.maps.StreetViewStatus.OK) {
-                //var coords = getCoordsString(currentChurch.address.geometry);
+                distances = [];
                 var lat = streetViewPanoramaData.location.latLng.lat();
                 var lng = streetViewPanoramaData.location.latLng.lng();
                 var coords = lat + ',' + lng;
@@ -584,18 +596,25 @@ function appendGSV() {
                     desc: 'gsv'
                 };
                 pushGalleryThumb(gsvThumbData);
+                gsvlock = false;
                 $passportCurrentImage.trigger('galleryready');
             } else {
-                _debug('street view returned : ' + status);
-                pushGalleryThumb({
-                    src: '/assets/images/passport/gsv_thumb_inactive.png',
-                    big: "",
-                    id: 'gsv',
-                    desc: 'gsv'
-                });
-                $passportCurrentImage.trigger('galleryready');
+                if (!distances.length) {
+                    _debug('street view returned : ' + status);
+                    pushGalleryThumb({
+                        src: '/assets/images/passport/gsv_thumb_inactive.png',
+                        big: "",
+                        id: 'gsv',
+                        desc: 'gsv'
+                    });
+                    $passportCurrentImage.trigger('galleryready');
+                }
+                else approximateGSVDistances();
             }
         });
+    }
+
+    approximateGSVDistances();
     gsvlock = false;
 }
 

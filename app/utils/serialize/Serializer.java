@@ -32,11 +32,15 @@ public class Serializer extends Plugin
     public static ObjectMapper shallowChurchMapper;
     public static ObjectWriter shallowChurchWriter;
 
+    public static ObjectMapper emptyChangeDateMapper;
+
     static
     {
         emptyMapper = new ObjectMapper();
 
         defaultWriter = emptyMapper.writer();
+
+        emptyChangeDateMapper = new ObjectMapper();
 
         shallowChurchMapper = new ObjectMapper();
         shallowChurchMapper.registerModule(new SimpleModule().addSerializer(Church.class, new MainPageChurchConverter()));

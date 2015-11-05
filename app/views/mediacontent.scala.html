@@ -2,10 +2,22 @@
 @import utils.web.RenderUtils
 @(content: MediaContent, preview: Boolean)
     @coverImage() = @{
-        if(content.getCover != null)
-            content.getCover.getPath
-        else
-            ServerProperties.getValue("asd.editor.nosrc.image")
+        if(content.getContentType == MediaContentType.Article) {
+            if(content.getCover != null)
+                content.getCover.getPath
+            else
+                ServerProperties.getValue("asd.editor.nosrc.image")
+        } else
+        {
+            content.getCoverThumbPath
+        }
+    }
+    @coverClass() = @{
+        if(content.getContentType == MediaContentType.Story) {
+            "content-cover-image-story"
+        } else {
+            "content-cover-image-article"
+        }
     }
 <!DOCTYPE html>
     <html lang="pl">
@@ -14,7 +26,7 @@
                 @parts.heads.commonhead()
                 @parts.heads.contenthead()
                 @parts.heads.metas()
-                @parts.style(".content-cover-image", "background: url(" + coverImage() + ") center; background-size: cover")
+                @parts.style(".content-cover-image", "background-image: url(" + coverImage() + ");")
         </head>
         <body>
             @if(!preview) {
@@ -30,7 +42,7 @@
             @sociallinks()
         }
         </div>
-        <div class="content-cover-image">
+        <div class='content-cover-image @coverClass()'>
             <div class="content-cover-image-overlay"></div>
             <div class="content-title">
             @content.getTitle
@@ -57,13 +69,15 @@
             }
             @parts.media.processed2(content.getText)
         </div>
-            <div class="mediacontent-church-data">
+            @if(content.getContentType == MediaContentType.Story) {
+                <div class="mediacontent-church-data">
                 @parts.passport.datatable(content.getDedicatedChurch)
-            </div>
+                </div>
+            }
             <div class="content-main-wrapper">
                 <div class="content-main">
                     <nav id="contentmenu-bottom" class="ui secondary pointing menu blurred">
-                        @parts.social_bands()
+                        @parts.social_bands(false)
                     </nav>
                 </div>
             </div>

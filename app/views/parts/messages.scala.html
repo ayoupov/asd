@@ -1,7 +1,8 @@
-@(part : String)
+@(part : String, headerSuccess : String)
     <div class="pointy passport-update-message" id="@part-success-message">
         <div class="message-icon"></div>
-        <div class="message-header">Twoje wspomnienie zostało wysłane!</div>
+        <!-- Twoje wspomnienie zostało wysłane! -->
+        <div class="message-header">@headerSuccess</div>
         <div class="message-text"></div>
     </div>
     <div class="pointy passport-update-message" id="@part-error-message">

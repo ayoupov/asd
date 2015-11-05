@@ -3,6 +3,7 @@
 <div class="suggestion-wrapper ui modal">
 @*    @parts.guidelines(false)            *@
     <!-- new church specific components -->
+    @parts.messages("new-church", "Twój komentarz został wysłany!")
     <nav id="new-church-menu-top" class="ui secondary pointing menu blurred hide-main menu-nav menu-nav-top">
         <div class="right item">
             <div class="close-button"></div>
@@ -39,7 +40,7 @@
         </div>
         <div class="col-1"></div>
         <div class="gapper-less clearfix"></div>
-        @parts.forms.submit_buttons(false, "WYŚLIJ DANE NA TEMAT KOŚCIOŁA", "new-church-submit form-submit")
+        @parts.forms.submit_buttons(false, "WYŚLIJ DANE KOŚCIOŁA", "new-church-submit form-submit")
         <div class="gapper clearfix"></div>
     </form>
     <nav id="new-church-menu-bottom" class="ui secondary pointing menu blurred hide-main menu-nav menu-nav-bottom">

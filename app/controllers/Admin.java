@@ -1,13 +1,10 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.base.CharMatcher;
 import models.Church;
 import models.MediaContent;
 import models.MediaContentType;
-import models.internal.ContentManager;
-import models.internal.SessionCache;
-import models.internal.UserManager;
+import models.internal.*;
 import models.internal.search.SearchManager;
 import models.internal.search.filters.ArticleFilter;
 import models.internal.search.filters.ChurchFilter;
@@ -26,12 +23,10 @@ import utils.map.BadIdsSieve;
 import utils.map.Processor;
 import utils.map.Snapshoter;
 import utils.media.bbcode.BBCodeTest;
-import utils.seed.ChurchSeeds;
 import utils.seed.Disseminator;
 import views.html.admin;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -205,9 +200,6 @@ public class Admin extends Controller
         if (roleCheck()) {
             try {
                 switch (part) {
-                    case "users":
-                        Disseminator.userSeed();
-                        break;
                     case "churches":
                         Disseminator.churchSeed();
                         break;
@@ -235,6 +227,27 @@ public class Admin extends Controller
         }
         return forbidden();
     }
+
+    public static Result exportMediaContent() throws IOException, InterruptedException
+    {
+        if (roleCheck()) {
+            Exporter.exportMediaContent();
+            return ok("mediacontent exported");
+        }
+        return forbidden();
+    }
+
+    public static Result importMediaContent() throws IOException, InterruptedException
+    {
+        if (roleCheck()) {
+            beginTransaction();
+            Importer.importMediaContent();
+            commitTransaction();
+            return ok("mediacontent imported");
+        }
+        return forbidden();
+    }
+
 
     public static Result temp()
     {

@@ -69,6 +69,7 @@
     padding-bottom: 10px;
     border-bottom-width: 5px;
     letter-spacing: 1px;
+    margin-bottom: -1px;
 }
 
 #links .item:first-child {

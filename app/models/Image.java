@@ -33,7 +33,7 @@ public class Image
     private User uploadedBy;
 
     @Column(name = "uploaded_ts")
-    @JsonSerialize(using = DateTimeConverter.class)
+//    @JsonSerialize(using = DateTimeConverter.class)
     private Date uploadedTS;
 
     @OneToOne
@@ -41,7 +41,7 @@ public class Image
     private User approvedBy;
 
     @Column(name = "approved_ts")
-    @JsonSerialize(using = DateTimeConverter.class)
+//    @JsonSerialize(using = DateTimeConverter.class)
     private Date approvedTS;
 
     public Image(String description, String path)

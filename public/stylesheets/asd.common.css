@@ -30,6 +30,7 @@
 .prompt-wrapper {
     margin-right: 24px !important;
     border-bottom: solid 5px black !important;
+    margin-bottom: -1px !important;
 }
 
 #menu.menu a:not(.result) {
@@ -181,6 +182,10 @@ form:not(#foo) > div > input[type='checkbox']:checked + label {
     /*font-weight: bold;*/
 }
 
+.form-submit:hover {
+    background-color: #d2b25d;
+}
+
 .passport-update .ui.tabular.menu .item {
     width: 50%;
     font-size: 24px;
@@ -296,21 +301,6 @@ form:not(#foo) > div > input[type='checkbox']:checked + label {
     text-align: right;
 }
 
-/*.passport-update div .ui.form input[type=text],*/
-/*.passport-update div .ui.form textarea,*/
-/*#new_church_form input[type=text],*/
-/*.passport-suggest input[type=text],*/
-/*.passport-suggest select{*/
-.ui.form input[type=text],.ui.form textarea, .ui.form select{
-    border: none !important;
-    border-radius: initial !important;
-    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif !important;
-    font-size: 12px;
-}
-
-.passport-update div .ui.form input, .ui.form div input{
-    height: 44px;
-}
 
 div.col-1
 {
@@ -389,14 +379,6 @@ div.gapper-less
 {
     width: 182px;
     float: left;
-}
-
-.form-title {
-    font-size: 24px;
-    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
-    /*text-align: center;*/
-    font-weight: bold;
-    margin-top: 20px;
 }
 
 
@@ -491,7 +473,8 @@ td.passport-data-filler {
 
 .cancel-button {
     height: 56px !important;
-    width: 150px;
+    /*width: 150px;*/
+    width: 100%;
 
     font-size: 18px;
     font-weight: bold;
@@ -501,4 +484,37 @@ td.passport-data-filler {
     border: 5px solid #d5d5d5;
     background-color: white;
     color: #a8a8a8;
+}
+
+.report-mistakes-wrapper {
+    margin-left: -140px !important;
+    width: 360px;
+    cursor: pointer;
+}
+
+.report-mistakes-button {
+    color: #d1d1d1;
+    background-color: white;
+
+    font-size: 18px;
+    font-weight: bold;
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
+    text-transform: uppercase;
+
+    float: left;
+    margin-left: 20px;
+}
+
+.report-mistakes-alarm {
+    background: transparent url(/assets/images/report_button.png) center center no-repeat;
+    height: 34px;
+    width: 34px;
+}
+
+/*#passportmenu-top .item, #passportmenu-bottom .item {*/
+    /*height: 55px;*/
+/*}*/
+
+.menu-nav .item{
+    height: 55px;
 }

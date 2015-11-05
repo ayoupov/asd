@@ -134,11 +134,13 @@ public class MediaContent
 
     public MediaContent()
     {
+        this.addedDT = new Date();
     }
 
     public MediaContent(MediaContentType mediaContentType)
     {
         this.contentType = mediaContentType;
+        this.addedDT = new Date();
     }
 
     public Long getId()

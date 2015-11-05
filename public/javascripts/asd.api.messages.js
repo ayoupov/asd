@@ -23,7 +23,7 @@ function notifyOk(message, callback) {
 
             var $nssm = $("#new-story-success-message");
             $(".message-header", $nssm).html('Twoje wspomnienie zostało wysłane!');
-            message = 'Moderator przeczyta ja i opublikuje w ciągu 48 godzin';
+            message = 'Moderator przeczyta ja<br>i opublikuje w ciągu 48 godzin';
             notifyUpdateResult($nssm, message, callback);
 
         } else {

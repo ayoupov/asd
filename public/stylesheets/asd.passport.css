@@ -19,10 +19,6 @@
     width: 980px;
 }
 
-#passportmenu-top .item, #passportmenu-bottom .item {
-    height: 55px;
-}
-
 .alarm-sign {
     height: 34px;
     width: 34px;
@@ -31,6 +27,7 @@
     margin-left: 10px;
     cursor: pointer;
 }
+
 .passport-title-wrapper {
     font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
     font-size: 38px;
@@ -220,50 +217,6 @@
     border: solid #5a38db 1px;
 }
 
-.passport-update input::-webkit-input-placeholder, .passport-update textarea::-webkit-input-placeholder {
-    color: #D4D4D4 !important;
-}
-
-.passport-update input:-moz-placeholder, .passport-update textarea:-moz-placeholder {
-    /* Firefox 18- */
-    color: #D4D4D4 !important;
-}
-
-.passport-update input::-moz-placeholder, .passport-update textarea::-moz-placeholder {
-    /* Firefox 19+ */
-    color: #D4D4D4 !important;
-}
-
-.passport-update input:-ms-input-placeholder, .passport-update textarea:-ms-input-placeholder {
-    color: #D4D4D4 !important;
-}
-
-.form-button {
-    border: none !important;
-    border-radius: initial !important;
-    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
-    font-size: 12px;
-    background: white;
-    height: 44px;
-    /*width: 100%;*/
-    line-height: 44px;
-    text-align: center;
-    cursor: pointer;
-    color: #486399;
-    text-transform: uppercase;
-    font-weight: bold;
-}
-
-.not-you-button {
-    width: 100%;
-}
-
-.entity-submit {
-    height: 56px !important;
-    font-size: 18px;
-    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
-}
-
 .passport-update-message {
     width: 308px;
     height: 178px;
@@ -323,11 +276,13 @@
     -webkit-border-radius: 0 !important;
     -moz-border-radius: 0 !important;
     border-radius: 0 !important;
+    height: 44px;
 }
 
 .suggestion-field-select .text {
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
     font-size: 14px;
+    line-height: 22px;
 }
 
 .suggestion-field-select .menu {
@@ -350,4 +305,8 @@
 .suggestion-field-select .item:hover {
     background-color: #d2b25d !important;
     color: white !important;
+}
+
+.suggestion-field-select .menu .item.active.selected{
+    font-weight: normal !important;
 }

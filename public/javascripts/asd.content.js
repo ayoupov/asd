@@ -1,7 +1,8 @@
-var $contentTitle;
+var $contentTitle, $contentCoverImage;
 
 $(document).ready(function () {
     $contentTitle = $('.content-title');
+    $contentCoverImage = $('.content-cover-image');
     $(window).on('resize', resizeContentFunc);
     // search prompt changes
     $('.prompt').on('focus', changeSearchPrompt).on('focusout', changeSearchPrompt);
@@ -15,7 +16,7 @@ var resizeContentFunc = function () {
     var wwidth = $(window).width();
     $contentTitle.css({
         left: (wwidth - $contentTitle.width()) / 2 + "px",
-        top: (560 - $contentTitle.height() - 100) + "px"
+        top: ($contentCoverImage.height() + 60 - $contentTitle.height() - 100) + "px"
     });
     //var margin = parseFloat($('.content-main-wrapper').css('margin-left'));
     $(".social-links").css({

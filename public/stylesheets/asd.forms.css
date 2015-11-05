@@ -1,0 +1,85 @@
+.form-title {
+    font-size: 24px;
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
+    /*text-align: center;*/
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.form-button {
+    border: none !important;
+    border-radius: initial !important;
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
+    font-size: 12px;
+    background: white;
+    height: 44px;
+    /*width: 100%;*/
+    line-height: 44px;
+    text-align: center;
+    cursor: pointer;
+    color: #486399;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.not-you-button {
+    width: 100%;
+}
+
+.entity-submit {
+    height: 56px !important;
+    font-size: 18px;
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
+}
+
+.ui.form input[type=text],.ui.form textarea, .ui.form select{
+    border: none !important;
+    border-radius: initial !important;
+    /*font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif !important;*/
+    /*font-size: 12px;*/
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-size: 14px;
+    height: 44px !important;
+}
+
+/*.passport-update div .ui.form input, .ui.form div input{*/
+    /*height: 44px;*/
+/*}*/
+
+.passport-update input::-webkit-input-placeholder, .passport-update textarea::-webkit-input-placeholder {
+    color: #D4D4D4 !important;
+}
+
+.passport-update input:-moz-placeholder, .passport-update textarea:-moz-placeholder {
+    /* Firefox 18- */
+    color: #D4D4D4 !important;
+}
+
+.passport-update input::-moz-placeholder, .passport-update textarea::-moz-placeholder {
+    /* Firefox 19+ */
+    color: #D4D4D4 !important;
+}
+
+.passport-update input:-ms-input-placeholder, .passport-update textarea:-ms-input-placeholder {
+    color: #D4D4D4 !important;
+}
+
+.required.not-filled {
+    border: 2px solid #fabdbd !important;
+}
+
+.required.not-filled::-webkit-input-placeholder {
+    color: #fabdbd !important;
+}
+
+.required.not-filled:-moz-placeholder {
+    color: #fabdbd !important;
+}
+
+.required.not-filled::-moz-placeholder {
+    color: #fabdbd !important;
+}
+
+.required.not-filled:-ms-input-placeholder {
+    color: #D4D4D4 !important;
+}
