@@ -292,11 +292,17 @@ function initUpdatePassportApi() {
         onError: function (errorMessage) {
             notifySuggestionError(errorMessage);
         },
-        beforeSend: adjustSuggestionSettings
+        beforeSend: function(settings) {
+            if (validateForm($(this).closest('form')))
+                return adjustSuggestionSettings(settings);
+            return false;
+        }
     };
 
     $(".entity-submit", $passportSuggestForm).off('click').api(
-        $.extend({on: 'click'}, fieldUpdateApi)
+        $.extend({
+            on: 'click',
+        }, fieldUpdateApi)
     );
     $passportSuggestForm.on("keypress", function (event) {
         return event.keyCode != 13;
@@ -314,36 +320,37 @@ var customUpdateWithImages = function (e) {
     var entity;
     var $entityForm = getCurrentForm();
 
+    if (validateForm($entityForm)) {
 
-    //grab all form data
-    var formData = new FormData();
-    var data = $entityForm.serializeObject();
-    for (var key in data) {
-        formData.append(key, data[key]);
-    }
-    // append files
-    $("input:file[name]", $entityForm).each(function (a, item) {
-        formData.append($(item).attr('name'), item.files[0]);
-    });
-
-    $.ajax({
-        url: url,
-        type: 'POST',
-        data: formData,
-        async: false,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (data) {
-            resetForm($entityForm);
-            notifyOk(data.message, hidePassportUpdateForm);
-        },
-        error: function (errorMessage) {
-            //showPassportUpdateForm();
-            notifyError(errorMessage);
+        //grab all form data
+        var formData = new FormData();
+        var data = $entityForm.serializeObject();
+        for (var key in data) {
+            formData.append(key, data[key]);
         }
-    });
+        // append files
+        $("input:file[name]", $entityForm).each(function (a, item) {
+            formData.append($(item).attr('name'), item.files[0]);
+        });
 
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                resetForm($entityForm);
+                notifyOk(data.message, hidePassportUpdateForm);
+            },
+            error: function (errorMessage) {
+                //showPassportUpdateForm();
+                notifyError(errorMessage);
+            }
+        });
+    }
     return false;
 
 };

@@ -54,6 +54,12 @@ var uiInit = function () {
     $(window).on('scroll', scrollFunc);
     // and window resize
     $(window).on('resize', resizeFunc);
+
+    $(document).on('change keypress', '.required.not-filled', function(){
+        $(this).removeClass('not-filled');
+        $('label[for='+ $(this).attr('id') +']').removeClass('not-filled');
+    });
+
     changeSearchPrompt();
     bindAPI();
     initSearch();
@@ -229,4 +235,21 @@ var isotopeThumbs = function () {
 
 function openContent(contentType, contentId) {
     console.log('api: {' + contentType + ' : ' + contentId + "}");
+}
+
+function validateForm($form)
+{
+    var $fields = $(".required:visible", $form);
+    var res = true;
+    $fields.each(function(a, item)
+    {
+        var $item = $(item);
+        var v = $item.val();
+        if (!v) {
+            res = false;
+            $item.addClass("not-filled");
+            $('label[for='+ $item.attr('id') +']').addClass('not-filled');
+        }
+    });
+    return res;
 }

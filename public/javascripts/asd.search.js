@@ -58,6 +58,10 @@ function initAddChurch() {
             //showPassportUpdateForm();
             notifyChurchError();
         },
+        beforeSend: function (settings) {
+            if (validateForm($(this).closest('form')))
+                return settings;
+        },
         serializeForm: true
     });
     $(".close-button").off('click').on('click', function () {

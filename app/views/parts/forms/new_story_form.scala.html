@@ -10,7 +10,7 @@
         <label for="story-title">Tytuł wspomnienia</label>
     </div>
     <div class="col-4">
-        <input type="text" class="ui input clear-on-update-form" id="story-title" name="title" placeholder="Wybierz, jak Twoje wspomnienie będzie zatytuowane na stronie głównej">
+        <input type="text" class="ui input clear-on-update-form required" id="story-title" name="title" placeholder="Wybierz, jak Twoje wspomnienie będzie zatytuowane na stronie głównej">
     </div>
     <div class="col-1"></div>
     <div class="gapper-less clearfix"></div>
@@ -26,10 +26,10 @@
         <label for="story-text">Twoje wspomnienie</label>
     </div>
     <div class="col-4 fullheight">
-        <textarea class="ui textarea clear-on-update-form" id="story-text" name="text" placeholder="Projektował kościół?  Pomagałeś przy budowie, znasz fakty, o których nikt już nie pamięta? A może ktoś z Twojej rodziny ma historię do opowiedzenia? Opisz ze szczegółami swoje wspomnienie."></textarea>
+        <textarea class="ui textarea clear-on-update-form required" id="story-text" name="text" placeholder="Projektował kościół?  Pomagałeś przy budowie, znasz fakty, o których nikt już nie pamięta? A może ktoś z Twojej rodziny ma historię do opowiedzenia? Opisz ze szczegółami swoje wspomnienie."></textarea>
     </div>
     <div class="col-1"></div>
     <input type="hidden" value="" name="cover" id="story-cover-id">
         @parts.forms.image_block("new-story")
-        @parts.forms.common_update_tail(false)
+        @parts.forms.common_update_tail("story")
 </form>

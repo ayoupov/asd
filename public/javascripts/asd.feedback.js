@@ -1,6 +1,6 @@
 var feedbackInited = false;
 function addFeedback() {
-    $("input[type=text],textarea",$feedbackWrapper).val('');
+    $("input[type=text],textarea", $feedbackWrapper).val('');
     $feedbackWrapper.modal('show');
     if (!feedbackInited)
         initFeedback();
@@ -19,7 +19,12 @@ function initFeedback() {
             //showPassportUpdateForm();
             notifyFeedbackError();
         },
-        serializeForm: true
+        serializeForm: true,
+        beforeSend: function (settings) {
+            if (validateForm($(this).closest('form')))
+                return settings;
+            return false;
+        }
     });
     feedbackInited = true;
     $(".close-button").off('click').on('click', function () {

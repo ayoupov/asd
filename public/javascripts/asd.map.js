@@ -22,14 +22,23 @@ var dieStyle = function (feature) {
     };
 };
 
-var dekStyle = function (feature) {
+var uniStyle = function (feature) {
     return {
-        color: 'white',
-        //color: 'green',
-        fillColor: 'transparent',
-        weight: 1
+        color: '#4d4d4d',
+        weight: 2,
+        dashArray: '1,5',
+        fillColor: 'transparent'
     };
 };
+
+//var dekStyle = function (feature) {
+//    return {
+//        color: 'white',
+//        //color: 'green',
+//        fillColor: 'transparent',
+//        weight: 1
+//    };
+//};
 
 $(document).ready(function () {
     checkReturn();
@@ -44,8 +53,7 @@ var map, customMetropLayer,
     metroCountersLayer, dioCounterLayer,
     comingBack = false;
 
-function checkReturn()
-{
+function checkReturn() {
     var cb = Cookies.get('auth.cb');
     if (cb && !userAuthed) {
         Cookies.remove('auth.cb');
@@ -55,11 +63,11 @@ function checkReturn()
 }
 
 var mapInit = function (geostats) {
-    L.mapbox.accessToken = 'pk.eyJ1IjoiYXlvdXBvdiIsImEiOiJjYTc1MDkyY2ZlZDIyOGE3Mjc2NzE1ODk3Yzg0OGRlMSJ9.TLk_UalfiCktwxGqd9kRmg';
+    L.mapbox.accessToken = mapboxAccessToken;
     var opts = {
         loadingControl: true
     };
-    map = L.mapbox.map('map', 'ayoupov.09a5336b', opts).setView([52.36, 18.45], 7);
+    map = L.mapbox.map('map', mapboxMapID, opts).setView([52.36, 18.45], 7);
     // relocate attribution
     $('.leaflet-control-attribution').css(
         {
@@ -72,14 +80,16 @@ var mapInit = function (geostats) {
 
     map.options.doubleClickZoom = true;
     map.options.minZoom = 7;
-    map.options.maxZoom = 18;
+    map.options.maxZoom = 13;
 
     addChurchContents();
     if (dekanatsEnabled)
         addDekanatsContent();
 
     customMetropLayer = L.geoJson(null, {
-        style: metropStyle
+        //style: metropStyle
+        style: uniStyle
+
         //, pointToLayer: function (feature, latlng) {
         //    return L.marker(latlng,
         //        {
@@ -88,7 +98,10 @@ var mapInit = function (geostats) {
         //}
     });
 
-    var customDieLayer = L.geoJson(null, {style: dieStyle});
+    var customDieLayer = L.geoJson(null, {
+        //style: dieStyle
+        style: uniStyle
+    });
     //var customDekLayer = L.geoJson(null, {style: dekStyle});
 
     metropoliesLayer = omnivore.topojson(feature_paths.metropolies, null, customMetropLayer);
@@ -121,29 +134,39 @@ var mapInit = function (geostats) {
 
     // map wheel zoom
     setSiteMode();
-    map.on('click', function() {setMapMode();});
-    map.on('move', function() {setMapMode();});
-    metropoliesLayer.on('click', function () {setMapMode();});
-    metropoliesLayer.on('move', function () {setMapMode();});
-    diecezjeLayer.on('click', function () {setMapMode();});
-    diecezjeLayer.on('move', function () {setMapMode();});
-    $('body,#links > a').click(function(evt){
-        if(evt.target.id == "map")
+    map.on('click', function () {
+        setMapMode();
+    });
+    map.on('move', function () {
+        setMapMode();
+    });
+    metropoliesLayer.on('click', function () {
+        setMapMode();
+    });
+    metropoliesLayer.on('move', function () {
+        setMapMode();
+    });
+    diecezjeLayer.on('click', function () {
+        setMapMode();
+    });
+    diecezjeLayer.on('move', function () {
+        setMapMode();
+    });
+    $('body,#links > a').click(function (evt) {
+        if (evt.target.id == "map")
             return;
-        if($(evt.target).closest('#map').length)
+        if ($(evt.target).closest('#map').length)
             return;
         setSiteMode();
     });
 
 };
 
-function setMapMode()
-{
+function setMapMode() {
     map.scrollWheelZoom.enable();
 }
 
-function setSiteMode()
-{
+function setSiteMode() {
     map.scrollWheelZoom.disable();
 }
 

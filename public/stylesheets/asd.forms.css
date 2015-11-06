@@ -33,12 +33,16 @@
 }
 
 .ui.form input[type=text],.ui.form textarea, .ui.form select{
-    border: none !important;
-    border-radius: initial !important;
+    border: none;
+    /*border: none !important;*/
+    border-radius: 0 !important;
     /*font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif !important;*/
     /*font-size: 12px;*/
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
     font-size: 14px;
+}
+
+.ui.form input[type=text], .ui.form select {
     height: 44px !important;
 }
 
@@ -62,6 +66,10 @@
 
 .passport-update input:-ms-input-placeholder, .passport-update textarea:-ms-input-placeholder {
     color: #D4D4D4 !important;
+}
+
+label.not-filled {
+    color: #fabdbd !important;
 }
 
 .required.not-filled {

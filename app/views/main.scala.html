@@ -31,7 +31,7 @@
             </div>
         </div>
         <script>
-        var userAuthed, userName;
+        var userAuthed, userName, mapboxAccessToken, mapboxMapID;
         @if(user != null) {
             userAuthed = true;
             userName = '@user.getName';
@@ -52,7 +52,10 @@
         }
             @if(currentChurch != null) {
                 @Json.setObjectMapper(Serializer.shallowChurchMapper)
-        var currentChurch = @{Html(Json.toJson(currentChurch).toString)};}
+        var currentChurch = @{Html(Json.toJson(currentChurch).toString)};
+        }
+        mapboxAccessToken = '@ServerProperties.getValue("asd.mapbox.access.token")';
+        mapboxMapID = '@ServerProperties.getValue("asd.mapbox.id")';
         </script>
     </body>
 </html>

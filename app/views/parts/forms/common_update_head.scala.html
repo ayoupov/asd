@@ -8,6 +8,13 @@
         case LoginTypeSelect.FEEDBACK => "Autor komentarza"
     }
 }
+@emailId() = @{
+    if(loginTypeSelect == LoginTypeSelect.IMAGES) {
+        "image-author-email"
+    } else {
+        "story-author-email"
+    }
+}
 <div class="gapper"></div>
     <!-- common part 1: auth info -->
 <div class="col-3 rightaligned inlinemiddle">
@@ -30,16 +37,10 @@
 <div class="col-1"></div>
 <div class="gapper-less clearfix hide-authed"></div>
 <div class="col-3 rightaligned inlinemiddle hide-authed">
-    <label for="story-author-email">adres e-mail</label>
+    <label for="@emailId()">adres e-mail</label>
 </div>
 <div class="col-2 hide-authed">
-    <input type="text" class="ui input hide-authed" id="@{
-        if(loginTypeSelect == LoginTypeSelect.IMAGES) {
-            "image-author-email"
-        } else {
-            "story-author-email"
-        }
-    }" name="useremail" placeholder="">
+    <input type="text" class="ui input hide-authed required" id="@emailId()" name="useremail" placeholder="">
 </div>
 <div class="col-2 hide-authed inlinemiddle">
     <div class="social-login" data-provider="facebook">
