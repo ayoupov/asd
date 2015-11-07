@@ -80,21 +80,22 @@ public class Importer
                 br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(thisArticleDir, "all.churches"))));
                 line = br.readLine();
                 if (line != null && !"".equals(line))
-                    mc.setChurches(parseChurches(line));
+                    mc.setChurches(parseChurches(line, mc));
                 br.close();
                 br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(thisArticleDir, "dedicated.church"))));
                 line = br.readLine();
                 if (line != null && !"".equals(line))
-                    mc.setDedicatedChurch(parseChurches(line).iterator().next());
+                    mc.setDedicatedChurch(parseChurches(line, mc).iterator().next());
                 br.close();
 
                 // todo: connect churches
+
                 save(mc);
             }
         }
     }
 
-    private static Set<Church> parseChurches(String line)
+    private static Set<Church> parseChurches(String line, MediaContent mc)
     {
         LinkedHashSet<Church> res = new LinkedHashSet<>();
         String[] split = line.split(",");
@@ -102,6 +103,15 @@ public class Importer
         {
             Church c = ContentManager.getChurch(id.trim());
             res.add(c);
+            if (c != null) {
+                res.add(c);
+                Set<MediaContent> media = c.getMedia();
+                if (media == null)
+                    media = new LinkedHashSet<>();
+                media.add(mc);
+                c.setMedia(media);
+                save(c);
+            }
         }
         return res;
     }

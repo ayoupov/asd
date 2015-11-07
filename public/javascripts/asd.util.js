@@ -102,7 +102,7 @@ function getPrev(key, q) {
     var contentLength = thisCache.ids.length;
     var idx = thisCache.idx;
     if (idx - q - dateStoriesFirst + 1 >= 0) {
-        for (var i = q; i >= 0; i--) {
+        for (var i = q; i > 0; i--) {
             var id = thisCache.ids[idx - dateStoriesFirst - i];
             if (typeof id !== "undefined") {
                 res.push(id[0]);
@@ -129,4 +129,8 @@ function starsort(arr) {
             notStarred.push(arr[item]);
     }
     return shuffle(starred).concat(shuffle(notStarred));
+}
+
+function stringStartsWith (string, prefix) {
+    return string.slice(0, prefix.length) == prefix;
 }

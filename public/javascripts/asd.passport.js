@@ -44,7 +44,7 @@ $(document).ready(function () {
     initPassportUI();
 });
 
-var gsvlock, churchMedia, churchMediaIndex;
+var gsvlock, relatedMedia, relatedMediaIndex;
 
 function fillPassport(church) {
     _debug(church);
@@ -65,10 +65,10 @@ function fillPassport(church) {
     $(".passport-data-help").off('click').on('click', showPassportSuggestForm);
     $passportSuggestForm.hide();
 
-    churchMedia = filterMedia(church.media);
-    churchMediaIndex = 0;
+    relatedMedia = filterMedia(church.media);
+    relatedMediaIndex = 0;
     $churchStories.empty();
-    if (churchMedia && churchMedia.length > 0) {
+    if (relatedMedia && relatedMedia.length > 0) {
         $churchStoriesTitle.html("Wspomnienia dodane przez użytkowników").show();
         inhabitNext();
         $churchStories.isotope();
@@ -92,15 +92,15 @@ function filterMedia(data) {
 }
 
 function inhabitNext() {
-    if ($(".extra-story", $churchStories).length > 0)
-        $churchStories.isotope('remove', $(".extra-story"));
-    var prevChurchMediaIndex = churchMediaIndex;
-    churchMediaIndex += (prevChurchMediaIndex == 0) ? 7 : 4;
-    churchMediaIndex = Math.min(churchMedia.length, churchMediaIndex);
-    var lastItem = inhabitThumbs($churchStories, 'story', churchMedia.slice(prevChurchMediaIndex, churchMediaIndex));
-    var whatsleft = churchMedia.length - churchMediaIndex;
+    if ($(".extra-related", $churchStories).length > 0)
+        $churchStories.isotope('remove', $(".extra-related"));
+    var prevChurchMediaIndex = relatedMediaIndex;
+    relatedMediaIndex += (prevChurchMediaIndex == 0) ? 7 : 4;
+    relatedMediaIndex = Math.min(relatedMedia.length, relatedMediaIndex);
+    var lastItem = inhabitThumbs($churchStories, 'related', relatedMedia.slice(prevChurchMediaIndex, relatedMediaIndex));
+    var whatsleft = relatedMedia.length - relatedMediaIndex;
     if (whatsleft > 0) {
-        var $more = $("<div/>").attr('id', 'more-story-thumb').addClass('extra-story story thumb center-more white').append(
+        var $more = $("<div/>").attr('id', 'more-story-thumb').addClass('extra-related story thumb center-more white').append(
             $('<div/>').addClass('more-wrapper grayish-bordered').append(
                 $('<div/>').addClass('more').html('Więcej ' + whatsleft)
             )
@@ -112,6 +112,28 @@ function inhabitNext() {
     var visibleStories = $('.story', $churchStories).length;
     // | 0 -- gets integer result of division
     $churchStories.css('height', (350 * (((visibleStories - 1) / 4 | 0) + 1)) + 'px');
+
+    // todo: less magic
+    $('.hover-content').hide();
+    $(".article").hover(function () {
+        // switch content
+        var hoverContent = $('.hover-content', $(this));
+        if (hoverContent.length > 0) {
+            $(this).toggleClass('hovered');
+            $('.face-content', $(this)).hide();
+            hoverContent.show();
+        }
+    }, function () {
+        var hoverContent = $('.hover-content', $(this));
+        if (hoverContent.length > 0) {
+            $(this).toggleClass('hovered');
+            $('.face-content', $(this)).show();
+            hoverContent.hide();
+        }
+    });
+
+    bindThumbEvents($churchStories, 'related');
+
 }
 
 function initPassportUI() {

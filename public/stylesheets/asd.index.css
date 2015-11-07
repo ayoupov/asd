@@ -424,6 +424,7 @@ div.holder-border {
     color: white;
     font-style: italic;
     font-family: Georgia, sans-serif;
+    text-align: center;
 }
 
 .hover-content .cover {

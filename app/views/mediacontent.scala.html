@@ -19,6 +19,13 @@
             "content-cover-image-article"
         }
     }
+    @churchID() = @{
+        if(content.getDedicatedChurch != null) {
+            content.getDedicatedChurch.getExtID
+        } else {
+            "null"
+        }
+    }
 <!DOCTYPE html>
     <html lang="pl">
         <head>
@@ -81,6 +88,12 @@
                     </nav>
                 </div>
             </div>
-            @parts.mediacontent_thumbs()
-        </body>
-    </html>
+            <script>
+                var contentId = @content.getId;
+                var churchId = '@churchID()';
+            </script>
+        <div class="content-main-wrapper">
+            @parts.mediacontent_thumbs(content.getContentType)
+        </div>
+    </body>
+</html>

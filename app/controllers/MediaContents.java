@@ -1,7 +1,9 @@
 package controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import models.Church;
 import models.Image;
 import models.MediaContent;
 import models.MediaContentType;
@@ -60,14 +62,18 @@ public class MediaContents extends Controller
         if (type == null)
             return badRequest("Trying to get content with type : " + ctype);
         MediaContent content = ContentManager.getMediaByIdAndAlternative(id);
-        commitTransaction();
         if (content != null) {
             if (!content.getContentType().equals(type))
                 return badRequest("Wrong content type: " + type);
             if ("json".equals(ext)) {
                 Json.setObjectMapper(emptyMapper);
-                return ok(Json.toJson(content));
+                ObjectNode res = Json.newObject();
+                res.put("data", Json.toJson(content));
+                res.put("churches", content.getChurchIds());
+//                commitTransaction();
+                return ok(res);
             } else {
+//                commitTransaction();
                 // check if static version exists
                 File dir = new File(publicPath + ctype);
                 File mediaFile = new File(dir, content.getId() + ".html");
@@ -77,8 +83,10 @@ public class MediaContents extends Controller
 //                saveToFS(dir, mediaFile, rendered);
                 return ok(rendered);
             }
-        } else
+        } else {
+//            commitTransaction();
             return notFound(String.format("MediaContent with id {%s}", id));
+        }
     }
 
     private static void saveToFS(File dir, File mediaFile, Html rendered) throws IOException
@@ -198,7 +206,8 @@ public class MediaContents extends Controller
                 jcover = (map.get("cover") != null) ? map.get("cover")[0] : null,
                 jalt = (map.get("alt") != null) ? map.get("alt")[0] : null,
                 jdesc = (map.get("coverDescription") != null) ? map.get("coverDescription")[0] : null,
-                jtitle = (map.get("title") != null) ? map.get("title")[0] : null;
+                jtitle = (map.get("title") != null) ? map.get("title")[0] : null,
+                churches = (map.get("churches") != null) ? map.get("churches")[0] : null;
         Boolean jstarred = (map.get("starred") != null) ? safeBool(map.get("starred")) : false;
         Date jpublishDate = (map.get("approvedDT") != null) ? DataUtils.dateFromReqString(map.get("approvedDT")) : null;
         Set<User> jauthors = (map.get("authors") != null) ? ContentManager.parseUserList(map.get("authors")) : null;
@@ -238,6 +247,11 @@ public class MediaContents extends Controller
             c.setApprovedDT(jpublishDate);
             c.setApprovedBy(user);
         }
+        if (churches != null)
+        {
+            c.setChurches(parseChurchList(churches, c));
+        }
+
         if (isNew)
             c.setId((Long) save(c));
         else
@@ -254,6 +268,26 @@ public class MediaContents extends Controller
         result.put("success", true);
         result.put("id", c.getId());
         return ok(result);
+    }
+
+    private static Set<Church> parseChurchList(String churches, MediaContent mc)
+    {
+        String[] split = churches.split(",");
+        Set<Church> res = new LinkedHashSet<>();
+        for (String churchId : split)
+        {
+            Church c = ContentManager.getChurch(churchId.trim());
+            if (c != null) {
+                res.add(c);
+                Set<MediaContent> media = c.getMedia();
+                if (media == null)
+                    media = new LinkedHashSet<>();
+                media.add(mc);
+                c.setMedia(media);
+                save(c);
+            }
+        }
+        return res;
     }
 
     @Security.Authenticated(Secured.class)
@@ -332,5 +366,23 @@ public class MediaContents extends Controller
         }
         commitTransaction();
         return ok(Json.toJson(out));
+    }
+
+    public static Result contentRelated(long id)
+    {
+        List<MediaContent>  res = new ArrayList<>();
+
+        beginTransaction();
+        MediaContent mc = (MediaContent) getSession().get(MediaContent.class, id);
+        Church dedicated = mc.getDedicatedChurch();
+        if (dedicated == null)
+        {
+
+        } else {
+            Set<MediaContent> churchMedia = dedicated.getMedia();
+            res.addAll(churchMedia);
+        }
+        commitTransaction();
+        return ok(Json.toJson(res));
     }
 }

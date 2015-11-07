@@ -13,6 +13,7 @@ import utils.serialize.converters.DateTimeConverter;
 
 import javax.persistence.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created with IntelliJ IDEA.
@@ -341,5 +342,13 @@ public class MediaContent
     public void setDedicatedChurch(Church dedicatedChurch)
     {
         this.dedicatedChurch = dedicatedChurch;
+    }
+
+    @JsonIgnore
+    public String getChurchIds()
+    {
+        if (churches == null)
+            return null;
+        return churches.stream().map(Church::getExtID).collect(Collectors.joining(", "));
     }
 }

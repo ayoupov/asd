@@ -1,8 +1,10 @@
-var $contentTitle, $contentCoverImage;
+var $contentTitle, $contentCoverImage, $relatedThumbs, $relatedThumbsTitle;
 
 $(document).ready(function () {
     $contentTitle = $('.content-title');
     $contentCoverImage = $('.content-cover-image');
+    $relatedThumbs = $('.church-stories');
+    $relatedThumbsTitle = $('.passport-stories-title');
     $(window).on('resize', resizeContentFunc);
     // search prompt changes
     $('.prompt').on('focus', changeSearchPrompt).on('focusout', changeSearchPrompt);
@@ -10,6 +12,10 @@ $(document).ready(function () {
     resizeContentFunc();
     anchorFix();
     galleries();
+    thumbs();
+    $('.passport-update-button-wrapper').on('click', function(){
+        location.href = '/church/' + churchId + '#passportadd';
+    })
 });
 
 var resizeContentFunc = function () {
@@ -22,11 +28,12 @@ var resizeContentFunc = function () {
     $(".social-links").css({
         'margin-left': '20px'
     });
-    $("#menu").css('left', '10px');
+    $("#menu").css('padding-left', '10px');
 
 };
 
-var contentType = 'article'; // location.pathname.split('/')[2] ||
+//var contentType = 'article'; // location.pathname.split('/')[2] ||
+var contentType = location.pathname.split('/')[1];
 var changeSearchPrompt = function () {
     if ($prompt.is(":focus")) {
         switch (contentType) {
@@ -142,4 +149,77 @@ function galleries() {
             changeCaption(isFullwidth, data, $gall);
         });
     });
+}
+
+var relatedMediaIndex, relatedMedia;
+
+function thumbs()
+{
+    $.ajax({
+        url: '/content/related/' + contentId,
+        type: 'GET',
+        cache: false,
+        contentType: false,
+        success: populateRelated,
+        error: function (errorMessage) {
+
+        }
+    });
+
+    function populateRelated(data) {
+        relatedMediaIndex = 0;
+        relatedMedia = data;
+        $relatedThumbs.empty();
+        if (relatedMedia && relatedMedia.length > 0) {
+            $relatedThumbsTitle.html("Wspomnienia dodane przez użytkowników").show();
+            inhabitNext();
+            $relatedThumbs.isotope();
+
+            $('.hover-content').hide();
+            $(".article").hover(function () {
+                // switch content
+                var hoverContent = $('.hover-content', $(this));
+                if (hoverContent.length > 0) {
+                    $(this).toggleClass('hovered');
+                    $('.face-content', $(this)).hide();
+                    hoverContent.show();
+                }
+            }, function () {
+                var hoverContent = $('.hover-content', $(this));
+                if (hoverContent.length > 0) {
+                    $(this).toggleClass('hovered');
+                    $('.face-content', $(this)).show();
+                    hoverContent.hide();
+                }
+            });
+
+            bindThumbEvents($relatedThumbs, 'related');
+        }
+        else {
+            $relatedThumbsTitle.hide();
+        }
+    }
+}
+
+function inhabitNext() {
+    if ($(".extra-related", $relatedThumbs).length > 0)
+        $relatedThumbs.isotope('remove', $(".extra-related"));
+    var prevChurchMediaIndex = relatedMediaIndex;
+    relatedMediaIndex += (prevChurchMediaIndex == 0) ? 7 : 4;
+    relatedMediaIndex = Math.min(relatedMedia.length, relatedMediaIndex);
+    var lastItem = inhabitThumbs($relatedThumbs, 'related', relatedMedia.slice(prevChurchMediaIndex, relatedMediaIndex));
+    var whatsleft = relatedMedia.length - relatedMediaIndex;
+    if (whatsleft > 0) {
+        var $more = $("<div/>").attr('id', 'more-story-thumb').addClass('extra-related story thumb center-more white').append(
+            $('<div/>').addClass('more-wrapper grayish-bordered').append(
+                $('<div/>').addClass('more').html('Więcej ' + whatsleft)
+            )
+        );
+        $more.insertAfter(lastItem);
+        $more.off('click').on('click', inhabitNext);
+        $relatedThumbs.isotope('appended', $more);
+    }
+    var visibleStories = $('.thumb', $relatedThumbs).length;
+    // | 0 -- gets integer result of division
+    $relatedThumbs.css('height', (350 * (((visibleStories - 1) / 4 | 0) + 1)) + 'px');
 }

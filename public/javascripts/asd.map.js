@@ -361,8 +361,8 @@ function navigateTo(church, comingBack) {
             if (POPUP_ON_LOAD_ONCE) {
                 churchesLayer.geojsonLayer.off('layeradd');
                 marker.openPopup();
-                if (location.hash == "#passport")
-                    openPassport(church.extID, comingBack ? function () {
+                if (stringStartsWith(location.hash, "#passport"))
+                    openPassport(church.extID, comingBack || location.hash == "#passportadd" ? function () {
                         // todo: huh? wait for gsv to load?
                         $passportWrapper.on('passportready', function () {
                             showPassportUpdateForm();
