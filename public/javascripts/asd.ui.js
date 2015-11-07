@@ -54,6 +54,7 @@ var uiInit = function () {
     $(window).on('scroll', scrollFunc);
     // and window resize
     $(window).on('resize', resizeFunc);
+    resizeFunc();
 
     $(document).on('change keypress', '.required.not-filled', function(){
         $(this).removeClass('not-filled');
@@ -63,6 +64,7 @@ var uiInit = function () {
     changeSearchPrompt();
     bindAPI();
     initSearch();
+
     // set focus to search
     //$prompt.focus();
 };

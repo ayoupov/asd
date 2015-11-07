@@ -509,6 +509,7 @@ div.holder-border {
     background-color: #f2f2f2;
     border: none;
     text-align: left;
+    cursor: pointer;
 }
 
 #stories-by-date .item .asd-content {
@@ -555,14 +556,17 @@ div.holder-border {
     width: 50%;
     height: 76px;
     top: 50%;
+    cursor: pointer;
+}
+
+#story-controls div:hover {
+    background-color: white;
 }
 
 #story-controls .story-control-left {
     float: left;
     border-right: 1px solid #f2f2f2;
     background: #f9f9f9 url(/assets/images/story_control_down.png) no-repeat center center;
-    /*height:200px;*/
-    /*width:200px;*/
 }
 
 #story-controls .story-control-right {

@@ -27,12 +27,6 @@ var bindAPI = function () {
             onSuccess: applySummary
         }
     );
-    //$(".stories").api(
-    //    {
-    //        action: 'get stories',
-    //        on: 'load'
-    //    }
-    //);
     $("#more-articles-thumb").api(
         {
             action: 'get articles',
@@ -57,6 +51,30 @@ var bindAPI = function () {
             onSuccess: populateStories
         }
     );
+    $(".story-control-left").api(
+        {
+            action: 'get stories',
+            on: 'click',
+            urlData: {
+                ids: function () {
+                    return getNext("ds", dateStoriesRequested)
+                }
+            },
+            onSuccess: populateDateStories
+        }
+    );
+    $(".story-control-right").api(
+        {
+            action: 'get stories',
+            on: 'click',
+            urlData: {
+                ids: function () {
+                    return getPrev("ds", dateStoriesRequested)
+                }
+            },
+            onSuccess: populateDateStories
+        }
+    );
 };
 
 var contentCache = {
@@ -68,7 +86,7 @@ var contentCache = {
 
 //var storiesByStars, articlesByStars, storiesByDate, articlesByDate;
 var storiesFirst = 5, articlesFirst = 7, dateStoriesFirst = 6;
-var storiesRequested = storiesFirst + 1, articlesRequested = articlesFirst + 1;
+var storiesRequested = storiesFirst + 1, articlesRequested = articlesFirst + 1, dateStoriesRequested = dateStoriesFirst;
 var applySummary = function (response) {
     contentCache.ds.ids = response.data["stories"];
     contentCache.da.ids = response.data["articles"];
@@ -201,23 +219,8 @@ function appendStoryApi(when) {
     );
 }
 
-function appendDateStoryApi(when) {
-    //var $more = $(".extra-stories");
-    //$more.api(
-    //    {
-    //        action: 'get stories',
-    //        on: typeof when !== 'undefined' ? when : 'click',
-    //        urlData: {
-    //            ids: function () {
-    //                return getNext("ss", storiesRequested)
-    //            }
-    //        },
-    //        onSuccess: populateStories
-    //    }
-    //);
-}
-
 function populateDateStories(data) {
+    $dateStories.empty();
     $(data.data).each(function (a, item) {
         var title = item.title;
         var dt = new Date(item.approvedDT);
@@ -241,12 +244,11 @@ function populateDateStories(data) {
         );
 
         $dateStories.append($item);
+        $item.on('click', function(){
+            location.href = 'http://' + thisHost + '/story/' + item.id;
+        });
     });
-    //$(".item", $dateStories).hover(function () {
-    //    $(this).addClass('active');
-    //}, function () {
-    //    $(this).removeClass('active');
-    //});
+    $(".item", $dateStories).on('click')
 }
 
 // The de-facto unbiased shuffle algorithm is the Fisher-Yates (aka Knuth) Shuffle.

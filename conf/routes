@@ -75,4 +75,5 @@ GET           /admin                             controllers.Admin.index
 GET           /restricted                        controllers.Restricted.index
 
 GET           /admin/temp                        controllers.Admin.temp()
+GET           /admin/temp2                        controllers.Admin.temp2()
 GET           /admin/getchurches                 controllers.Admin.getChurches

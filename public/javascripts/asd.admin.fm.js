@@ -19,12 +19,13 @@ function fillFM(data) {
 }
 
 function addFileItem(item) {
+    var display_path = item.display;
     var path = item.path;
     var thumb = item.thumb;
 
-    var $item = $("<div class='fm-item'/>").append($("<div class='fm-item-path'>").html(path));
+    var $item = $("<div class='fm-item'/>").append($("<div class='fm-item-path'>").html(display_path).attr('data-lm', item.lm));
     if (thumb)
-        $item.append($("<img class='ui image'/>").attr('src', thumb));
+        $item.append($("<br>")).append($("<img class='ui image'/>").attr('src', thumb));
 
     $item.on('click', function () {
         var target = "text";

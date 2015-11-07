@@ -21,15 +21,13 @@ $.fn.serializeObject = function () {
     return o;
 };
 
-function ddmmyy(d)
-{
+function ddmmyy(d) {
     return prepad(d.getUTCDate()) + d.getUTCDate() + '/' +
         prepad(d.getUTCMonth() + 1) + (d.getUTCMonth() + 1) + '/' +
         d.getUTCFullYear() % 100;
 }
 
-function toEditorDate(d)
-{
+function toEditorDate(d) {
     return d.getFullYear() +
         '-' + prepad(d.getUTCMonth() + 1) + (d.getUTCMonth() + 1) +
         '-' + prepad(d.getUTCDate()) + d.getUTCDate() + ' ' +
@@ -94,7 +92,25 @@ function getNext(key, q) {
             break;
     }
     contentCache[key].idx += Math.min(q, pushed);
-    _debug(res.join(','));
+    return res.join(",");
+}
+
+function getPrev(key, q) {
+    var res = [];
+    var pushed = 0;
+    var thisCache = contentCache[key];
+    var contentLength = thisCache.ids.length;
+    var idx = thisCache.idx;
+    if (idx - q - dateStoriesFirst + 1 >= 0) {
+        for (var i = q; i >= 0; i--) {
+            var id = thisCache.ids[idx - dateStoriesFirst - i];
+            if (typeof id !== "undefined") {
+                res.push(id[0]);
+                pushed++;
+            }
+        }
+        thisCache.idx -= Math.min(q, pushed);
+    }
     return res.join(",");
 }
 

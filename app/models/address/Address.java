@@ -18,6 +18,7 @@ import javax.persistence.*;
 import java.util.List;
 
 import static models.internal.GeographyManager.findDioceses;
+import static utils.DataUtils.safeInt;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,6 +31,7 @@ import static models.internal.GeographyManager.findDioceses;
 @Embeddable
 public class Address
 {
+    public static final int DEFAULT_USER_CHURCH_ID = 500;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -141,8 +143,11 @@ public class Address
         if (diocese != null) {
             dioId = diocese.getId();
         } else dioId = "??";
-        int getDekanatCount = GeographyManager.getChurchesInDiocese(diocese);
-        return dioId + "-" + String.format("%03d", getDekanatCount + 1);
+        String maxChurchId = GeographyManager.getMaxChurchId(diocese);
+        int numId = safeInt(maxChurchId.substring(3), DEFAULT_USER_CHURCH_ID);
+        if (numId < 500)
+            numId = 500;
+        return dioId + "-" + String.format("%03d", numId + 1);
     }
 
     @Override

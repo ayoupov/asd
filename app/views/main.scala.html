@@ -31,7 +31,7 @@
             </div>
         </div>
         <script>
-        var userAuthed, userName, mapboxAccessToken, mapboxMapID;
+        var userAuthed, userName, mapboxAccessToken, mapboxMapID, churchTilesURL;
         @if(user != null) {
             userAuthed = true;
             userName = '@user.getName';
@@ -43,12 +43,11 @@
         }
         var googleApiKey = "@ServerProperties.getValue("google.api.key")";
         var port = location.port;
+        var thisHost = location.hostname + (port != "" ? ":" + port : "");
         @if(ServerProperties.isInProduction) {
-        var churchTilesURL = 'http://{s}.' + location.hostname + (port != "" ? ":" + port : "") + '/tiles/c/{z}/{x}/{y}.json';
-        var dekanatTilesURL = 'http://{s}.' + location.hostname + (port != "" ? ":" + port : "") + '/tiles/d/{z}/{x}/{y}.json';
+            churchTilesURL = 'http://{s}.' + thisHost + '/tiles/c/{z}/{x}/{y}.json';
         } else {
-        var churchTilesURL = 'http://' + location.hostname + (port != "" ? ":" + port : "") + '/tiles/c/{z}/{x}/{y}.json';
-        var dekanatTilesURL = 'http://' + location.hostname + (port != "" ? ":" + port : "") + '/tiles/d/{z}/{x}/{y}.json';
+            churchTilesURL = 'http://' + thisHost + '/tiles/c/{z}/{x}/{y}.json';
         }
             @if(currentChurch != null) {
                 @Json.setObjectMapper(Serializer.shallowChurchMapper)

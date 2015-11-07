@@ -22,6 +22,7 @@ var resizeContentFunc = function () {
     $(".social-links").css({
         'margin-left': '20px'
     });
+    $("#menu").css('left', '10px');
 
 };
 
@@ -38,7 +39,7 @@ var changeSearchPrompt = function () {
         }
         $prompt.css('font-size', '11pt');
     } else {
-        $prompt.attr('placeholder', "szukaj");
+        $prompt.attr('placeholder', "");
         $prompt.css('font-size', '18pt');
     }
 };

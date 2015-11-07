@@ -108,19 +108,16 @@ public class GeographyManager
 //        return count.intValue();
 //    }
 
-    public static int getChurchesInDiocese(Diocese diocese)
+    public static String getMaxChurchId(Diocese diocese)
     {
         if (diocese == null)
-            return 0;
+            return "";
         Session session = getSession();
 
-        Long count = (Long) session.createQuery("select count(*) from Diocese d, Church c " +
-                "where ST_contains(d.geometry, c.address.geometry) = 1")
-                .setCacheable(true)
+        return (String) session.createQuery("select c.extID from Diocese d, Church c " +
+                "where c.extID like concat(d.id, '-%') order by c.extID desc")
+                .setMaxResults(1)
                 .uniqueResult();
-        if (count == null)
-            return 0;
-        return count.intValue();
     }
 
     public static int getChurchesInMetropolies(Geometrified metropolie)

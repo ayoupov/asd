@@ -3,6 +3,7 @@ package controllers;
 import models.internal.UserManager;
 import models.user.User;
 import org.apache.commons.io.FilenameUtils;
+import org.joda.time.DateTimeComparator;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -12,10 +13,11 @@ import utils.media.images.Thumber;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
+import java.util.function.ToLongFunction;
 
 import static utils.HibernateUtils.beginTransaction;
 import static utils.HibernateUtils.commitTransaction;
@@ -46,9 +48,12 @@ public class FileManagerJava extends Controller
         File[] files = new File(origpath).listFiles(originalFileFilter);
         Set<Map<String, String>> fileArr = new LinkedHashSet<>();
         if (files != null && files.length > 0) {
+            Arrays.sort(files, FileTimestampComparator.getInstance());
             for (File file : files) {
                 Map<String, String> fileMap = new HashMap<>();
                 fileMap.put("path", outpath + "/" + file.getName());
+                fileMap.put("display", file.getName());
+                fileMap.put("lm", "" + file.lastModified());
                 String thumbName = Thumber.thumbName(file, Thumber.ThumbType.EDITORIAL);
                 File thumbFile = new File(thumbName);
                 if (thumbFile.exists())
@@ -70,6 +75,62 @@ public class FileManagerJava extends Controller
                 accept &= !name.contains(ends +".");
             }
             return accept;
+        }
+    }
+
+    private static class FileTimestampComparator implements Comparator<File>
+    {
+        public static Comparator<? super File> getInstance()
+        {
+            return new FileTimestampComparator();
+        }
+
+        @Override
+        public int compare(File o1, File o2)
+        {
+            return (int) (o2.lastModified() - o1.lastModified());
+        }
+
+        @Override
+        public Comparator<File> reversed()
+        {
+            return null;
+        }
+
+        @Override
+        public Comparator<File> thenComparing(Comparator<? super File> other)
+        {
+            return null;
+        }
+
+        @Override
+        public <U> Comparator<File> thenComparing(Function<? super File, ? extends U> keyExtractor, Comparator<? super U> keyComparator)
+        {
+            return null;
+        }
+
+        @Override
+        public <U extends Comparable<? super U>> Comparator<File> thenComparing(Function<? super File, ? extends U> keyExtractor)
+        {
+            return null;
+        }
+
+        @Override
+        public Comparator<File> thenComparingInt(ToIntFunction<? super File> keyExtractor)
+        {
+            return null;
+        }
+
+        @Override
+        public Comparator<File> thenComparingLong(ToLongFunction<? super File> keyExtractor)
+        {
+            return null;
+        }
+
+        @Override
+        public Comparator<File> thenComparingDouble(ToDoubleFunction<? super File> keyExtractor)
+        {
+            return null;
         }
     }
 }

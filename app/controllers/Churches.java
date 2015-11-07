@@ -7,10 +7,7 @@ import models.Church;
 import models.Image;
 import models.MediaContent;
 import models.MediaContentType;
-import models.internal.ChurchSuggestion;
-import models.internal.ChurchSuggestionType;
-import models.internal.ContentManager;
-import models.internal.UserManager;
+import models.internal.*;
 import models.user.User;
 import models.user.UserRole;
 import play.Logger;
@@ -150,6 +147,14 @@ public class Churches extends Controller
 
         MediaContent c = new MediaContent(MediaContentType.Story, text, title, year, null, coverThumbPath, user, church);
         c.setId((Long) save(c));
+
+        try{
+            Exporter.exportOne(c);
+        } catch (Exception e)
+        {
+            Logger.error("cannot save story to archive: ", e);
+        }
+
         Set<MediaContent> media = church.getMedia();
         if (media == null)
             media = new LinkedHashSet<>();

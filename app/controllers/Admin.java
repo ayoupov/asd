@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import models.Church;
 import models.MediaContent;
 import models.MediaContentType;
+import models.address.Diocese;
 import models.internal.*;
 import models.internal.search.SearchManager;
 import models.internal.search.filters.ArticleFilter;
@@ -252,6 +253,15 @@ public class Admin extends Controller
     public static Result temp()
     {
         return ok(views.html.temp.render());
+    }
+    public static Result temp2()
+    {
+        beginTransaction();
+        Church c = ContentManager.getChurch("KK-104");
+        String id = c.getAddress().constructChurchId();
+        System.out.println("id = " + id);
+        commitTransaction();
+        return ok("ok");
     }
 
     public static Result getChurches()

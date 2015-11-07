@@ -91,3 +91,40 @@ label.not-filled {
 .required.not-filled:-ms-input-placeholder {
     color: #D4D4D4 !important;
 }
+
+
+/* custom checkboxes */
+form:not(#foo) > div > input[type='radio'],
+form:not(#foo) > div > input[type='checkbox'] {
+    /* Hide the input, but have it still be clickable */
+    opacity: 0;
+
+    float: left;
+    width: 26px;
+    height: 26px;
+    margin-left: -26px;
+}
+
+form:not(#foo) > div > input[type='radio'] + label,
+form:not(#foo) > div > input[type='checkbox'] + label{
+
+    margin: 0;
+    clear: none;
+
+    /* Left padding makes room for image */
+    padding: 5px 0 4px 36px;
+
+    /* Make look clickable because they are */
+    cursor: pointer;
+
+    background: transparent url(/assets/images/uncheck.png) left center no-repeat;
+    /*background: transparent url(off.png) left center no-repeat;*/
+}
+
+/*form:not(#foo) > div > input[type='radio']:checked + label {*/
+/*background-image: url(radio.png);*/
+/*}*/
+
+form:not(#foo) > div > input[type='checkbox']:checked + label {
+    background-image: url(/assets/images/check.png);
+}
