@@ -29,7 +29,7 @@
     @contentURL() = @{
         val id = if(content.getAlt != null && !"".equals(content.getAlt))
             content.getAlt else content.getId
-        routes.MediaContents.byTypeAndId(content.getContentType.toString, id.toString, "html")
+        routes.MediaContents.byTypeAndId(content.getContentType.toString, id + "", "html")
     }
     @contentCover() = @{
         if (content.getCover != null) content.getCover.getPath else null

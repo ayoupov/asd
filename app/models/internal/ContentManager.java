@@ -3,6 +3,7 @@ package models.internal;
 import models.*;
 import models.address.Address;
 import models.internal.email.EmailTemplate;
+import models.internal.email.EmailUnsubscription;
 import models.internal.search.filters.ChurchFilter;
 import models.internal.search.filters.QueryFilter;
 import models.internal.search.filters.UserFilter;
@@ -480,6 +481,13 @@ public class ContentManager
         return (EmailTemplate) getSession().createQuery("from EmailTemplate et where et.name=:etn")
                 .setParameter("etn", templateName)
                 .setCacheable(true)
+                .uniqueResult();
+    }
+
+    public static EmailUnsubscription getUnsubscription(String hash)
+    {
+        return (EmailUnsubscription) getSession().createQuery("from EmailUnsubscription eu where eu.hash = :hash")
+                .setParameter("hash", hash)
                 .uniqueResult();
     }
 }

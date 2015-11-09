@@ -153,7 +153,7 @@ preload([
     '/assets/images/arrow_selector_menu_golden.png',
     '/assets/images/story_control_down.png',
     '/assets/images/story_control_up.png',
-    '/assets/images/article_cover_overlay',
+    '/assets/images/article_cover_overlay.png',
     '/assets/images/gallery_thumb_down.png',
     '/assets/images/gallery_thumb_up.png'
 ]);

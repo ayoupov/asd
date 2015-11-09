@@ -63,13 +63,17 @@ public class MediaContents extends Controller
             return badRequest("Trying to get content with type : " + ctype);
         MediaContent content = ContentManager.getMediaByIdAndAlternative(id);
         if (content != null) {
+            String contentChurchIds = content.getChurchIds();
+            Church dedicatedChurch = content.getDedicatedChurch();
+            commitTransaction();
             if (!content.getContentType().equals(type))
                 return badRequest("Wrong content type: " + type);
             if ("json".equals(ext)) {
                 Json.setObjectMapper(emptyMapper);
                 ObjectNode res = Json.newObject();
                 res.put("data", Json.toJson(content));
-                res.put("churches", content.getChurchIds());
+                res.put("churches", contentChurchIds);
+                res.put("church", Json.toJson(dedicatedChurch != null ? dedicatedChurch.getExtID() : null));
 //                commitTransaction();
                 return ok(res);
             } else {
@@ -84,7 +88,7 @@ public class MediaContents extends Controller
                 return ok(rendered);
             }
         } else {
-//            commitTransaction();
+            commitTransaction();
             return notFound(String.format("MediaContent with id {%s}", id));
         }
     }
@@ -170,7 +174,7 @@ public class MediaContents extends Controller
         File dir = new File(publicPath + "preview/" + ctype);
         File mediaFile = new File(dir, id + ".html");
         saveToFS(dir, mediaFile, rendered);
-        return ok(Json.newObject().put("success", true).put("previewId", id));
+        return ok(Json.newObject().put("success", true).put("previewId", id).put("contentType", ctype));
     }
 
     @Security.Authenticated(Secured.class)

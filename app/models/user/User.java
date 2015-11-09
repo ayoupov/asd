@@ -56,6 +56,8 @@ public class User
     @JsonIgnore
     private Set<MediaContent> authorOf;
 
+    private boolean unsubscribed;
+
     public User(String name, UserRole role, UserStatus status)
     {
         this.name = name;
@@ -179,5 +181,15 @@ public class User
     public static String anonymousHash()
     {
         return ANONYMOUS_HASH;
+    }
+
+    public void setUnsubscribed(boolean unsubscribed)
+    {
+        this.unsubscribed = unsubscribed;
+    }
+
+    public boolean getUnsubscribed()
+    {
+        return unsubscribed;
     }
 }

@@ -7,6 +7,7 @@ import models.MediaContentType;
 import models.internal.ContentManager;
 import models.internal.email.EmailSubstitution;
 import models.internal.email.EmailTemplate;
+import models.internal.email.EmailUnsubscription;
 import models.internal.email.EmailWrapper;
 import models.user.User;
 import org.apache.commons.lang3.tuple.Pair;
@@ -22,14 +23,13 @@ import utils.web.PasswordProtectionAnnotation;
 import views.html.index;
 
 import java.net.MalformedURLException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import static controllers.Admin.roleCheck;
 import static models.internal.UserManager.getLocalUser;
-import static utils.HibernateUtils.beginTransaction;
-import static utils.HibernateUtils.commitTransaction;
-import static utils.HibernateUtils.saveOrUpdate;
+import static utils.HibernateUtils.*;
 import static utils.ServerProperties.isInProduction;
 
 @PasswordProtectionAnnotation
@@ -126,5 +126,24 @@ public class Application extends Controller
                 return notFound();
             }
         } else return forbidden();
+    }
+
+    public static Result emailUnsubscribe(String hash)
+    {
+        boolean res = true;
+        beginTransaction();
+        EmailUnsubscription eu = ContentManager.getUnsubscription(hash);
+        if (eu != null) {
+            User user = eu.getSubscriber();
+            if (user != null)
+                user.setUnsubscribed(true);
+            eu.setUnsubscribedDT(new Date());
+            saveOrUpdate(user);
+            saveOrUpdate(eu);
+        }
+        commitTransaction();
+        if (res)
+            return ok("unsubscribed");
+        else return badRequest();
     }
 }

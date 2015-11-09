@@ -8,12 +8,14 @@ var apiExtension =
     'get json article': '/article/{id}.json',
     'get json story': '/story/{id}.json',
     'get associated pictures': '/files/list',
+    'get story pictures' : '/files/story/{id}',
 
     'post update email': '/content/email/{name}',
     'post check email': '/content/email/check/{name}',
     'post update article': '/article/update',
     'preview article': '/preview/article',
     'post update story': '/story/update',
+    'preview story': '/preview/story',
     'upload files' : '/files/upload',
 
     'remove content' : '/{ctype}/{id}'

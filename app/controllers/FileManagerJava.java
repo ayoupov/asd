@@ -1,5 +1,8 @@
 package controllers;
 
+import models.Image;
+import models.MediaContent;
+import models.internal.ContentManager;
 import models.internal.UserManager;
 import models.user.User;
 import org.apache.commons.io.FilenameUtils;
@@ -62,6 +65,55 @@ public class FileManagerJava extends Controller
             }
         }
         return ok(Json.toJson(fileArr));
+    }
+
+    public static Result listStory(long id)
+    {
+        Set<Map<String, String>> fileArr = new LinkedHashSet<>();
+        beginTransaction();
+//        User admin = UserManager.getLocalUser(session());
+        MediaContent mc = ContentManager.getMediaByIdAndAlternative(id + "");
+        User author = mc.getAuthors().iterator().next();
+
+        List<Image> churchImages = mc.getDedicatedChurch().getImages();
+        List<File> churchFiles = new ArrayList<>();
+        if (churchImages != null)
+            churchImages.stream().filter(i -> i.getApprovedTS() != null).map(i -> putInMap(fileArr, i));
+        String authorHash = author.getHash();
+        commitTransaction();
+        String origpath = FilenameUtils.normalize(ServerProperties.getValue("asd.upload.path") + "/" + authorHash);
+        String outpath = ServerProperties.getValue("asd.upload.relative.path") + "/" + authorHash;
+        File[] files = new File(origpath).listFiles(originalFileFilter);
+
+
+        if (files != null && files.length > 0) {
+            Arrays.sort(files, FileTimestampComparator.getInstance());
+            for (File file : files) {
+                Map<String, String> fileMap = new HashMap<>();
+                fileMap.put("path", outpath + "/" + file.getName());
+                fileMap.put("display", file.getName());
+                fileMap.put("lm", "" + file.lastModified());
+                String thumbName = Thumber.thumbName(file, Thumber.ThumbType.EDITORIAL);
+                File thumbFile = new File(thumbName);
+                if (thumbFile.exists())
+                    fileMap.put("thumb", outpath + "/" + thumbFile.getName());
+                fileArr.add(fileMap);
+            }
+        }
+        return ok(Json.toJson(fileArr));
+
+    }
+
+    private static Void putInMap(Set<Map<String, String>> fileArr, Image i)
+    {
+        Map<String, String> fileMap = new HashMap<>();
+        fileMap.put("path", i.getPath());
+        String[] split = i.getPath().split("/");
+        fileMap.put("display", split[split.length - 1]);
+        fileMap.put("lm", i.getUploadedTS().getTime() + "");
+        fileMap.put("desc", i.getDescription());
+        fileArr.add(fileMap);
+        return null;
     }
 
     static class OriginalFileFilter implements FilenameFilter

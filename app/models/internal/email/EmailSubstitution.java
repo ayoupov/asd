@@ -10,6 +10,12 @@ public enum EmailSubstitution
 {
     Username,
     ChurchLink,
-    ChurchPassportLink
+    ChurchPassportLink,
+    ChurchName,
+    ChurchPassportAdd,
+    UnsubscribeLink,
 
+    FacebookPage,
+    ArticlesLink,
+    StoriesLink;
 }

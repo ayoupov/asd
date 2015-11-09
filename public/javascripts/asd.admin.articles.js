@@ -143,7 +143,7 @@ function fillArticle(data) {
 function preview(data) {
     if (data.success)
     {
-        window.open('/preview/article/' + data.previewId, '_blank');
+        window.open('/preview/' + data.contentType + '/' + data.previewId, '_blank');
     }
     else if (data.error)
         noty({

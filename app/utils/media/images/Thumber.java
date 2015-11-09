@@ -127,6 +127,9 @@ public class Thumber
                         case HOVER:
                             hoverThumb(file, image, imageWidth, imageHeight);
                             break;
+                        case GALLERY:
+                            galleryThumb(file, image, imageWidth, imageHeight);
+                            break;
                     }
                 }
         } catch (Exception e) {
@@ -178,6 +181,21 @@ public class Thumber
         File output = new File(thumbName(file, ThumbType.HOVER));
         if (!ImageIO.write(thumbImage, "png", output))
             Logger.error("Failed to write: ", ThumbType.HOVER, output, destWidth, thumbHeightMax);
+
+    }
+
+    private static void galleryThumb(File file, BufferedImage image, int imageWidth, int imageHeight) throws IOException
+    {
+        float thumbWidthMax = 860;
+        ResampleOp resampleOp;
+
+        float imageRatio = (imageWidth < thumbWidthMax) ? 1.0f : (thumbWidthMax / imageWidth);
+        int destHeight = (int) (imageHeight * imageRatio);
+        resampleOp = new ResampleOp((int) thumbWidthMax, destHeight);
+        BufferedImage thumbImage = resampleOp.filter(image, null);
+        File output = new File(thumbName(file, ThumbType.GALLERY));
+        if (!ImageIO.write(thumbImage, "png", output))
+            Logger.error("Failed to write: ", ThumbType.GALLERY, output, thumbWidthMax, destHeight);
 
     }
 }

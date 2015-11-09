@@ -27,6 +27,7 @@ import utils.service.auth.ASDAuthUser;
 import java.io.File;
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static models.internal.email.EmailWrapper.sendEmail;
 import static utils.HibernateUtils.*;
@@ -57,8 +58,10 @@ public class Churches extends Controller
         beginTransaction();
         Church church = ContentManager.getChurch(id);
         commitTransaction();
-        if (church != null)
-            return ok(Json.toJson(church.getImages()));
+        if (church != null && church.getImages() != null) {
+            List<Image> images = church.getImages();
+            return ok(Json.toJson(images.stream().filter(i -> i.getApprovedTS() != null).collect(Collectors.toList())));
+        }
         else
             return notFound(String.format("Church with id {%s}", id));
     }

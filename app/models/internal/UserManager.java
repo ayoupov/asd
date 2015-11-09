@@ -7,17 +7,20 @@ import com.feth.play.module.pa.user.EmailIdentity;
 import com.feth.play.module.pa.user.NameIdentity;
 import models.LinkedAccount;
 import models.internal.email.EmailSubstitution;
+import models.internal.email.EmailUnsubscription;
 import models.internal.email.EmailWrapper;
 import models.internal.identities.AutoIdentity;
 import models.user.User;
 import models.user.UserRole;
 import models.user.UserStatus;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.hibernate.Query;
 import play.Logger;
 import play.api.mvc.Session;
 import play.mvc.Http;
-import utils.service.auth.ROT13;
+import utils.ServerProperties;
+import utils.service.auth.Str2Hex;
 
 import java.io.Serializable;
 import java.util.*;
@@ -139,7 +142,6 @@ public class UserManager
         user.setLinkedAccounts(Collections.singletonList(account));
 
 //        user.setHash(nextHash());
-
         String name = null, email = null;
         if (authUser instanceof EmailIdentity) {
             final EmailIdentity identity = (EmailIdentity) authUser;
@@ -150,16 +152,6 @@ public class UserManager
             email = identity.getEmail();
             if (email != null) {
                 user.setEmail(email);
-                // send greetings
-                try {
-                    sendEmail(
-                            EmailWrapper.EmailNames.UserRegistered,
-                            null,
-                            user,
-                            Pair.of(EmailSubstitution.Username.name(), user.getName()));
-                } catch (Exception e) {
-                    Logger.error("error while sending greetings", e);
-                }
             }
         }
 
@@ -171,15 +163,33 @@ public class UserManager
             }
         }
 
-        if (email != null && name != null && authUser instanceof EmailIdentity && authUser instanceof NameIdentity)
-            user.setHash(ROT13.encode(email.replace("@", "") + name));
-        else
-            user.setHash(account.getProviderUserId() + ROT13.encode(account.getProviderKey()));
+        EmailUnsubscription eu = null;
+        if (email != null && name != null && authUser instanceof EmailIdentity && authUser instanceof NameIdentity) {
+            user.setHash(StringUtils.substring(Str2Hex.byteArray2Hex((email + name).getBytes()), 0, 32));
+            // send greetings
+            try {
+                String hash = UUID.randomUUID().toString();
+                eu = new EmailUnsubscription(user, hash);
+                sendEmail(
+                        EmailWrapper.EmailNames.UserRegistered,
+                        null,
+                        user,
+                        Pair.of(EmailSubstitution.Username.name(), user.getName()),
+                        Pair.of(EmailSubstitution.UnsubscribeLink.name(), ServerProperties.getValue("asd.absolute.url") + "unsubscribe/" + hash)
+                );
+                user.setUnsubscribed(false);
+            } catch (Exception e) {
+                Logger.error("error while sending greetings", e);
+            }
+        } else
+            user.setHash(StringUtils.substring(Str2Hex.byteArray2Hex((account.getProviderUserId() + account.getProviderKey()).getBytes()), 0, 32));
 
         Serializable id = save(user);
         user.setId((Long) id);
         account.setUser(user);
         saveOrUpdate(account);
+        if (eu != null)
+            save(eu);
         return user;
     }
 

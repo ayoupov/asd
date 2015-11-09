@@ -18,15 +18,19 @@ import java.net.MalformedURLException;
 public class EmailWrapper
 {
 
+    private static final String defaultSenderName = "Zespół projektu Architektura VII Dnia";
+
     public static void sendEmail(String templateName, String senderName, User to, Pair<String, String>... substitutions) throws MalformedURLException, EmailException
     {
-        EmailTemplate et = ContentManager.getEmailTemplateByName(templateName);
-        sendEmail(
-                et.getProcessedBody(substitutions),
-                et.getProcessedSubject(substitutions),
-                senderName,
-                to
-        );
+        if (!to.getUnsubscribed()) {
+            EmailTemplate et = ContentManager.getEmailTemplateByName(templateName);
+            sendEmail(
+                    et.getProcessedBody(substitutions),
+                    et.getProcessedSubject(substitutions),
+                    senderName,
+                    to
+            );
+        }
     }
 
     public static void sendEmail(String processedEmailTemplate, String subject, String senderName, User to) throws EmailException, MalformedURLException
@@ -41,7 +45,7 @@ public class EmailWrapper
         email.setCharset("UTF-8");
 
         email.setFrom(
-                ServerProperties.getValue("asd.email"), senderName == null ? ServerProperties.getValue("asd.default.sender") : senderName,
+                ServerProperties.getValue("asd.email"), senderName == null ? defaultSenderName : senderName,
                 "UTF-8");
         email.addTo(to.getEmail(), to.getName(), "UTF-8");
 

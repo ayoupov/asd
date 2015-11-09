@@ -39,9 +39,12 @@ GET           /content/related/:id               controllers.MediaContents.conte
 GET           /content/email/:name               controllers.Application.emailGet(name : String)
 POST          /content/email/:name               controllers.Application.emailPost(name : String)
 POST          /content/email/check/:name         controllers.Application.emailCheck(name : String)
+GET           /content/email/unsubscribe/:hash   controllers.Application.emailUnsubscribe(hash : String)
 
 POST          /preview/article                   controllers.MediaContents.previewPost(ctype : String = "article")
 GET           /preview/article/:id               controllers.MediaContents.previewGet(ctype: String = "article", id : String)
+POST          /preview/story                     controllers.MediaContents.previewPost(ctype : String = "story")
+GET           /preview/story/:id                 controllers.MediaContents.previewGet(ctype: String = "story", id : String)
 
 POST          /search/churches/:q                controllers.Search.churchesByNameAndAddress(q: String)
 GET           /search/churches/:q                controllers.Search.churchesByNameAndAddress(q: String)
@@ -59,6 +62,7 @@ GET           /auth/:provider/denied             controllers.Auth.oAuthDenied(pr
 # secure, role must be >= Moderator
 POST          /files/upload                      controllers.FileManager.upload
 GET           /files/list                        controllers.FileManagerJava.list
+GET           /files/story/:id                   controllers.FileManagerJava.listStory(id: Long)
 POST          /article/update                    controllers.MediaContents.update(ctype : String = "article")
 POST          /story/update                      controllers.MediaContents.update(ctype : String = "story")
 

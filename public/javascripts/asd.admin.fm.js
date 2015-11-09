@@ -2,11 +2,14 @@
 
 function newFileManager(mctype, id) {
     //currentMCType = mctype;
+    if (mctype=='article')
     return $('<form class="ui form" method="POST" class="dropzone" ' +
         'id="fm-form" action="/files/upload" enctype="multipart/form-data">' +
         '<input type="file" name="picture" multiple>' +
         '<p><input type="button" class="ui submit button" value="upload"></p>' +
         '</form>');
+    else
+    return $("<br>");
 }
 
 function fillFM(data) {
@@ -25,7 +28,7 @@ function addFileItem(item) {
 
     var $item = $("<div class='fm-item'/>").append($("<div class='fm-item-path'>").html(display_path).attr('data-lm', item.lm));
     if (thumb)
-        $item.append($("<br>")).append($("<img class='ui image'/>").attr('src', thumb));
+        $item.append($("<img class='ui image'/>").attr('src', thumb)).append($("<br>"));
 
     $item.on('click', function () {
         var target = "text";
