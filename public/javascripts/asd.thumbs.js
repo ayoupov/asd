@@ -1,7 +1,8 @@
 function createMediaThumb(selectorClass, id, cover, title, desc, hover, lead, alt) {
+    var idSelectorPart = selectorClass.split(' ').pop();
     var $thumb = $('<div/>')
         .addClass(selectorClass + ' thumb')
-        .attr('id', selectorClass + '_' + id)
+        .attr('id', idSelectorPart + '_' + id)
         .append(
         $('<div/>').addClass('image face-content').append(
             $('<div/>').addClass('face-image').css('background-image', 'url(' + cover + ')')
@@ -15,12 +16,13 @@ function createMediaThumb(selectorClass, id, cover, title, desc, hover, lead, al
     );
     if (alt)
         $thumb.data('alt', alt);
-    if (hover)
+    //if (hover)
         $thumb.append(
             $('<div/>').addClass('hover-content').append(
                 $('<div/>').addClass('cover')
-            ).append(
-                $('<div/>').addClass('back-image').css('background-image', 'url(' + hover + ')')
+            )
+                .append(
+                $('<div/>').addClass('back-image').css( hover ? {'background-image':'url(' + hover + ')'} : {})
             ).append(
                 $('<div/>').addClass('hover-icon').append(
                     $("<img/>").attr('src', '/assets/images/hover-icon.png')
@@ -32,7 +34,7 @@ function createMediaThumb(selectorClass, id, cover, title, desc, hover, lead, al
     $thumb.append(
         $('<div/>').addClass('thumb-stroke face-content')
     );
-    if (hover)
+    //if (hover)
         $thumb.append(
             $('<div/>').addClass('thumb-stroke hover-content')
         );
@@ -63,15 +65,33 @@ function inhabitThumbs($container, selectorClass, data) {
         $container.isotope('appended', $item);
         lastItem = $item;
     });
+    $('.hover-content').hide();
+
+    $("." + selectorClass).hover(function () {
+        // switch content
+        var hoverContent = $('.hover-content', $(this));
+        if (hoverContent.length > 0) {
+            $(this).toggleClass('hovered');
+            $('.face-content', $(this)).hide();
+            hoverContent.show();
+        }
+    }, function () {
+        var hoverContent = $('.hover-content', $(this));
+        if (hoverContent.length > 0) {
+            $(this).toggleClass('hovered');
+            $('.face-content', $(this)).show();
+            hoverContent.hide();
+        }
+    });
+
     return lastItem;
 }
 
 function bindThumbEvents($container, selectorClass)
 {
     // todo: ohwell, hack. invent something more clever
-    if (selectorClass == 'related')
-        selectorClass = $(this).hasClass('story') ? 'story' : 'article';
     $('.' + selectorClass + ':not(.extra-' + selectorClass +')', $container).off('click').on('click', function () {
-        window.location.href = '/' + selectorClass + '/' + ($(this).data('alt') ? $(this).data('alt') : getId($(this)));
+        var mctype = $(this).hasClass('story') ? 'story' : 'article';
+        window.location.href = '/' + mctype + '/' + ($(this).data('alt') ? $(this).data('alt') : getId($(this)));
     });
 }

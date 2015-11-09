@@ -32,22 +32,21 @@ var resizeContentFunc = function () {
 
 };
 
-//var contentType = 'article'; // location.pathname.split('/')[2] ||
 var contentType = location.pathname.split('/')[1];
 var changeSearchPrompt = function () {
     if ($prompt.is(":focus")) {
         switch (contentType) {
             case "article":
-                $prompt.attr('placeholder', "Słowo do wyszukiwania (articles)");
+                $prompt.attr('placeholder', "Szukaj w artykułach");
                 break;
             case "story":
-                $prompt.attr('placeholder', "Słowo do wyszukiwania (stories)");
+                $prompt.attr('placeholder', "Szukaj we wspomnieniach");
                 break;
         }
         $prompt.css('font-size', '11pt');
-    } else {
+    }
+    else {
         $prompt.attr('placeholder', "");
-        $prompt.css('font-size', '18pt');
     }
 };
 
@@ -77,8 +76,6 @@ var DEFAULT_GALL_OPTS =
     gallery_debug_errors: true,
     slider_control_zoom: false,
     slider_enable_arrows: false
-    //, slider_enable_text_panel : true,
-    //slider_textpanel_enable_title : false
 };
 
 function galleries() {
@@ -162,7 +159,6 @@ function thumbs()
         contentType: false,
         success: populateRelated,
         error: function (errorMessage) {
-
         }
     });
 
@@ -174,25 +170,6 @@ function thumbs()
             $relatedThumbsTitle.html("Wspomnienia dodane przez użytkowników").show();
             inhabitNext();
             $relatedThumbs.isotope();
-
-            $('.hover-content').hide();
-            $(".article").hover(function () {
-                // switch content
-                var hoverContent = $('.hover-content', $(this));
-                if (hoverContent.length > 0) {
-                    $(this).toggleClass('hovered');
-                    $('.face-content', $(this)).hide();
-                    hoverContent.show();
-                }
-            }, function () {
-                var hoverContent = $('.hover-content', $(this));
-                if (hoverContent.length > 0) {
-                    $(this).toggleClass('hovered');
-                    $('.face-content', $(this)).show();
-                    hoverContent.hide();
-                }
-            });
-
             bindThumbEvents($relatedThumbs, 'related');
         }
         else {
@@ -204,21 +181,7 @@ function thumbs()
 function inhabitNext() {
     if ($(".extra-related", $relatedThumbs).length > 0)
         $relatedThumbs.isotope('remove', $(".extra-related"));
-    var prevChurchMediaIndex = relatedMediaIndex;
-    relatedMediaIndex += (prevChurchMediaIndex == 0) ? 7 : 4;
-    relatedMediaIndex = Math.min(relatedMedia.length, relatedMediaIndex);
-    var lastItem = inhabitThumbs($relatedThumbs, 'related', relatedMedia.slice(prevChurchMediaIndex, relatedMediaIndex));
-    var whatsleft = relatedMedia.length - relatedMediaIndex;
-    if (whatsleft > 0) {
-        var $more = $("<div/>").attr('id', 'more-story-thumb').addClass('extra-related story thumb center-more white').append(
-            $('<div/>').addClass('more-wrapper grayish-bordered').append(
-                $('<div/>').addClass('more').html('Więcej ' + whatsleft)
-            )
-        );
-        $more.insertAfter(lastItem);
-        $more.off('click').on('click', inhabitNext);
-        $relatedThumbs.isotope('appended', $more);
-    }
+    var lastItem = inhabitThumbs($relatedThumbs, 'related', relatedMedia);
     var visibleStories = $('.thumb', $relatedThumbs).length;
     // | 0 -- gets integer result of division
     $relatedThumbs.css('height', (350 * (((visibleStories - 1) / 4 | 0) + 1)) + 'px');

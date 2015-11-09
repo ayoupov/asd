@@ -16,6 +16,7 @@ function fileInputTweak() {
         }
     });
 
+    //$(document).on('fileselect', '.btn-file :file', fileselect);
     $('.btn-file :file').on('fileselect', fileselect);
 }
 
@@ -34,8 +35,9 @@ var fileselect = function (event, numFiles, label, size) {
             $attachmentName.removeAttr('name'); // cancel upload file.
         } else {
             $('#_' + $attachmentName.attr('id')).val(label).attr('disabled', 'disabled');
-            addNewImageBlock($attachmentName.closest('.ui.form'));
-
+            var $thisForm = $attachmentName.closest('.ui.form');
+            addNewImageBlock($thisForm);
+            $(".not-filled", $thisForm).removeClass('not-filled');
         }
     } else {
         notifyError('Prześlij plik w formacie <strong>png, jpg, jpeg</strong> lub <strong>gif</strong>');
@@ -68,6 +70,8 @@ function updateLabels($elem) {
 
 function addNewImageBlock($elem) {
     var $insertElem = $elem.find(".insert-image-after").eq(0);
+    if (!$insertElem.length)
+        $insertElem = $elem.find(".image-block:last");
     var $newImageBlock = getNextImageBlockElem($elem.data('image-part'));
     $('.btn-file :file', $newImageBlock).on('fileselect', fileselect);
     $newImageBlock.hide().insertAfter($insertElem);
@@ -115,10 +119,10 @@ function getNextImageBlockElem(part) {
         return '<input type="file" id="' + createId() + '" style="display: none;">'
     }
 
-    return $('<div class="image-block image-block-generated"><div class="gapper-less clearfix"></div><div class="col-3 rightaligned inlinemiddle">' + gnibeLabel() +
+    return $('<div class="image-block image-block-generated  insert-image-after"><div class="gapper-less clearfix"></div><div class="col-3 rightaligned inlinemiddle">' + gnibeLabel() +
         '</div><div class="col-4"><div class="ui action input">' + gnibeTextInput() +
         gnibeFileLabelPart() + '<i class="attach big icon"></i>' + gnibeFileInput() + '</label></div></div>' +
         '<div class="col-1"></div><div class="gapper-less clearfix"></div><div class="col-3 rightaligned inlinemiddle">' +
         '<label class="image-label image-label-desc" for="' + createDescId() + '">Podpis pod zdjęciem</label></div>' +
-        '<div class="col-4"><input id="' + createDescId() + '" type="text" value="" name="' + createDescName() + '" placeholder="Napisz nam co jest na zdjęciu, kto jest autorem i kiedy zostało zrobione"></div><div class="col-1 insert-image-after"></div></div>');
+        '<div class="col-4"><input id="' + createDescId() + '" type="text" value="" name="' + createDescName() + '" placeholder="Napisz nam co jest na zdjęciu, kto jest autorem i kiedy zostało zrobione"></div><div class="col-1"></div></div>');
 }

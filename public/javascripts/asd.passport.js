@@ -7,8 +7,7 @@ var $passportCurrentImage, $overlayArrowUp, $overlayArrowDown;
 
 var globalTOSConfirmed = Cookies.get("tos-confirmed");
 
-// todo: remove crutch
-var DEF_IMAGE_DESC = 'Autor: Igor Snopek';
+var DEF_IMAGE_DESC = '';
 
 $(document).ready(function () {
     $passportWrapper = $(".passport-wrapper");
@@ -109,28 +108,9 @@ function inhabitNext() {
         $more.off('click').on('click', inhabitNext);
         $churchStories.isotope('appended', $more);
     }
-    var visibleStories = $('.story', $churchStories).length;
+    var visibleStories = $('.thumb:not(.extra-related)', $churchStories).length;
     // | 0 -- gets integer result of division
     $churchStories.css('height', (350 * (((visibleStories - 1) / 4 | 0) + 1)) + 'px');
-
-    // todo: less magic
-    $('.hover-content').hide();
-    $(".article").hover(function () {
-        // switch content
-        var hoverContent = $('.hover-content', $(this));
-        if (hoverContent.length > 0) {
-            $(this).toggleClass('hovered');
-            $('.face-content', $(this)).hide();
-            hoverContent.show();
-        }
-    }, function () {
-        var hoverContent = $('.hover-content', $(this));
-        if (hoverContent.length > 0) {
-            $(this).toggleClass('hovered');
-            $('.face-content', $(this)).show();
-            hoverContent.hide();
-        }
-    });
 
     bindThumbEvents($churchStories, 'related');
 
@@ -299,6 +279,7 @@ function resetForm($form) {
         $('.upload-confirmation', $form).attr('checked', 'checked');
     else
         $('.upload-confirmation', $form).removeAttr('checked');
+    $(".not-filled", $form).removeClass('not-filled');
 }
 
 function initUpdatePassportApi() {
@@ -464,12 +445,8 @@ function doPassportGallery(galldata) {
                         $passportCurrentImage.append(
                             $("<div class='passport-gallery-large-description' />").html(
                                 $("<span class='passport-gallery-large-description-content' />").html(desc)
-                            ).hide()
-                        ).hover(function () {
-                                $(".passport-gallery-large-description").fadeIn(600);
-                            }, function () {
-                                $(".passport-gallery-large-description").fadeOut(600);
-                            });
+                            )
+                        );
                     }
                 }
             });

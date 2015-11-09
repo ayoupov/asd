@@ -30,11 +30,12 @@ public class ImageCreator
         if (outFile.exists())
             outFile.delete();
         if (file.renameTo(outFile)) {
-            Thumber.rethumb(outFile, Thumber.ThumbType.EDITORIAL, Thumber.ThumbType.HOVER, Thumber.ThumbType.ISOTOPE);
+            Thumber.rethumb(outFile, Thumber.ThumbType.EDITORIAL, Thumber.ThumbType.HOVER, Thumber.ThumbType.ISOTOPE, Thumber.ThumbType.GALLERY);
             boolean setReadableSuccess = outFile.setReadable(true, false);
-            System.out.println("creator: description = " + description);
-            System.out.println("creator: webPath = " + webPath);
-            Image image = new Image(description, webPath);
+//            System.out.println("creator: description = " + description);
+//            System.out.println("creator: webPath = " + webPath);
+            Image image = new Image(description, Thumber.thumbNameWeb(outFile, Thumber.ThumbType.GALLERY));
+//            Image image = new Image(description, webPath);
             image.setUploadedBy(user);
             return image;
         } else {

@@ -12,24 +12,6 @@ function currentSlide() {
 }
 
 var uiInit = function () {
-    $('.hover-content').hide();
-    $(".article").hover(function () {
-        // switch content
-        var hoverContent = $('.hover-content', $(this));
-        if (hoverContent.length > 0) {
-            $(this).toggleClass('hovered');
-            $('.face-content', $(this)).hide();
-            hoverContent.show();
-        }
-    }, function () {
-        var hoverContent = $('.hover-content', $(this));
-        if (hoverContent.length > 0) {
-            $(this).toggleClass('hovered');
-            $('.face-content', $(this)).show();
-            hoverContent.hide();
-        }
-    });
-
     // links transitions
     $('a[href*=#]:not([href=#])').click(function () {
         if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '')
@@ -239,6 +221,12 @@ function openContent(contentType, contentId) {
     console.log('api: {' + contentType + ' : ' + contentId + "}");
 }
 
+function redit($item)
+{
+    $item.addClass("not-filled");
+    //$('label[for=' + $item.attr('id') + ']').addClass('not-filled');
+}
+
 function validateForm($form)
 {
     var $fields = $(".required:visible", $form);
@@ -246,11 +234,18 @@ function validateForm($form)
     $fields.each(function(a, item)
     {
         var $item = $(item);
-        var v = $item.val();
-        if (!v) {
-            res = false;
-            $item.addClass("not-filled");
-            $('label[for='+ $item.attr('id') +']').addClass('not-filled');
+        if ($item.is('[type=checkbox]'))
+        {
+            if (!$item.is(':checked')) {
+                redit($item);
+                res = false;
+            }
+        } else {
+            var v = $item.val();
+            if (!v) {
+                res = false;
+                redit($item);
+            }
         }
     });
     return res;

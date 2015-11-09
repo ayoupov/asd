@@ -1,10 +1,18 @@
 package controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.Church;
 import models.MediaContentType;
 import models.internal.ContentManager;
+import models.internal.email.EmailSubstitution;
+import models.internal.email.EmailTemplate;
+import models.internal.email.EmailWrapper;
+import models.user.User;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.mail.EmailException;
 import play.Logger;
+import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -13,12 +21,15 @@ import utils.serialize.Serializer;
 import utils.web.PasswordProtectionAnnotation;
 import views.html.index;
 
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Map;
 
+import static controllers.Admin.roleCheck;
 import static models.internal.UserManager.getLocalUser;
 import static utils.HibernateUtils.beginTransaction;
 import static utils.HibernateUtils.commitTransaction;
+import static utils.HibernateUtils.saveOrUpdate;
 import static utils.ServerProperties.isInProduction;
 
 @PasswordProtectionAnnotation
@@ -66,4 +77,54 @@ public class Application extends Controller
         return ok(result);
     }
 
+
+    public static Result emailGet(String name)
+    {
+        if (roleCheck()) {
+            beginTransaction();
+            JsonNode jsonNode = Json.toJson(ContentManager.emailByName(name));
+            commitTransaction();
+            return ok(jsonNode);
+        } else return forbidden();
+    }
+
+    public static Result emailPost(String name)
+    {
+        if (roleCheck()) {
+            Form<EmailTemplate> etf = Form.form(EmailTemplate.class).bindFromRequest(request());
+            if (!etf.hasErrors()) {
+                beginTransaction();
+                EmailTemplate emailTemplate = etf.get();
+                saveOrUpdate(emailTemplate);
+                commitTransaction();
+                ObjectNode result = Json.newObject();
+                result.put("success", true);
+                return ok(result);
+            } else {
+                return notFound();
+            }
+        } else return forbidden();
+    }
+
+    public static Result emailCheck(String name) throws MalformedURLException, EmailException
+    {
+        if (roleCheck()) {
+
+            Form<EmailTemplate> etf = Form.form(EmailTemplate.class).bindFromRequest(request());
+            if (!etf.hasErrors()) {
+                EmailTemplate emailTemplate = etf.get();
+                beginTransaction();
+                User user = getLocalUser(session());
+                commitTransaction();
+                String username = user.getName();
+                Pair<String, String> pair = Pair.of(EmailSubstitution.Username.name(), username);
+                EmailWrapper.sendEmail(emailTemplate.getProcessedBody(pair), emailTemplate.getProcessedSubject(pair), null, user);
+                ObjectNode result = Json.newObject();
+                result.put("success", true);
+                return ok(result);
+            } else {
+                return notFound();
+            }
+        } else return forbidden();
+    }
 }

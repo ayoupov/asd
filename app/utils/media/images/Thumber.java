@@ -25,6 +25,7 @@ public class Thumber
     public static final String THUMB_ED = "_thumb_ed";
     public static final String THUMB_IS = "_thumb_is";
     public static final String THUMB_HV = "_thumb_hv";
+    public static final String THUMB_GL = "_thumb_gl";
 
     public static Set<String> THUMB_ENDS = new HashSet<>();
 
@@ -32,11 +33,12 @@ public class Thumber
         THUMB_ENDS.add(THUMB_ED);
         THUMB_ENDS.add(THUMB_IS);
         THUMB_ENDS.add(THUMB_HV);
+        THUMB_ENDS.add(THUMB_GL);
     }
 
     public enum ThumbType
     {
-        EDITORIAL, ISOTOPE, HOVER
+        EDITORIAL, ISOTOPE, HOVER, GALLERY
     }
 
     public static String thumbNameWeb(File file, ThumbType type)
@@ -52,6 +54,9 @@ public class Thumber
                 break;
             case HOVER:
                 name += THUMB_HV;
+                break;
+            case GALLERY:
+                name += THUMB_GL;
                 break;
         }
         String ext = FilenameUtils.getExtension(fileName);
@@ -86,6 +91,9 @@ public class Thumber
                 break;
             case HOVER:
                 name += THUMB_HV;
+                break;
+            case GALLERY:
+                name += THUMB_GL;
                 break;
         }
         String ext = FilenameUtils.getExtension(fileName);

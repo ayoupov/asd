@@ -2,6 +2,7 @@ package models.internal;
 
 import models.*;
 import models.address.Address;
+import models.internal.email.EmailTemplate;
 import models.internal.search.filters.ChurchFilter;
 import models.internal.search.filters.QueryFilter;
 import models.internal.search.filters.UserFilter;
@@ -398,6 +399,87 @@ public class ContentManager
     {
         return getSession().createQuery("select mc " +
                 "from MediaContent mc where mc.contentType = :mct")
-        .setParameter("mct", contentType).setCacheable(true).list();
+                .setParameter("mct", contentType).setCacheable(true).list();
+    }
+
+    public static List<EmailTemplate> getEmails()
+    {
+        return getSession().createQuery("from EmailTemplate e").list();
+    }
+
+    public static EmailTemplate emailByName(String name)
+    {
+        return (EmailTemplate) getSession().createQuery("from EmailTemplate e where name = :name").setString("name", name).uniqueResult();
+    }
+
+    public static List<MediaContent> getRelatedForArticles(MediaContent mcFor)
+    {
+        List<MediaContent> articles = getSession().createQuery(
+                "from MediaContent mc where mc.contentType = :ct and mc.id != :thisid " +
+                        "order by rand()")
+                .setParameter("ct", MediaContentType.Article)
+                .setParameter("thisid", mcFor.getId())
+                .setMaxResults(3)
+                .list();
+        List<MediaContent> stories = getSession().createQuery(
+                "from MediaContent mc where mc.contentType = :ct " +
+                        "order by rand()")
+                .setParameter("ct", MediaContentType.Story)
+                .setMaxResults(8 - articles.size())
+                .list();
+        List<MediaContent> res = new ArrayList<>();
+        res.addAll(articles);
+        res.addAll(stories);
+        return res;
+    }
+
+    public static List<MediaContent> getRelatedForStory(MediaContent mc, int size)
+    {
+        List<MediaContent> res = new ArrayList<>();
+        List<MediaContent> storiesRelatedByDiocese =
+                getSession().createQuery("from MediaContent mc " +
+                        "where mc.contentType = :ct and mc.id != :mcid " +
+                        "and mc.dedicatedChurch.address.diocese = :mcdio " +
+                        "order by rand()")
+                        .setParameter("ct", MediaContentType.Story)
+                        .setParameter("mcid", mc.getId())
+                        .setParameter("mcdio", mc.getDedicatedChurch().getAddress().getDiocese())
+                        .setMaxResults(size)
+                        .list();
+        res.addAll(storiesRelatedByDiocese);
+        if (res.size() < size) {
+            List<MediaContent> storiesRelatedByMetropolie =
+                    getSession().createQuery("from MediaContent mc " +
+                            "where mc.contentType = :ct and mc.id != :mcid " +
+                            "and mc.dedicatedChurch.address.diocese.metropolie = :mcmetro " +
+                            "order by rand()")
+                            .setParameter("ct", MediaContentType.Story)
+                            .setParameter("mcid", mc.getId())
+                            .setParameter("mcmetro", mc.getDedicatedChurch().getAddress().getDiocese().getMetropolie())
+                            .setMaxResults(size - res.size())
+                            .list();
+            res.addAll(storiesRelatedByMetropolie);
+            if (res.size() < size)
+            {
+                res.addAll(
+                        getSession().createQuery("from MediaContent mc " +
+                                "where mc.contentType = :ct and mc.id != :mcid " +
+                                "order by rand()")
+                                .setParameter("ct", MediaContentType.Story)
+                                .setParameter("mcid", mc.getId())
+                                .setMaxResults(size - res.size())
+                                .list()
+                );
+            }
+        }
+        return res;
+    }
+
+    public static EmailTemplate getEmailTemplateByName(String templateName)
+    {
+        return (EmailTemplate) getSession().createQuery("from EmailTemplate et where et.name=:etn")
+                .setParameter("etn", templateName)
+                .setCacheable(true)
+                .uniqueResult();
     }
 }

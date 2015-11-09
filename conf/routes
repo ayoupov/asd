@@ -36,6 +36,9 @@ GET           /articles/:ids                     controllers.MediaContents.byTyp
 GET           /stories/:ids                      controllers.MediaContents.byTypeAndIds(ctype: String = "story", ids: String)
 
 GET           /content/related/:id               controllers.MediaContents.contentRelated(id: Long)
+GET           /content/email/:name               controllers.Application.emailGet(name : String)
+POST          /content/email/:name               controllers.Application.emailPost(name : String)
+POST          /content/email/check/:name         controllers.Application.emailCheck(name : String)
 
 POST          /preview/article                   controllers.MediaContents.previewPost(ctype : String = "article")
 GET           /preview/article/:id               controllers.MediaContents.previewGet(ctype: String = "article", id : String)
@@ -77,5 +80,5 @@ GET           /admin                             controllers.Admin.index
 GET           /restricted                        controllers.Restricted.index
 
 GET           /admin/temp                        controllers.Admin.temp()
-GET           /admin/temp2                        controllers.Admin.temp2()
+GET           /admin/temp2                       controllers.Admin.temp2()
 GET           /admin/getchurches                 controllers.Admin.getChurches

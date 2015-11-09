@@ -1,7 +1,39 @@
-@()
+@import utils.ServerProperties
+@(description: String, title: String, image : String, contentType: String, identifyingURL: String)
 
-@*<meta property="og:url"           content="@routes.Application.index(null).absoluteURL()" />*@
-<meta property="og:type"          content="website" />
-<meta property="og:title"         content="Architektura Siódmego Dnia" />
-<meta property="og:description"   content="Architektura Siódmego Dnia desc" />
-<meta property="og:image"         content="@routes.Assets.at("images/logo.png").absoluteURL()" />
+<meta property="og:title"         content="@{if(title != null) title else "Architektura Siódmego Dnia"} " />
+<meta property="og:site_name"     content="Architektura VII Dnia" />
+
+<meta property="og:url"           content="@identifyingURL" />
+<meta property="og:type"          content="@contentType" />
+<meta property="og:description"   content="@description" />
+<meta property="og:image"         content="@{if(image != null) image else routes.Assets.at("images/logo.png").absoluteURL()}" />
+<meta property="fb:app_id"        content="@ServerProperties.getValue("facebook.app.id")" />
+<meta property="og:locale"        content="pl" />
+
+    @*
+    article :
+    type: article
+    description: article.lead
+    title : article.title
+    image: title.cover
+    <meta property="article:author" content="https://www.facebook.com/fareedzakaria" />
+    <meta property="article:publisher" content="https://www.facebook.com/cnn" />
+    *@
+     @*
+    story :
+    type: article
+    description: article.lead
+    title : article.title
+    image: title.cover (1 from 8, pending on Kuba)
+    <meta property="article:author" content="https://www.facebook.com/fareedzakaria" />
+    <meta property="article:publisher" content="https://www.facebook.com/cnn" />
+    *@
+    @*
+    passport:
+    type: ????
+    description
+    title: churchname
+    image: if we have images, take first, else base image
+
+    *@

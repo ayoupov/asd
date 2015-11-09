@@ -1,9 +1,8 @@
 @(churchCount : Long)
 @polishedCount() = @{
     churchCount % 100 match {
-        // todo: check if 4001 fits
-        case 2|3|4|22|23|24|32|33|34|42|43|44|52|53|54|62|63|64|72|73|74|82|83|84|92|93|94 => "POWSTAŁY " + churchCount + " NOWE KOŚCIOŁY"
-        case _ => "POWSTAŁO " + churchCount + " NOWYCH KOŚCIOŁÓW"
+        case 2|3|4|22|23|24|32|33|34|42|43|44|52|53|54|62|63|64|72|73|74|82|83|84|92|93|94 => churchCount + " KOŚCIOŁY"
+        case _ => churchCount + " KOŚCIOŁÓW"
     }
 }
 <div id="slide-map" class="slide wrapped violet slide-map">
@@ -13,9 +12,9 @@
             <img class="ui image" src="@routes.Assets.at("images/arrow_selector_white.png")">
         </div>
         <div class="about-content">
-            <div class="black about-header">POLICZYLIŚMY –<br>PO WOJNIE W POLSCE @polishedCount()</div>
-            <div class="black about-more">Większość wznieśli społecznie sami parafianie. Znajdź swój kościół i
-                podziel się wspomnieniami i zdjęciami z jego budowy!
+            <div class="black about-header">ZBUDOWALIŚMY<br>@polishedCount() &mdash;<br>NAPISZMY TERAZ<br>ICH HISTORIĘ</div>
+            <div class="black about-more">Zróbmy to wspólnie! Znajdź swój kościół na mapie i dodaj<br>
+                wspomnienie z jego budowy. <a href="#slide-about" class="credits-link">Przeczytaj więcej o projekcie.</a>
             </div>
             <div class="thumb-stroke"></div>
         </div>

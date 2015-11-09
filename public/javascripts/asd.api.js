@@ -133,26 +133,6 @@ function populateArticles(data) {
     }
     $articles.isotope();
 
-    $('.hover-content').hide();
-    $(".article").hover(function () {
-        // switch content
-        var hoverContent = $('.hover-content', $(this));
-        if (hoverContent.length > 0) {
-            $(this).toggleClass('hovered');
-            $('.face-content', $(this)).hide();
-            hoverContent.show();
-        }
-    }, function () {
-        var hoverContent = $('.hover-content', $(this));
-        if (hoverContent.length > 0) {
-            $(this).toggleClass('hovered');
-            $('.face-content', $(this)).show();
-            hoverContent.hide();
-        }
-    });
-    //$('.article:not(.extra-articles)').off('click').on('click', function () {
-    //    window.open('/article/' + getId($(this)));
-    //});
     bindThumbEvents($articles, 'article');
     hackStories();
 }

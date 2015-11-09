@@ -6,10 +6,13 @@ import com.feth.play.module.pa.user.AuthUserIdentity;
 import com.feth.play.module.pa.user.EmailIdentity;
 import com.feth.play.module.pa.user.NameIdentity;
 import models.LinkedAccount;
+import models.internal.email.EmailSubstitution;
+import models.internal.email.EmailWrapper;
 import models.internal.identities.AutoIdentity;
 import models.user.User;
 import models.user.UserRole;
 import models.user.UserStatus;
+import org.apache.commons.lang3.tuple.Pair;
 import org.hibernate.Query;
 import play.Logger;
 import play.api.mvc.Session;
@@ -20,6 +23,7 @@ import java.io.Serializable;
 import java.util.*;
 
 import static com.feth.play.module.pa.PlayAuthenticate.getProvider;
+import static models.internal.email.EmailWrapper.sendEmail;
 import static utils.HibernateUtils.*;
 
 /**
@@ -146,6 +150,16 @@ public class UserManager
             email = identity.getEmail();
             if (email != null) {
                 user.setEmail(email);
+                // send greetings
+                try {
+                    sendEmail(
+                            EmailWrapper.EmailNames.UserRegistered,
+                            null,
+                            user,
+                            Pair.of(EmailSubstitution.Username.name(), user.getName()));
+                } catch (Exception e) {
+                    Logger.error("error while sending greetings", e);
+                }
             }
         }
 

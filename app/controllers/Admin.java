@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import models.Church;
 import models.MediaContent;
 import models.MediaContentType;
-import models.address.Diocese;
 import models.internal.*;
 import models.internal.search.SearchManager;
 import models.internal.search.filters.ArticleFilter;
@@ -25,6 +24,7 @@ import utils.map.Processor;
 import utils.map.Snapshoter;
 import utils.media.bbcode.BBCodeTest;
 import utils.seed.Disseminator;
+import models.internal.email.EmailTemplate;
 import views.html.admin;
 
 import java.io.IOException;
@@ -169,6 +169,7 @@ public class Admin extends Controller
             List<MediaContent> articles = ContentManager.getMediaContent(articleFilter, MediaContentType.Article);
             List<MediaContent> stories = ContentManager.getMediaContent(storyFilter, MediaContentType.Story);
             List<Church> churches = ContentManager.getChurches(churchFilter);
+            List<EmailTemplate> emails = ContentManager.getEmails();
 
             Map<String, Integer> issues = new HashMap<>();
             issues.put("users", ContentManager.getUserIssuesCount());
@@ -176,7 +177,12 @@ public class Admin extends Controller
             issues.put("stories", ContentManager.getStoryIssuesCount());
             issues.put("churches", ContentManager.getChurchIssuesCount());
 
-            Html content = admin.render(users, articles, stories, churches, issues, session());
+            Html content = admin.render(
+//                    contentReqs, dbReqs,
+                    users, articles, stories, churches,
+                    emails,
+//                    credits,
+                    issues, session());
             commitTransaction();
             return ok(content);
         }

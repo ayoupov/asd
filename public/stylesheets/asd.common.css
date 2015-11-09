@@ -482,3 +482,21 @@ td.passport-data-filler {
 .menu-nav .item{
     height: 55px;
 }
+
+.prompt::-webkit-input-placeholder {
+    color: black !important;
+}
+
+.prompt:-moz-placeholder {
+    /* Firefox 18- */
+    color: black !important;
+}
+
+.prompt::-moz-placeholder {
+    /* Firefox 19+ */
+    color: black !important;
+}
+
+.prompt:-ms-input-placeholder {
+    color: black !important;
+}

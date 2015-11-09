@@ -1,16 +1,21 @@
-var $admpages, $editors, $wrappers, $revisions,
+var $admpages, $editors, $wrappers,
     $churchEditor, $articleWrapper, $storyWrapper,
-    $articleForm, $storyForm, $fm;
+    $articleForm, $storyForm, $fm, $emailWrapper, $emailForm;
 
 var apiExtension =
 {
+    'get json email': '/content/email/{name}',
     'get json article': '/article/{id}.json',
     'get json story': '/story/{id}.json',
     'get associated pictures': '/files/list',
+
+    'post update email': '/content/email/{name}',
+    'post check email': '/content/email/check/{name}',
     'post update article': '/article/update',
     'preview article': '/preview/article',
     'post update story': '/story/update',
     'upload files' : '/files/upload',
+
     'remove content' : '/{ctype}/{id}'
 };
 
@@ -50,8 +55,8 @@ function changeRow(data) {
             );
             $row.append($("<td/>").addClass('noedit').html(
                     $(
-                        "<a href='/article/" + id + "' target='_blank'>→</a>" +
-                        "<a href='javascript:removeContent('article', " + id + ");'><img src='/assets/images/close_button.png'></a>"
+                        "<a href='/article/" + id + "' target='_blank'><img src='/assets/images/arrow_selector_menu_golden.png'></a>" +
+                        "<a href='javascript:removeContent(\"article\", " + id + ");' style='margin-left:20px;'><img src='/assets/images/close_button.png'></a>"
                     )
                 )
             );
@@ -79,12 +84,11 @@ function removeContent(ctype, id)
         },
         method : 'DELETE'
     });
-    location.reload(true);
+    window.location = '/admin' + ((new Date()).getTime()) + location.hash;
 }
 
 function initAdmSelectorCache() {
     $admpages = $(".admin-page");
-    $revisions = $("#revisions");
     $editors = $(".editor-content");
     $wrappers = $(".editor-wrapper");
     $churchEditor = $(".church-editor");
@@ -93,6 +97,8 @@ function initAdmSelectorCache() {
     $articleForm = $(".article-form");
     $storyForm = $(".story-form");
     $fm = $("#fm");
+    $emailForm = $(".email-form");
+    $emailWrapper = $(".email-wrapper");
 }
 
 $(document).ready(function () {
@@ -107,6 +113,7 @@ $(document).ready(function () {
     });
     $("td:not(.noedit)", $("#articles")).on('click', articleEditClick);
     $("td:not(.noedit)", $("#stories")).on('click', storyEditClick);
+    $("td:not(.noedit)", $("#emails")).on('click', emailEditClick);
     $("tr", $("#churches")).on('click', churchRevisionClick);
 
     $("tr").hover(function () {
@@ -149,7 +156,7 @@ function applyTextFilter(e) {
         var val = $item.val();
         if (filterType) {
             var hash = location.hash;
-            location = '/admin' + '?' + (entity + '_' + filterType) + '=' + val + (hash ? hash : '');
+            window.location = '/admin' + '?' + (entity + '_' + filterType) + '=' + val + (hash ? hash : '');
         }
     }
 }

@@ -1,0 +1,21 @@
+@import models.internal.email.EmailTemplate
+@(emails : List[EmailTemplate])
+
+<div id="emails" class="admin-page">
+    <table class="ui celled table">
+        <thead>
+            <tr>
+                <th>template name</th>
+                <th>subject</th>
+                <th>body</th>
+            </tr>
+        </thead>
+        @for(e <- emails) {
+            <tr id="@e.getName">
+                <td>@e.getName</td>
+                <td>@e.getSubject</td>
+                <td>@e.getBody.substring(0, 50)</td>
+            </tr>
+        }
+    </table>
+</div>

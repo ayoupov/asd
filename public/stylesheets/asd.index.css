@@ -153,7 +153,7 @@
     cursor: pointer;
 }
 
-.story:not(.center-more) {
+.story:not(.center-more):not(.hovered) {
     border: 5px solid #5a38db;
 }
 
@@ -358,6 +358,16 @@ div.holder-border {
     filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
 }
 
+#about a.credits-link {
+    border-bottom: black 1px solid;
+    color: black;
+}
+
+#about a.credits-link:hover {
+    color: #5a38db;
+    border-bottom: #5a38db 1px solid;
+}
+
 .menu .thumb-stroke {
     background-color: black;
 }
@@ -392,10 +402,6 @@ div.holder-border {
     height: 100%;
 }
 
-.hover-content.thumb-stroke {
-    margin-top: -5px;
-}
-
 .face-image {
     background-size: cover;
     background: no-repeat center;
@@ -419,7 +425,7 @@ div.holder-border {
     border: solid white 5px;
     top: 223px;
     position: absolute;
-    left: 40px;
+    left: 35px;
     bottom: 0;
     color: white;
     font-style: italic;
@@ -433,13 +439,43 @@ div.holder-border {
     left: 0;
     height: 100%;
     width: 100%;
+}
+
+.article .hover-content .cover {
     background: rgba(208, 177, 101, 0.81);
+}
+
+.story .hover-content .cover {
+    background: rgba(90, 56, 219, 0.81);
+}
+
+.story .thumb-stroke.face-content {
+    background-color: #d0b165;
+}
+
+.article .thumb-stroke.face-content {
+    background-color: #5a38db;
+}
+
+.thumb-stroke.hover-content {
+    position: absolute;
+    left: 80px;
+    /*margin-top: -5px;*/
+    top: 325px;
+}
+
+.article .thumb-stroke.hover-content {
+    background-color: white;
+}
+
+.story .thumb-stroke.hover-content {
+    background-color: white;
 }
 
 .hover-content .hover-icon {
     position: absolute;
     top: 75px;
-    left: 80px;
+    left: 75px;
 }
 
 .credits-container {
@@ -604,18 +640,6 @@ div.holder-border {
     border-radius: 50%;
     font-size: 18pt;
     line-height: 68px;
-}
-
-.story .thumb-stroke.face-content {
-    background-color: #d0b165;
-}
-
-.article .thumb-stroke.face-content {
-    background-color: #5a38db;
-}
-
-.article .thumb-stroke.hover-content {
-    background-color: white;
 }
 
 .suggestion-wrapper, .feedback-wrapper {

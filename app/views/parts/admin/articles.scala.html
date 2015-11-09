@@ -31,8 +31,8 @@
                 }>
                 </td>
                 <td class="noedit">
-                    <a href="@routes.MediaContents.byTypeAndId("article", a.getId + "", "html")" target="_blank">→</a>
-                    <a href="javascript: removeContent('article', @a.getId);"><img src="@routes.Assets.at("images/close_button.png")"></a>
+                    <a href="@routes.MediaContents.byTypeAndId("article", a.getId + "", "html")" target="_blank"><img src="@routes.Assets.at("images/arrow_selector_menu_golden.png")"></a>
+                    <a href="javascript: removeContent('article', @a.getId);" style="margin-left:20px;"><img src="@routes.Assets.at("images/close_button.png")"></a>
                 </td>
             </tr>
         }

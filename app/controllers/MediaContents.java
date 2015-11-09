@@ -1,7 +1,6 @@
 package controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.Church;
 import models.Image;
@@ -27,6 +26,7 @@ import views.html.mediacontent;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static models.internal.UserManager.getLocalUser;
 import static utils.DataUtils.safeBool;
@@ -247,8 +247,7 @@ public class MediaContents extends Controller
             c.setApprovedDT(jpublishDate);
             c.setApprovedBy(user);
         }
-        if (churches != null)
-        {
+        if (churches != null) {
             c.setChurches(parseChurchList(churches, c));
         }
 
@@ -274,8 +273,7 @@ public class MediaContents extends Controller
     {
         String[] split = churches.split(",");
         Set<Church> res = new LinkedHashSet<>();
-        for (String churchId : split)
-        {
+        for (String churchId : split) {
             Church c = ContentManager.getChurch(churchId.trim());
             if (c != null) {
                 res.add(c);
@@ -315,8 +313,7 @@ public class MediaContents extends Controller
                 return ok(result);
             } else
                 return internalServerError(result);
-        }
-        else
+        } else
             return notFound(result);
     }
 
@@ -370,17 +367,35 @@ public class MediaContents extends Controller
 
     public static Result contentRelated(long id)
     {
-        List<MediaContent>  res = new ArrayList<>();
+        List<MediaContent> res = new ArrayList<>();
 
         beginTransaction();
         MediaContent mc = (MediaContent) getSession().get(MediaContent.class, id);
         Church dedicated = mc.getDedicatedChurch();
-        if (dedicated == null)
+        if (dedicated == null) // story
         {
-
+            res = ContentManager.getRelatedForArticles(mc);
+//            res.remove(mc);
         } else {
-            Set<MediaContent> churchMedia = dedicated.getMedia();
-            res.addAll(churchMedia);
+            Set<MediaContent> dedicatedMedia = dedicated.getMedia();
+            if (dedicatedMedia != null) {
+                List<MediaContent> churchMedia = new ArrayList<>(dedicatedMedia);
+                List<MediaContent> articles = churchMedia.stream().filter(p -> p.getContentType() == MediaContentType.Article).collect(Collectors.toList());
+                Collections.shuffle(articles);
+                for (int i = 0; i < Math.min(3, articles.size()); i++)
+                    res.add(articles.get(i));
+
+                List<MediaContent> stories = churchMedia.stream().filter(p -> p.getContentType() == MediaContentType.Story).collect(Collectors.toList());
+                Collections.shuffle(stories);
+                for (int i = 0; i < Math.min(8 - res.size(), stories.size()); i++)
+                    res.add(stories.get(i));
+
+                if (res.size() < 8)
+                    res.addAll(ContentManager.getRelatedForStory(mc, 8 - res.size()));
+
+            }
+//            res.addAll(churchMedia);
+//            res.remove(mc);
         }
         commitTransaction();
         return ok(Json.toJson(res));

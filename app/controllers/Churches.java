@@ -8,8 +8,11 @@ import models.Image;
 import models.MediaContent;
 import models.MediaContentType;
 import models.internal.*;
+import models.internal.email.EmailSubstitution;
+import models.internal.email.EmailWrapper;
 import models.user.User;
 import models.user.UserRole;
+import org.apache.commons.lang3.tuple.Pair;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -17,7 +20,6 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
-import utils.HibernateUtils;
 import utils.serialize.Serializer;
 import utils.service.ImageCreator;
 import utils.service.auth.ASDAuthUser;
@@ -26,6 +28,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.*;
 
+import static models.internal.email.EmailWrapper.sendEmail;
 import static utils.HibernateUtils.*;
 
 /**
@@ -148,10 +151,9 @@ public class Churches extends Controller
         MediaContent c = new MediaContent(MediaContentType.Story, text, title, year, null, coverThumbPath, user, church);
         c.setId((Long) save(c));
 
-        try{
+        try {
             Exporter.exportOne(c);
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             Logger.error("cannot save story to archive: ", e);
         }
 
@@ -166,7 +168,20 @@ public class Churches extends Controller
 
         update(church);
 
+        try {
+            String username = user.getName();
+            sendEmail(
+                    EmailWrapper.EmailNames.AddStory,
+                    null,
+                    user,
+                    Pair.of(EmailSubstitution.Username.name(), username));
+
+        } catch (Exception e) {
+            Logger.error("error while sending email", e);
+        }
+
         commitTransaction();
+
 
         result.put("success", true);
         result.put("id", c.getId());

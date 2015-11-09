@@ -134,3 +134,26 @@ function starsort(arr) {
 function stringStartsWith (string, prefix) {
     return string.slice(0, prefix.length) == prefix;
 }
+
+function preload(arrayOfImages) {
+    $(arrayOfImages).each(function(){
+        $('<img/>')[0].src = this;
+    });
+}
+
+// todo: apply list
+preload([
+    '/assets/images/button-close.png',
+    '/assets/images/close_button.png',
+    '/assets/images/logo.png',
+    '/assets/images/notification_church_icon.png',
+    '/assets/images/check.png',
+    '/assets/images/uncheck.png',
+    '/assets/images/fb_login_button.png',
+    '/assets/images/arrow_selector_menu_golden.png',
+    '/assets/images/story_control_down.png',
+    '/assets/images/story_control_up.png',
+    '/assets/images/article_cover_overlay',
+    '/assets/images/gallery_thumb_down.png',
+    '/assets/images/gallery_thumb_up.png'
+]);

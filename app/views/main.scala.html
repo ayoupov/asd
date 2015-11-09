@@ -3,15 +3,29 @@
 @import utils.ServerProperties
 @import utils.serialize.Serializer
 @(churchCount: Long, currentChurch: Church, user: User)
+@polishedCount() = @{
+    churchCount % 100 match {
+        case 2|3|4|22|23|24|32|33|34|42|43|44|52|53|54|62|63|64|72|73|74|82|83|84|92|93|94 => churchCount + " kościoły"
+        case _ => churchCount + " kościołów"
+    }
+}
+
+@mainDesription() = @{
+    s"Zbudowaliśmy ${polishedCount()} – napiszmy teraz ich historię. " +
+            "Zróbmy to wspólnie! Znajdź swój kościół na mapie i dodaj wspomnienie z jego budowy."
+}
+@mainTitle() = @{
+    "Architektura Siódmego Dnia"
+}
 <!DOCTYPE html>
 <html lang="pl">
     <head>
         <meta charset="UTF-8">
-        <title>Architektura Siódmego Dnia</title>
+        <title>@mainTitle()</title>
         @parts.heads.commonhead()
         @parts.heads.maphead()
         @parts.heads.indexhead()
-        @parts.heads.metas()
+        @parts.heads.metas(mainDesription(),mainTitle(), null, "website", routes.Application.index(null).absoluteURL())
         </head>
     <body>
         <div class="wrapper">

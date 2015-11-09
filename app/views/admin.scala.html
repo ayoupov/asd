@@ -4,7 +4,12 @@
 @import play.mvc.Http.Session
 
 @import scala.collection.JavaConverters._
-@(users: java.util.List[User], articles: java.util.List[MediaContent], stories: java.util.List[MediaContent], churches: java.util.List[Church],
+@import models.internal.email.EmailTemplate
+@(
+//        content_reqs : java.util.List[ContentReq], db_reqs : java.util.List[DBReq],
+        users: java.util.List[User], articles: java.util.List[MediaContent], stories: java.util.List[MediaContent], churches: java.util.List[Church],
+        emails : java.util.List[EmailTemplate],
+//        credits : Credits,
         count: java.util.Map[String, Integer], session: Session)
 
 @counters() = @{
@@ -36,6 +41,7 @@
         <script src="@routes.Assets.at("javascripts/asd.api.js")"></script>
         <script src="@routes.Assets.at("javascripts/asd.admin.js")"></script>
         <script src="@routes.Assets.at("javascripts/asd.admin.articles.js")"></script>
+        <script src="@routes.Assets.at("javascripts/asd.admin.email.js")"></script>
         <script src="@routes.Assets.at("javascripts/asd.admin.stories.js")"></script>
         <script src="@routes.Assets.at("javascripts/asd.admin.churches.js")"></script>
         <script src="@routes.Assets.at("javascripts/asd.admin.editor.js")"></script>
@@ -61,20 +67,30 @@
             </nav>
             <div class="ui left rail">
                 <div class="ui vertical menu left-admin-menu">
-                    <a class="item page-changer" href="#stats">
-                        <b>Stats</b>
-                    </a>
-                    <a class="item page-changer" href="#users">
-                        <b>Users</b>
 
-                        <div id="user_reqs" class="ui label">@counters.getOrElse("users", 0)</div>
-                    </a>
+                    <div class="ui item">
+                        <b>Requests</b>
+                        <div class="menu">
+                        <a class="item page-changer" href="#content_requests">
+                            Stories & images (Kuba)
+                            <div id="content_reqs" class="ui label">@counters.getOrElse("content_reqs", 0)</div>
+                        </a>
+                        </div>
+                        <div class="menu">
+                        <a class="item page-changer" href="#db_requests">
+                            Data fixes & new churches (Karolina)
+                                <div id="db_reqs" class="ui label">@counters.getOrElse("db_reqs", 0)</div>
+                        </a>
+                        </div>
+                    </div>
 
                     <div class="ui item">
                         <b>Content</b>
-
-                        <div class="ui label">@totalIssues()</div>
                         <div class="menu">
+                            <a class="item page-changer" href="#users">
+                                <b>Users</b>
+                                <div id="user_reqs" class="ui label">@counters.getOrElse("users", 0)</div>
+                            </a>
                             <a class="item page-changer" href="#articles">Articles
                                 <div id="articles_reqs" class="ui right label">@counters.getOrElse("articles", 0)</div>
                             </a>
@@ -86,22 +102,48 @@
                             </a>
                         </div>
                     </div>
+
+                    <div class="ui item">
+                        <b>Static</b>
+                        <div class="menu">
+                            <a class="item page-changer" href="#emails">
+                                Emails
+                            </a>
+                        </div>
+                        <div class="menu">
+                            <a class="item page-changer" href="#credits">
+                                Credits page
+                            </a>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div class="ui grid skipped-top">
                 <div class="four column row">
                     <div class="column"></div>
                     <div class="eight wide column" id="main-admin-content">
-                        <div id="stats" class="admin-page">Do we really need it?</div>
+                        @parts.admin.stats()
+                        <!-- requests -->
+            @*            @parts.admin.content_reqs(content_reqs.asScala.toList, SessionCache.get(session, "contentReqFilter").asInstanceOf[ContentReqFilter]) *@
+            @*            @parts.admin.db_reqs(db_reqs.asScala.toList, SessionCache.get(session, "dbReqFilter").asInstanceOf[DBReqFilter]) *@
+                        <!-- content -->
                         @parts.admin.users(users.asScala.toList, SessionCache.get(session, "userFilter").asInstanceOf[UserFilter])
                         @parts.admin.articles(articles.asScala.toList, SessionCache.get(session, "articleFilter").asInstanceOf[ArticleFilter])
                         @parts.admin.stories(stories.asScala.toList, SessionCache.get(session, "storyFilter").asInstanceOf[StoryFilter])
                         @parts.admin.churches(churches.asScala.toList, SessionCache.get(session, "churchFilter").asInstanceOf[ChurchFilter])
+                        <!-- static -->
+                        @parts.admin.emails(emails.asScala.toList)
+            @*            @parts.admin.credits(credits)    *@
                         <div id="editor-wrapper">
-                            @parts.admin.usereditor()
-                            @parts.admin.articleeditor()
-                            @parts.admin.storyeditor()
-                            @parts.admin.churcheditor()
+             @*               @parts.admin.forms.creqeditor()  *@
+             @*               @parts.admin.forms.dbreqeditor()   *@
+                            @parts.admin.forms.usereditor()
+                            @parts.admin.forms.articleeditor()
+                            @parts.admin.forms.storyeditor()
+                            @parts.admin.forms.churcheditor()
+                            @parts.admin.forms.emaileditor()
+            @*                @parts.admin.forms.creditseditor()  *@
                         </div>
 
                     </div>
