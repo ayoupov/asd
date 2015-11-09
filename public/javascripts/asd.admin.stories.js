@@ -72,9 +72,9 @@ function fillStory(data) {
     if (data) {
         var church = data.church;
         data = data.data;
-        $("#title", $storyForm).val(data.title);
-        $("#lead", $storyForm).html(data.lead);
-        $("#desc", $storyForm).html(data.coverDescription);
+        $("#title", $storyForm).val(data.title).on('input', changeThumb);
+        $("#lead", $storyForm).html(data.lead).on('keyup', changeThumb);
+        $("#desc", $storyForm).html(data.coverDescription).on('keyup', changeThumb);
         //$("#cover", $storyForm).val((data.cover) ? data.cover.path : "");
         $("#alternativeId", $storyForm).val(data.alternativeId);
         $("#church", $storyForm).val(church).attr('disabled', 'disabled');
@@ -90,6 +90,12 @@ function fillStory(data) {
         $("#author", $storyForm).val(data.authors[0].name).attr('disabled', 'disabled');
         $("#id", $storyForm).val(data.id);
         $("#text", $storyForm).val(data.text);
+
+        $(".admin-editor-thumb").remove();
+        $editorThumb = createMediaThumb('story', data.id, data.coverThumbPath, data.title, data.coverDescription, null, data.lead, data.alternativeId);
+        $editorThumb.addClass('admin-editor-thumb admin-page');
+        $(".hover-content", $editorThumb).hide();
+        $(".wrapper").append($editorThumb);
     }
     $storyWrapper.show();
 }

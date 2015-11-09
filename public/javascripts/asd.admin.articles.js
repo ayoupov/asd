@@ -116,9 +116,9 @@ function fillArticle(data) {
     if (data) {
         var churches = data.churches;
         data = data.data;
-        $("#title", $articleForm).val(data.title);
-        $("#lead", $articleForm).html(data.lead);
-        $("#desc", $articleForm).html(data.coverDescription);
+        $("#title", $articleForm).val(data.title).on('input', changeThumb);
+        $("#lead", $articleForm).html(data.lead).on('keyup', changeThumb);
+        $("#desc", $articleForm).html(data.coverDescription).on('keyup', changeThumb);
         $("#cover", $articleForm).val((data.cover) ? data.cover.path : "");
         $("#alternativeId", $articleForm).val(data.alternativeId);
         $("#churches", $articleForm).val(churches);
@@ -129,6 +129,14 @@ function fillArticle(data) {
         fillAuthors(data.authors);
         $("#id", $articleForm).val(data.id);
         $("#text", $articleForm).val(data.text);
+
+        $(".admin-editor-thumb").remove();
+        var cover = (data.coverThumbPath) ? data.coverThumbPath : ((data.cover) ? data.cover.path : "");
+        $editorThumb = createMediaThumb('article', data.id, cover, data.title, data.coverDescription, null, data.lead, data.alternativeId);
+        $editorThumb.addClass('admin-editor-thumb admin-page');
+        $(".hover-content", $editorThumb).hide();
+        $(".wrapper").append($editorThumb);
+
     }
     $("#authors", $articleForm).tokenize(
         {

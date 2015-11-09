@@ -1,3 +1,5 @@
+var $editorThumb;
+
 function createMediaThumb(selectorClass, id, cover, title, desc, hover, lead, alt) {
     var idSelectorPart = selectorClass.split(' ').pop();
     var $thumb = $('<div/>')
@@ -35,7 +37,7 @@ function createMediaThumb(selectorClass, id, cover, title, desc, hover, lead, al
         $('<div/>').addClass('thumb-stroke face-content')
     );
     //if (hover)
-        $thumb.append(
+    $thumb.append(
             $('<div/>').addClass('thumb-stroke hover-content')
         );
     return $thumb;
@@ -94,4 +96,15 @@ function bindThumbEvents($container, selectorClass)
         var mctype = $(this).hasClass('story') ? 'story' : 'article';
         window.location.href = '/' + mctype + '/' + ($(this).data('alt') ? $(this).data('alt') : getId($(this)));
     });
+}
+
+function changeThumb(e)
+{
+    var $elem = $(e.target);
+    switch ($elem.attr('id'))
+    {
+        case 'title' : $('.header', $editorThumb).html($elem.val());break;
+        case 'lead' :
+        case 'desc' : $('.description', $editorThumb).html($elem.val());break;
+    }
 }

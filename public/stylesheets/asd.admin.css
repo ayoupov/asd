@@ -41,6 +41,12 @@ body
     height: 450px !important;
 }
 
+.admin-editor-thumb
+{
+    position: fixed;
+    bottom: 0;
+}
+
 span.editor-tool
 {
     padding: 2px;
