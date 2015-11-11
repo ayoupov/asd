@@ -16,6 +16,6 @@ public class RenderUtils
 
     public static String contentDateToString(Date date)
     {
-        return sdf.format(date);
+        return date == null ? "" : sdf.format(date);
     }
 }

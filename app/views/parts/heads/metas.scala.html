@@ -1,39 +1,17 @@
 @import utils.ServerProperties
-@(description: String, title: String, image : String, contentType: String, identifyingURL: String)
+@(description: String, title: String, image : String, contentType: String, identifyingURL: String, church: Church)
 
-<meta property="og:title"         content="@{if(title != null) title else "Architektura Siódmego Dnia"} " />
+<meta property="og:title"         content="@{if(title != null) title else "Architektura Siódmego Dnia"}" />
 <meta property="og:site_name"     content="Architektura VII Dnia" />
 
 <meta property="og:url"           content="@identifyingURL" />
 <meta property="og:type"          content="@contentType" />
 <meta property="og:description"   content="@description" />
-<meta property="og:image"         content="@{if(image != null) image else routes.Assets.at("images/fb_cover_main.png").absoluteURL()}" />
+<meta property="og:image"         content="@{if(image != null) image else routes.Assets.at("images/fb_cover_main.png").absoluteURL(request())}" />
 <meta property="fb:app_id"        content="@ServerProperties.getValue("facebook.app.id")" />
-<meta property="og:locale"        content="pl" />
+<meta property="og:locale"        content="pl_PL" />
+    @if(church != null) {
 
-    @*
-    article :
-    type: article
-    description: article.lead
-    title : article.title
-    image: title.cover
-    <meta property="article:author" content="https://www.facebook.com/fareedzakaria" />
-    <meta property="article:publisher" content="https://www.facebook.com/cnn" />
-    *@
-     @*
-    story :
-    type: article
-    description: article.lead
-    title : article.title
-    image: title.cover (1 from 8, pending on Kuba)
-    <meta property="article:author" content="https://www.facebook.com/fareedzakaria" />
-    <meta property="article:publisher" content="https://www.facebook.com/cnn" />
-    *@
-    @*
-    passport:
-    type: ????
-    description
-    title: churchname
-    image: if we have images, take first, else base image
-
-    *@
+        <meta property="place:location:latitude"  content="@church.address.getGeometry.getCoordinate().y" />
+        <meta property="place:location:longitude"  content="@church.address.getGeometry.getCoordinate().x" />
+    }

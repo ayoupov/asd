@@ -46,7 +46,7 @@ function newStoryForm() {
         "</div>" +
         "<div class='ui bottom attached tab segment active' data-tab='basic-props'>" +
         "<label for='title'>Title</label><input id='title' placeholder='Title' name='title'/>" +
-        "<label for='lead'>Lead</label><textarea id='lead' placeholder='Lead' name='lead'/>" +
+        "<label for='year'>Year</label><input id='year' placeholder='Year' name='year'/>" +
         "<label for='desc'>Cover description</label><textarea id='desc' placeholder='Text on cover' name='coverDescription'/>" +
         //"<label for='cover'>Cover image path</label><input id='cover' placeholder='Path to image' name='cover'/>" +
         "<label for='alt'>Alternative id</label><input id='alternativeId' placeholder='alternative id' name='alt'/>" +
@@ -73,7 +73,7 @@ function fillStory(data) {
         var church = data.church;
         data = data.data;
         $("#title", $storyForm).val(data.title).on('input', changeThumb);
-        $("#lead", $storyForm).html(data.lead).on('keyup', changeThumb);
+        $("#year", $storyForm).val(data.year);
         $("#desc", $storyForm).html(data.coverDescription).on('keyup', changeThumb);
         //$("#cover", $storyForm).val((data.cover) ? data.cover.path : "");
         $("#alternativeId", $storyForm).val(data.alternativeId);

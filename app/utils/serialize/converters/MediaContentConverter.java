@@ -40,7 +40,8 @@ public class MediaContentConverter extends com.fasterxml.jackson.databind.JsonSe
         String authors = content.getAuthors().stream()
                 .map(User::getName)
                 .collect(Collectors.joining(", "));
-        json.writeStringField("description", "by " + authors);
+        if (!"".equals(authors.trim()))
+            json.writeStringField("description", "by " + authors);
         json.writeEndObject();
     }
 }

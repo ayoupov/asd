@@ -1,27 +1,19 @@
 function initSearch() {
-    console.log('initiating search');
-    console.log($prompt);
-    $searchWrapper.search(
+    //console.log('initiating search');
+    //console.log($churchPrompt);
+    var defaultAction = {
+        url: "javascript:addNewChurch();",
+        text: 'Dodaj kościół'
+    };
+
+    $searchContentWrapper.search(
         {
             apiSettings: {
-                debug: true,
-                verbose: true,
-                action: 'search',
-                onResponse: function (churchResponse) {
-                    var
-                        response = churchResponse;
-                    response["action"] =
-                    {
-                        url: "javascript:addNewChurch();",
-                        text: 'Nie możesz znaleźć? Dodaj kościół do bazy!'
-                    };
-                    return response;
-                }
+                action: 'search'
             },
-            debug: true,
-            verbose: true,
-            minCharacters: 3,
-            //type: 'category',
+            //debug: true,
+            //verbose: true,
+            minCharacters: 4,
             maxResults: 5,
             fields: {
                 title: 'title',       // result title
@@ -29,14 +21,52 @@ function initSearch() {
                 actionText: 'text',        // "view more" text
                 actionURL: 'url'          // "view more" url
             },
-            errors: {
-                error: {
-                    serverError: ""
+            error: {
+                serverError: ""
+            }
+            //,
+            //templates: {
+            //    message: function(message, type) {
+            //        return '<a href="javascript:addNewChurch();" class="action">Dodaj kościół</a>';
+            //    }
+            //}
+        }
+    );
+
+    $searchChurchWrapper.search(
+        {
+            apiSettings: {
+                //debug: true,
+                //verbose: true,
+                action: 'search',
+                onResponse: function (churchResponse) {
+                    var response = churchResponse;
+                        response["action"] = defaultAction;
+                    return response;
+                }
+            },
+            //debug: true,
+            //verbose: true,
+            minCharacters: 4,
+            maxResults: 5,
+            fields: {
+                title: 'title',       // result title
+                action: 'action',      // "view more" object name
+                actionText: 'text',        // "view more" text
+                actionURL: 'url'          // "view more" url
+            },
+            error: {
+                serverError: ""
+            },
+            templates: {
+                message: function(message, type) {
+                    return '<a href="javascript:addNewChurch();" class="action">Dodaj kościół</a>';
                 }
             }
         }
     );
 }
+
 var newChurchInited = false;
 function addNewChurch() {
     $("input[type=text]",$suggestionWrapper).val('');
@@ -61,6 +91,7 @@ function initAddChurch() {
         beforeSend: function (settings) {
             if (validateForm($(this).closest('form')))
                 return settings;
+            return false;
         },
         serializeForm: true
     });

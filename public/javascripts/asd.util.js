@@ -149,6 +149,7 @@ preload([
     '/assets/images/notification_church_icon.png',
     '/assets/images/check.png',
     '/assets/images/uncheck.png',
+    '/assets/images/uncheck_required.png',
     '/assets/images/fb_login_button.png',
     '/assets/images/arrow_selector_menu_golden.png',
     '/assets/images/story_control_down.png',
@@ -157,3 +158,59 @@ preload([
     '/assets/images/gallery_thumb_down.png',
     '/assets/images/gallery_thumb_up.png'
 ]);
+
+
+// The de-facto unbiased shuffle algorithm is the Fisher-Yates (aka Knuth) Shuffle.
+// from https://github.com/coolaj86/knuth-shuffle
+
+function shuffle(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex;
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+    }
+    return array;
+}
+
+function escapeName(s)
+{
+    return s.replace(/:/g, '\\:');
+}
+
+function updateOGTags(tagObject)
+{
+    $.each(tagObject, function(key, value){
+        var escaped = escapeName(key);
+        var $property = $("meta[property=" + escaped + "]");
+        if (!$property.length)
+            $property.appendTo($("head"));
+        $property.attr("content", value);
+    });
+}
+
+function removeOGTags(arr)
+{
+    $.each(arr, function(key, value){
+        var escaped = escapeName(value);
+        $("meta[property=" + escaped + "]").remove();
+    });
+}
+
+function updateScrapeStatus(url, callback)
+{
+    $.post('https://graph.facebook.com', {
+        id: url,
+        scrape: true
+    }, function(response) {
+        // todo: remove
+        console.log(response);
+        if (callback)
+          callback();
+    });
+}

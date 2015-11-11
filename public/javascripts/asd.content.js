@@ -8,6 +8,7 @@ $(document).ready(function () {
     $(window).on('resize', resizeContentFunc);
     // search prompt changes
     $('.prompt').on('focus', changeSearchPrompt).on('focusout', changeSearchPrompt);
+    initSearch();
     changeSearchPrompt();
     resizeContentFunc();
     anchorFix();
@@ -34,19 +35,19 @@ var resizeContentFunc = function () {
 
 var contentType = location.pathname.split('/')[1];
 var changeSearchPrompt = function () {
-    if ($prompt.is(":focus")) {
+    if ($churchPrompt.is(":focus")) {
         switch (contentType) {
             case "article":
-                $prompt.attr('placeholder', "Szukaj w artykułach");
+                $churchPrompt.attr('placeholder', "Szukaj w artykułach");
                 break;
             case "story":
-                $prompt.attr('placeholder', "Szukaj we wspomnieniach");
+                $churchPrompt.attr('placeholder', "Szukaj we wspomnieniach");
                 break;
         }
-        $prompt.css('font-size', '11pt');
+        $churchPrompt.css('font-size', '11pt');
     }
     else {
-        $prompt.attr('placeholder', "");
+        $churchPrompt.attr('placeholder', "");
     }
 };
 

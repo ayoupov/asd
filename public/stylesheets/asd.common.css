@@ -33,9 +33,26 @@
     margin-bottom: -1px !important;
 }
 
+#menu.menu .results {
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif !important;
+    border-radius: 0 !important;
+}
+
+.ui.search>.results>.action {
+    text-align: left !important;
+    font-size: 11pt !important;
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif !important;
+}
+
 #menu.menu a:not(.result) {
-    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
-    font-size: 18pt !important;
+    font-size: 18pt;
+    font-weight: bold !important;
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif !important;
+}
+
+#menu.menu {
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif !important;
+    font-size: 11pt !important;
     font-weight: bold !important;
 }
 
@@ -303,6 +320,11 @@ div.rightaligned
     text-align: right;
 }
 
+div.leftaligned
+{
+    text-align: left;
+}
+
 div.inlinemiddle
 {
     line-height: 44px;
@@ -345,6 +367,9 @@ div.gapper-less
     float: left;
 }
 
+.passport-table-gap {
+    height: 32px;
+}
 
 .passport-data-wrapper {
     width: 100%;

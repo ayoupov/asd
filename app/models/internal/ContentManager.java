@@ -15,6 +15,7 @@ import play.Logger;
 import play.mvc.Http;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static utils.DataUtils.safeLong;
 import static utils.HibernateUtils.getSession;
@@ -417,6 +418,7 @@ public class ContentManager
     {
         List<MediaContent> articles = getSession().createQuery(
                 "from MediaContent mc where mc.contentType = :ct and mc.id != :thisid " +
+                        "and mc.approvedDT is not null " +
                         "order by rand()")
                 .setParameter("ct", MediaContentType.Article)
                 .setParameter("thisid", mcFor.getId())
@@ -424,6 +426,7 @@ public class ContentManager
                 .list();
         List<MediaContent> stories = getSession().createQuery(
                 "from MediaContent mc where mc.contentType = :ct " +
+                        "and mc.approvedDT is not null " +
                         "order by rand()")
                 .setParameter("ct", MediaContentType.Story)
                 .setMaxResults(8 - articles.size())
@@ -434,40 +437,49 @@ public class ContentManager
         return res;
     }
 
-    public static List<MediaContent> getRelatedForStory(MediaContent mc, int size)
+    public static List<MediaContent> getRelatedForStory(MediaContent mc, int size, Set<Long> alreadyDone)
     {
+        alreadyDone.add(mc.getId());
         List<MediaContent> res = new ArrayList<>();
         List<MediaContent> storiesRelatedByDiocese =
                 getSession().createQuery("from MediaContent mc " +
-                        "where mc.contentType = :ct and mc.id != :mcid " +
+                        "where mc.contentType = :ct " +
+                        "and mc.approvedDT is not null " +
                         "and mc.dedicatedChurch.address.diocese = :mcdio " +
+                        "and mc.id not in (:ids) " +
                         "order by rand()")
                         .setParameter("ct", MediaContentType.Story)
-                        .setParameter("mcid", mc.getId())
                         .setParameter("mcdio", mc.getDedicatedChurch().getAddress().getDiocese())
+                        .setParameterList("ids", alreadyDone)
                         .setMaxResults(size)
                         .list();
         res.addAll(storiesRelatedByDiocese);
         if (res.size() < size) {
+            alreadyDone.addAll(storiesRelatedByDiocese.stream().map(MediaContent::getId).collect(Collectors.toSet()));
             List<MediaContent> storiesRelatedByMetropolie =
                     getSession().createQuery("from MediaContent mc " +
-                            "where mc.contentType = :ct and mc.id != :mcid " +
+                            "where mc.contentType = :ct " +
+                            "and mc.approvedDT is not null " +
                             "and mc.dedicatedChurch.address.diocese.metropolie = :mcmetro " +
+                            "and mc.id not in (:ids) " +
                             "order by rand()")
                             .setParameter("ct", MediaContentType.Story)
-                            .setParameter("mcid", mc.getId())
                             .setParameter("mcmetro", mc.getDedicatedChurch().getAddress().getDiocese().getMetropolie())
+                            .setParameterList("ids", alreadyDone)
                             .setMaxResults(size - res.size())
                             .list();
             res.addAll(storiesRelatedByMetropolie);
             if (res.size() < size)
             {
+                alreadyDone.addAll(storiesRelatedByDiocese.stream().map(MediaContent::getId).collect(Collectors.toSet()));
                 res.addAll(
                         getSession().createQuery("from MediaContent mc " +
-                                "where mc.contentType = :ct and mc.id != :mcid " +
+                                "where mc.contentType = :ct " +
+                                "and mc.approvedDT is not null " +
+                                "and mc.id not in (:ids) " +
                                 "order by rand()")
                                 .setParameter("ct", MediaContentType.Story)
-                                .setParameter("mcid", mc.getId())
+                                .setParameterList("ids", alreadyDone)
                                 .setMaxResults(size - res.size())
                                 .list()
                 );

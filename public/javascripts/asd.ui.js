@@ -29,7 +29,7 @@ var uiInit = function () {
     });
     // search prompt changes
     //$('.prompt').on('focus', changeSearchPrompt).on('focusout', changeSearchPrompt);
-    $prompt.on('focus', changeSearchPrompt).on('focusout', changeSearchPrompt);
+    $churchPrompt.on('focus', changeSearchPrompt).on('focusout', changeSearchPrompt);
     // sticky bindings
     $about.on('click', toggleAbout);
     // scroll bindings
@@ -38,9 +38,9 @@ var uiInit = function () {
     $(window).on('resize', resizeFunc);
     resizeFunc();
 
-    $(document).on('change keypress', '.required.not-filled', function(){
+    $(document).on('change keypress', '.required.not-filled', function () {
         $(this).removeClass('not-filled');
-        $('label[for='+ $(this).attr('id') +']').removeClass('not-filled');
+        $('label[for=' + $(this).attr('id') + ']').removeClass('not-filled');
     });
 
     changeSearchPrompt();
@@ -48,52 +48,73 @@ var uiInit = function () {
     initSearch();
 
     // set focus to search
-    //$prompt.focus();
+    //$churchPrompt.focus();
 };
 
 var changeSearchPrompt = function () {
     var slide = currentSlide();
-    if ($prompt.is(":focus")) {
-        switch (slide) {
-            case "map":
-                $prompt.attr('placeholder', "Wpisz nazwę lub adres");
-                $searchWrapper.data('searchable', 'churches');
-                break;
-            case "articles":
-                $prompt.attr('placeholder', "Szukaj w artykułach");
-                $searchWrapper.data('searchable', 'article');
-                break;
-            case "stories":
-                $prompt.attr('placeholder', "Szukaj we wspomnieniach");
-                $searchWrapper.data('searchable', 'story');
-                break;
-        }
-        $prompt.css('font-size', '11pt');
-    } else {
-        switch (slide) {
-            case "map":
-                //$prompt.attr('placeholder', "znajdź swój kościół");
-                $prompt.attr('placeholder', "");
-                break;
-            default :
-                //$prompt.attr('placeholder', "szukaj");
-                $prompt.attr('placeholder', "");
-                break;
-        }
-        if (!$prompt.val())
-            $prompt.css('font-size', '18pt');
-    }
-    switch (slide)
-    {
+    switch (slide) {
         case "map":
+            $churchPrompt.parent().show();
+            $churchPrompt.parent().css('visibility', 'visible');
+            $contentPrompt.parent().hide();
+            break;
         case "stories":
         case "articles":
-            $prompt.parent().css('visibility', 'visible');
+            //$churchPrompt.blur();
+            $searchChurchWrapper.search('hide results');
+            $churchPrompt.parent().hide();
+            $contentPrompt.parent().show();
             break;
         default :
-            $prompt.parent().css('visibility', 'hidden');
+            //$churchPrompt.blur();
+            $searchChurchWrapper.search('hide results');
+            $churchPrompt.parent().show();
+            $churchPrompt.parent().css('visibility', 'hidden');
+            $contentPrompt.parent().hide();
+    }
+    var promptFocused = $('.prompt:focus').length > 0;
+    if (promptFocused) {
+
+        if ($churchPrompt.is(":focus")) {
+            if (slide == "map") {
+                $churchPrompt.attr('placeholder', "Wpisz nazwę lub adres");
+                $searchChurchWrapper.data('searchable', 'churches');
+            }
+        }
+        if ($contentPrompt.is(":focus")) {
+            switch (slide) {
+                case "articles":
+                    $contentPrompt.attr('placeholder', "Szukaj w artykułach");
+                    $searchContentWrapper.data('searchable', 'article');
+                    break;
+                case "stories":
+                    $contentPrompt.attr('placeholder', "Szukaj we wspomnieniach");
+                    $searchContentWrapper.data('searchable', 'story');
+                    break;
+            }
+        }
+
+        $churchPrompt.css('font-size', '11pt');
+        $contentPrompt.css('font-size', '11pt');
+    }
+    else {
+        switch (slide) {
+            case "map":
+                $churchPrompt.attr('placeholder', "");
+                break;
+            case "articles":
+                $contentPrompt.attr('placeholder', "");
+                $searchContentWrapper.data('searchable', 'article');
+                break;
+            case "stories":
+                $contentPrompt.attr('placeholder', "");
+                $searchContentWrapper.data('searchable', 'story');
+                break;
+        }
     }
 };
+
 
 var scrollFunc = function (event) {
     // adjust menu
@@ -138,7 +159,7 @@ var resizeFunc = function () {
     var margin = parseFloat($('.media-container').css('margin-left'));
     $(".social-links").css({
         'bottom': menuOffsetTop + 'px',
-        'margin-left' : (margin + 20) + 'px'
+        'margin-left': (margin + 20) + 'px'
     });
     // resize map (take care of position prop of slide!)
     $map.css({
@@ -152,9 +173,9 @@ var resizeFunc = function () {
     if (wwidth < 960 && !$about.hasClass('shrunk'))
         toggleAbout();
     if (wwidth <= 720)
-        $prompt.css('width', '160px');
+        $churchPrompt.css('width', '160px');
     else
-        $prompt.css('width', '224px');
+        $churchPrompt.css('width', '224px');
     // center transition arrows
     var $stransition = $('.slide-transition');
     var stransition = $stransition.width();
@@ -185,7 +206,7 @@ var toggleAbout = function (action) {
             angle: 0,
             animateTo: 180
         });
-        $prompt.focus();
+        $churchPrompt.focus();
     }
     $shrunkContent.toggle(200);
     $content.toggle(200);
@@ -221,21 +242,17 @@ function openContent(contentType, contentId) {
     console.log('api: {' + contentType + ' : ' + contentId + "}");
 }
 
-function redit($item)
-{
+function redit($item) {
     $item.addClass("not-filled");
     //$('label[for=' + $item.attr('id') + ']').addClass('not-filled');
 }
 
-function validateForm($form)
-{
+function validateForm($form) {
     var $fields = $(".required:visible", $form);
     var res = true;
-    $fields.each(function(a, item)
-    {
+    $fields.each(function (a, item) {
         var $item = $(item);
-        if ($item.is('[type=checkbox]'))
-        {
+        if ($item.is('[type=checkbox]')) {
             if (!$item.is(':checked')) {
                 redit($item);
                 res = false;

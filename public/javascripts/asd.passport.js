@@ -48,8 +48,18 @@ var gsvlock, relatedMedia, relatedMediaIndex;
 function fillPassport(church) {
     _debug(church);
     currentChurch = church;
+    var churchURL = 'http://' + thisHost + '/church/' + church.extID;
+    updateOGTags({
+       "og:title" : church.name,
+        "og:type" : "place",
+        "place:location:latitude" : church.address.geometry[0],
+        "place:location:longitude" : church.address.geometry[1],
+        "og:image" : (church.images && church.images.length) ? 'http://' + thisHost + church.images[0].path : 'http://' + thisHost + '/assets/images/fb_cover_main.png',
+        "og:url" : 'http://' + thisHost + '/church/' + church.extID
+
+    });
+    updateScrapeStatus(churchURL, fillSocial);
     gsvlock = true;
-    fillSocial();
     resetEdit();
     clearAndFillDataTable();
     $passportUpdate.hide();
@@ -118,7 +128,7 @@ function inhabitNext() {
 
 function initPassportUI() {
 
-    $(".close-button", $passportWrapper).on('click', function () {
+    $(".close-button", $passportWrapper).off('click').on('click', function () {
         $passportWrapper.modal('hide');
     });
 
@@ -137,6 +147,13 @@ function initPassportUI() {
         onHidden: function () {
             removeHash();
             setMapMode();
+            updateOGTags({
+                "og:title" : "Architektura Siódmego Dnia",
+                "og:type" : "website",
+                "og:image" : 'http://' + thisHost + '/assets/images/fb_cover_main.png',
+                "og:url" : 'http://' + thisHost
+            });
+            removeOGTags(["place:location:latitude","place:location:latitude"]);
         }
     });
 

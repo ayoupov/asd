@@ -13,10 +13,17 @@
     </div>
 
     <div class="right item">
-        <div class="ui search input prompt-wrapper item">
+        <div class="ui search input church-search prompt-wrapper item">
             <input class="prompt" type="text" placeholder="">
             <div class="results"></div>
             <div class="search-icon"></div>
         </div>
+@{if ("map".equals(activeItem)) {
+        <div class="ui search input content-search prompt-wrapper item" style="display:none;">
+            <input class="prompt" type="text" placeholder="" />
+            <div class="results"></div>
+            <div class="search-icon"></div>
+        </div>
+}}
     </div>
 </nav>

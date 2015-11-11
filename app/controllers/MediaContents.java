@@ -22,6 +22,7 @@ import play.twirl.api.Html;
 import utils.DataUtils;
 import utils.ServerProperties;
 import utils.media.images.Thumber;
+import utils.serialize.Serializer;
 import views.html.mediacontent;
 
 import java.io.*;
@@ -384,24 +385,33 @@ public class MediaContents extends Controller
             Set<MediaContent> dedicatedMedia = dedicated.getMedia();
             if (dedicatedMedia != null) {
                 List<MediaContent> churchMedia = new ArrayList<>(dedicatedMedia);
-                List<MediaContent> articles = churchMedia.stream().filter(p -> p.getContentType() == MediaContentType.Article).collect(Collectors.toList());
+                List<MediaContent> articles =
+                        churchMedia.stream().filter(p -> p.getContentType() == MediaContentType.Article).collect(Collectors.toList());
                 Collections.shuffle(articles);
                 for (int i = 0; i < Math.min(3, articles.size()); i++)
                     res.add(articles.get(i));
 
-                List<MediaContent> stories = churchMedia.stream().filter(p -> p.getContentType() == MediaContentType.Story).collect(Collectors.toList());
+                List<MediaContent> stories =
+                        churchMedia.stream()
+                                .filter(p -> p.getContentType() == MediaContentType.Story && p.getId() != id)
+                                .collect(Collectors.toList());
                 Collections.shuffle(stories);
                 for (int i = 0; i < Math.min(8 - res.size(), stories.size()); i++)
                     res.add(stories.get(i));
 
+                Set<Long> alreadyAdded = res.stream()
+                        .filter(c -> c.getContentType() == MediaContentType.Story)
+                        .map(MediaContent::getId)
+                        .collect(Collectors.toSet());
                 if (res.size() < 8)
-                    res.addAll(ContentManager.getRelatedForStory(mc, 8 - res.size()));
+                    res.addAll(ContentManager.getRelatedForStory(mc, 8 - res.size(), alreadyAdded));
 
             }
 //            res.addAll(churchMedia);
 //            res.remove(mc);
         }
         commitTransaction();
+        Json.setObjectMapper(Serializer.emptyMapper);
         return ok(Json.toJson(res));
     }
 }

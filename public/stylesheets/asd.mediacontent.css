@@ -57,12 +57,69 @@
     margin-top: 0 !important;
 }
 
+.content-header-wrapper.media-content-story {
+    margin-bottom: 60px;
+}
+
+.mediacontent-church-data.media-content-story {
+    margin-top: 70px;
+}
+
+.bordered-upper-gap {
+    border-top: 3px solid rgb(236, 236, 236);
+    margin-bottom: 18px;
+}
+
+.bordered-bottom-gap {
+    border-bottom: 3px solid rgb(236, 236, 236);
+    margin-top: 35px;
+}
+
+.media-bottom-gap {
+    /*height: 75px;*/
+    margin-bottom: 12px;
+}
+
+.media-bottom-gap .content-main-wrapper{
+    margin-top: 58px;
+}
+
+.media-prethumbs-gap {
+    height: 50px;
+}
+
+.media-bottom-link1
+{
+    float: right;
+    margin-right: 20px;
+}
+
+.media-bottom-link2
+{
+    float: right;
+    margin-right: 45px;
+}
+
+.mediacontent-bottom-text, .mediacontent-bottom-text a {
+    font-family: "Helvetica", "Helvetica Neue Light", Arial, sans-serif;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    color: #bcbcbc;
+}
+
+.mediacontent-bottom-fb-button {
+    height: 20px;
+    background: transparent url("/assets/images/mc_bottom_fb_button.png") top right no-repeat;
+    padding-right: 32px;
+}
+
 .content-header-date {
     margin-left: 20px;
     /*margin-right: 4.6875%;*/
     color: #b5b5b5 !important;
     /*font-family: "Helvetica", "Helvetica Neue Light", sans-serif;*/
-    font-size: 8pt;
+    font-size: 12px;
     float: left;
 }
 
@@ -72,7 +129,7 @@
 
 .content-header-authors {
     /*font-family: "Helvetica", "Helvetica Neue Light", sans-serif;*/
-    font-size: 8pt;
+    font-size: 12px;
     text-transform: uppercase !important;
     margin-left: 25px;
     float: left;
@@ -300,7 +357,7 @@ div.gap {
 
 #contentmenu-bottom {
     bottom: 0;
-    border-top: 3px solid rgb(236, 236, 236);
+    /*border-top: 3px solid rgb(236, 236, 236);*/
     border-bottom: none !important;
     margin: 0 !important;
 }

@@ -1,17 +1,17 @@
 @(contentType : MediaContentType)
 <div class="passport-stories">
     <div class="passport-stories-wrapper">
-        <div class="passport-stories-title">
-            Wspomnienia dodane przez użytkowników
-        </div>
-        <div class="church-stories"></div>
+        @*<div class="passport-stories-title">*@
+            @*Wspomnienia dodane przez użytkowników*@
+        @*</div>*@
         @if(contentType == MediaContentType.Story){
-        <table class="passport-update-button-wrapper">
-            <tr>
-                <td><img src="/assets/images/add_story_plus.png" class="passport-update-button-icon"></td>
-                <td class="passport-update-button">DODAJ WSPOMNIENIE LUB ZDJĘCIE</td>
-            </tr>
-        </table>
+            <table class="passport-update-button-wrapper">
+                <tr>
+                    <td><img src="/assets/images/add_story_plus.png" class="passport-update-button-icon"></td>
+                    <td class="passport-update-button">DODAJ WSPOMNIENIE LUB ZDJĘCIE</td>
+                </tr>
+            </table>
         }
+        <div class="church-stories"></div>
     </div>
 </div>

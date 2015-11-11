@@ -98,6 +98,7 @@
     height: 21px;
     width: 21px;
     margin-bottom: 5px;
+    margin-left: -5px;
 }
 
 /* width of 960 + 20 of margin */
@@ -398,6 +399,14 @@ div.holder-border {
     padding-top: 115px;
 }
 
+.credits-container a {
+    color: white;
+}
+
+.credits-container a:hover {
+    text-decoration: underline;
+}
+
 .hover-content:not(.thumb-stroke) {
     height: 100%;
 }
@@ -446,7 +455,7 @@ div.holder-border {
 }
 
 .story .hover-content .cover {
-    background: rgba(90, 56, 219, 0.81);
+    background: rgb(90, 56, 219);
 }
 
 .story .thumb-stroke.face-content {
@@ -528,11 +537,29 @@ div.holder-border {
     /*margin-bottom: 20px;*/
 }
 
+#slide-about .row.logos {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+#slide-about .other-logos-left{
+    float: left;
+}
+
+#slide-about .other-logos-right{
+    float: left;
+    margin-left: 20px;
+}
+
 /* 30 top + 20 from previous row*/
 #slide-about .row.last {
     /*padding-top: 30px;*/
     display: block;
     padding-bottom: 50px;
+}
+
+#slide-about .row.upper-gap {
+    margin-top: 50px;
 }
 
 .social {

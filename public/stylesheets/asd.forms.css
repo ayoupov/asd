@@ -72,6 +72,8 @@ label.not-filled {
     color: #fabdbd !important;
 }
 
+
+
 .required.not-filled {
     border: 2px solid #fabdbd !important;
 }
@@ -89,7 +91,7 @@ label.not-filled {
 }
 
 .required.not-filled:-ms-input-placeholder {
-    color: #D4D4D4 !important;
+    color: #fabdbd !important;
 }
 
 
@@ -103,6 +105,10 @@ form:not(#foo) > div > input[type='checkbox'] {
     width: 26px;
     height: 26px;
     margin-left: -26px;
+}
+
+form:not(#foo) > div > input[type='checkbox'].required.not-filled + label{
+    background-image: url(/assets/images/uncheck_required.png);
 }
 
 form:not(#foo) > div > input[type='radio'] + label,

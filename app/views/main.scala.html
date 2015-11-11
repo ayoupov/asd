@@ -10,12 +10,25 @@
     }
 }
 
-@mainDesription() = @{
+@mainDescription() = @{
     s"Zbudowaliśmy ${polishedCount()} – napiszmy teraz ich historię. " +
             "Zróbmy to wspólnie! Znajdź swój kościół na mapie i dodaj wspomnienie z jego budowy."
 }
+@churchDescription() = @{
+    s"Zobacz kościół ${currentChurch.name} i jego historię"
+}
 @mainTitle() = @{
-    "Architektura Siódmego Dnia"
+    "Architektura VII Dnia"
+}
+@churchTitle() = @{
+    currentChurch.getName
+}
+@churchImage() = @{
+    val images = currentChurch.getImages
+    if (images != null && images.size() > 0)
+        "http://" + request().host() + images.get(0).getPath
+    else
+        null
 }
 <!DOCTYPE html>
 <html lang="pl">
@@ -25,7 +38,11 @@
         @parts.heads.commonhead()
         @parts.heads.maphead()
         @parts.heads.indexhead()
-        @parts.heads.metas(mainDesription(),mainTitle(), null, "website", routes.Application.index(null).absoluteURL())
+        @if(currentChurch == null) {
+        @parts.heads.metas(mainDescription(),mainTitle(), null, "website", routes.Application.index(null).absoluteURL(), null)
+        } else {
+        @parts.heads.metas(churchDescription(),churchTitle(), churchImage(), "place", routes.Application.index(currentChurch.getExtID).absoluteURL(), currentChurch)
+        }
         </head>
     <body>
         <div class="wrapper">

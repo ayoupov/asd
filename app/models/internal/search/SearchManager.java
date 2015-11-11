@@ -16,6 +16,7 @@ import play.Logger;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static utils.HibernateUtils.getSession;
 
@@ -89,8 +90,11 @@ public class SearchManager
                 .must(queryBuilder.keyword().onFields("text", "lead", "title").matching(q).createQuery())
                 .createQuery();
         FullTextQuery query = fullTextSession.createFullTextQuery(luceneQuery);
-        query.setMaxResults(10);
+        query.setMaxResults(15);
         List<MediaContent> result = query.list();
+        if (result == null)
+            return result;
+        result = result.stream().filter(mc -> mc.getApprovedDT() != null).limit(5).collect(Collectors.toList());
         return result;
     }
 }

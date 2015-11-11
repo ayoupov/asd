@@ -26,13 +26,30 @@
             "null"
         }
     }
+    @contentDescription() = @{
+        if (content.getContentType == MediaContentType.Article)
+            content.getLead
+        else
+            content.getCoverDescription
+    }
     @contentURL() = @{
         val id = if(content.getAlt != null && !"".equals(content.getAlt))
             content.getAlt else content.getId
         routes.MediaContents.byTypeAndId(content.getContentType.toString, id + "", "html")
     }
     @contentCover() = @{
-        if (content.getCover != null) content.getCover.getPath else null
+        if (content.getContentType == MediaContentType.Article) {
+            if(content.getCover != null) "http://" + request().host() + content.getCover.getPath else null
+        } else
+        {
+            val split : Array[String] = content.getCoverThumbPath.split("/")
+            val name = split(split.length-1)
+            val id = name.split("_")(2)
+            "http://" + request().host() + routes.Assets.at(s"images/fb_share_$id.png")
+        }
+    }
+    @contentGapClass() = @{
+        if (content.getContentType == MediaContentType.Story) "media-content-story" else ""
     }
 <!DOCTYPE html>
     <html lang="pl">
@@ -40,8 +57,9 @@
             <meta charset="UTF-8">
                 @parts.heads.commonhead()
                 @parts.heads.contenthead()
-                @parts.heads.metas(content.getLead, content.getTitle, contentCover(), "article", contentURL().absoluteURL())
+                @parts.heads.metas(contentDescription(), content.getTitle, contentCover(), "article", contentURL().absoluteURL(), null)
                 @parts.style(".content-cover-image", "background-image: url(" + coverImage() + ");")
+            <title>@{s"${content.getTitle} — Architektura VII Dnia"}</title>
         </head>
         <body>
             @if(!preview) {
@@ -63,7 +81,7 @@
             @content.getTitle
             </div>
         </div>
-        <div class="content-header-wrapper">
+        <div class="content-header-wrapper @contentGapClass()">
             <div class="content-main-wrapper content-header-center">
                 <div class="content-header-date">@RenderUtils.contentDateToString(content.getApprovedDT)</div>
                 <div class="content-header-authors-wrapper">
@@ -85,10 +103,11 @@
             @parts.media.processed2(content.getText)
         </div>
             @if(content.getContentType == MediaContentType.Story) {
-                <div class="mediacontent-church-data">
+                <div class="mediacontent-church-data @contentGapClass()">
                 @parts.passport.datatable(content.getDedicatedChurch)
                 </div>
             }
+            <div class="full-width bordered-upper-gap"></div>
             <div class="content-main-wrapper">
                 <div class="content-main">
                     <nav id="contentmenu-bottom" class="ui secondary pointing menu blurred">
@@ -96,12 +115,23 @@
                     </nav>
                 </div>
             </div>
+            <div class="full-width bordered-bottom-gap"></div>
             <script>
                 var contentId = @content.getId;
                 var churchId = '@churchID()';
             </script>
+            @if(content.getContentType == MediaContentType.Article) {
+                <div class="full-width media-prethumbs-gap"></div>
+            }
         <div class="content-main-wrapper">
             @parts.mediacontent_thumbs(content.getContentType)
+        </div>
+        <div class="full-width media-bottom-gap">
+            <div class="content-main-wrapper">
+                <a target="_blank" href="@ServerProperties.getValue("facebook.url")" class="media-bottom-link1"><div class="mediacontent-bottom-text mediacontent-bottom-fb-button" style="">Obserwuj</div></a>
+                <a href="@{routes.Application.index(null).absoluteURL() + "#slide-about"}" class="media-bottom-link2"><div class="mediacontent-bottom-text">O projekcie</div></a>
+                <div class="clearfix"></div>
+            </div>
         </div>
     </body>
 </html>

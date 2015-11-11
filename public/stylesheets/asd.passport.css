@@ -62,10 +62,6 @@
     width: 3em;
 }
 
-.passport-table-gap {
-    height: 32px;
-}
-
 .passport-gallery {
     width: 980px;
     /*max-width: 960px;*/
@@ -191,10 +187,10 @@
 .passport-gallery-large-description-content {
     margin-right: 20px;
     line-height: 1.5em;
-    font-size: 14px;
+    font-size: 12px;
     font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
     color: white;
-    text-shadow: 0.2px 0.2px 0.2px #000000;
+    text-shadow: 1px 1px 3px #000000;
 }
 
 .ui.message.pointy {
