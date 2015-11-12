@@ -75,16 +75,16 @@ var suggestionChangeFunc = function (value, text, $choice) {
             placeholderValue = 'Napisz do nas, jeśli zauważyłeś błędy adresowe';
             break;
         case 'years' :
-            placeholderValue = 'Pomóż nam uzupełnić lub poprawić nieprawidłowe daty budowy kościoła';
+            placeholderValue = 'Pomóż nam uzupełnić lub poprawić daty budowy kościoła';
             break;
         case 'architects' :
-            placeholderValue = 'Pomóż nam dowiedzieć się, kto projektował kościół. Napisz do nas, jeśli przypadkiem pominęliśmy jednego z projektantów lub nieprawidłowo napisaliśmy nazwisko';
+            placeholderValue = 'Pomóż nam dowiedzieć się, kto projektował kościół';
             break;
         case 'website' :
-            placeholderValue = 'Napisz do nas, jeśli znasz aktualny adres strony WWW parafii';
+            placeholderValue = 'Wpisz aktualny adres strony WWW parafii';
             break;
         case 'other' :
-            placeholderValue = 'Podziel się z nami innymi spostrzeżeniami na temat bazy danych na stronie';
+            placeholderValue = 'Podziel się z nami innymi spostrzeżeniami';
             break;
     }
     $field.attr('placeholder', placeholderValue);

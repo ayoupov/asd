@@ -177,8 +177,8 @@ public class Churches extends Controller
                     EmailWrapper.EmailNames.AddStory,
                     null,
                     user,
-                    Pair.of(EmailSubstitution.Username.name(), username));
-
+                    Pair.of(EmailSubstitution.Username.name(), username)
+            );
         } catch (Exception e) {
             Logger.error("error while sending email", e);
         }

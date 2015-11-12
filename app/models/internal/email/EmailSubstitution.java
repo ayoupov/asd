@@ -9,10 +9,15 @@ package models.internal.email;
 public enum EmailSubstitution
 {
     Username,
+    UserStoryLink,
+    UserStoryTitle,
+    UserStoryFBShareLink,
+
     ChurchLink,
     ChurchPassportLink,
     ChurchName,
     ChurchPassportAdd,
+
     UnsubscribeLink,
 
     FacebookPage,

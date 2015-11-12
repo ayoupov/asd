@@ -24,14 +24,15 @@
                     if(a.getApprovedDT != null) {
                         DateTimeConverter.sdf.format(a.getApprovedDT)
                     }
-                }">
+                }" disabled="disabled">
                 </td>
                 <td class="noedit"><input type="checkbox" @{
-                    if(a.getStarred) "checked"
-                }>
+                    if(a.getStarred == true) "checked"
+                } onchange="flipStar('article', @a.getId);">
                 </td>
                 <td class="noedit">
                     <a href="@routes.MediaContents.byTypeAndId("article", a.getId + "", "html")" target="_blank"><img src="@routes.Assets.at("images/arrow_selector_menu_golden.png")"></a>
+                    <a href="javascript: flipApprove('article', @a.getId, @{a.getApprovedDT == null});">@{if(a.getApprovedDT == null)  "publish" else "unpublish"} </a>
                     <a href="javascript: removeContent('article', @a.getId);" style="margin-left:20px;"><img src="@routes.Assets.at("images/close_button.png")"></a>
                 </td>
             </tr>

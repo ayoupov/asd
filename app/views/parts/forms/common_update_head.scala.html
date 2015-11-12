@@ -3,9 +3,9 @@
 @(user: User, loginTypeSelect: LoginTypeSelect)
 @usernameLabel() = @{
     loginTypeSelect match {
-        case LoginTypeSelect.IMAGES => "Zdjęcia dodał"
-        case LoginTypeSelect.STORY => "Autor wspomnienia"
-        case LoginTypeSelect.FEEDBACK => "Autor komentarza"
+        case LoginTypeSelect.IMAGES => "Autor"
+        case LoginTypeSelect.STORY => "Autor"
+        case LoginTypeSelect.FEEDBACK => "Autor"
     }
 }
 @emailId() = @{

@@ -2,14 +2,12 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import models.Church;
+import models.Image;
 import models.MediaContent;
 import models.MediaContentType;
 import models.internal.*;
 import models.internal.search.SearchManager;
-import models.internal.search.filters.ArticleFilter;
-import models.internal.search.filters.ChurchFilter;
-import models.internal.search.filters.StoryFilter;
-import models.internal.search.filters.UserFilter;
+import models.internal.search.filters.*;
 import models.user.User;
 import models.user.UserRole;
 import play.Logger;
@@ -165,10 +163,20 @@ public class Admin extends Controller
             churchFilter.setTotalResults(totalChurches);
             SessionCache.put(session(), "churchFilter", churchFilter);
 
+            ImageFilter imageFilter = (ImageFilter) SessionCache.get(session(), "imageFilter");
+            if (imageFilter == null)
+                imageFilter = new ImageFilter(request());
+            else
+                imageFilter.apply(request(), "images");
+            long totalImages = ContentManager.getTotalImages(imageFilter);
+            imageFilter.setTotalResults(totalImages);
+            SessionCache.put(session(), "imageFilter", imageFilter);
+
             List<User> users = ContentManager.getUsers(userFilter);
             List<MediaContent> articles = ContentManager.getMediaContent(articleFilter, MediaContentType.Article);
             List<MediaContent> stories = ContentManager.getMediaContent(storyFilter, MediaContentType.Story);
             List<Church> churches = ContentManager.getChurches(churchFilter);
+            List<Image> images = ContentManager.getImages(imageFilter);
             List<EmailTemplate> emails = ContentManager.getEmails();
 
             Map<String, Integer> issues = new HashMap<>();
@@ -176,13 +184,20 @@ public class Admin extends Controller
             issues.put("articles", ContentManager.getArticleIssuesCount());
             issues.put("stories", ContentManager.getStoryIssuesCount());
             issues.put("churches", ContentManager.getChurchIssuesCount());
+            issues.put("images", ContentManager.getImageIssuesCount());
+
+            Map<String, Long> totals = new HashMap<>();
+            totals.put("articles", totalArticles);
+            totals.put("stories", totalStories);
+            totals.put("churches", totalChurches);
+            totals.put("images", totalImages);
 
             Html content = admin.render(
 //                    contentReqs, dbReqs,
-                    users, articles, stories, churches,
+                    users, articles, stories, churches, images,
                     emails,
 //                    credits,
-                    issues, session());
+                    issues, totals, session());
             commitTransaction();
             return ok(content);
         }

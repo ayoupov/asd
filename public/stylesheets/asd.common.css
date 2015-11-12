@@ -121,7 +121,25 @@
     margin-top:0 !important;
     width: 100%;
     z-index: 9999;
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif !important;;
+    color: #000 !important;;
+    background-color: white !important;;
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    border-radius: 0 !important;
+    min-height: 80px;
+    max-height: 300px;
+    padding-top:20px !important;
+    padding-bottom:20px !important;
+}
 
+.cookie-notification a {
+    color: #000 !important;
+    text-decoration: none;
+}
+
+.cookie-notification a:hover {
+    text-decoration: underline;
 }
 
 div.content-main-guideline {

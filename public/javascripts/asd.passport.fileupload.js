@@ -108,7 +108,7 @@ function getNextImageBlockElem(part) {
     }
 
     function gnibeTextInput() {
-        return '<input type="text" id="_' + createId() + '" class="image-name-input" placeholder="Podziel się archiwalnymi zdjęciami, projektami lub szkicami">';
+        return '<input type="text" id="_' + createId() + '" class="image-name-input" placeholder="Podziel się archiwalnymi zdjęciami i grafikami">';
     }
 
     function gnibeFileLabelPart() {
@@ -124,5 +124,5 @@ function getNextImageBlockElem(part) {
         gnibeFileLabelPart() + '<i class="attach big icon"></i>' + gnibeFileInput() + '</label></div></div>' +
         '<div class="col-1"></div><div class="gapper-less clearfix"></div><div class="col-3 rightaligned inlinemiddle">' +
         '<label class="image-label image-label-desc" for="' + createDescId() + '">Podpis pod zdjęciem</label></div>' +
-        '<div class="col-4"><input id="' + createDescId() + '" type="text" value="" name="' + createDescName() + '" placeholder="Napisz nam co jest na zdjęciu, kto jest autorem i kiedy zostało zrobione"></div><div class="col-1"></div></div>');
+        '<div class="col-4"><input id="' + createDescId() + '" type="text" value="" name="' + createDescName() + '" placeholder="Co jest na zdjęciu? Kto jest autorem? Kiedy zostało zrobione?"></div><div class="col-1"></div></div>');
 }

@@ -2,17 +2,22 @@ package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import models.internal.email.EmailSubstitution;
+import models.internal.email.EmailWrapper;
 import models.user.User;
 import models.user.UserRole;
+import org.apache.commons.lang3.tuple.Pair;
 import org.hibernate.annotations.Type;
 import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
-import utils.serialize.converters.DateTimeConverter;
+import play.Logger;
+import play.mvc.Http;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -89,7 +94,7 @@ public class MediaContent
     @JoinColumn(name = "approved_by")
     private User approvedBy;
 
-    @ManyToMany(mappedBy = "media")
+    @ManyToMany(mappedBy = "media", fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JsonIgnore
     private Set<Church> churches;
 
@@ -97,6 +102,9 @@ public class MediaContent
     @JoinColumn(name = "dedicated_church")
     @JsonIgnore
     private Church dedicatedChurch;
+
+    @JoinColumn(name = "was_published")
+    private boolean wasPublished;
 
     public MediaContent(MediaContentType contentType, String text, String title, String year, Image cover, String coverThumbPath, User addedBy, Church church)
     {
@@ -350,5 +358,39 @@ public class MediaContent
         if (churches == null)
             return null;
         return churches.stream().map(Church::getExtID).collect(Collectors.joining(", "));
+    }
+
+    public boolean isWasPublished()
+    {
+        return wasPublished;
+    }
+
+    public void setWasPublished(boolean wasPublished)
+    {
+        this.wasPublished = wasPublished;
+    }
+
+    public void disapprove(User who)
+    {
+        approve(who, null);
+    }
+
+    public void approve(User who)
+    {
+        approve(who, new Date());
+    }
+
+    public void approve(User who, Date when)
+    {
+        setWasPublished(true);
+        setApprovedDT(when);
+        setApprovedBy(who);
+    }
+
+    public void flipStarred()
+    {
+        if (this.getStarred() == null)
+            setStarred(false);
+        setStarred(!getStarred());
     }
 }

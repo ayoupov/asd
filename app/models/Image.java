@@ -159,4 +159,22 @@ public class Image
                 ", approvedTS=" + approvedTS +
                 '}';
     }
+
+
+    public void disapprove(User who)
+    {
+        approve(who, null);
+    }
+
+    public void approve(User who)
+    {
+        approve(who, new Date());
+    }
+
+    public void approve(User who, Date when)
+    {
+        setApprovedTS(when);
+        setApprovedBy(who);
+    }
+
 }

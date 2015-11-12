@@ -1,0 +1,58 @@
+@import models.internal.search.filters.ImageFilter
+@import utils.serialize.converters.DateTimeConverter
+@import utils.media.images.Thumber
+@import play.Logger
+@(images: List[Image], filter: ImageFilter)
+
+@getThumb(path:String) = @{
+    val slash = path.lastIndexOf('/')
+    val fname = path.substring(slash + 1)
+    val dot = fname.lastIndexOf('.')
+    val glLI = fname.lastIndexOf(Thumber.THUMB_GL)
+    val prepath = path.substring(0, slash + 1)
+    if (glLI > 0) {
+        prepath + fname.substring(0, glLI) + Thumber.THUMB_ED + '.' + fname.substring(dot + 1)
+    } else
+        prepath + fname.substring(0, dot) + Thumber.THUMB_ED + '.' + fname.substring(dot + 1)
+}
+<div id="images" class="admin-page">
+    <table class="ui celled table">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Preview</th>
+                <th>Uploaded by</th>
+                <th>Publish</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        @for(i <- images) {
+            <tr id="image_@i.getId">
+                <td style="max-width : 150px;">@i.getDescription</td>
+                <td class="noedit"><a href="@i.getPath" target="_blank"><img src="@getThumb(i.getPath)" class="ui image"></a></td>
+                <td>@i.getUploadedBy</td>
+                <td class="noedit"><input type="datetime" value="@{
+                    if(i.getApprovedTS != null) {
+                        DateTimeConverter.sdf.format(i.getApprovedTS)
+                    }
+                }" disabled="disabled">
+                </td>
+                <td class="noedit" style="min-width: 110px;">
+                    <a href="javascript: flipApprove('image', @i.getId, @{i.getApprovedTS == null});">@{if(i.getApprovedTS == null)  "approve" else "disapprove"} </a>
+                    <a href="javascript: removeContent('image', @i.getId);"><img src="@routes.Assets.at("images/close_button.png")"></a>
+                </td>
+            </tr>
+        }
+            <tfoot>
+                <tr>
+                    <th colspan="5">
+                            <!--<div class="ui left floated search input">-->
+                            <!--<input type="text" placeholder="Filter by">-->
+                            <!--</div>-->
+                        @parts.admin.paginator(filter, "images")
+    </th>
+    </tr>
+    </tfoot>
+
+    </table>
+</div>

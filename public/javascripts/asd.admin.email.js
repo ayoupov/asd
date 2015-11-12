@@ -33,10 +33,12 @@ var emailEditClick = function () {
     $emailForm.appendTo($emailWrapper);
     var $emailHint = $(
         "<div class='email-hint'><ul><li>Context-dependent variables:" +
-        "<ul><li>$USERNAME</li><li>$CHURCHNAME</li><li>$CHURCHPASSPORTLINK</li>" +
-        "<li>$CHURCHADDCONTENTLINK</li><li>$UNSUBSCRIBELINK</li></ul></li>" +
+        "<ul><li>$USERNAME</li>" +
+        "<li>$USERSTORYTITLE, $USERSTORYLINK, $USERFBSHARELINK</li>" +
+        "<li>$CHURCHNAME, $CHURCHPASSPORTLINK, $CHURCHADDCONTENTLINK</li>" +
+        "<li>$UNSUBSCRIBELINK</li></ul></li>" +
         "<li>Context-independent variables:" +
-        "<ul><li>$FACEBOOKPAGE</li><li>$ARTICLESLINK</li><li>$STORIESLINK</li>" +
+        "<ul><li>$FACEBOOKPAGE, $ARTICLESLINK, $STORIESLINK</li>" +
         "</ul></div>"
     );
     $emailHint.appendTo($emailForm);

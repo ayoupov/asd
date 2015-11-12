@@ -51,10 +51,10 @@ function newStoryForm() {
         //"<label for='cover'>Cover image path</label><input id='cover' placeholder='Path to image' name='cover'/>" +
         "<label for='alt'>Alternative id</label><input id='alternativeId' placeholder='alternative id' name='alt'/>" +
         "<label for='church'>Dedicated church</label><input id='church' placeholder='church of story'/>" +
-        "<label for='starred'>Starred</label><input type='checkbox' name='starred' id='starred' class='ui checkbox'/>" +
-        "<br>" +
-        "<label for='approvedDT'>Publish on</label><input type='datetime' class='ui datetime' name='approvedDT' id='approvedDT' value='" + datenow() + "'/>" +
-        "<br>" +
+        //"<label for='starred'>Starred</label><input type='checkbox' name='starred' id='starred' class='ui checkbox'/>" +
+        //"<br>" +
+        //"<label for='approvedDT'>Publish on</label><input type='datetime' class='ui datetime' name='approvedDT' id='approvedDT' value='" + datenow() + "'/>" +
+        //"<br>" +
         "<input type='hidden' id='id' name='id' value='0'/>" +
         "<input type='hidden' id='ctype' name='ctype' value='story'/>" +
         "<label for='author'>Author</label><input id='author' type='text'/>" +
@@ -78,15 +78,15 @@ function fillStory(data) {
         //$("#cover", $storyForm).val((data.cover) ? data.cover.path : "");
         $("#alternativeId", $storyForm).val(data.alternativeId);
         $("#church", $storyForm).val(church).attr('disabled', 'disabled');
-        if (data.starred)
-            $("#starred", $storyForm).attr("checked", "checked");
-        else $("#starred", $storyForm).removeAttr("checked");
-        var editorDate;
-        if (data.approvedDT)
-            editorDate = toEditorDate(new Date(data.approvedDT));
-        else
-            editorDate = '';
-        $("#approvedDT", $storyForm).val(editorDate);
+        //if (data.starred)
+        //    $("#starred", $storyForm).attr("checked", "checked");
+        //else $("#starred", $storyForm).removeAttr("checked");
+        //var editorDate;
+        //if (data.approvedDT)
+        //    editorDate = toEditorDate(new Date(data.approvedDT));
+        //else
+        //    editorDate = '';
+        //$("#approvedDT", $storyForm).val(editorDate);
         $("#author", $storyForm).val(data.authors[0].name).attr('disabled', 'disabled');
         $("#id", $storyForm).val(data.id);
         $("#text", $storyForm).val(data.text);

@@ -8,7 +8,7 @@ var apiExtension =
     'get json article': '/article/{id}.json',
     'get json story': '/story/{id}.json',
     'get associated pictures': '/files/list',
-    'get story pictures' : '/files/story/{id}',
+    'get story pictures': '/files/story/{id}',
 
     'post update email': '/content/email/{name}',
     'post check email': '/content/email/check/{name}',
@@ -16,9 +16,19 @@ var apiExtension =
     'preview article': '/preview/article',
     'post update story': '/story/update',
     'preview story': '/preview/story',
-    'upload files' : '/files/upload',
 
-    'remove content' : '/{ctype}/{id}'
+    'star article': '/article/star/{id}',
+    'star story': '/story/star/{id}',
+    'approve article': '/article/approve/{id}/{timestamp}',
+    'approve story': '/story/approve/{id}/{timestamp}',
+    'disapprove article': '/article/disapprove/{id}',
+    'disapprove story': '/story/disapprove/{id}',
+    'approve image': '/image/approve/{id}/{timestamp}',
+    'disapprove image': '/image/disapprove/{id}',
+
+    'upload files': '/files/upload',
+
+    'remove content': '/{ctype}/{id}'
 };
 
 var $prevPage;
@@ -74,19 +84,53 @@ function changeRow(data) {
 
 }
 
-function removeContent(ctype, id)
-{
-    // todo: alert
+function flipApprove(ctype, id, unapprovedYet) {
+    var act = (unapprovedYet) ? 'approve' : 'disapprove';
+    var urlData = {
+        ctype: ctype,
+        id: id
+    };
+    if (unapprovedYet)
+        $.extend(urlData, {timestamp: new Date().getTime()});
     $.api({
-        action : 'remove content',
-        on :'now',
-        urlData : {
+        action: act + ' ' + ctype,
+        on: 'now',
+        urlData: urlData,
+        method: 'POST',
+        onSuccess: reloadPage
+    });
+}
+
+function flipStar(ctype, id) {
+    $.api({
+        action: 'star ' + ctype,
+        on: 'now',
+        urlData: {
             ctype: ctype,
             id: id
         },
-        method : 'DELETE'
+        method: 'POST',
+        onSuccess: reloadPage
     });
-    window.location = '/admin' + ((new Date()).getTime()) + location.hash;
+}
+
+function reloadPage()
+{
+    window.location = '/admin?_=' + ((new Date()).getTime()) + location.hash;
+}
+
+function removeContent(ctype, id) {
+    // todo: alert
+    $.api({
+        action: 'remove content',
+        on: 'now',
+        urlData: {
+            ctype: ctype,
+            id: id
+        },
+        method: 'DELETE',
+        onSuccess: reloadPage
+    });
 }
 
 function initAdmSelectorCache() {

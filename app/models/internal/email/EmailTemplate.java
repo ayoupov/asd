@@ -42,6 +42,11 @@ public class EmailTemplate
 
     static {
         subsRegexps.put(EmailSubstitution.Username.name(), "\\$USERNAME");
+
+        subsRegexps.put(EmailSubstitution.UserStoryTitle.name(), "\\$USERSTORYTITLE");
+        subsRegexps.put(EmailSubstitution.UserStoryLink.name(), "\\$USERSTORYLINK");
+        subsRegexps.put(EmailSubstitution.UserStoryFBShareLink.name(), "\\$USERFBSHARELINK");
+
         subsRegexps.put(EmailSubstitution.ChurchName.name(), "\\$CHURCHNAME");
         subsRegexps.put(EmailSubstitution.ChurchPassportLink.name(), "\\$CHURCHPASSPORTLINK");
         subsRegexps.put(EmailSubstitution.ChurchPassportAdd.name(), "\\$CHURCHADDCONTENTLINK");

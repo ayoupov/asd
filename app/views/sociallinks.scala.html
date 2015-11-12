@@ -1,7 +1,20 @@
-@()
+@import java.net.URLEncoder
+@(description : String)
+@siteURL = @{
+    val url = URLEncoder.encode(routes.Application.index(null).absoluteURL(), "UTF-8")
+    s"url=$url"
+}
+@tweetText = @{
+    if(description != null){
+        s"$siteURL&text=$description"
+    }
+    else {
+        siteURL
+    }
+}
 <div class="social-links">
     <div class="social-tw">
-        <a target="_blank" href="https://twitter.com/home?status=@routes.Application.index(null).absoluteURL()">
+        <a target="_blank" href="https://twitter.com/intent/tweet?@tweetText">
             <img class="ui image" src="@routes.Assets.at("images/twitter.png")">
         </a>
     </div>

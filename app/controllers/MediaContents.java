@@ -9,15 +9,15 @@ import models.MediaContentType;
 import models.internal.ContentManager;
 import models.internal.RequestException;
 import models.internal.UserManager;
+import models.internal.email.EmailSubstitution;
+import models.internal.email.EmailWrapper;
 import models.user.User;
+import org.apache.commons.lang3.tuple.Pair;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
-import play.mvc.Controller;
-import play.mvc.Http;
-import play.mvc.Result;
-import play.mvc.Security;
+import play.mvc.*;
 import play.twirl.api.Html;
 import utils.DataUtils;
 import utils.ServerProperties;
@@ -107,6 +107,76 @@ public class MediaContents extends Controller
         out.write(rendered.toString());
         out.close();
     }
+
+    public static Result approve(String ctype, long id, long timestamp)
+    {
+        ObjectNode result = Json.newObject();
+        Date when = (timestamp == 0) ? null : new Date(timestamp);
+        beginTransaction();
+        User user = getLocalUser(session());
+        long approvedTS = 0;
+        if (!"image".equals(ctype)) {
+            MediaContent c;
+            c = (MediaContent) get(MediaContent.class, id);
+            if (!c.isWasPublished() && request() != null) {
+                sendApproveEmail(c, user, when, request());
+            }
+            c.approve(user, when);
+            approvedTS = c.getApprovedDT().getTime();
+        } else {
+            Image i = (Image) get(Image.class, id);
+            i.approve(user, when);
+            approvedTS = i.getApprovedTS().getTime();
+        }
+        result.put("entity", ctype);
+        commitTransaction();
+        result.put("success", true);
+        result.put("id", id);
+        result.put("approveDT", approvedTS + "");
+        return ok(result);
+
+    }
+
+    public static Result star(String ctype, long id)
+    {
+        ObjectNode result = Json.newObject();
+        beginTransaction();
+        MediaContent c;
+        c = (MediaContent) get(MediaContent.class, id);
+        result.put("entity", ctype);
+        c.flipStarred();
+        commitTransaction();
+        result.put("success", true);
+        result.put("id", c.getId());
+        result.put("star", c.getStarred());
+        return ok(result);
+
+    }
+
+    private static void sendApproveEmail(MediaContent c, User who, Date when, Http.Request request)
+    {
+        try {
+            User addedBy = c.getAddedBy();
+            String username = addedBy.getName();
+            String mcTitle = c.getTitle();
+            Call mcCall = controllers.routes.MediaContents.byTypeAndId(
+                    c.getContentType().toString().toLowerCase(),
+                    (c.getAlt() != null) ? c.getAlt() : c.getId() + "",
+                    "html");
+            String mcLink = mcCall.absoluteURL(request);
+            String mcFBShareLink = "https://www.facebook.com/sharer.php?u=" + mcLink;
+
+            EmailWrapper.sendEmail(EmailWrapper.EmailNames.ApproveStory, null, addedBy,
+                    Pair.of(EmailSubstitution.Username.name(), username),
+                    Pair.of(EmailSubstitution.UserStoryTitle.name(), mcTitle),
+                    Pair.of(EmailSubstitution.UserStoryLink.name(), mcLink),
+                    Pair.of(EmailSubstitution.UserStoryFBShareLink.name(), mcFBShareLink)
+            );
+        } catch (Exception e) {
+            Logger.error("while sending approve email", e);
+        }
+    }
+
 
     public static Result byTypeAndIds(String ctype, String ids) throws RequestException, JsonProcessingException
     {
@@ -258,8 +328,9 @@ public class MediaContents extends Controller
 
         if (isNew)
             c.setId((Long) save(c));
-        else
+        else {
             saveOrUpdate(c);
+        }
         Logger.info("c = " + c);
         commitTransaction();
 
@@ -303,10 +374,15 @@ public class MediaContents extends Controller
         MediaContent mc = (MediaContent) get(MediaContent.class, mcid);
         commitTransaction();
         if (mc != null) {
+            beginTransaction();
             mc.getAuthors().iterator().forEachRemaining(user -> {
                 user.getAuthorOf().remove(mc);
+                saveOrUpdate(user);
             });
-            beginTransaction();
+            mc.getChurches().iterator().forEachRemaining(church -> {
+                church.getMedia().remove(mc);
+                saveOrUpdate(church);
+            });
             boolean deleted = delete(mc);
             commitTransaction();
             result.put("success", deleted);

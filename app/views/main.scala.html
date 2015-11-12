@@ -11,8 +11,11 @@
 }
 
 @mainDescription() = @{
-    s"Zbudowaliśmy ${polishedCount()} – napiszmy teraz ich historię. " +
+    s"Zbudowaliśmy ${polishedCount()} – teraz piszemy ich historię. " +
             "Zróbmy to wspólnie! Znajdź swój kościół na mapie i dodaj wspomnienie z jego budowy."
+}
+@tweetDescription() = @{
+    s"Zbudowaliśmy ${polishedCount()} – teraz piszemy ich historię."
 }
 @churchDescription() = @{
     s"Zobacz kościół ${currentChurch.name} i jego historię"
@@ -49,7 +52,7 @@
             @* @parts.guidelines(true) *@
             @staticmenu("map")
             @* @staticmenu2("map") *@
-            @sociallinks()
+            @sociallinks(tweetDescription)
             @parts.main.mainslide1(churchCount)
             @parts.main.mainslide2()
             @parts.main.mainslide3()

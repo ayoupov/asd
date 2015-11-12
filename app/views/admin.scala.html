@@ -8,18 +8,16 @@
 @(
 //        content_reqs : java.util.List[ContentReq], db_reqs : java.util.List[DBReq],
         users: java.util.List[User], articles: java.util.List[MediaContent], stories: java.util.List[MediaContent], churches: java.util.List[Church],
+        images : java.util.List[Image],
         emails : java.util.List[EmailTemplate],
-//        credits : Credits,
-        count: java.util.Map[String, Integer], session: Session)
+        count: java.util.Map[String, Integer], countTotals: java.util.Map[String, Long],
+        session: Session)
 
 @counters() = @{
     count.asScala.toMap
 }
-@totalIssues() = @{
-    val ac: Integer = counters.getOrElse("articles", 0)
-    val sc: Integer = counters.getOrElse("stories", 0)
-    val cc: Integer = counters.getOrElse("churches", 0)
-    ac + sc + cc
+@countersTotal() = @{
+    countTotals.asScala.toMap
 }
 <!DOCTYPE html>
 <html lang="pl">
@@ -69,21 +67,21 @@
             <div class="ui left rail">
                 <div class="ui vertical menu left-admin-menu">
 
-                    <div class="ui item">
-                        <b>Requests</b>
-                        <div class="menu">
-                        <a class="item page-changer" href="#content_requests">
-                            Stories & images (Kuba)
-                            <div id="content_reqs" class="ui label">@counters.getOrElse("content_reqs", 0)</div>
-                        </a>
-                        </div>
-                        <div class="menu">
-                        <a class="item page-changer" href="#db_requests">
-                            Data fixes & new churches (Karolina)
-                                <div id="db_reqs" class="ui label">@counters.getOrElse("db_reqs", 0)</div>
-                        </a>
-                        </div>
-                    </div>
+                    @*<div class="ui item">*@
+                        @*<b>Requests</b>*@
+                        @*<div class="menu">*@
+                        @*<a class="item page-changer" href="#content_requests">*@
+                            @*Stories & images (Kuba)*@
+                            @*<div id="content_reqs" class="ui label">@counters.getOrElse("content_reqs", 0)</div>*@
+                        @*</a>*@
+                        @*</div>*@
+                        @*<div class="menu">*@
+                        @*<a class="item page-changer" href="#db_requests">*@
+                            @*Data fixes & new churches (Karolina)*@
+                                @*<div id="db_reqs" class="ui label">@counters.getOrElse("db_reqs", 0)</div>*@
+                        @*</a>*@
+                        @*</div>*@
+                    @*</div>*@
 
                     <div class="ui item">
                         <b>Content</b>
@@ -93,13 +91,20 @@
                                 <div id="user_reqs" class="ui label">@counters.getOrElse("users", 0)</div>
                             </a>
                             <a class="item page-changer" href="#articles">Articles
-                                <div id="articles_reqs" class="ui right label">@counters.getOrElse("articles", 0)</div>
+                                <div id="articles_total" class="ui right label">@countersTotal.getOrElse("articles", 0)</div>
+                                <div id="articles_reqs" class="ui right @{if (counters.getOrElse("articles", 0) == 0) "green" else "red"} label">@counters.getOrElse("articles", 0)</div>
                             </a>
                             <a class="item page-changer" href="#stories">Stories
-                                <div id="stories_reqs" class="ui right label">@counters.getOrElse("stories", 0)</div>
+                                <div id="stories_total" class="ui right label">@countersTotal.getOrElse("stories", 0)</div>
+                                <div id="stories_reqs" class="ui right @{if (counters.getOrElse("stories", 0) == 0) "green" else "red"} label">@counters.getOrElse("stories", 0)</div>
+                            </a>
+                            <a class="item page-changer" href="#images">Images
+                                <div id="images_total" class="ui right label">@countersTotal.getOrElse("images", 0)</div>
+                                <div id="images_reqs" class="ui right @{if (counters.getOrElse("images", 0) == 0) "green" else "red"} label">@counters.getOrElse("images", 0)</div>
                             </a>
                             <a class="item page-changer" href="#churches">Churches
-                                <div id="churches_reqs" class="ui right label">@counters.getOrElse("churches", 0)</div>
+                                <div id="churches_total" class="ui right label">@countersTotal.getOrElse("churches", 0)</div>
+                                <div id="churches_reqs" class="ui right @{if (counters.getOrElse("churches", 0) == 0) "green" else "red"} label">@counters.getOrElse("churches", 0)</div>
                             </a>
                         </div>
                     </div>
@@ -132,6 +137,7 @@
                         @parts.admin.users(users.asScala.toList, SessionCache.get(session, "userFilter").asInstanceOf[UserFilter])
                         @parts.admin.articles(articles.asScala.toList, SessionCache.get(session, "articleFilter").asInstanceOf[ArticleFilter])
                         @parts.admin.stories(stories.asScala.toList, SessionCache.get(session, "storyFilter").asInstanceOf[StoryFilter])
+                        @parts.admin.images(images.asScala.toList, SessionCache.get(session, "imageFilter").asInstanceOf[ImageFilter])
                         @parts.admin.churches(churches.asScala.toList, SessionCache.get(session, "churchFilter").asInstanceOf[ChurchFilter])
                         <!-- static -->
                         @parts.admin.emails(emails.asScala.toList)
@@ -142,6 +148,7 @@
                             @parts.admin.forms.usereditor()
                             @parts.admin.forms.articleeditor()
                             @parts.admin.forms.storyeditor()
+                            @parts.admin.forms.imageeditor()
                             @parts.admin.forms.churcheditor()
                             @parts.admin.forms.emaileditor()
             @*                @parts.admin.forms.creditseditor()  *@

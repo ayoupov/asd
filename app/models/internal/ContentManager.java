@@ -5,6 +5,7 @@ import models.address.Address;
 import models.internal.email.EmailTemplate;
 import models.internal.email.EmailUnsubscription;
 import models.internal.search.filters.ChurchFilter;
+import models.internal.search.filters.ImageFilter;
 import models.internal.search.filters.QueryFilter;
 import models.internal.search.filters.UserFilter;
 import models.user.User;
@@ -64,7 +65,7 @@ public class ContentManager
         List<Pair<Long, Boolean>> res = session.createQuery(
                 "select mc.id, mc.starred from MediaContent mc " +
                         "where mc.contentType = :ct and (:sa = TRUE or mc.approvedDT is not null) " +
-                        "order by mc.approvedDT desc"
+                        "order by mc.approvedDT DESC"
         )
                 .setParameter("ct", contentType)
                 .setParameter("sa", skipApproval)
@@ -203,7 +204,8 @@ public class ContentManager
                 "select distinct mc " +
                         "from MediaContent mc where " +
                         "mc.title like :fname and mc.contentType = :mct " +
-                        "order by mc.approvedDT")
+                        "order by (CASE WHEN mc.approvedDT IS NULL THEN 1 ELSE 0 END) DESC, " +
+                        "mc.approvedDT DESC")
                 .setParameter("fname", "%" + filter.getNameFilter() + "%")
                 .setParameter("mct", mct)
                 .setMaxResults(filter.getMaxResults())
@@ -254,6 +256,16 @@ public class ContentManager
         return res.intValue();
     }
 
+    public static Integer getImageIssuesCount()
+    {
+        Session session = getSession();
+        Long res = (Long) session.createQuery(
+                "select count(*) " +
+                        "from Image i where i.approvedTS is null ")
+                .uniqueResult();
+        return res.intValue();
+    }
+
     public static Set<User> parseUserList(String[] strings)
     {
         Set<User> res = new LinkedHashSet<>();
@@ -275,16 +287,16 @@ public class ContentManager
                     "select distinct count(c) " +
                             "from Church c " +
                             "where " +
-                            "c.name like :fname and " +
-                            "c.approvedDT is not null "
+                            "c.name like :fname "
+//                            "and c.approvedDT is not null "
             ).setParameter("fname", "%" + filter.getNameFilter() + "%")
                     .uniqueResult();
         else
             return (long) getSession().createQuery(
                     "select distinct count(c) " +
-                            "from Church c " +
-                            "where " +
-                            "c.approvedDT is not null "
+                            "from Church c "
+//                            "where " +
+//                            "and c.approvedDT is not null "
             ).setCacheable(true).uniqueResult();
     }
 
@@ -502,4 +514,40 @@ public class ContentManager
                 .setParameter("hash", hash)
                 .uniqueResult();
     }
+
+    public static long getTotalImages(ImageFilter filter)
+    {
+        String nameFilter = filter.getNameFilter();
+        if (nameFilter != null && !"".equals(nameFilter))
+            return (long) getSession().createQuery(
+                    "select distinct count(i) " +
+                            "from Image i " +
+                            "where " +
+                            "i.description like :fname"
+            ).setParameter("fname", "%" + filter.getNameFilter() + "%")
+                    .uniqueResult();
+        else
+            return (long) getSession().createQuery(
+                    "select distinct count(i) " +
+                            "from Image i "
+//                            "where " +
+//                            "i.approvedTS is not null "
+            ).setCacheable(true).uniqueResult();
+    }
+
+    public static List<Image> getImages(ImageFilter filter)
+    {
+        Session session = getSession();
+        Query query = session.createQuery(
+                "select distinct i " +
+                        "from Image i where " +
+                        "i.description like :fname " +
+                        "order by i.approvedTS")
+                .setParameter("fname", "%" + filter.getNameFilter() + "%")
+                .setMaxResults(filter.getMaxResults())
+                .setFirstResult(filter.getPage() * filter.getMaxResults());
+        List<Image> images = query.list();
+        return images;
+    }
+
 }

@@ -179,7 +179,14 @@ function initPassportUI() {
             globalTOSConfirmed = false;
             Cookies.remove("tos-confirmed");
         }
-    })
+    });
+
+    // init multiline Textareas:
+    var textAreas = document.getElementsByTagName('textarea');
+
+    Array.prototype.forEach.call(textAreas, function(elem) {
+        elem.placeholder = elem.placeholder.replace(/\\n/g, '\n');
+    });
 }
 
 function resetEdit() {
@@ -307,7 +314,7 @@ function initUpdatePassportApi() {
     var fieldUpdateApi = {
         method: 'POST',
         onSuccess: function (data) {
-            notifySuggestionOk("Dziękujemy za pomoc, czytamy wszystkie<br>komentarze i na bierząco aktualizujemy dane", hidePassportSuggestForm);
+            notifySuggestionOk("Dziękujemy za pomoc, czytamy wszystkie<br>komentarze i na bieżąco aktualizujemy dane", hidePassportSuggestForm);
         },
         onError: function (errorMessage) {
             notifySuggestionError(errorMessage);

@@ -1,4 +1,5 @@
 @import models.internal.search.filters.StoryFilter
+@import utils.serialize.converters.DateTimeConverter
 @(stories: List[MediaContent], filter : StoryFilter)
 <div id="stories" class="admin-page">
     <table class="ui celled table">
@@ -6,7 +7,8 @@
             <tr>
                 <th>Title</th>
                 <th>Author</th>
-                <th>Starred</th>
+                <th>Publish</th>
+                <th>Star</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -14,8 +16,21 @@
         <tr id="story_@s.getId">
             <td>@s.getTitle</td>
             <td>@{if(s.getAddedBy != null) s.getAddedBy.getName}</td>
-            <td><input type="checkbox" @{if (s.getStarred == true) "checked"}></td>
-            <td><input type="button" value="@{if(s.getApprovedDT == null)  "approve" else "disapprove"}"></td>
+            <td class="noedit"><input type="datetime" value="@{
+                if(s.getApprovedDT != null) {
+                    DateTimeConverter.sdf.format(s.getApprovedDT)
+                }
+            }" disabled="disabled">
+            </td>
+            <td class="noedit"><input type="checkbox" @{
+                if (s.getStarred == true) "checked"
+            } onchange="flipStar('story', @s.getId);">
+            </td>
+            <td class="noedit">
+                <a href="javascript: flipApprove('story', @s.getId, @{s.getApprovedDT == null});">@{if(s.getApprovedDT == null) "publish" else "unpublish"}</a>
+                <a href="javascript: removeContent('story', @s.getId);" style="margin-left:20px;"><img src="@routes.Assets.at("images/close_button.png")"></a>
+            </td>
+
         </tr>
         }
         <tfoot>
