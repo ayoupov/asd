@@ -1,14 +1,18 @@
 package models.internal;
 
+import com.feth.play.module.pa.user.AuthUser;
 import models.*;
 import models.address.Address;
 import models.internal.email.EmailTemplate;
 import models.internal.email.EmailUnsubscription;
+import models.internal.identities.MockIdentity;
 import models.internal.search.filters.ChurchFilter;
 import models.internal.search.filters.ImageFilter;
 import models.internal.search.filters.QueryFilter;
 import models.internal.search.filters.UserFilter;
 import models.user.User;
+import models.user.UserRole;
+import models.user.UserStatus;
 import org.apache.commons.lang3.tuple.Pair;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -20,6 +24,7 @@ import java.util.stream.Collectors;
 
 import static utils.DataUtils.safeLong;
 import static utils.HibernateUtils.getSession;
+import static utils.HibernateUtils.saveOrUpdate;
 
 /**
  * Created with IntelliJ IDEA.
@@ -273,8 +278,19 @@ public class ContentManager
             long id = safeLong(s, -1);
             if (id > -1)
                 res.add((User) getSession().get(User.class, id));
-            else
-                Logger.warn("Warning! Bad authors detected!");
+            else {
+                Logger.warn("Warning! Creating an author: " + s);
+                AuthUser internalUser = new MockIdentity(s.replaceAll("\\s", ""), s);
+                User user;
+                user = UserManager.findByAuthUserIdentity(internalUser);
+                if (user == null) {
+                    user = UserManager.createUser(internalUser);
+                    user.setRole(UserRole.Guest);
+                    user.setStatus(UserStatus.Blocked);
+                }
+                saveOrUpdate(user);
+                res.add(user);
+            }
         }
         return res;
     }
@@ -481,8 +497,7 @@ public class ContentManager
                             .setMaxResults(size - res.size())
                             .list();
             res.addAll(storiesRelatedByMetropolie);
-            if (res.size() < size)
-            {
+            if (res.size() < size) {
                 alreadyDone.addAll(storiesRelatedByDiocese.stream().map(MediaContent::getId).collect(Collectors.toSet()));
                 res.addAll(
                         getSession().createQuery("from MediaContent mc " +

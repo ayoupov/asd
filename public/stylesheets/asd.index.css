@@ -81,9 +81,9 @@
     margin-bottom: -1px;
 }
 
-#links .item:first-child {
-    margin-left: 260px;
-}
+/*#links .item:first-child {*/
+    /*margin-left: 260px;*/
+/*}*/
 
 #menu {
     border-bottom-width: 1px;
@@ -468,7 +468,7 @@ div.holder-border {
 
 .thumb-stroke.hover-content {
     position: absolute;
-    left: 80px;
+    left: 82px;
     /*margin-top: -5px;*/
     top: 325px;
 }

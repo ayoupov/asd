@@ -21,6 +21,7 @@ public enum EmailSubstitution
     UnsubscribeLink,
 
     FacebookPage,
+    MapLink,
     ArticlesLink,
     StoriesLink;
 }

@@ -2,12 +2,16 @@ package models.internal.email;
 
 import models.internal.ContentManager;
 import models.user.User;
+import models.user.UserStatus;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
+import org.apache.commons.mail.ImageHtmlEmail;
+import org.apache.commons.mail.resolver.DataSourceUrlResolver;
 import utils.ServerProperties;
 
 import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,7 +26,7 @@ public class EmailWrapper
 
     public static void sendEmail(String templateName, String senderName, User to, Pair<String, String>... substitutions) throws MalformedURLException, EmailException
     {
-        if (!to.getUnsubscribed()) {
+        if (!to.getUnsubscribed() && to.getStatus() == UserStatus.Active) {
             EmailTemplate et = ContentManager.getEmailTemplateByName(templateName);
             sendEmail(
                     et.getProcessedBody(substitutions),
@@ -37,6 +41,11 @@ public class EmailWrapper
     {
         // Create the email message
         HtmlEmail email = new HtmlEmail();
+//        ImageHtmlEmail email = new ImageHtmlEmail();
+
+        URL url = new URL(ServerProperties.getValue("asd.absolute.url"));
+//        email.setDataSourceResolver(new DataSourceUrlResolver(url));
+
         email.setHostName("smtp.gmail.com");
         email.setSmtpPort(587);
         email.setStartTLSEnabled(true);

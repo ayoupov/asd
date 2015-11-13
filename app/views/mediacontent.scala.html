@@ -117,7 +117,11 @@
             </div>
             <div class="full-width bordered-bottom-gap"></div>
             <script>
-                var contentId = @content.getId;
+                var contentId = @if(!preview) {
+                @content.getId
+                } else {
+                null
+                };
                 var churchId = '@churchID()';
             </script>
             @if(content.getContentType == MediaContentType.Article) {

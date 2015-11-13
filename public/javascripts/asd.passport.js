@@ -253,7 +253,7 @@ function fillSocial() {
     $(".social-wrapper").empty().html(
         "<div class='fb-like' data-href='" + window.location + "' data-layout='button_count' data-action='like'" +
         " data-show-faces='true' data-share='false'></div>" +
-        "<a href='https://twitter.com/share' class='twitter-share-button' data-lang='pl'>Tweetnij</a>"
+        "<a href='https://twitter.com/share' class='twitter-share-button' data-text='" + currentChurch.name + "' data-lang='pl'>Tweetnij</a>"
     );
     try {
         if (typeof FB !== 'undefined')

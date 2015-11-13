@@ -53,10 +53,12 @@ public class EmailTemplate
         subsRegexps.put(EmailSubstitution.UnsubscribeLink.name(), "\\$UNSUBSCRIBELINK");
 
         subsRegexps.put(EmailSubstitution.FacebookPage.name(), "\\$FACEBOOKPAGE");
+        subsRegexps.put(EmailSubstitution.MapLink.name(), "\\$MAPLINK");
         subsRegexps.put(EmailSubstitution.ArticlesLink.name(), "\\$ARTICLESLINK");
         subsRegexps.put(EmailSubstitution.StoriesLink.name(), "\\$STORIESLINK");
 
         commonSubs.add(Pair.of(EmailSubstitution.FacebookPage.name(), ServerProperties.getValue("facebook.url")));
+        commonSubs.add(Pair.of(EmailSubstitution.MapLink.name(), ServerProperties.getValue("asd.absolute.url") + "#slide-map"));
         commonSubs.add(Pair.of(EmailSubstitution.ArticlesLink.name(), ServerProperties.getValue("asd.absolute.url") + "#slide-articles"));
         commonSubs.add(Pair.of(EmailSubstitution.StoriesLink.name(), ServerProperties.getValue("asd.absolute.url") + "#slide-stories"));
     }

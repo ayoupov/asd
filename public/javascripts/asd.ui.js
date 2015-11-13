@@ -35,8 +35,10 @@ var uiInit = function () {
     // scroll bindings
     $(window).on('scroll', scrollFunc);
     // and window resize
-    $(window).on('resize', resizeFunc);
-    resizeFunc();
+    //$(window).on('resize', resizeFunc);
+    $(window).on('resize', scrollFunc);
+    //resizeFunc();
+    scrollFunc();
 
     $(document).on('change keypress', '.required.not-filled', function () {
         $(this).removeClass('not-filled');
@@ -151,12 +153,21 @@ var menuOffsetTop = menuOffsetDefault, menuOffsetLeft = menuOffsetDefault; // sh
 var resizeFunc = function () {
     // resize nav
     var wwidth = $(window).width();
+    var margin = parseFloat($('.media-container').css('margin-left'));
     $menu.css({
         left: menuOffsetLeft + 'px',
         top: menuOffsetTop + 'px',
         width: (wwidth - 2 * menuOffsetLeft) + "px"
     });
-    var margin = parseFloat($('.media-container').css('margin-left'));
+    // try another story:
+    $links.css({
+        position: 'absolute',
+        left: (margin + 240 - menuOffsetLeft) + 'px',
+        top : '14px'
+        //width: (wwidth - 2 * menuOffsetLeft) + "px"
+    });
+
+
     $(".social-links").css({
         'bottom': menuOffsetTop + 'px',
         'margin-left': (margin + 20) + 'px'

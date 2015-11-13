@@ -143,7 +143,8 @@ function fillArticle(data) {
             datas: "/content/authors/",
             placeholder: 'Start typing author name',
             searchParam: "q",
-            autosize: true
+            autosize: true,
+            newElements : true
         });
     $articleWrapper.show();
 }

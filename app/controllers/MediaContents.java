@@ -118,11 +118,13 @@ public class MediaContents extends Controller
         if (!"image".equals(ctype)) {
             MediaContent c;
             c = (MediaContent) get(MediaContent.class, id);
-            if (!c.isWasPublished() && request() != null) {
-                sendApproveEmail(c, user, when, request());
-            }
-            c.approve(user, when);
-            approvedTS = c.getApprovedDT().getTime();
+            if (when != null) {
+                if (!c.isWasPublished() && request() != null) {
+                    sendApproveEmail(c, user, when, request());
+                }
+                c.approve(user, when);
+                approvedTS = c.getApprovedDT().getTime();
+            } else c.disapprove(user);
         } else {
             Image i = (Image) get(Image.class, id);
             i.approve(user, when);

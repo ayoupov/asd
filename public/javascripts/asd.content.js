@@ -25,7 +25,13 @@ var resizeContentFunc = function () {
         left: (wwidth - $contentTitle.width()) / 2 + "px",
         top: ($contentCoverImage.height() + 60 - $contentTitle.height() - 100) + "px"
     });
-    //var margin = parseFloat($('.content-main-wrapper').css('margin-left'));
+    var margin = parseFloat($('.content-main-wrapper').css('margin-left'));
+    $links.css({
+        position: 'absolute',
+        left: (margin + 240) + 'px',
+        top : '14px'
+        //width: (wwidth - 2 * menuOffsetLeft) + "px"
+    });
     $(".social-links").css({
         'margin-left': '20px'
     });

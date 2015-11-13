@@ -38,7 +38,7 @@ var emailEditClick = function () {
         "<li>$CHURCHNAME, $CHURCHPASSPORTLINK, $CHURCHADDCONTENTLINK</li>" +
         "<li>$UNSUBSCRIBELINK</li></ul></li>" +
         "<li>Context-independent variables:" +
-        "<ul><li>$FACEBOOKPAGE, $ARTICLESLINK, $STORIESLINK</li>" +
+        "<ul><li>$FACEBOOKPAGE, $MAPLINK, $ARTICLESLINK, $STORIESLINK</li>" +
         "</ul></div>"
     );
     $emailHint.appendTo($emailForm);

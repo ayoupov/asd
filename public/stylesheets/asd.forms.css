@@ -134,3 +134,23 @@ form:not(#foo) > div > input[type='checkbox'] + label{
 form:not(#foo) > div > input[type='checkbox']:checked + label {
     background-image: url(/assets/images/check.png);
 }
+
+label.btn-file {
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 44px;
+    width: 47px;
+    border: 0 !important;
+}
+
+label.btn-file i.asd-photo.icon{
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 44px;
+    width: 47px;
+    background: url(/assets/images/photo_icon.png);
+}
+
+label.btn-file i.asd-photo.icon:hover{
+    background: url(/assets/images/photo_icon_hv.png);
+}

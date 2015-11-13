@@ -112,7 +112,7 @@ function getNextImageBlockElem(part) {
     }
 
     function gnibeFileLabelPart() {
-        return '<label for="' + createId() + '" class="ui icon button btn-file">';
+        return '<label for="' + createId() + '" class="button btn-file">';
     }
 
     function gnibeFileInput() {
@@ -121,7 +121,7 @@ function getNextImageBlockElem(part) {
 
     return $('<div class="image-block image-block-generated  insert-image-after"><div class="gapper-less clearfix"></div><div class="col-3 rightaligned inlinemiddle">' + gnibeLabel() +
         '</div><div class="col-4"><div class="ui action input">' + gnibeTextInput() +
-        gnibeFileLabelPart() + '<i class="attach big icon"></i>' + gnibeFileInput() + '</label></div></div>' +
+        gnibeFileLabelPart() + '<i class="asd-photo icon"></i>' + gnibeFileInput() + '</label></div></div>' +
         '<div class="col-1"></div><div class="gapper-less clearfix"></div><div class="col-3 rightaligned inlinemiddle">' +
         '<label class="image-label image-label-desc" for="' + createDescId() + '">Podpis pod zdjęciem</label></div>' +
         '<div class="col-4"><input id="' + createDescId() + '" type="text" value="" name="' + createDescName() + '" placeholder="Co jest na zdjęciu? Kto jest autorem? Kiedy zostało zrobione?"></div><div class="col-1"></div></div>');
