@@ -4840,19 +4840,19 @@ function UniteGalleryMain(){
 	function onGalleryResized(){
 		
 		var objSize = t.getSize();
-		
+
 		if(objSize.width == 0)	//fix hidden gallery change
 			return(true);
-		
+
 		t.setSizeClass();
-		
+
 		var objSize = t.getSize();
-				
+
 		if(objSize.width != g_temp.lastWidth || objSize.height != g_temp.lastHeight){
-			
+
 			if(g_options.gallery_preserve_ratio == true && g_temp.isFreestyleMode == false)
 				setHeightByOriginalRatio();
-			
+
 			storeLastSize();
 			g_objGallery.trigger(t.events.SIZE_CHANGE);
 		}
@@ -4950,11 +4950,14 @@ function UniteGalleryMain(){
 		
 		 //on resize event
 		 storeLastSize();
-		 
-		 jQuery(window).resize(function(){
-			 g_objWrapper.css("width","auto");
-			 g_functions.whenContiniousEventOver("gallery_resize", onGalleryResized, g_temp.resizeDelay);
-		 });
+
+
+		// ayoupov hack: sorry, we don't need resize of gallery
+
+		 //jQuery(window).resize(function(){
+			// g_objWrapper.css("width","auto");
+			// g_functions.whenContiniousEventOver("gallery_resize", onGalleryResized, g_temp.resizeDelay);
+		 //});
 		 
 		 //fullscreen:
 		 g_functions.addFullScreenChangeEvent(onFullScreenChange);

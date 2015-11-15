@@ -22,7 +22,7 @@ public class GridGallery extends ComplexSubstitute
 
     private ImageOptions opts;
     private static final Pattern pattern = Pattern.compile("\\[gallery\\s(.*?)](.*?)\\[\\/gallery]", Pattern.DOTALL);
-    protected int marginLeft = 0;
+    protected int marginLeft = 0, width = 0;
 
     @Override
     protected String getProcessed(StringBuffer sb, Matcher matcher, BBCodeParser.BBCodeRenderState state)
@@ -32,7 +32,7 @@ public class GridGallery extends ComplexSubstitute
         int to = opts.getTo();
         int from = opts.getFrom();
         boolean gutter = opts.getGutter();
-        int width = GridUtil.gridWidth(from, to, gutter);
+        width = GridUtil.gridWidth(from, to, gutter);
         marginLeft = GridUtil.leftMargin(from, to, gutter);
         String opt = "";
         if (opts.heightSet())

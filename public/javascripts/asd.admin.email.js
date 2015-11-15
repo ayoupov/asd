@@ -45,7 +45,7 @@ var emailEditClick = function () {
     $(".email-visible").show();
     if (id) {
         $emailForm.api({on: 'now', action: "get json email", urlData: {name: id}, onSuccess: fillEmail});
-        applySubmit();
+        //applySubmit();
     }
 };
 

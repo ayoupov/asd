@@ -149,6 +149,7 @@ label.btn-file i.asd-photo.icon{
     height: 44px;
     width: 47px;
     background: url(/assets/images/photo_icon.png);
+    cursor: pointer;
 }
 
 label.btn-file i.asd-photo.icon:hover{

@@ -13,6 +13,7 @@ import models.internal.search.filters.UserFilter;
 import models.user.User;
 import models.user.UserRole;
 import models.user.UserStatus;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -151,8 +152,8 @@ public class ContentManager
         Query query = session.createQuery(
                 "select distinct c " +
                         "from Church c where " +
-                        "c.name like :fname " +
-                        "order by c.approvedDT")
+                        "c.name like :fname or c.extID like :fname " +
+                        "order by c.approvedDT, c.extID asc")
                 .setParameter("fname", "%" + filter.getNameFilter() + "%")
                 .setMaxResults(filter.getMaxResults())
                 .setFirstResult(filter.getPage() * filter.getMaxResults());
@@ -280,7 +281,7 @@ public class ContentManager
                 res.add((User) getSession().get(User.class, id));
             else {
                 Logger.warn("Warning! Creating an author: " + s);
-                AuthUser internalUser = new MockIdentity(s.replaceAll("\\s", ""), s);
+                AuthUser internalUser = new MockIdentity(StringUtils.stripAccents(s.replaceAll("\\s", "")), s, "architektura7dnia.pl");
                 User user;
                 user = UserManager.findByAuthUserIdentity(internalUser);
                 if (user == null) {

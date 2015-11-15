@@ -279,7 +279,9 @@ div.full-width {
     font-size: 8pt;
     color: #a8a8a8;
     margin-top: 4px;
-    height: 16px;
+    /*height: 16px;*/
+    line-height: 1.5em;
+    height:100%;
 }
 
 img.full-width {

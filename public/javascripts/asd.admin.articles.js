@@ -68,7 +68,7 @@ function applySubmit()
 
 function recreateArticleFM() {
     $fm.empty();
-    $fm.append(newFileManager());
+    $fm.append(newFileManager('article'));
     $fm.api({on: 'now', action: 'get associated pictures', onSuccess: fillFM});
     applySubmit();
 }

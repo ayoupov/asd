@@ -131,6 +131,10 @@ function galleries() {
         }
         var $gallery = $("#" + $gall.attr("id"));
         var thisGalleryAPI = $gallery.unitegallery(gallOpts);
+        //thisGalleryAPI.on('resize', function(e){
+        //    e.preventDefault();
+        //    return false;
+        //});
         $gallery.append($("<div class='content-gallery-arrow content-gallery-arrow-left'></div><div class='content-gallery-arrow content-gallery-arrow-right'></div>"));
         $(".content-gallery-arrow-left", $gallery).on('click', function () {
             thisGalleryAPI.prevItem();
@@ -152,6 +156,9 @@ function galleries() {
         thisGalleryAPI.on('item_change', function (num, data) {
             changeCaption(isFullwidth, data, $gall);
         });
+        thisGalleryAPI.onGalleryResized = function() {
+            return false;
+        }
     });
 }
 

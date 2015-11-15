@@ -31,7 +31,7 @@ public class GridCoub extends GridImage
         int to = opts.getTo();
         int from = opts.getFrom();
         boolean gutter = opts.getGutter();
-        int width = GridUtil.gridWidth(from, to, gutter);
+        width = GridUtil.gridWidth(from, to, gutter);
         marginLeft = GridUtil.leftMargin(from, to, gutter);
         String coubStyle = String.format("style='width: %dpx; margin-left: %dpx;' ", width, marginLeft);
 
@@ -59,8 +59,8 @@ public class GridCoub extends GridImage
     @Override
     protected String getPostfix()
     {
-        return String.format("<span class='content-image-caption' style='margin-left: %dpx;'>%s</span><br>",
-                marginLeft, getOptions().getCaption());
+        return String.format("<div class='content-image-caption' style='margin-left: %dpx;width: %dpx;'>%s</div><br>",
+                marginLeft, width, getOptions().getCaption());
     }
 
     @Override

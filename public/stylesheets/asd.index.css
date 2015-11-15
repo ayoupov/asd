@@ -289,7 +289,8 @@ div.holder-border {
 }
 
 .padder {
-    padding-bottom: 46px;
+    /*padding-bottom: 46px;*/
+    padding-bottom: 56px;
 }
 
 #about {

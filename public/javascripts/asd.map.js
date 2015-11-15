@@ -163,11 +163,13 @@ var mapInit = function (geostats) {
 };
 
 function setMapMode() {
-    map.scrollWheelZoom.enable();
+    if (map)
+        map.scrollWheelZoom.enable();
 }
 
 function setSiteMode() {
-    map.scrollWheelZoom.disable();
+    if (map)
+        map.scrollWheelZoom.disable();
 }
 
 var layerChanges = function (e) {

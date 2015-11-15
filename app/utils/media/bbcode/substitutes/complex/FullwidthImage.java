@@ -54,7 +54,7 @@ public class FullwidthImage extends FullwidthSubstitute
         String postfix = super.getPostfix();
         if (caption != null && !"".equals(caption.trim()))
             return postfix +
-                    String.format("<span class='content-image-caption'  style='margin-left: 0;'>%s</span><br>", caption);
+                    String.format("<div class='content-image-caption'  style='margin-left: 0;'>%s</div><br>", caption);
 //                    String.format("<span class='content-image-caption'  style='margin-left: -120px;'>%s</span><br>", caption);
         else
             return postfix;

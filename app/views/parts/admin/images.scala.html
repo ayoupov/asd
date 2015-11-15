@@ -1,19 +1,22 @@
 @import models.internal.search.filters.ImageFilter
 @import utils.serialize.converters.DateTimeConverter
 @import utils.media.images.Thumber
-@import play.Logger
+@import utils.ServerProperties
 @(images: List[Image], filter: ImageFilter)
 
 @getThumb(path:String) = @{
     val slash = path.lastIndexOf('/')
     val fname = path.substring(slash + 1)
     val dot = fname.lastIndexOf('.')
-    val glLI = fname.lastIndexOf(Thumber.THUMB_GL)
-    val prepath = path.substring(0, slash + 1)
-    if (glLI > 0) {
-        prepath + fname.substring(0, glLI) + Thumber.THUMB_ED + '.' + fname.substring(dot + 1)
+    if (dot > 0) {
+        val glLI = fname.lastIndexOf(Thumber.THUMB_GL)
+        val prepath = path.substring(0, slash + 1)
+        if(glLI > 0) {
+            prepath + fname.substring(0, glLI) + Thumber.THUMB_ED + '.' + fname.substring(dot + 1)
+        } else
+            prepath + fname.substring(0, dot) + Thumber.THUMB_ED + '.' + fname.substring(dot + 1)
     } else
-        prepath + fname.substring(0, dot) + Thumber.THUMB_ED + '.' + fname.substring(dot + 1)
+    ServerProperties.getValue("asd.editor.nosrc.image")
 }
 <div id="images" class="admin-page">
     <table class="ui celled table">

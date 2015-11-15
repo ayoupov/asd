@@ -1,9 +1,12 @@
-@(contentType : MediaContentType)
+@(contentType : MediaContentType, passport: Boolean)
 <div class="passport-stories">
     <div class="passport-stories-wrapper">
-        @*<div class="passport-stories-title">*@
-            @*Wspomnienia dodane przez użytkowników*@
-        @*</div>*@
+        @if(passport) {
+        <div class="passport-stories-title">
+            Więcej o tym kościele
+        </div>
+            <div class="church-stories"></div>
+        }
         @if(contentType == MediaContentType.Story){
             <table class="passport-update-button-wrapper">
                 <tr>
@@ -12,6 +15,8 @@
                 </tr>
             </table>
         }
-        <div class="church-stories"></div>
+        @if(!passport) {
+            <div class="church-stories"></div>
+        }
     </div>
 </div>

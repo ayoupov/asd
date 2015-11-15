@@ -56,6 +56,7 @@ public class User
     @JsonIgnore
     private Set<MediaContent> authorOf;
 
+    @JsonIgnore
     private boolean unsubscribed;
 
     public User(String name, UserRole role, UserStatus status)

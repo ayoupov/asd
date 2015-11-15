@@ -25,6 +25,7 @@ public class GridImage extends ComplexSubstitute
     protected static final int colWidth = 100;
     protected static final int colGutterWidth = 20;
     protected int marginLeft = 0;
+    protected int width = 0;
 
     @Override
     protected String getProcessed(StringBuffer sb, Matcher matcher, BBCodeParser.BBCodeRenderState state)
@@ -35,7 +36,7 @@ public class GridImage extends ComplexSubstitute
         int to = opts.getTo();
         int from = opts.getFrom();
         boolean gutter = opts.getGutter();
-        int width = GridUtil.gridWidth(from, to, gutter);
+        width = GridUtil.gridWidth(from, to, gutter);
         marginLeft = GridUtil.leftMargin(from, to, gutter);
 //        int width = (to - from + 1) * (colWidth + colGutterWidth) - colGutterWidth;
 //        marginLeft = (from - 2) * (colWidth + colGutterWidth);
@@ -71,8 +72,8 @@ public class GridImage extends ComplexSubstitute
     @Override
     protected String getPostfix()
     {
-        return String.format("<br><span class='content-image-caption' style='margin-left: %dpx;'>%s</span><br>",
-                marginLeft, getOptions().getCaption());
+        return String.format("<br><div class='content-image-caption' style='margin-left: %dpx;width: %dpx'>%s</div><br>",
+                marginLeft, width, getOptions().getCaption());
     }
 
     public ImageOptions getOptions()

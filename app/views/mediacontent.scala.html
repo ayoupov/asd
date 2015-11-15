@@ -42,10 +42,12 @@
             if(content.getCover != null) "http://" + request().host() + content.getCover.getPath else null
         } else
         {
-            val split : Array[String] = content.getCoverThumbPath.split("/")
-            val name = split(split.length-1)
-            val id = name.split("_")(2)
-            "http://" + request().host() + routes.Assets.at(s"images/fb_share_$id.png")
+            if (content.getCoverThumbPath != null) {
+                val split: Array[String] = content.getCoverThumbPath.split("/")
+                val name = split(split.length - 1)
+                val id = name.split("_")(2)
+                "http://" + request().host() + routes.Assets.at(s"images/fb_share_$id.png")
+            } else null
         }
     }
     @contentGapClass() = @{
@@ -128,7 +130,7 @@
                 <div class="full-width media-prethumbs-gap"></div>
             }
         <div class="content-main-wrapper">
-            @parts.mediacontent_thumbs(content.getContentType)
+            @parts.mediacontent_thumbs(content.getContentType, false)
         </div>
         <div class="full-width media-bottom-gap">
             <div class="content-main-wrapper">

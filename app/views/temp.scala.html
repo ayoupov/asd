@@ -18,21 +18,25 @@
         {
             var center = new google.maps.LatLng(church.address.geometry[0], church.address.geometry[1]);
             var streetViewService = new google.maps.StreetViewService();
-            var maxDistanceFromCenter = 50; //meters
-            setTimeout(
-                function()
+            var distances = [100, 50];
+            function approximateGSVDistances()
+            {
+                var distance = distances.pop();
+                streetViewService.getPanoramaByLocation(center, distance, function (streetViewPanoramaData, status)
                 {
-                    streetViewService.getPanoramaByLocation(center, maxDistanceFromCenter, function (streetViewPanoramaData, status)
-                    {
-                        if (status === google.maps.StreetViewStatus.OK) {
-                            console.log('Ok with ' + church.extID)
-                        } else {
+                    if (status === google.maps.StreetViewStatus.OK) {
+                        console.log('Ok with ' + church.extID)
+                    } else {
+                        if (!distances.length) {
                             $("<div>").html(church.extID + "<br>").appendTo($("body"));
                             console.log(status + ' with ' + church.extID)
-                        }
-                    });
-                },
-                time);
+                        } else
+                            approximateGSVDistances();
+                    }
+                });
+            }
+
+            setTimeout(approximateGSVDistances, time);
                 time += 1200;
         });
     }

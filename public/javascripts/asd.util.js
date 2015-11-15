@@ -69,11 +69,11 @@ function _debug(obj) {
     console.log(obj);
 }
 
-function _scrollTo($src, $target, speed) {
+function _scrollTo($src, $target, speed, callback) {
     if ($target.length && $src.length) {
         $src.animate({
             scrollTop: $target.offset().top
-        }, speed ? speed : 600);
+        }, speed ? speed : 600, callback);
     }
 }
 

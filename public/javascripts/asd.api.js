@@ -123,7 +123,8 @@ function populateArticles(data) {
     if (whatsleft > 0) {
         var $more = $("<div/>").attr('id', 'more-article-thumb').addClass('extra-article article thumb center-more grayish').append(
             $('<div/>').addClass('more-wrapper white-bordered').append(
-                $('<div/>').addClass('more').html('Więcej ' + whatsleft)
+                //$('<div/>').addClass('more').html('Więcej ' + whatsleft)
+                $('<div/>').addClass('more').html('Więcej')
             )
         );
         $more.insertAfter(lastItem);
@@ -172,7 +173,8 @@ function populateStories(data) {
     if (whatsleft > 0) {
         var $more = $("<div/>").attr('id', 'more-story-thumb').addClass('extra-story story thumb center-more white').append(
             $('<div/>').addClass('more-wrapper grayish-bordered').append(
-                $('<div/>').addClass('more').html('Więcej ' + whatsleft)
+                //$('<div/>').addClass('more').html('Więcej ' + whatsleft)
+                $('<div/>').addClass('more').html('Więcej')
             )
         );
         $more.insertAfter(lastItem);

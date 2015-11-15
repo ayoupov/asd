@@ -12,6 +12,7 @@ import com.feth.play.module.pa.user.EmailIdentity;
  */
 public class MockIdentity extends AuthUser implements BasicIdentity
 {
+    private String provider = "internal";
     private String name;
     private String id;
 
@@ -19,6 +20,14 @@ public class MockIdentity extends AuthUser implements BasicIdentity
     {
         this.id = id;
         this.name = name;
+        this.provider = "internal";
+    }
+
+    public MockIdentity(String id, String name, String provider)
+    {
+        this.id = id;
+        this.name = name;
+        this.provider = provider;
     }
 
     @Override
@@ -30,7 +39,7 @@ public class MockIdentity extends AuthUser implements BasicIdentity
     @Override
     public String getProvider()
     {
-        return "internal";
+        return provider;
     }
 
     @Override

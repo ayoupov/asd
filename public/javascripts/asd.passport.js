@@ -78,7 +78,7 @@ function fillPassport(church) {
     relatedMediaIndex = 0;
     $churchStories.empty();
     if (relatedMedia && relatedMedia.length > 0) {
-        $churchStoriesTitle.html("Wspomnienia dodane przez użytkowników").show();
+        $churchStoriesTitle.html("Więcej o tym kościele").show();
         inhabitNext();
         $churchStories.isotope();
         bindThumbEvents($churchStories, 'story');
@@ -111,7 +111,8 @@ function inhabitNext() {
     if (whatsleft > 0) {
         var $more = $("<div/>").attr('id', 'more-story-thumb').addClass('extra-related story thumb center-more white').append(
             $('<div/>').addClass('more-wrapper grayish-bordered').append(
-                $('<div/>').addClass('more').html('Więcej ' + whatsleft)
+                $('<div/>').addClass('more').html('Więcej')
+                //$('<div/>').addClass('more').html('Więcej ' + whatsleft)
             )
         );
         $more.insertAfter(lastItem);
@@ -120,7 +121,10 @@ function inhabitNext() {
     }
     var visibleStories = $('.thumb:not(.extra-related)', $churchStories).length;
     // | 0 -- gets integer result of division
-    $churchStories.css('height', (350 * (((visibleStories - 1) / 4 | 0) + 1)) + 'px');
+    if (visibleStories > 0)
+        $churchStories.css('height', (350 * (((visibleStories - 1) / 4 | 0) + 1)) + 'px');
+    else
+        $churchStories.css('height', 0);
 
     bindThumbEvents($churchStories, 'related');
 
@@ -266,26 +270,36 @@ function fillSocial() {
 }
 
 function showPassportUpdateForm() {
-    $(".passport-stories-wrapper").fadeToggle(800);
-    $passportUpdate.slideUp(800);
-    $passportUpdate.fadeIn(800, function () {
+    //$(".passport-stories-wrapper").fadeToggle(800);
+    $passportSuggestForm.slideUp(300);
+    $passportUpdateButtonWrapper.slideUp(800);
+    //$passportUpdate.slideUp(800);
+    //$passportUpdate.fadeIn(800, function () {
+    $passportUpdate.show().slideDown(800, function () {
         $passportWrapper.modal('refresh');
-        _scrollTo($passportWrapper.parent(), $("#passportmenu-bottom"), 900);
+        //_scrollTo($passportWrapper.parent(), $("#passportmenu-bottom"), 900);
     });
+    _scrollTo($passportWrapper.parent(), $("#passportmenu-bottom"), 850);
 
     resetForm(getCurrentForm());
 
-    $passportWrapper.modal('refresh');
+    //$passportWrapper.modal('refresh');
     //_scrollTo($passportWrapper.parent(), $("#passportmenu-bottom"), 900);
 }
 
 function hidePassportUpdateForm() {
-    $(".passport-stories-wrapper").fadeToggle(800);
-    $passportUpdate.fadeOut(800);
+    //$(".passport-stories-wrapper").fadeToggle(600);
+    $passportUpdateButtonWrapper.slideDown(600);
+    //$passportUpdate.fadeOut(800);
+    $passportUpdate.slideUp(600, function () {
+        $passportUpdate.hide();
+        $passportWrapper.modal('refresh');
+        //_scrollTo($passportWrapper.parent(), $("#passportmenu-bottom"), 900);
+    });
 
-    $passportWrapper.modal('refresh');
+    //$passportWrapper.modal('refresh');
     //_scrollTo($passportWrapper.parent(), $(".entity-submit", $passportUpdate), 900);
-    _scrollTo($passportWrapper.parent(), $("#passportmenu-bottom"), 900);
+    //_scrollTo($passportWrapper.parent(), $("#passportmenu-bottom"), 6500);
 }
 
 function resetForm($form) {

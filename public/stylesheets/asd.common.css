@@ -101,9 +101,9 @@
     position: relative;
     display: inline-block;
     top: 50%;
-    left: 23%;
+    left: 20px;
     transform: translate(-50%, -50%);
-    font-size: 12pt;
+    font-size: 14px;
     font-family: Georgia, sans-serif;
     font-style: italic;
 }

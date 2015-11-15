@@ -17,7 +17,7 @@
             <td colspan="5">New article</td>
         </tr>
         @for(a <- articles) {
-            <tr id="article_@a.getId">
+            <tr id="article_@a.getId" @if(a.getApprovedDT == null) {"class='bold-thing'"}>
                 <td>@a.getTitle</td>
                 <td>@a.getAuthors.map(x => x.getName).mkString(", ")</td>
                 <td class="noedit"><input type="datetime" value="@{

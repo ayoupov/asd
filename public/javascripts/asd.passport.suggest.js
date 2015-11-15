@@ -1,29 +1,37 @@
 function showPassportSuggestForm() {
     if ($passportUpdate.is(":visible"))
-        $passportUpdate.slideUp('slow');
+        $passportUpdate.slideUp(300);
     initSuggestForm($(this));
     var visibleAlready = $passportSuggestForm.is(":visible");
-    $passportUpdateButtonWrapper.hide();
+    if (!$passportUpdateButtonWrapper.is(":visible"))
+        $passportUpdateButtonWrapper.slideUp(300);
     if (!visibleAlready) {
-        $passportSuggestForm.slideDown(800);
-        $passportSuggestForm.fadeIn(800, focusOnField);
-        _scrollTo($passportWrapper.parent(), $("#field-value", $passportSuggestForm), 900);
+        $passportSuggestForm.show();
+        $passportWrapper.modal('refresh');
+        _scrollTo($passportWrapper.parent(), $(".cancel-button", $passportSuggestForm), 500, focusOnField);
+    } else {
+        _scrollTo($passportWrapper.parent(), $(".cancel-button", $passportSuggestForm), 500, focusOnField);
     }
     $reportMistakesWrapper.hide();
 
-    focusOnField();
+    //focusOnField();
     //$passportWrapper.modal('refresh');
 }
 
 function hidePassportSuggestForm() {
-    $(".passport-stories-wrapper").show('slow');
-    $passportUpdateButtonWrapper.show();
+    if (!$passportUpdateButtonWrapper.is(":visible")) {
+        $passportUpdateButtonWrapper.slideDown(300);
+    }
+    $(".passport-stories-wrapper").fadeIn(800);
+    //$passportUpdateButtonWrapper.show();
     //$passportSuggestForm.fadeOut(500);
-    $passportSuggestForm.slideUp(800);
+    $passportSuggestForm.slideUp(800, function () {
+        $passportWrapper.modal('refresh');
+        //_scrollTo($passportWrapper.parent(), $("#passportmenu-bottom"), 300);
+    });
     $reportMistakesWrapper.show();
-    $passportWrapper.modal('refresh');
     //_scrollTo($passportWrapper.parent(), $passportUpdateButtonWrapper, 900);
-    _scrollTo($passportWrapper.parent(), $("#passportmenu-bottom"), 900);
+
 }
 
 function focusOnField() {

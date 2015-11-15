@@ -153,7 +153,7 @@ var menuOffsetTop = menuOffsetDefault, menuOffsetLeft = menuOffsetDefault; // sh
 var resizeFunc = function () {
     // resize nav
     var wwidth = $(window).width();
-    var margin = parseFloat($('.media-container').css('margin-left'));
+    var margin = parseFloat($('.media-container').css('margin-left')) || $('.media-container').offset().left;
     $menu.css({
         left: menuOffsetLeft + 'px',
         top: menuOffsetTop + 'px',
@@ -198,6 +198,8 @@ var followMenu = function () {
     var slide = currentSlide();
     $('a', $links).removeClass('active');
     $(".slide-" + slide, $links).addClass('active');
+    if (slide != "map")
+        setSiteMode();
 };
 
 var prevWidth = 50;
