@@ -1,0 +1,45 @@
+a {
+    text-decoration: none;
+    color: #5a38db
+}
+
+a:hover {
+    text-decoration: none;
+    /*border-bottom: 5px solid;*/
+    color: #5a38db
+}
+
+
+body {
+    font-family: Georgia, serif;
+    font-size: 14px;
+    line-height: 1.2;
+}
+
+.d {
+    font-size: 21px;
+    font-weight: bold;
+}
+
+.wrap {
+    width: 720px;
+    background: #FFF;
+    margin: auto;
+    border: 5px solid #e1e1e1;
+}
+
+.body-text {
+    margin: 40px 0 40px;
+    padding: 0 30px;
+}
+
+.centered {
+    margin: auto;
+    width: 560px;
+    text-align: center;
+}
+
+.bolder {
+    font-weight: bolder;
+}
+

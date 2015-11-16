@@ -41,6 +41,9 @@ POST          /content/email/:name                    controllers.Application.em
 POST          /content/email/check/:name              controllers.Application.emailCheck(name : String)
 GET           /content/email/unsubscribe/:hash        controllers.Application.emailUnsubscribe(hash : String)
 
+GET           /content/tos_site.html                  controllers.Application.tos_site()
+GET           /content/tos_content.html               controllers.Application.tos_content()
+
 POST          /preview/article                        controllers.MediaContents.previewPost(ctype : String = "article")
 GET           /preview/article/:id                    controllers.MediaContents.previewGet(ctype: String = "article", id : String)
 POST          /preview/story                          controllers.MediaContents.previewPost(ctype : String = "story")

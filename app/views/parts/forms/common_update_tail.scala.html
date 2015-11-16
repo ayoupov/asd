@@ -1,6 +1,6 @@
 @(partName : String)
-@checkedConfirmed() = @{
-    val isConfirmed = Option(request().cookie("tos-confirmed")) match {
+@checkedConfirmed(value: String) = @{
+    val isConfirmed = Option(request().cookie(value)) match {
         case None => ""
         case Some(c : Http.Cookie) => c.value()
     }
@@ -12,9 +12,14 @@
 <!-- common part 2, TOS etc -->
 <div class="gapper-less clearfix"></div>
 <div class="col-3"></div>
-<div class="col-4 inlinemiddle">
-    <input type="checkbox" id="@{partName + "-"}upload-confirmation" class="ui checkbox upload-confirmation required" name="upload-confirmed" @checkedConfirmed()>
-    <label for="@{partName + "-"}upload-confirmation" class="upload-confirmation-label"><span>Zgadzam się z <a href="#tos" class="tos-anchor">regulaminem</a></span></label>
+<div class="col-4 fullheight">
+    <input type="checkbox" id="@{partName + "-"}site-tos-confirmation" class="ui checkbox upload-confirmation required" name="site-tos-confirmed" @checkedConfirmed("tos-site-confirmed")>
+    <label for="@{partName + "-"}site-tos-confirmation" class="upload-confirmation-label"><span>Zapoznałam/em się z <a href="@routes.Application.tos_site" target="_blank" class="tos-anchor">regulaminem</a> i z umową <a href="@routes.Application.tos_content" target="_blank" class="tos-anchor">licencji</a> i wyrażam na nie zgodę.</span></label>
+    <br><br>
+    <input type="checkbox" id="@{partName + "-"}upload-tos-confirmation" class="ui checkbox upload-confirmation required" name="upload-tos-confirmed" @checkedConfirmed("tos-content-confirmed")>
+    <label for="@{partName + "-"}upload-tos-confirmation" class="upload-confirmation-label"><span>Wyrażam zgodę na przetwarzanie moich danych osobowych przez Administratora w celu zawarcia umowy <a href="@routes.Application.tos_content" target="_blank" class="tos-anchor">licencji</a> dotyczącej przesyłanych przeze mnie treści.</span><br>
+    <span class="more-legal">Osoba, której dane dotyczą, ma prawo dostępu do swoich danych i ich poprawiania. Osoba, której dane dotyczą, ma również prawo do żądania zaprzestania wszelkiego wykorzystywania danych z naruszeniem przepisów prawa, jak również do wycofania swojej zgody na przetwarzanie danych osobowych.</span></label>
+    <br><br><br><br>
 </div>
 <div class="col-1"></div>
 <div class="gapper"></div>

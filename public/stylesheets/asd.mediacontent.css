@@ -27,9 +27,11 @@
 .content-cover-image-article .content-cover-image-overlay {
     height: 100%;
     width: 100%;
-    background: transparent url(/assets/images/article_cover_overlay.png) center;
+    /*background: transparent url(/assets/images/article_cover_overlay.png);*/
+    background: rgba(0,0,0,0.3) repeat;
+    background-size: cover;
     position: absolute;
-    opacity: 0.5;
+    opacity: 1;
 }
 
 .content-title {

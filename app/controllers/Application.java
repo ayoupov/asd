@@ -18,10 +18,12 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.twirl.api.Html;
+import utils.ServerProperties;
 import utils.serialize.Serializer;
 import utils.web.PasswordProtectionAnnotation;
 import views.html.index;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.List;
@@ -44,7 +46,8 @@ public class Application extends Controller
         long churchCount = ContentManager.getChurchCount();
         Church currentChurch = ContentManager.getChurch(churchId);
         if (!isInProduction()) Logger.info("currentChurch = " + currentChurch);
-        Html content = index.render(churchCount, currentChurch, getLocalUser(session()));
+        Boolean useStamen = new File(ServerProperties.getValue("asd.map.flag.file")).exists();
+        Html content = index.render(useStamen, churchCount, currentChurch, getLocalUser(session()));
         commitTransaction();
         return ok(content);
     }
@@ -145,5 +148,15 @@ public class Application extends Controller
         if (res)
             return ok("unsubscribed");
         else return badRequest();
+    }
+
+    public static Result tos_site()
+    {
+        return ok(views.html.tos_site.render());
+    }
+
+    public static Result tos_content()
+    {
+        return ok(views.html.tos_content.render());
     }
 }

@@ -17,7 +17,7 @@ public class PasswordProtectionAnnotationAction extends Action<PasswordProtectio
 {
 
     public static final String PWDPROVIDED = "pwdprovided";
-    private static final String PROTPWD = "dragons&dungeons";
+    private static final String PROTPWD = "architektura";
     private static final String PWD = "pwd";
     private static final boolean debugmode = !ServerProperties.isInProduction();
 

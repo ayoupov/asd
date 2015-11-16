@@ -173,8 +173,13 @@ var resizeFunc = function () {
         'margin-left': (margin + 20) + 'px'
     });
     // resize map (take care of position prop of slide!)
+    var maptop;
+    if($('.buorg').length && $('.buorg').is(':visible'))
+        maptop = 0;
+    else
+        maptop = $menu.height();
     $map.css({
-        top: $menu.height(),
+        top: maptop,
         left: 0,
         right: menuOffsetLeft,
         bottom: 0,

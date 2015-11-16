@@ -692,3 +692,16 @@ div.holder-border {
     font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
     color: #5a38db;
 }
+
+.upload-confirmation-label {
+    font-family: "Helvetica Neue Light", "Helvetica", Arial, sans-serif;
+    width: 430px;
+    display: inline-block;
+    vertical-align: top !important;
+    line-height: 16px;
+}
+
+.upload-confirmation-label .more-legal {
+    font-family: Georgia, serif;
+    font-size: 11px;
+}

@@ -63,11 +63,29 @@ function checkReturn() {
 }
 
 var mapInit = function (geostats) {
-    L.mapbox.accessToken = mapboxAccessToken;
-    var opts = {
-        loadingControl: true
-    };
-    map = L.mapbox.map('map', mapboxMapID, opts).setView([52.36, 18.45], 7);
+    if (source == 'mapbox') {
+        L.mapbox.accessToken = mapboxAccessToken;
+        var opts = {
+            loadingControl: true
+        };
+        map = L.mapbox.map('map', mapboxMapID, opts).setView([52.36, 18.45], 7);
+    } else if (source == 'stamen')
+    {
+        var stamenLayer = new L.StamenTileLayer("toner-lite");
+        map = new L.Map('map', {
+            center: new L.LatLng(52.36, 18.45),
+            zoom: 7
+        });
+        //var stamenLayer = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.{ext}', {
+        //    attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        //    subdomains: 'abcd',
+        //    minZoom: 0,
+        //    maxZoom: 20,
+        //    ext: 'png'
+        //});
+        map.addLayer(stamenLayer);
+    }
+
     // relocate attribution
     $('.leaflet-control-attribution').css(
         {

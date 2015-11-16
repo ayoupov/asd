@@ -2,7 +2,7 @@
 @import play.libs.Json
 @import utils.ServerProperties
 @import utils.serialize.Serializer
-@(churchCount: Long, currentChurch: Church, user: User)
+@(useStamen : Boolean, churchCount: Long, currentChurch: Church, user: User)
 @polishedCount() = @{
     churchCount % 100 match {
         case 2|3|4|22|23|24|32|33|34|42|43|44|52|53|54|62|63|64|72|73|74|82|83|84|92|93|94 => churchCount + " kościoły"
@@ -39,7 +39,7 @@
         <meta charset="UTF-8">
         <title>@mainTitle()</title>
         @parts.heads.commonhead()
-        @parts.heads.maphead()
+        @parts.heads.maphead(useStamen)
         @parts.heads.indexhead()
         @if(currentChurch == null) {
         @parts.heads.metas(mainDescription(),mainTitle(), null, "website", routes.Application.index(null).absoluteURL(), null)
@@ -63,6 +63,7 @@
                 @parts.forms.new_church_form(user)
                 @parts.forms.feedback_form(user)
             </div>
+            <div class="message-wrapper"></div>
         </div>
         <script>
         var userAuthed, userName, mapboxAccessToken, mapboxMapID, churchTilesURL;
@@ -77,6 +78,12 @@
         }
         var googleApiKey = "@ServerProperties.getValue("google.api.key")";
         var port = location.port;
+        var source;
+        @if(useStamen) {
+            source = 'stamen';
+        } else {
+            source = 'mapbox';
+        }
         var thisHost = location.hostname + (port != "" ? ":" + port : "");
         @if(ServerProperties.isInProduction) {
             churchTilesURL = 'http://{s}.' + thisHost + '/tiles/c/{z}/{x}/{y}.json';
