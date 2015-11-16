@@ -19,11 +19,16 @@ GET           /stats/count                            controllers.Stats.count
 #church content
 GET           /church/:id                             controllers.Application.index(id: String)
 GET           /church/passport/:id                    controllers.Churches.byId(id: String)
+GET           /church/requests/:id                    controllers.Churches.requestsById(id: String)
 POST          /church/passport/:field                 controllers.Churches.updateField(field: String)
 POST          /church/suggest                         controllers.Churches.suggest
 POST          /church/story                           controllers.Churches.addStory
+POST          /church/requests/:id/ignore             controllers.Churches.ignoreSuggestion(id:Int)
+POST          /church/requests/:id/fix                controllers.Churches.fixSuggestion(id:Int)
 GET           /church/:id/images                      controllers.Churches.images(id:String)
 POST          /church/images                          controllers.Churches.addImages
+
+POST          /church/update/:extID                   controllers.Churches.updateChurch(extID : String)
 
 # use html or none to get rendered page, json -- to simple data, has to be restricted to role >= moderator
 GET           /article/:id.:ext                       controllers.MediaContents.byTypeAndId(ctype: String = "article", id: String, ext: String )

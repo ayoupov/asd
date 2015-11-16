@@ -7,7 +7,8 @@
             <tr>
                 <th>Title</th>
                 <th>Author</th>
-                <th>Publish</th>
+                <th>PublishOn</th>
+                <th>ApprovedBy</th>
                 <th>Star</th>
                 <th>Actions</th>
             </tr>
@@ -22,13 +23,15 @@
                 }
             }" disabled="disabled">
             </td>
+            <td>@{if(s.getApprovedBy != null){s.getApprovedBy.getName} else {""}}</td>
             <td class="noedit"><input type="checkbox" @{
                 if (s.getStarred == true) "checked"
             } onchange="flipStar('story', @s.getId);">
             </td>
             <td class="noedit">
-                <a href="javascript: flipApprove('story', @s.getId, @{s.getApprovedDT == null});">@{if(s.getApprovedDT == null) "publish" else "unpublish"}</a>
-                <a href="javascript: removeContent('story', @s.getId);" style="margin-left:20px;"><img src="@routes.Assets.at("images/close_button.png")"></a>
+                <a href="javascript: flipApprove('story', @s.getId, @{s.getApprovedDT == null});"> @{if(s.getApprovedDT == null) "publish" else "unpublish"} </a><br><br>
+                @*<a href="javascript: removeContent('story', @s.getId);" style="margin-left:20px;"><img src="@routes.Assets.at("images/close_button.png")"></a>*@
+                <a href="javascript: removeContent('story', @s.getId);"> remove </a>
             </td>
 
         </tr>

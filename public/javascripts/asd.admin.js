@@ -1,16 +1,20 @@
 var $admpages, $editors, $wrappers,
-    $churchEditor, $articleWrapper, $storyWrapper,
+    $requestForm, $churchForm, $churchWrapper, $articleWrapper, $storyWrapper,
     $articleForm, $storyForm, $fm, $emailWrapper, $emailForm;
 
 var apiExtension =
 {
     'get json email': '/content/email/{name}',
+    'get json requests': '/church/requests/{id}',
+    'post ignore suggestion': '/church/requests/{id}/ignore',
+    'post fix suggestion': '/church/requests/{id}/fix',
     'get json article': '/article/{id}.json',
     'get json story': '/story/{id}.json',
     'get associated pictures': '/files/list',
     'get story pictures': '/files/story/{id}',
 
     'post update email': '/content/email/{name}',
+    'post update church': '/church/update/{id}',
     'post check email': '/content/email/check/{name}',
     'post update article': '/article/update',
     'preview article': '/preview/article',
@@ -137,7 +141,8 @@ function initAdmSelectorCache() {
     $admpages = $(".admin-page");
     $editors = $(".editor-content");
     $wrappers = $(".editor-wrapper");
-    $churchEditor = $(".church-editor");
+    $churchForm = $(".church-form");
+    $churchWrapper = $(".church-wrapper");
     $articleWrapper = $(".article-wrapper");
     $storyWrapper = $(".story-wrapper");
     $articleForm = $(".article-form");
@@ -160,7 +165,7 @@ $(document).ready(function () {
     $("td:not(.noedit)", $("#articles")).on('click', articleEditClick);
     $("td:not(.noedit)", $("#stories")).on('click', storyEditClick);
     $("td:not(.noedit)", $("#emails")).on('click', emailEditClick);
-    $("tr", $("#churches")).on('click', churchRevisionClick);
+    $("td:not(.noedit)", $("#churches")).on('click', churchEditClick);
 
     $("tr").hover(function () {
         $(this).toggleClass('active');

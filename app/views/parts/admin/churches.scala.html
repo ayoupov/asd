@@ -1,4 +1,5 @@
 @import models.internal.search.filters.ChurchFilter
+@import utils.serialize.converters.DateTimeConverter
 @(churches : List[Church], filter : ChurchFilter)
 
 <div id="churches" class="admin-page">
@@ -8,23 +9,29 @@
                 <th>ID</th>
                 <th>Church</th>
                 <th>Address</th>
-                <th>State</th>
+                <th>ApprovedDT</th>
+                <th>ApprovedBy</th>
+                <th>Reqs</th>
             </tr>
         </thead>
         @for(c <- churches) {
         <tr id="church_@c.getExtID">
             <td>@c.getExtID</td>
             <td>@c.getName</td>
-            <td>@c.getAddress.getUnfolded</td>
-            <td><select>
-                <option>fix</option>
-                <option>ok</option>
-            </select></td>
+            <td class="noedit"><input type='checkbox' @{if(c.getAddress != null){"checked='checked'"}} ></td>
+            <td class="noedit"><input type="datetime" value="@{
+                if(c.getApprovedDT != null) {
+                    DateTimeConverter.sdf.format(c.getApprovedDT)
+                }
+            }" disabled="disabled">
+            </td>
+            <td>@{if(c.getApprovedBy != null){c.getApprovedBy.getName} else {""}}</td>
+            <td>@{if(c.getRequests != null){c.getRequests.count(r => !r.isFixed && !r.isIgnored)}}</td>
         </tr>
         }
         <tfoot>
             <tr>
-                <th colspan="4">
+                <th colspan="6">
                     <div class="ui left floated search input">
                         <input type="text" placeholder="Filter by name" class="filter-like text-filter" value="@filter.getNameFilter">
                     </div>

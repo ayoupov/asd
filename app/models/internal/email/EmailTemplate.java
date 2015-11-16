@@ -3,6 +3,7 @@ package models.internal.email;
 import org.apache.commons.lang3.tuple.Pair;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
+import play.Logger;
 import utils.ServerProperties;
 
 import javax.persistence.Entity;
@@ -13,8 +14,6 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-
-import controllers.routes;
 
 /**
  * Created with IntelliJ IDEA.
@@ -51,6 +50,8 @@ public class EmailTemplate
         subsRegexps.put(EmailSubstitution.ChurchPassportLink.name(), "\\$CHURCHPASSPORTLINK");
         subsRegexps.put(EmailSubstitution.ChurchPassportAdd.name(), "\\$CHURCHADDCONTENTLINK");
         subsRegexps.put(EmailSubstitution.UnsubscribeLink.name(), "\\$UNSUBSCRIBELINK");
+
+        subsRegexps.put(EmailSubstitution.ChurchLink.name(), "\\$CHURCHLINK");
 
         subsRegexps.put(EmailSubstitution.FacebookPage.name(), "\\$FACEBOOKPAGE");
         subsRegexps.put(EmailSubstitution.MapLink.name(), "\\$MAPLINK");
@@ -109,11 +110,21 @@ public class EmailTemplate
         // context-dependent
         for (Pair<String, String> substitution : substitutions) {
 //            System.out.println("trying to apply: " + substitution);
-            input = input.replaceAll(subsRegexps.get(substitution.getLeft()), substitution.getRight());
+            String right = substitution.getRight();
+            String left = subsRegexps.get(substitution.getLeft());
+            if (right != null && left != null) {
+                input = input.replaceAll(left, right);
+            } else
+                Logger.warn("trying to replace with null: " + substitution);
         }
         // content-independent
         for (Pair<String, String> substitution : commonSubs) {
-            input= input.replaceAll(subsRegexps.get(substitution.getLeft()), substitution.getRight());
+            String right = substitution.getRight();
+            String left = subsRegexps.get(substitution.getLeft());
+            if (right != null && left != null)
+                input = input.replaceAll(subsRegexps.get(substitution.getLeft()), substitution.getRight());
+            else
+                Logger.warn("trying to replace with null: " + substitution);
         }
         return input;
     }

@@ -10,6 +10,7 @@ import models.internal.ContentManager;
 import models.internal.RequestException;
 import models.internal.UserManager;
 import models.internal.email.EmailSubstitution;
+import models.internal.email.EmailUnsubscription;
 import models.internal.email.EmailWrapper;
 import models.user.User;
 import org.apache.commons.lang3.tuple.Pair;
@@ -30,6 +31,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static models.internal.UserManager.getLocalUser;
+import static models.internal.UserManager.getUnsubscribeLink;
 import static utils.DataUtils.safeBool;
 import static utils.DataUtils.safeLong;
 import static utils.HibernateUtils.*;
@@ -120,7 +122,8 @@ public class MediaContents extends Controller
             c = (MediaContent) get(MediaContent.class, id);
             if (when != null) {
                 if (!c.isWasPublished() && request() != null) {
-                    sendApproveEmail(c, user, when, request());
+                    EmailUnsubscription eu = UserManager.findUnsubscription(user);
+                    sendApproveEmail(c, eu, when, request());
                 }
                 c.approve(user, when);
                 approvedTS = c.getApprovedDT().getTime();
@@ -155,7 +158,7 @@ public class MediaContents extends Controller
 
     }
 
-    private static void sendApproveEmail(MediaContent c, User who, Date when, Http.Request request)
+    private static void sendApproveEmail(MediaContent c, EmailUnsubscription eu, Date when, Http.Request request)
     {
         try {
             User addedBy = c.getAddedBy();
@@ -167,12 +170,14 @@ public class MediaContents extends Controller
                     "html");
             String mcLink = mcCall.absoluteURL(request);
             String mcFBShareLink = "https://www.facebook.com/sharer.php?u=" + mcLink;
+            String hash = (eu == null) ? "" : eu.getHash();
 
             EmailWrapper.sendEmail(EmailWrapper.EmailNames.ApproveStory, null, addedBy,
                     Pair.of(EmailSubstitution.Username.name(), username),
                     Pair.of(EmailSubstitution.UserStoryTitle.name(), mcTitle),
                     Pair.of(EmailSubstitution.UserStoryLink.name(), mcLink),
-                    Pair.of(EmailSubstitution.UserStoryFBShareLink.name(), mcFBShareLink)
+                    Pair.of(EmailSubstitution.UserStoryFBShareLink.name(), mcFBShareLink),
+                    Pair.of(EmailSubstitution.UnsubscribeLink.name(), getUnsubscribeLink(hash))
             );
         } catch (Exception e) {
             Logger.error("while sending approve email", e);
@@ -268,6 +273,7 @@ public class MediaContents extends Controller
         else {
             c = new MediaContent(mct);
             c.setAddedBy(user);
+            c.setAddedDT(new Date());
         }
         result.put("entity", ctype);
 

@@ -175,7 +175,7 @@ public class UserManager
                         null,
                         user,
                         Pair.of(EmailSubstitution.Username.name(), user.getName()),
-                        Pair.of(EmailSubstitution.UnsubscribeLink.name(), ServerProperties.getValue("asd.absolute.url") + "unsubscribe/" + hash)
+                        Pair.of(EmailSubstitution.UnsubscribeLink.name(), UserManager.getUnsubscribeLink(hash))
                 );
                 user.setUnsubscribed(false);
             } catch (Exception e) {
@@ -312,4 +312,16 @@ public class UserManager
         return expires;
     }
 
+    public static String getUnsubscribeLink(String hash)
+    {
+        return ServerProperties.getValue("asd.absolute.url") + "unsubscribe/" + hash;
+    }
+
+    public static EmailUnsubscription findUnsubscription(User user)
+    {
+        return (EmailUnsubscription) getSession()
+                .createQuery("from EmailUnsubscription eu where eu.subscriber = :u")
+                .setEntity("u", user)
+                .uniqueResult();
+    }
 }

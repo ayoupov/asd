@@ -14,7 +14,7 @@ var api =
     'add church images': '/church/images',
     'update passport field': '/church/passport/{field}',
     'suggest church': '/church/suggest',
-    'send feedback' : '/feedback'
+    'send feedback': '/feedback'
 };
 
 // ss = starStories, sa = starArticles, ds = dateStories, da = dateArticles
@@ -55,24 +55,34 @@ var bindAPI = function () {
         {
             action: 'get stories',
             on: 'click',
-            urlData: {
-                ids: function () {
-                    return getNext("ds", dateStoriesRequested)
-                }
-            },
-            onSuccess: populateDateStories
+            onSuccess: populateDateStories,
+            beforeSend: function (settings) {
+                var ids = getNext("ds", dateStoriesRequested);
+                if (!ids)
+                    return false;
+                settings.urlData = {
+                    ids: ids
+                };
+                return settings;
+
+            }
         }
     );
     $(".story-control-right").api(
         {
             action: 'get stories',
             on: 'click',
-            urlData: {
-                ids: function () {
-                    return getPrev("ds", dateStoriesRequested)
-                }
-            },
-            onSuccess: populateDateStories
+            onSuccess: populateDateStories,
+            beforeSend: function (settings) {
+                var ids = getPrev("ds", dateStoriesRequested);
+                if (!ids)
+                    return false;
+                settings.urlData = {
+                    ids: ids
+                };
+                return settings;
+
+            }
         }
     );
 };
@@ -226,7 +236,7 @@ function populateDateStories(data) {
         );
 
         $dateStories.append($item);
-        $item.on('click', function(){
+        $item.on('click', function () {
             location.href = 'http://' + thisHost + '/story/' + item.id;
         });
     });

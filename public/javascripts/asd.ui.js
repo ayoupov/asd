@@ -159,6 +159,11 @@ var resizeFunc = function () {
         top: menuOffsetTop + 'px',
         width: (wwidth - 2 * menuOffsetLeft) + "px"
     });
+
+    $(".message-wrapper").css({
+       top : ($menu.height() + menuOffsetTop) +"px"
+    });
+
     // try another story:
     $links.css({
         position: 'absolute',

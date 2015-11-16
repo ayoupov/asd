@@ -28,6 +28,11 @@ public class EmailUnsubscription
     @JoinColumn(name="subscriber")
     private User subscriber;
 
+    public EmailUnsubscription()
+    {
+
+    }
+
     public EmailUnsubscription(User user, String hash)
     {
         this.subscriber = user;

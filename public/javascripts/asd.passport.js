@@ -62,6 +62,7 @@ function fillPassport(church) {
     gsvlock = true;
     resetEdit();
     clearAndFillDataTable();
+    clearSuggestionForm();
     $passportUpdate.hide();
     var churchId = currentChurch.extID;
     $("input.church-id-hidden").val(currentChurch.extID);
@@ -85,6 +86,7 @@ function fillPassport(church) {
     }
     else {
         $churchStoriesTitle.hide();
+        $churchStories.css('height', 0);
     }
 
     initPassportGallery(churchId);
@@ -204,6 +206,10 @@ function resetEdit() {
 function getCurrentForm() {
     var $thisTab = $(".ui.tab.active", $passportUpdate);
     return $(".entity-form", $thisTab);
+}
+
+function clearSuggestionForm() {
+    // todo
 }
 
 function clearAndFillDataTable() {

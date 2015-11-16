@@ -24,8 +24,9 @@
             <tr>
                 <th>Description</th>
                 <th>Preview</th>
-                <th>Uploaded by</th>
-                <th>Publish</th>
+                <th>UploadedBy</th>
+                <th>ApprovedOn</th>
+                <th>ApprovedBy</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -40,6 +41,7 @@
                     }
                 }" disabled="disabled">
                 </td>
+                <td>@{if(i.getApprovedBy != null){i.getApprovedBy.getName} else {""}}</td>
                 <td class="noedit" style="min-width: 110px;">
                     <a href="javascript: flipApprove('image', @i.getId, @{i.getApprovedTS == null});">@{if(i.getApprovedTS == null)  "approve" else "disapprove"} </a>
                     <a href="javascript: removeContent('image', @i.getId);"><img src="@routes.Assets.at("images/close_button.png")"></a>

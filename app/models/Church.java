@@ -10,6 +10,7 @@ package models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import models.address.Address;
+import models.internal.ChurchSuggestion;
 import models.internal.UserManager;
 import models.user.User;
 import org.apache.lucene.analysis.charfilter.MappingCharFilterFactory;
@@ -130,12 +131,27 @@ public class Church
     @JsonIgnore
     public Set<String> synset = new LinkedHashSet<String>();
 
+    @OneToMany(mappedBy = "relatedChurch")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonIgnore
+    private Set<ChurchSuggestion> requests;
+
+    boolean useUserGSV;
+
+    boolean useUserAddress;
+
     // only for internal update!
     public Church(String extID, String name, Address address)
     {
         this(extID, name, null, null, address, null, null, null, UserManager.getAutoUser());
         approvedBy = addedBy;
         approvedDT = new Date();
+    }
+
+    public Church(String extID, User by)
+    {
+        setAddedBy(by);
+        setAddedDT(new Date());
     }
 
     public Church(String extID, String name, Integer constructionStart, Integer constructionEnd,
@@ -344,5 +360,35 @@ public class Church
     public void setSynset(Set<String> synset)
     {
         this.synset = synset;
+    }
+
+    public Set<ChurchSuggestion> getRequests()
+    {
+        return requests;
+    }
+
+    public void setRequests(Set<ChurchSuggestion> requests)
+    {
+        this.requests = requests;
+    }
+
+    public boolean isUseUserGSV()
+    {
+        return useUserGSV;
+    }
+
+    public void setUseUserGSV(boolean useUserGSV)
+    {
+        this.useUserGSV = useUserGSV;
+    }
+
+    public boolean isUseUserAddress()
+    {
+        return useUserAddress;
+    }
+
+    public void setUseUserAddress(boolean useUserAddress)
+    {
+        this.useUserAddress = useUserAddress;
     }
 }

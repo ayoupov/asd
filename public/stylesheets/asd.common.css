@@ -524,7 +524,7 @@ td.passport-data-filler {
 
 .message-wrapper {
     position: fixed !important;
-    top:0;
+    top:69px;
     margin-top:0 !important;
     width: 100%;
     z-index: 9999;
@@ -572,4 +572,9 @@ td.passport-data-filler {
 
 .cookie-notification a:hover {
     text-decoration: underline;
+}
+
+.notification-close-button {
+    float: right;
+    cursor: pointer;
 }

@@ -1,5 +1,6 @@
 package models.internal;
 
+import models.Church;
 import models.user.User;
 import org.hibernate.annotations.Type;
 import play.data.validation.Constraints;
@@ -43,6 +44,11 @@ public class ChurchSuggestion
     private String field;
 
     private boolean fixed;
+
+    private boolean ignored;
+
+    @ManyToOne
+    private Church relatedChurch;
 
     @Column(name = "suggested_on_dt")
     private Date suggestedOn;
@@ -195,6 +201,16 @@ public class ChurchSuggestion
         this.suggestedOn = suggestedOn;
     }
 
+    public Church getRelatedChurch()
+    {
+        return relatedChurch;
+    }
+
+    public void setRelatedChurch(Church relatedChurch)
+    {
+        this.relatedChurch = relatedChurch;
+    }
+
     @Override
     public String toString()
     {
@@ -213,5 +229,15 @@ public class ChurchSuggestion
     public void setFixed(boolean fixed)
     {
         this.fixed = fixed;
+    }
+
+    public boolean isIgnored()
+    {
+        return ignored;
+    }
+
+    public void setIgnored(boolean ignored)
+    {
+        this.ignored = ignored;
     }
 }

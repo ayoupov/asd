@@ -26,9 +26,11 @@ import models.internal.email.EmailTemplate;
 import views.html.admin;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static utils.HibernateUtils.beginTransaction;
 import static utils.HibernateUtils.commitTransaction;
@@ -176,6 +178,8 @@ public class Admin extends Controller
             List<MediaContent> articles = ContentManager.getMediaContent(articleFilter, MediaContentType.Article);
             List<MediaContent> stories = ContentManager.getMediaContent(storyFilter, MediaContentType.Story);
             List<Church> churches = ContentManager.getChurches(churchFilter);
+            churches = churches.stream().sorted(ChurchIssueComparator.instance()).collect(Collectors.toList());
+
             List<Image> images = ContentManager.getImages(imageFilter);
             List<EmailTemplate> emails = ContentManager.getEmails();
 
@@ -293,4 +297,31 @@ public class Admin extends Controller
         return ok(jsonNode);
     }
 
+    private static class ChurchIssueComparator implements Comparator<Church>
+    {
+        private static Comparator<Church> instance = new ChurchIssueComparator();
+
+        private ChurchIssueComparator(){
+
+        }
+
+        public static Comparator<Church> instance()
+        {
+            return instance;
+        }
+
+        @Override
+        public int compare(Church o1, Church o2)
+        {
+            long s1 = (o1.getRequests() == null) ? 0 : o1.getRequests().stream().filter(r -> !r.isFixed() && !r.isIgnored()).count();
+            long s2 = (o2.getRequests() == null) ? 0 : o2.getRequests().stream().filter(r -> !r.isFixed() && !r.isIgnored()).count();
+            return (int) (s2-s1);
+        }
+
+        @Override
+        public Comparator<Church> reversed()
+        {
+            return null;
+        }
+    }
 }

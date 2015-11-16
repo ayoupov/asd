@@ -6,12 +6,12 @@ import models.user.UserStatus;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
-import org.apache.commons.mail.ImageHtmlEmail;
-import org.apache.commons.mail.resolver.DataSourceUrlResolver;
+import play.Logger;
 import utils.ServerProperties;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,6 +27,7 @@ public class EmailWrapper
     public static void sendEmail(String templateName, String senderName, User to, Pair<String, String>... substitutions) throws MalformedURLException, EmailException
     {
         if (!to.getUnsubscribed() && to.getStatus() == UserStatus.Active) {
+            Logger.info("sending email with these substitutions: " + Arrays.deepToString(substitutions));
             EmailTemplate et = ContentManager.getEmailTemplateByName(templateName);
             sendEmail(
                     et.getProcessedBody(substitutions),

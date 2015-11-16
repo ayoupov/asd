@@ -50,7 +50,7 @@ $(document).ready(function () {
     $buo($buoop, false);
     // cookie notification
     if (!Cookies.get("cookiesnotified")) {
-        var notificationMessage = $("<div class='ui message cookie-notification' id='cookie-notification'><i class='close icon'></i>" +
+        var notificationMessage = $("<div class='ui message cookie-notification' id='cookie-notification'><img src='/assets/images/close_button.png' class='notification-close-button'>" +
             "Nasza strona internetowa używa plików cookies (tzw. ciasteczka) w celach statystycznych, funkcjonalnych oraz autoryzacyjnych. " +
             "Dzięki nim możemy indywidualnie dostosować stronę do twoich potrzeb oraz bardziej efektywnie zbierać wspomnienia z budów kościołów. " +
             "Wyłączając ten komunikat akceptujesz używanie plików cookies. " +
@@ -58,7 +58,7 @@ $(document).ready(function () {
             "<a href='http://ciasteczka.eu/#jak-wylaczyc-ciasteczka'>Dowiedz się jak je wyłączyć</a>. Przeczytaj więcej w <a href='/content/tos_site.html'>regulaminie strony</a>." +
             "</div>");
         $(".message-wrapper").append(notificationMessage);
-        $('.close', notificationMessage).on('click', function () {
+        $('.notification-close-button', notificationMessage).on('click', function () {
             Cookies.set("cookiesnotified", "true", {expires: 365});
             notificationMessage.fadeOut(600);
         });

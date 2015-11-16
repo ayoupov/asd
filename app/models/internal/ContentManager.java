@@ -24,8 +24,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static utils.DataUtils.safeLong;
-import static utils.HibernateUtils.getSession;
-import static utils.HibernateUtils.saveOrUpdate;
+import static utils.HibernateUtils.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -113,17 +112,6 @@ public class ContentManager
         return church;
     }
 
-//    public static List<Church> getChurchVersions(String id)
-//    {
-//        Session session = getSession();
-//        List<Church> churches = session.createQuery(
-//                "select c from Church c " +
-//                        "where c.extID = :id " +
-//                        "order by c.version asc"
-//        ).setParameter("id", id).list();
-//        return churches;
-//    }
-
     public static List<Object> getChurchesShort()
     {
         Session session = getSession();
@@ -140,7 +128,7 @@ public class ContentManager
         Session session = getSession();
         List<Church> churches = session.createQuery(
                 "select distinct c1 " +
-                        "from Church c1, Church c2 " +
+                        "from Church c1 " +
                         "where " +
                         "c1.approvedDT is not null ").list();
         return churches;
@@ -151,9 +139,11 @@ public class ContentManager
         Session session = getSession();
         Query query = session.createQuery(
                 "select distinct c " +
-                        "from Church c where " +
+                        "from Church c, ChurchSuggestion cs where " +
                         "c.name like :fname or c.extID like :fname " +
-                        "order by c.approvedDT, c.extID asc")
+                        "order by " +
+                        "(CASE WHEN c.approvedDT IS NULL THEN 1 ELSE 0 END) DESC, " +
+                        "c.requests.size desc, c.approvedDT desc, c.extID asc")
                 .setParameter("fname", "%" + filter.getNameFilter() + "%")
                 .setMaxResults(filter.getMaxResults())
                 .setFirstResult(filter.getPage() * filter.getMaxResults());
@@ -259,7 +249,11 @@ public class ContentManager
                 "select count(*) " +
                         "from Church c where c.approvedDT is null ")
                 .uniqueResult();
-        return res.intValue();
+        Long res2 = (Long) session.createQuery(
+                "select count(cs.id) from ChurchSuggestion cs, Church c " +
+                        "where cs.fixed = FALSE and cs.ignored = FALSE and (cs.relatedChurch = c)"
+        ).uniqueResult();
+        return res.intValue() + res2.intValue();
     }
 
     public static Integer getImageIssuesCount()
@@ -566,4 +560,27 @@ public class ContentManager
         return images;
     }
 
+    public static Set<Architect> parseArchitectsList(String[] architectsRaw)
+    {
+        Set<Architect> res = new LinkedHashSet<>();
+        for (String sRaw : architectsRaw) {
+            String[] rawsplit = sRaw.split(",");
+            for (String s : rawsplit) {
+                long id = safeLong(s, -1);
+                if (id > -1)
+                    res.add((Architect) getSession().get(Architect.class, id));
+                else {
+                    Logger.warn("Warning! Searching for an architect: " + s);
+                    Architect architect = ContentManager.getArchitectByName(s);
+                    if (architect == null) {
+                        architect = new Architect();
+                        architect.setName(s);
+                        architect.setId((Long) save(architect));
+                    }
+                    res.add(architect);
+                }
+            }
+        }
+        return res;
+    }
 }

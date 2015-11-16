@@ -92,6 +92,7 @@ function getNext(key, q) {
             break;
     }
     contentCache[key].idx += Math.min(q, pushed);
+    contentCache[key].left = q - q % pushed;
     return res.join(",");
 }
 
@@ -101,16 +102,20 @@ function getPrev(key, q) {
     var thisCache = contentCache[key];
     var contentLength = thisCache.ids.length;
     var idx = thisCache.idx;
-    if (idx - q - dateStoriesFirst + 1 >= 0) {
-        for (var i = q; i > 0; i--) {
-            var id = thisCache.ids[idx - dateStoriesFirst - i];
+    var left = thisCache.left;
+    //if (idx - q - dateStoriesFirst + 1 >= 0) {
+    //if (idx - q  + 1 >= 0) {
+        for (var i = q + left; i > left; i--) {
+            //var id = thisCache.ids[idx - dateStoriesFirst - i];
+            var id = thisCache.ids[idx - i];
             if (typeof id !== "undefined") {
                 res.push(id[0]);
                 pushed++;
             }
         }
         thisCache.idx -= Math.min(q, pushed);
-    }
+        contentCache[key].left = q % pushed;
+    //}
     return res.join(",");
 }
 

@@ -222,7 +222,7 @@ var $buo = function(op,test) {
     div.id="buorg";
     div.className="buorg ui message";
     //div.innerHTML= '<div><i class="close icon" id="buorgclose"></i>' + this.op.text + '</div>';
-    div.innerHTML= '<i class="close icon" id="buorgclose"></i>' + this.op.text;
+    div.innerHTML= "<img id='buorgclose' src='/assets/images/close_button.png' class='notification-close-button'>" + this.op.text;
 
 //    var sheet = document.createElement("style");
 ////sheet.setAttribute("type", "text/css");

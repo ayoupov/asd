@@ -113,6 +113,13 @@ public class HibernateUtils
 //        getSession().close();
     }
 
+    public static void rollbackTransaction()
+    {
+        getSession().getTransaction().rollback();
+//        ourSessionFactory.close();
+//        getSession().close();
+    }
+
     public static boolean delete(Object o)
     {
         boolean res = true;
