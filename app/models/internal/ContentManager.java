@@ -279,9 +279,7 @@ public class ContentManager
                 User user;
                 user = UserManager.findByAuthUserIdentity(internalUser);
                 if (user == null) {
-                    user = UserManager.createUser(internalUser);
-                    user.setRole(UserRole.Guest);
-                    user.setStatus(UserStatus.Blocked);
+                    user = UserManager.createUser(internalUser, UserRole.Guest, UserStatus.Blocked);
                 }
                 saveOrUpdate(user);
                 res.add(user);
@@ -582,5 +580,15 @@ public class ContentManager
             }
         }
         return res;
+    }
+
+    public static List<UserFeedback> getFeedbacks()
+    {
+        return getSession().createQuery("from UserFeedback uf where uf.hidden = false ").list();
+    }
+
+    public static Long getTotalFeedbacks()
+    {
+        return (Long) getSession().createQuery("select count(*) from UserFeedback uf ").setCacheable(true).uniqueResult();
     }
 }

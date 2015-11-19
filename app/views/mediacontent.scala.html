@@ -27,10 +27,7 @@
         }
     }
     @contentDescription() = @{
-        if (content.getContentType == MediaContentType.Article)
-            content.getLead
-        else
-            content.getCoverDescription
+        content.getCoverDescription
     }
     @contentURL() = @{
         val id = if(content.getAlt != null && !"".equals(content.getAlt))
@@ -50,8 +47,15 @@
             } else null
         }
     }
-    @contentGapClass() = @{
-        if (content.getContentType == MediaContentType.Story) "media-content-story" else ""
+    @contentGapClass(bottom: Boolean) = @{
+        if (content.getContentType == MediaContentType.Story &&
+                content.getText.contains("afterwords") && bottom)
+            ""
+        else
+            if (content.getContentType == MediaContentType.Story)
+                "media-content-story"
+            else
+                ""
     }
 <!DOCTYPE html>
     <html lang="pl">
@@ -83,7 +87,7 @@
             @content.getTitle
             </div>
         </div>
-        <div class="content-header-wrapper @contentGapClass()">
+        <div class="content-header-wrapper @contentGapClass(false)">
             <div class="content-main-wrapper content-header-center">
                 <div class="content-header-date">@RenderUtils.contentDateToString(content.getApprovedDT)</div>
                 <div class="content-header-authors-wrapper">
@@ -105,7 +109,7 @@
             @parts.media.processed2(content.getText)
         </div>
             @if(content.getContentType == MediaContentType.Story) {
-                <div class="mediacontent-church-data @contentGapClass()">
+                <div class="mediacontent-church-data @contentGapClass(true)">
                 @parts.passport.datatable(content.getDedicatedChurch)
                 </div>
             }

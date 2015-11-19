@@ -6,6 +6,8 @@ import models.user.UserStatus;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
+import org.apache.commons.mail.ImageHtmlEmail;
+import org.apache.commons.mail.resolver.DataSourceUrlResolver;
 import play.Logger;
 import utils.ServerProperties;
 
@@ -41,11 +43,11 @@ public class EmailWrapper
     public static void sendEmail(String processedEmailTemplate, String subject, String senderName, User to) throws EmailException, MalformedURLException
     {
         // Create the email message
-        HtmlEmail email = new HtmlEmail();
-//        ImageHtmlEmail email = new ImageHtmlEmail();
+//        HtmlEmail email = new HtmlEmail();
+        ImageHtmlEmail email = new ImageHtmlEmail();
 
         URL url = new URL(ServerProperties.getValue("asd.absolute.url"));
-//        email.setDataSourceResolver(new DataSourceUrlResolver(url));
+        email.setDataSourceResolver(new DataSourceUrlResolver(url));
 
         email.setHostName("smtp.gmail.com");
         email.setSmtpPort(587);

@@ -80,6 +80,10 @@ function _scrollTo($src, $target, speed, callback) {
 function getNext(key, q) {
     var res = [];
     var pushed = 0;
+    var thisCache = contentCache[key];
+    var contentLength = thisCache.ids.length;
+    //console.log("full: " + contentLength);
+    //console.log("thiscache idx" + thisCache.idx);
     for (var i = 0; i < q; i++) {
         if (contentLeft(key) > 0) {
             var id = contentCache[key].ids[contentCache[key].idx + i];
@@ -91,8 +95,8 @@ function getNext(key, q) {
         else
             break;
     }
+    contentCache[key].lastIdx = contentCache[key].idx;
     contentCache[key].idx += Math.min(q, pushed);
-    contentCache[key].left = q - q % pushed;
     return res.join(",");
 }
 
@@ -101,20 +105,23 @@ function getPrev(key, q) {
     var pushed = 0;
     var thisCache = contentCache[key];
     var contentLength = thisCache.ids.length;
-    var idx = thisCache.idx;
-    var left = thisCache.left;
-    //if (idx - q - dateStoriesFirst + 1 >= 0) {
-    //if (idx - q  + 1 >= 0) {
-        for (var i = q + left; i > left; i--) {
-            //var id = thisCache.ids[idx - dateStoriesFirst - i];
-            var id = thisCache.ids[idx - i];
-            if (typeof id !== "undefined") {
-                res.push(id[0]);
-                pushed++;
-            }
+    //console.log("full: " + contentLength);
+    //console.log("thiscache idx: " + thisCache.idx);
+    //console.log("thiscache lastIdx: " + thisCache.lastIdx);
+    //var idx = thisCache.idx - thisCache.left;
+    var idx = thisCache.lastIdx;
+    if (idx > 0)
+    for (var i = q; i > 0; i--) {
+        //var id = thisCache.ids[idx - dateStoriesFirst - i];
+        var id = thisCache.ids[idx - i];
+        if (typeof id !== "undefined") {
+            res.push(id[0]);
+            pushed++;
         }
-        thisCache.idx -= Math.min(q, pushed);
-        contentCache[key].left = q % pushed;
+    }
+    thisCache.idx = thisCache.lastIdx;
+    thisCache.idx -= Math.min(q, pushed);
+    thisCache.lastIdx = thisCache.idx;
     //}
     return res.join(",");
 }
@@ -136,12 +143,12 @@ function starsort(arr) {
     return shuffle(starred).concat(shuffle(notStarred));
 }
 
-function stringStartsWith (string, prefix) {
+function stringStartsWith(string, prefix) {
     return string.slice(0, prefix.length) == prefix;
 }
 
 function preload(arrayOfImages) {
-    $(arrayOfImages).each(function(){
+    $(arrayOfImages).each(function () {
         $('<img/>')[0].src = this;
     });
 }
@@ -185,14 +192,12 @@ function shuffle(array) {
     return array;
 }
 
-function escapeName(s)
-{
+function escapeName(s) {
     return s.replace(/:/g, '\\:');
 }
 
-function updateOGTags(tagObject)
-{
-    $.each(tagObject, function(key, value){
+function updateOGTags(tagObject) {
+    $.each(tagObject, function (key, value) {
         var escaped = escapeName(key);
         var $property = $("meta[property=" + escaped + "]");
         if (!$property.length)
@@ -201,23 +206,21 @@ function updateOGTags(tagObject)
     });
 }
 
-function removeOGTags(arr)
-{
-    $.each(arr, function(key, value){
+function removeOGTags(arr) {
+    $.each(arr, function (key, value) {
         var escaped = escapeName(value);
         $("meta[property=" + escaped + "]").remove();
     });
 }
 
-function updateScrapeStatus(url, callback)
-{
+function updateScrapeStatus(url, callback) {
     $.post('https://graph.facebook.com', {
         id: url,
         scrape: true
-    }, function(response) {
+    }, function (response) {
         // todo: remove
         console.log(response);
         if (callback)
-          callback();
+            callback();
     });
 }

@@ -1,0 +1,36 @@
+@import models.internal.UserFeedback
+@(feedbacks : List[UserFeedback])
+@feedbackEmail(f : UserFeedback) = @{
+    val user = f.getSuggestedBy
+    if (user == null)
+       "unknown email"
+    else
+       user.getEmail
+}
+@feedbackName(f : UserFeedback) = @{
+    val user = f.getSuggestedBy
+    if (user == null)
+       "unknown user"
+    else
+       user.getName
+}
+<div id="feedbacks" class="admin-page">
+    <table class="ui celled table">
+        <thead>
+            <tr>
+                <th>name</th>
+                <th>comment</th>
+                <th>email</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        @for(f <- feedbacks) {
+            <tr id="@f.getId">
+                <td>@feedbackName(f)</td>
+                <td>@f.getComment</td>
+                <td>@feedbackEmail(f)</td>
+                <td><a href="javascript: hideFeedback(@f.getId);">hide</a></td>
+            </tr>
+        }
+    </table>
+</div>

@@ -29,6 +29,8 @@ public class UserFeedback
 
     private transient String name;
 
+    private boolean hidden = false;
+
     @Column(name = "suggested_on_dt")
     private Date suggestedOn;
 
@@ -80,5 +82,20 @@ public class UserFeedback
     public void setSuggestedOn(Date suggestedOn)
     {
         this.suggestedOn = suggestedOn;
+    }
+
+    public UserFeedback()
+    {
+
+    }
+
+    public boolean isHidden()
+    {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden)
+    {
+        this.hidden = hidden;
     }
 }

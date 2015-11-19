@@ -445,7 +445,7 @@ function doPassportGallery(galldata) {
                 src: getThumb(image.path),
                 big: image.path,
                 id: image.id,
-                desc: image.description
+                desc: getDescription(image)
             });
         });
         //$("<div class='gallery-thumb-arrow-down' />").appendTo($passportGalleryThumbs);
@@ -494,15 +494,13 @@ function doPassportGallery(galldata) {
                     }
                 }
             });
-            //// add arrows and scroll behaviour
-
-            $thumbs.eq(0).trigger('click');
             // scroll to the first thumb
-
             if (galldata.length > 0) {
                 while (!$(".passport-thumb-image", $passportGalleryThumbs).eq(2).hasClass('normal'))
                     galleryUp();
             }
+
+            $thumbs.eq(0).trigger('click');
 
             if (noGSV)
                 thumbscroll();
@@ -568,9 +566,22 @@ function getThumb(resourceName) {
     var name = splitURI.pop();
     var thumbSplit = name.split('.');
     var ext = thumbSplit.pop();
-    var thumbName = thumbSplit.join('.') + '_thumb_ed.' + ext;
+    var thumbName = thumbSplit.join('.');
+    var thumbIdx = thumbName.lastIndexOf("_thumb_gl");
+    if (thumbIdx > 0)
+        thumbName = thumbName.substr(0, thumbIdx);
+    thumbName += '_thumb_ed.' + ext;
     splitURI.push(thumbName);
     return splitURI.join('/');
+}
+
+function getDescription(image)
+{
+    if (image.description)
+      return image.description;
+    if (image.uploadedBy)
+      return "Autor: " + image.uploadedBy.name;
+    return "";
 }
 
 function pushGalleryThumb(thumbData) {

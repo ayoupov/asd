@@ -130,13 +130,18 @@ public class UserManager
 
     public static User createUser(final AuthUser authUser)
     {
-        return createUser(authUser, UserRole.User);
+        return createUser(authUser, UserRole.User, UserStatus.Active);
     }
 
     public static User createUser(final AuthUser authUser, UserRole role)
     {
+        return createUser(authUser, role, UserStatus.Active);
+    }
+
+    public static User createUser(final AuthUser authUser, UserRole role, UserStatus status)
+    {
         final User user = new User();
-        user.setStatus(UserStatus.Active);
+        user.setStatus(status);
         user.setRole(role);
         LinkedAccount account = createLinkedAccount(authUser);
         user.setLinkedAccounts(Collections.singletonList(account));
@@ -319,6 +324,8 @@ public class UserManager
 
     public static EmailUnsubscription findUnsubscription(User user)
     {
+        if (user == null)
+            return null;
         return (EmailUnsubscription) getSession()
                 .createQuery("from EmailUnsubscription eu where eu.subscriber = :u")
                 .setEntity("u", user)

@@ -5,10 +5,12 @@
 
 @import scala.collection.JavaConverters._
 @import models.internal.email.EmailTemplate
+@import models.internal.UserFeedback
 @(
 //        content_reqs : java.util.List[ContentReq], db_reqs : java.util.List[DBReq],
         users: java.util.List[User], articles: java.util.List[MediaContent], stories: java.util.List[MediaContent], churches: java.util.List[Church],
         images : java.util.List[Image],
+        feedbacks : java.util.List[UserFeedback],
         emails : java.util.List[EmailTemplate],
         count: java.util.Map[String, Integer], countTotals: java.util.Map[String, Long],
         session: Session)
@@ -102,6 +104,10 @@
                                 <div id="images_total" class="ui right label">@countersTotal.getOrElse("images", 0)</div>
                                 <div id="images_reqs" class="ui right @{if (counters.getOrElse("images", 0) == 0) "green" else "red"} label">@counters.getOrElse("images", 0)</div>
                             </a>
+                            <a class="item page-changer" href="#feedbacks">Feedback
+                                <div id="feedbacks_total" class="ui right label">@countersTotal.getOrElse("feedbacks", 0)</div>
+                                <div id="feedbacks_reqs" class="ui right @{if (counters.getOrElse("feedbacks", 0) == 0) "green" else "red"} label">@counters.getOrElse("feedbacks", 0)</div>
+                            </a>
                             <a class="item page-changer" href="#churches">Churches
                                 <div id="churches_total" class="ui right label">@countersTotal.getOrElse("churches", 0)</div>
                                 <div id="churches_reqs" class="ui right @{if (counters.getOrElse("churches", 0) == 0) "green" else "red"} label">@counters.getOrElse("churches", 0)</div>
@@ -130,21 +136,17 @@
                     <div class="column"></div>
                     <div class="eight wide column" id="main-admin-content">
                         @parts.admin.stats()
-                        <!-- requests -->
-            @*            @parts.admin.content_reqs(content_reqs.asScala.toList, SessionCache.get(session, "contentReqFilter").asInstanceOf[ContentReqFilter]) *@
-            @*            @parts.admin.db_reqs(db_reqs.asScala.toList, SessionCache.get(session, "dbReqFilter").asInstanceOf[DBReqFilter]) *@
                         <!-- content -->
                         @parts.admin.users(users.asScala.toList, SessionCache.get(session, "userFilter").asInstanceOf[UserFilter])
                         @parts.admin.articles(articles.asScala.toList, SessionCache.get(session, "articleFilter").asInstanceOf[ArticleFilter])
                         @parts.admin.stories(stories.asScala.toList, SessionCache.get(session, "storyFilter").asInstanceOf[StoryFilter])
                         @parts.admin.images(images.asScala.toList, SessionCache.get(session, "imageFilter").asInstanceOf[ImageFilter])
+                        @parts.admin.feedbacks(feedbacks.asScala.toList)
                         @parts.admin.churches(churches.asScala.toList, SessionCache.get(session, "churchFilter").asInstanceOf[ChurchFilter])
                         <!-- static -->
                         @parts.admin.emails(emails.asScala.toList)
             @*            @parts.admin.credits(credits)    *@
                         <div id="editor-wrapper">
-             @*               @parts.admin.forms.creqeditor()  *@
-             @*               @parts.admin.forms.dbreqeditor()   *@
                             @parts.admin.forms.usereditor()
                             @parts.admin.forms.articleeditor()
                             @parts.admin.forms.storyeditor()

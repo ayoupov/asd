@@ -182,6 +182,12 @@ public class Admin extends Controller
 
             List<Image> images = ContentManager.getImages(imageFilter);
             List<EmailTemplate> emails = ContentManager.getEmails();
+            List<UserFeedback> feedbacks = ContentManager.getFeedbacks();
+
+            Long totalFeedbacks = ContentManager.getTotalFeedbacks();
+            if (totalFeedbacks == null)
+                totalFeedbacks = 0l;
+
 
             Map<String, Integer> issues = new HashMap<>();
             issues.put("users", ContentManager.getUserIssuesCount());
@@ -189,16 +195,18 @@ public class Admin extends Controller
             issues.put("stories", ContentManager.getStoryIssuesCount());
             issues.put("churches", ContentManager.getChurchIssuesCount());
             issues.put("images", ContentManager.getImageIssuesCount());
+            issues.put("feedbacks", feedbacks != null ? feedbacks.size() : 0);
 
             Map<String, Long> totals = new HashMap<>();
             totals.put("articles", totalArticles);
             totals.put("stories", totalStories);
             totals.put("churches", totalChurches);
             totals.put("images", totalImages);
+            totals.put("feedbacks", totalFeedbacks);
 
             Html content = admin.render(
 //                    contentReqs, dbReqs,
-                    users, articles, stories, churches, images,
+                    users, articles, stories, churches, images, feedbacks,
                     emails,
 //                    credits,
                     issues, totals, session());

@@ -11,7 +11,7 @@ var churchEditClick = function () {
         method: 'POST',
         onSuccess: apiResult,
         urlData: {id: id},
-        serializeForm: true,
+        serializeForm: true
         //beforeSend: function (settings) {
         //    settings.urlData.id = id;
         //    return settings;
@@ -49,7 +49,8 @@ function fillRequests(data) {
         $requestForm.append("<div>Church has " + data.length + " requests</div>");
         $.each(data, function (a, item) {
             var $requestDiv = $("<div id='req-div_" + item.id + "' />");
-            var $entry = $("<label for='req_" + item.id + "'>" + "On " +  item.field + " by " + item.suggestedBy.name + "</label>" +
+            var by = (item.suggestedBy) ? item.suggestedBy.name : "unknown";
+            var $entry = $("<label for='req_" + item.id + "'>" + "On " +  item.field + " by " + by + "</label>" +
                 "<input id='req_" + item.id + "' value='" + item[item.field] + "' >");
             $requestDiv.append($entry);
             var $fixButton = $("<label for='req-fix_" + item.id + "'>Mark as fixed</label>" +

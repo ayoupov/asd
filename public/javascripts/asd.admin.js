@@ -32,7 +32,8 @@ var apiExtension =
 
     'upload files': '/files/upload',
 
-    'remove content': '/{ctype}/{id}'
+    'remove content': '/{ctype}/{id}',
+    'hide feedback' : '/feedback/{id}'
 };
 
 var $prevPage;
@@ -130,6 +131,18 @@ function removeContent(ctype, id) {
         on: 'now',
         urlData: {
             ctype: ctype,
+            id: id
+        },
+        method: 'DELETE',
+        onSuccess: reloadPage
+    });
+}
+
+function hideFeedback(id) {
+    $.api({
+        action: 'hide feedback',
+        on: 'now',
+        urlData: {
             id: id
         },
         method: 'DELETE',

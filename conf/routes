@@ -7,6 +7,7 @@ GET           /                                       controllers.Application.in
 
 # Map static resources from the /public folder to the /assets URL path
 GET           /robots.txt                             controllers.Assets.at(path="/public", file="robots.txt")
+GET           /googlec8fc9a1a199d7324.html            controllers.Assets.at(path="/public", file="googlec8fc9a1a199d7324.html")
 GET           /assets/*file                           controllers.Assets.at(path="/public", file)
 
 GET           /tiles/:layer/:z/:x/:y.:ext             controllers.Tiles.tile(layer: String, z: Integer, x: Integer, y: Integer, ext: String)
@@ -60,6 +61,7 @@ POST          /search/:stype/:q                       controllers.Search.mediaCo
 GET           /search/:stype/:q                       controllers.Search.mediaContentByText(q: String, stype: String)
 
 POST          /feedback                               controllers.Feedback.feedback
+DELETE        /feedback/:id                           controllers.Feedback.hide(id: Long)
 
 # security
 

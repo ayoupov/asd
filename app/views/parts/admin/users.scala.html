@@ -13,7 +13,7 @@
                 <th>A</th>
                 <th>S</th>
                 <th>C</th>
-                <th>Actions</th>
+                <th>Email</th>
             </tr>
         </thead>
         @for(u <- users) {
@@ -24,7 +24,7 @@
                 <td>@ContentManager.articlesByUser(u)</td>
                 <td>@ContentManager.storiesByUser(u)</td>
                 <td>@ContentManager.churchesByUser(u)</td>
-                <td>actions</td>
+                <td>@u.getEmail</td>
             </tr>
         }
 

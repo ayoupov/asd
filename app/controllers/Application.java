@@ -34,7 +34,7 @@ import static models.internal.UserManager.getLocalUser;
 import static utils.HibernateUtils.*;
 import static utils.ServerProperties.isInProduction;
 
-@PasswordProtectionAnnotation
+//@PasswordProtectionAnnotation
 public class Application extends Controller
 {
 
@@ -56,7 +56,6 @@ public class Application extends Controller
     public static Result summary()
     {
         beginTransaction();
-        Json.setObjectMapper(Serializer.pointMapper);
         ObjectNode result = Json.newObject();
         // stories and articles
         // stories ids, sorted by starred
@@ -69,6 +68,7 @@ public class Application extends Controller
         Map<String, Object> countSummary = ContentManager.getChurchCountSummary();
 //        List churches = ContentManager.getChurchesShort();
         ObjectNode dataNode = Json.newObject();
+        Json.setObjectMapper(Serializer.pointMapper);
         dataNode.put("articles", Json.toJson(articleSummary));
         dataNode.put("stories", Json.toJson(storySummary));
         dataNode.put("geostats", Json.toJson(countSummary));

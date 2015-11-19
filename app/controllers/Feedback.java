@@ -80,4 +80,14 @@ public class Feedback extends Controller
     }
 
 
+    public static Result hide(long id)
+    {
+        beginTransaction();
+        UserFeedback uf = (UserFeedback) getSession().get(UserFeedback.class, (int)id);
+        if (uf != null)
+            uf.setHidden(true);
+        update(uf);
+        commitTransaction();
+        return ok(Json.newObject().put("success", true).put("id", id));
+    }
 }

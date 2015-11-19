@@ -470,14 +470,15 @@ public class MediaContents extends Controller
             if (dedicatedMedia != null) {
                 List<MediaContent> churchMedia = new ArrayList<>(dedicatedMedia);
                 List<MediaContent> articles =
-                        churchMedia.stream().filter(p -> p.getContentType() == MediaContentType.Article).collect(Collectors.toList());
+                        churchMedia.stream().
+                                filter(p -> p.getContentType() == MediaContentType.Article && p.getId() != id && p.getApprovedDT() != null).collect(Collectors.toList());
                 Collections.shuffle(articles);
                 for (int i = 0; i < Math.min(3, articles.size()); i++)
                     res.add(articles.get(i));
 
                 List<MediaContent> stories =
                         churchMedia.stream()
-                                .filter(p -> p.getContentType() == MediaContentType.Story && p.getId() != id)
+                                .filter(p -> p.getContentType() == MediaContentType.Story && p.getId() != id && p.getApprovedDT() != null)
                                 .collect(Collectors.toList());
                 Collections.shuffle(stories);
                 for (int i = 0; i < Math.min(8 - res.size(), stories.size()); i++)
@@ -491,6 +492,7 @@ public class MediaContents extends Controller
                     res.addAll(ContentManager.getRelatedForStory(mc, 8 - res.size(), alreadyAdded));
 
             }
+            res = res.stream().distinct().collect(Collectors.toList());
 //            res.addAll(churchMedia);
 //            res.remove(mc);
         }

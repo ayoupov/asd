@@ -135,6 +135,7 @@ public class Churches extends Controller
 //                relatedChurch.getRequests().remove(cs);
 //                update(relatedChurch);
                 update(cs);
+                if (suggestedBy != null)
                 sendEmail(EmailWrapper.EmailNames.PassportFixed,
                         null,
                         suggestedBy,
