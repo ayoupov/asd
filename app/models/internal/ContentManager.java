@@ -3,6 +3,7 @@ package models.internal;
 import com.feth.play.module.pa.user.AuthUser;
 import models.*;
 import models.address.Address;
+import models.address.Diocese;
 import models.internal.email.EmailTemplate;
 import models.internal.email.EmailUnsubscription;
 import models.internal.identities.MockIdentity;
@@ -23,6 +24,7 @@ import play.mvc.Http;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static utils.DataUtils.safeInt;
 import static utils.DataUtils.safeLong;
 import static utils.HibernateUtils.*;
 
@@ -251,9 +253,14 @@ public class ContentManager
                 .uniqueResult();
         Long res2 = (Long) session.createQuery(
                 "select count(cs.id) from ChurchSuggestion cs, Church c " +
-                        "where cs.fixed = FALSE and cs.ignored = FALSE and (cs.relatedChurch = c)"
-        ).uniqueResult();
-        return res.intValue() + res2.intValue();
+                        "where cs.fixed = FALSE and cs.ignored = FALSE and (cs.relatedChurch = c) and cs.type = :cst"
+        ).setParameter("cst", ChurchSuggestionType.FIELD).uniqueResult();
+
+        Long res3 = (Long) session.createQuery(
+                "select count(cs.id) from ChurchSuggestion cs " +
+                        "where cs.fixed = FALSE and cs.ignored = FALSE and cs.type = :cst"
+        ).setParameter("cst", ChurchSuggestionType.NEW_CHURCH).uniqueResult();
+        return res.intValue() + res2.intValue() + res3.intValue();
     }
 
     public static Integer getImageIssuesCount()
@@ -591,4 +598,17 @@ public class ContentManager
     {
         return (Long) getSession().createQuery("select count(*) from UserFeedback uf ").setCacheable(true).uniqueResult();
     }
+
+    public static List<ChurchSuggestion> getSuggestedChurches()
+    {
+        return getSession().createQuery("from ChurchSuggestion cs " +
+                        "where cs.fixed = FALSE and cs.ignored = FALSE and cs.type = :cst"
+        ).setParameter("cst", ChurchSuggestionType.NEW_CHURCH).list();
+    }
+
+    public static List<String> getDioceseIds()
+    {
+        return getSession().createQuery("select d.id from Diocese d order by d.id asc").setCacheable(true).list();
+    }
+
 }

@@ -3,7 +3,10 @@ package controllers;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.user.AuthUser;
+import com.vividsolutions.jts.geom.Point;
 import models.*;
+import models.address.Address;
+import models.address.Diocese;
 import models.internal.*;
 import models.internal.email.EmailSubstitution;
 import models.internal.email.EmailUnsubscription;
@@ -32,7 +35,9 @@ import java.util.stream.Collectors;
 import static models.internal.UserManager.getLocalUser;
 import static models.internal.UserManager.getUnsubscribeLink;
 import static models.internal.email.EmailWrapper.sendEmail;
+import static utils.DataUtils.safeBool;
 import static utils.DataUtils.safeInt;
+import static utils.DataUtils.safeLong;
 import static utils.HibernateUtils.*;
 
 /**
@@ -396,20 +401,48 @@ public class Churches extends Controller
         ObjectNode result = Json.newObject();
         Http.RequestBody body = request().body();
         Map<String, String[]> map = body.asFormUrlEncoded();
+        result.put("entity", "church");
+        result.put("id", extID);
 
         beginTransaction();
         User user = getLocalUser(session());
-        boolean isNew;
         Church c = ContentManager.getChurch(extID);
-        isNew = c == null;
-        if (isNew) {
-            c = new Church(extID, user);
+        if (c == null)
+        {
+            commitTransaction();
+            return badRequest(result);
         }
-        try {
-            result.put("entity", "church");
-            result.put("id", c.getExtID());
 
-            // possible changeable fields
+        try {
+            // gsv data
+
+            GSV gsv = Form.form(GSV.class).bindFromRequest(request()).get();
+            int gsvId = safeInt((map.get("gsv.id") != null) ? map.get("gsv.id")[0] : null, 0);
+            if (gsvId == 0) {
+                gsv.setId(null);
+                saveOrUpdate(gsv);
+                c.setGsv(gsv);
+            } else
+            {
+                GSV original = c.getGsv();
+                original.updateGSV(gsv);
+                update(original);
+            }
+
+
+            // address
+
+            Address address = c.getAddress();
+            String lat =(map.get("address.lat") != null) ? map.get("address.lat")[0] : "";
+            String lng =(map.get("address.lng") != null) ? map.get("address.lng")[0] : "";
+            String unfolded =(map.get("address.unfolded") != null) ? map.get("address.unfolded")[0] : null;
+            address.updateAddress(Double.parseDouble(lat), Double.parseDouble(lng), unfolded);
+            saveOrUpdate(address);
+
+            // possible changeable fields, base data
+            Boolean juseCustom = (map.get("use_custom") != null) ? safeBool(map.get("use_custom")) : false;
+            c.setUseCustomGSV(juseCustom);
+
             String jname = (map.get("name") != null) ? map.get("name")[0] : null,
                     jconstructionStart = (map.get("constructionStart") != null) ? map.get("constructionStart")[0] : null,
                     jconstructionEnd = (map.get("constructionEnd") != null) ? map.get("constructionEnd")[0] : null,
@@ -431,7 +464,6 @@ public class Churches extends Controller
                 architect.setChurches(churches);
             }
 
-
             c.setConstructionStart(safeInt(jconstructionStart, 0));
             c.setConstructionEnd(safeInt(jconstructionEnd, 0));
             if (jname != null && !"".equals(jname))
@@ -441,7 +473,7 @@ public class Churches extends Controller
 
             Set<String> synonymSet = createSynonymSet(jsynonyms);
             if (synonymSet != null)
-                c.getSynset().addAll(synonymSet);
+                c.getSynonyms().addAll(synonymSet);
 
             if (jpublishDate != null) {
                 c.setApprovedDT(jpublishDate);
@@ -477,4 +509,121 @@ public class Churches extends Controller
         return res;
     }
 
+    public static Result approve(String ctype, String extID, long timestamp)
+    {
+        ObjectNode result = Json.newObject();
+        Date when = (timestamp == 0) ? null : new Date(timestamp);
+        beginTransaction();
+        User user = getLocalUser(session());
+        result.put("id", extID);
+        result.put("entity", ctype);
+        long approvedDT = 0;
+        if ("church".equals(ctype)) {
+            Church c;
+            c = ContentManager.getChurch(extID, true);
+            if (c != null) {
+                if (when != null) {
+                    if (!c.isWasPublished() && request() != null) {
+                        EmailUnsubscription eu = UserManager.findUnsubscription(user);
+                        sendChurchApproveEmail(c, eu);
+                    }
+                    c.approve(user, when);
+                    approvedDT = c.getApprovedDT().getTime();
+                } else c.disapprove(user);
+            }   else {
+                commitTransaction();
+                return badRequest(result.put("success", false));
+            }
+        } else {
+            commitTransaction();
+            return badRequest(result.put("success", false));
+        }
+        commitTransaction();
+        result.put("success", true);
+        result.put("approveDT", approvedDT + "");
+        return ok(result);
+
+    }
+
+    private static void sendChurchApproveEmail(Church c, EmailUnsubscription eu)
+    {
+        try {
+            User addedBy = c.getAddedBy();
+            String username = addedBy.getName();
+            String hash = (eu == null) ? "" : eu.getHash();
+
+            EmailWrapper.sendEmail(EmailWrapper.EmailNames.ChurchApproved, null, addedBy,
+                    Pair.of(EmailSubstitution.Username.name(), username),
+                    Pair.of(EmailSubstitution.UnsubscribeLink.name(), getUnsubscribeLink(hash)),
+                    Pair.of(EmailSubstitution.ChurchName.name(), c.getName()),
+                    Pair.of(EmailSubstitution.ChurchLink.name(),
+                            getChurchLink(c)),
+                    Pair.of(EmailSubstitution.ChurchPassportLink.name(),
+                            getChurchLink(c, "#passport")),
+                    Pair.of(EmailSubstitution.ChurchPassportAdd.name(),
+                            getChurchLink(c, "#passportadd"))
+            );
+        } catch (Exception e) {
+            Logger.error("while sending church approve email", e);
+        }
+    }
+
+
+    public static Result getNextId(String dioid)
+    {
+        beginTransaction();
+        String extID = GeographyManager.constructExtId(dioid);
+        commitTransaction();
+        if (extID != null)
+            return ok(Json.newObject().put("success", true).put("ext_id", extID));
+        else
+            return ok(Json.newObject().put("success", false));
+    }
+
+    public static Result newFromRequest(String extId)
+    {
+        Http.RequestBody body = request().body();
+        Map<String, String[]> map = body.asFormUrlEncoded();
+        beginTransaction();
+        Church c = new Church();
+        try {
+
+            String jname = (map.get("name") != null) ? map.get("name")[0] : null;
+            String jaddress = (map.get("address") != null) ? map.get("address")[0] : null;
+            String juserid = (map.get("userId") != null) ? map.get("userId")[0] : null;
+            String jcsid = (map.get("suggestionId") != null) ? map.get("suggestionId")[0] : null;
+
+            ChurchSuggestion cs = (ChurchSuggestion) get(ChurchSuggestion.class, safeInt(jcsid, 0));
+            cs.setExtID(extId);
+            cs.setFixed(true);
+            saveOrUpdate(cs);
+
+            Diocese diocese = (Diocese) get(Diocese.class, extId.split("-")[0]);
+            Point centroid = diocese.getCentroid();
+            Double centroidLat = centroid.getY();
+            Double centroidLng = centroid.getX();
+            Address address = new Address(centroidLat, centroidLng, jaddress);
+            save(address);
+
+            User addedBy = (User) get(User.class, safeLong(juserid, 1));
+            c.setExtID(extId);
+            c.setAddress(address);
+            c.setAddedBy(addedBy);
+            c.setAddedDT(new Date());
+            c.setName(jname);
+            c.setUseCustomGSV(false);
+            c.setUseUserAddress(false);
+            save(c);
+
+        } catch (Exception e)
+        {
+            Logger.error("while creating church from request: " + extId, e);
+            rollbackTransaction();
+            return badRequest(Json.newObject().put("success", false).put("extId", extId));
+        }
+
+        commitTransaction();
+
+        return ok(Json.newObject().put("success", true).put("extId", extId).put("id", c.getId()));
+    }
 }

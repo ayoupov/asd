@@ -16,6 +16,10 @@ addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.4.3")
 
 addSbtPlugin("com.github.shivawu" % "sbt-maven-plugin" % "0.1.3-SNAPSHOT")
 
+addSbtPlugin("net.ground5hark.sbt" % "sbt-css-compress" % "0.1.3")
+
+addSbtPlugin("com.typesafe.sbt" % "sbt-gzip" % "1.0.0")
+
 //addSbtPlugin("com.github.shivawu" % "sbt-maven-plugin" % "0.1.2")
 
 //addSbtPlugin("com.typesafe.sbt" % "sbt-play-ebean" % "1.0.0")

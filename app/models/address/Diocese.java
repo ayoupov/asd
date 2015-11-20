@@ -114,4 +114,9 @@ public class Diocese implements Geometrified
                 ", archidiocese=" + archidiocese +
                 '}';
     }
+
+    public Point getCentroid()
+    {
+        return centroid;
+    }
 }

@@ -1,5 +1,5 @@
 var $admpages, $editors, $wrappers,
-    $requestForm, $churchForm, $churchWrapper, $articleWrapper, $storyWrapper,
+    $requestForm, $addressForm, $churchForm, $churchWrapper, $articleWrapper, $storyWrapper,
     $articleForm, $storyForm, $fm, $emailWrapper, $emailForm;
 
 var apiExtension =
@@ -29,6 +29,11 @@ var apiExtension =
     'disapprove story': '/story/disapprove/{id}',
     'approve image': '/image/approve/{id}/{timestamp}',
     'disapprove image': '/image/disapprove/{id}',
+    'approve church': '/church/approve/{id}/{timestamp}',
+    'disapprove church': '/church/disapprove/{id}',
+
+    'get ext id' : '/content/diocese/next/{id}',
+    'add new church' : '/church/new/from/request/{id}',
 
     'upload files': '/files/upload',
 
@@ -175,10 +180,10 @@ $(document).ready(function () {
         var id = $(this).attr('href');
         goAdmPage(id);
     });
-    $("td:not(.noedit)", $("#articles")).on('click', articleEditClick);
-    $("td:not(.noedit)", $("#stories")).on('click', storyEditClick);
-    $("td:not(.noedit)", $("#emails")).on('click', emailEditClick);
-    $("td:not(.noedit)", $("#churches")).on('click', churchEditClick);
+    $("td:not(.noedit)", $("#articles")).off('click').on('click', articleEditClick);
+    $("td:not(.noedit)", $("#stories")).off('click').on('click', storyEditClick);
+    $("td:not(.noedit)", $("#emails")).off('click').on('click', emailEditClick);
+    $("td:not(.noedit)", $("#churches")).off('click').on('click', churchEditClick);
 
     $("tr").hover(function () {
         $(this).toggleClass('active');
@@ -223,4 +228,18 @@ function applyTextFilter(e) {
             window.location = '/admin' + '?' + (entity + '_' + filterType) + '=' + val + (hash ? hash : '');
         }
     }
+}
+
+function apiIgnoreSuggestion(suggestionId) {
+    $.api({
+        on: 'now',
+        action: 'post ignore suggestion',
+        method: 'POST',
+        onSuccess: reloadPage,
+        beforeSend: function (settings) {
+            settings.urlData.id = suggestionId;
+            return settings;
+        }
+    });
+
 }

@@ -31,7 +31,6 @@ import static utils.DataUtils.safeInt;
 @Embeddable
 public class Address
 {
-    public static final int DEFAULT_USER_CHURCH_ID = 500;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -43,7 +42,6 @@ public class Address
     @Analyzer(definition = "polish_def_analyzer")
     @OneToOne
     @JsonIgnore
-//    private Dekanat dekanat;
     private Diocese diocese;
 
     @Field
@@ -107,47 +105,12 @@ public class Address
 
     public Address(Double lat, Double lng, String unfolded)
     {
-        Point point = new Point(new CoordinateArraySequence
-                (new Coordinate[]{new Coordinate(lng, lat)}), new GeometryFactory());
-        Geometry geom = point;
-        this.geometry = point;
-//        List<Dekanat> dekanats = findDioceses(point);
-//        if (dekanats.size() > 1) {
-//            Logger.warn(String.format("Alarma! : %s {%s} is in %d dekanats! ",
-//                    unfolded, point.toString(), dekanats.size()));
-//            for (Dekanat d : dekanats) {
-//                Logger.warn("which are: ", d);
-//            }
-//        }
-//        this.dekanat = dekanats.get(0);
-        List<Diocese> dioceses = findDioceses(point);
-        if (dioceses.size() > 1) {
-            Logger.warn(String.format("Alarma! : %s {%s} is in %d dekanats! ",
-                    unfolded, point.toString(), dioceses.size()));
-            for (Diocese d : dioceses) {
-                Logger.warn("which are: ", d);
-            }
-        }
-        this.diocese = dioceses.get(0);
-
+        updateAddress(lat, lng, unfolded);
     }
 
     public Address()
     {
 
-    }
-
-    public String constructChurchId()
-    {
-        String dioId = "";
-        if (diocese != null) {
-            dioId = diocese.getId();
-        } else dioId = "??";
-        String maxChurchId = GeographyManager.getMaxChurchId(diocese);
-        int numId = safeInt(maxChurchId.substring(3), DEFAULT_USER_CHURCH_ID);
-        if (numId < 500)
-            numId = 500;
-        return dioId + "-" + String.format("%03d", numId + 1);
     }
 
     @Override
@@ -157,5 +120,28 @@ public class Address
                 "id=" + id +
                 ", unfolded='" + unfolded + '\'' +
                 '}';
+    }
+
+    public void updateAddress(Double lat, Double lng, String unfolded)
+    {
+        if (lat != null && lng != null) {
+            Point point = new Point(new CoordinateArraySequence
+                    (new Coordinate[]{new Coordinate(lng, lat)}), new GeometryFactory());
+            this.geometry = point;
+            List<Diocese> dioceses = findDioceses(point);
+            if (dioceses.size() > 1) {
+                Logger.warn(String.format("Alarma! : %s {%s} is in %d dekanats! ",
+                        unfolded, point.toString(), dioceses.size()));
+                for (Diocese d : dioceses) {
+                    Logger.warn("which are: ", d);
+                }
+            }
+            this.diocese = dioceses.get(0);
+        } else
+        {
+            Logger.error("lat || lng is null!!!");
+        }
+        this.unfolded = unfolded;
+
     }
 }

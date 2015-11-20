@@ -3,15 +3,19 @@
 @import models.user.User
 @import play.mvc.Http.Session
 
+@import utils.ServerProperties
+
 @import scala.collection.JavaConverters._
 @import models.internal.email.EmailTemplate
 @import models.internal.UserFeedback
+@import models.internal.ChurchSuggestion
 @(
-//        content_reqs : java.util.List[ContentReq], db_reqs : java.util.List[DBReq],
+        admin: User,
         users: java.util.List[User], articles: java.util.List[MediaContent], stories: java.util.List[MediaContent], churches: java.util.List[Church],
         images : java.util.List[Image],
         feedbacks : java.util.List[UserFeedback],
         emails : java.util.List[EmailTemplate],
+        newChurches: java.util.List[ChurchSuggestion], dioIds : java.util.List[String],
         count: java.util.Map[String, Integer], countTotals: java.util.Map[String, Long],
         session: Session)
 
@@ -48,7 +52,8 @@
         <script src="@routes.Assets.at("javascripts/asd.admin.fm.js")"></script>
         <script src="@routes.Assets.at("javascripts/asd.thumbs.js")"></script>
         <script src="@routes.Assets.at("javascripts/asd.util.js")"></script>
-        <script src="@routes.Assets.at("javascripts/dropzone.js")"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=@ServerProperties.getValue("google.api.key")&language=pl&v=3"></script>
+        @*<script src="@routes.Assets.at("javascripts/dropzone.js")"></script>*@
         <script src="@routes.Assets.at("javascripts/jquery.noty.packaged.min.js")"></script>
         <script src="@routes.Assets.at("javascripts/jquery.tokenize.js")"></script>
         <script src="@routes.Assets.at("javascripts/isotope.pkgd.2.2.1.min.js")"></script>
@@ -58,7 +63,7 @@
             <nav id="menu" class="ui fixed secondary pointing menu blurred">
                 <div class="left item logo-wrapper">
                     <div class="logo-wrapper-more item">
-                        <a id="logo" class="logo"><img src="@routes.Assets.at("images/logo.png")" class="ui image"></a>
+                        <a id="logo" class="logo" href="@routes.Application.index(null)"><img src="@routes.Assets.at("images/logo.png")" class="ui image"></a>
                     </div>
                 </div>
 
@@ -68,23 +73,6 @@
             </nav>
             <div class="ui left rail">
                 <div class="ui vertical menu left-admin-menu">
-
-                    @*<div class="ui item">*@
-                        @*<b>Requests</b>*@
-                        @*<div class="menu">*@
-                        @*<a class="item page-changer" href="#content_requests">*@
-                            @*Stories & images (Kuba)*@
-                            @*<div id="content_reqs" class="ui label">@counters.getOrElse("content_reqs", 0)</div>*@
-                        @*</a>*@
-                        @*</div>*@
-                        @*<div class="menu">*@
-                        @*<a class="item page-changer" href="#db_requests">*@
-                            @*Data fixes & new churches (Karolina)*@
-                                @*<div id="db_reqs" class="ui label">@counters.getOrElse("db_reqs", 0)</div>*@
-                        @*</a>*@
-                        @*</div>*@
-                    @*</div>*@
-
                     <div class="ui item">
                         <b>Content</b>
                         <div class="menu">
@@ -122,13 +110,7 @@
                                 Emails
                             </a>
                         </div>
-                        @*<div class="menu">*@
-                            @*<a class="item page-changer" href="#credits">*@
-                                @*Credits page*@
-                            @*</a>*@
-                        @*</div>*@
                     </div>
-
                 </div>
             </div>
             <div class="ui grid skipped-top">
@@ -142,10 +124,9 @@
                         @parts.admin.stories(stories.asScala.toList, SessionCache.get(session, "storyFilter").asInstanceOf[StoryFilter])
                         @parts.admin.images(images.asScala.toList, SessionCache.get(session, "imageFilter").asInstanceOf[ImageFilter])
                         @parts.admin.feedbacks(feedbacks.asScala.toList)
-                        @parts.admin.churches(churches.asScala.toList, SessionCache.get(session, "churchFilter").asInstanceOf[ChurchFilter])
+                        @parts.admin.churches(churches.asScala.toList, SessionCache.get(session, "churchFilter").asInstanceOf[ChurchFilter], newChurches, dioIds, admin)
                         <!-- static -->
                         @parts.admin.emails(emails.asScala.toList)
-            @*            @parts.admin.credits(credits)    *@
                         <div id="editor-wrapper">
                             @parts.admin.forms.usereditor()
                             @parts.admin.forms.articleeditor()
@@ -153,7 +134,6 @@
                             @parts.admin.forms.imageeditor()
                             @parts.admin.forms.churcheditor()
                             @parts.admin.forms.emaileditor()
-            @*                @parts.admin.forms.creditseditor()  *@
                         </div>
 
                     </div>

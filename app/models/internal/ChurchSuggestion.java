@@ -47,6 +47,9 @@ public class ChurchSuggestion
 
     private boolean ignored;
 
+    @Type(type = "text")
+    private String comment;
+
     @ManyToOne
     private Church relatedChurch;
 
@@ -239,5 +242,15 @@ public class ChurchSuggestion
     public void setIgnored(boolean ignored)
     {
         this.ignored = ignored;
+    }
+
+    public String getComment()
+    {
+        return comment;
+    }
+
+    public void setComment(String comment)
+    {
+        this.comment = comment;
     }
 }

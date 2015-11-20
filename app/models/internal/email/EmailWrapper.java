@@ -28,7 +28,7 @@ public class EmailWrapper
 
     public static void sendEmail(String templateName, String senderName, User to, Pair<String, String>... substitutions) throws MalformedURLException, EmailException
     {
-        if (!to.getUnsubscribed() && to.getStatus() == UserStatus.Active) {
+        if (to != null && !to.getUnsubscribed() && to.getStatus() == UserStatus.Active ) {
             Logger.info("sending email with these substitutions: " + Arrays.deepToString(substitutions));
             EmailTemplate et = ContentManager.getEmailTemplateByName(templateName);
             sendEmail(

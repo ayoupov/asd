@@ -15,6 +15,8 @@ import utils.map.TileBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import static utils.DataUtils.safeInt;
+import static utils.HibernateUtils.get;
 import static utils.HibernateUtils.getSession;
 
 /**
@@ -185,7 +187,7 @@ public class GeographyManager
         List res = session.createQuery(
                 "select c.id as id, c.extID as extID, c.name as name, a.geometry as geometry " +
                         "from Church c, Address a " +
-                        "where c.address = a and ST_CONTAINS(:geom, a.geometry) = 1")
+                        "where c.approvedDT != null and c.address = a and ST_CONTAINS(:geom, a.geometry) = 1")
                 .setParameter("geom",  geometry)
                 .list();
         return res;
@@ -227,9 +229,24 @@ public class GeographyManager
         List res = session.createQuery(
                 "select c.id as id, c.extID as extID, a.geometry as geometry " +
                         "from Church c, Address a " +
-                        "where c.address = a and ST_CONTAINS(:geom, a.geometry) = 1")
+                        "where c.approvedDT != null and c.address = a and ST_CONTAINS(:geom, a.geometry) = 1")
                 .setParameter("geom",  envelope)
                 .list();
         return res;
+    }
+
+    public static final int DEFAULT_USER_CHURCH_ID = 500;
+
+    public static String constructExtId(String dioid)
+    {
+        Diocese diocese = (Diocese) get(Diocese.class, dioid);
+        if (diocese == null)
+            return null;
+        String maxChurchId = GeographyManager.getMaxChurchId(diocese);
+        int numId = safeInt(maxChurchId.substring(3), DEFAULT_USER_CHURCH_ID);
+        if (numId < 500)
+            numId = 500;
+        return dioid + "-" + String.format("%03d", numId + 1);
+
     }
 }

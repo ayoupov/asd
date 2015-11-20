@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static models.internal.UserManager.getLocalUser;
 import static utils.HibernateUtils.beginTransaction;
 import static utils.HibernateUtils.commitTransaction;
 import static utils.ServerProperties.isInProduction;
@@ -51,7 +52,7 @@ public class Admin extends Controller
     public static boolean roleCheck()
     {
         beginTransaction();
-        User user = UserManager.getLocalUser(session());
+        User user = getLocalUser(session());
         commitTransaction();
         if (!isInProduction())
             Logger.info("user = " + user);
@@ -128,6 +129,8 @@ public class Admin extends Controller
         if (roleCheck()) {
             beginTransaction();
 
+            User adminUser = getLocalUser(session());
+
             UserFilter userFilter = (UserFilter) SessionCache.get(session(), "userFilter");
             if (userFilter == null)
                 userFilter = new UserFilter(request());
@@ -184,6 +187,9 @@ public class Admin extends Controller
             List<EmailTemplate> emails = ContentManager.getEmails();
             List<UserFeedback> feedbacks = ContentManager.getFeedbacks();
 
+            List<ChurchSuggestion> newChurches = ContentManager.getSuggestedChurches();
+            List<String> dioIds = ContentManager.getDioceseIds();
+
             Long totalFeedbacks = ContentManager.getTotalFeedbacks();
             if (totalFeedbacks == null)
                 totalFeedbacks = 0l;
@@ -205,10 +211,10 @@ public class Admin extends Controller
             totals.put("feedbacks", totalFeedbacks);
 
             Html content = admin.render(
-//                    contentReqs, dbReqs,
+                    adminUser,
                     users, articles, stories, churches, images, feedbacks,
                     emails,
-//                    credits,
+                    newChurches, dioIds,
                     issues, totals, session());
             commitTransaction();
             return ok(content);
@@ -286,15 +292,6 @@ public class Admin extends Controller
     public static Result temp()
     {
         return ok(views.html.temp.render());
-    }
-    public static Result temp2()
-    {
-        beginTransaction();
-        Church c = ContentManager.getChurch("KK-104");
-        String id = c.getAddress().constructChurchId();
-        System.out.println("id = " + id);
-        commitTransaction();
-        return ok("ok");
     }
 
     public static Result getChurches()

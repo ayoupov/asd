@@ -255,7 +255,7 @@ public class ChurchSeeds
                             church.setName(entry.getName());
                         Set<String> synonymSet = createSynonymSet(entry.getSynonyms());
                         if (synonymSet != null)
-                            church.getSynset().addAll(synonymSet);
+                            church.getSynonyms().addAll(synonymSet);
                         data.remove(extId);
                     }
                     saveOrUpdate(church);

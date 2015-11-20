@@ -348,7 +348,7 @@ function initUpdatePassportApi() {
 
     $(".entity-submit", $passportSuggestForm).off('click').api(
         $.extend({
-            on: 'click',
+            on: 'click'
         }, fieldUpdateApi)
     );
     $passportSuggestForm.on("keypress", function (event) {
@@ -627,11 +627,43 @@ function pushGalleryThumb(thumbData) {
 
 function appendGSV() {
 
+    var galleryHeight = 480;
+    var galleryWidth = 860;
+
+    function _appendGSV(coords, heading, fov, pitch) {
+        if (!fov)
+            fov = 100;
+        if (!pitch)
+            pitch = 0;
+        var url = "https://www.google.com/maps/embed/v1/streetview?location=" + coords
+            + "&key=" + googleApiKey + "&heading=" + heading + "&fov=" + fov + "&pitch=" + pitch;
+        var gsvElem = "<iframe width='" + galleryWidth + "' height='" + galleryHeight +
+            "' frameborder='0' style='border:0'" +
+            " src='" + url + "'></iframe>";
+        _debug(gsvElem);
+        var $gsv = $(gsvElem);
+        $gsv.appendTo($passportCurrentImage);
+        var gsvThumbData = {
+            src: '/assets/images/passport/gsv_thumb.png',
+            big: $gsv,
+            id: 'gsv',
+            desc: 'gsv'
+        };
+        pushGalleryThumb(gsvThumbData);
+        gsvlock = false;
+        $passportCurrentImage.trigger('galleryready');
+    }
+
+    if (currentChurch.useCustomGSV)
+    {
+        var gsv = currentChurch.gsv;
+        _appendGSV(gsv.lat + "," + gsv.lng, gsv.heading, gsv.fov, gsv.pitch);
+        return;
+    }
+
     var center = new google.maps.LatLng(currentChurch.address.geometry[0], currentChurch.address.geometry[1]);
     var streetViewService = new google.maps.StreetViewService();
     var distances = [100, 50];
-    var galleryHeight = 480;
-    var galleryWidth = 860;
 
     function approximateGSVDistances() {
         var distance = distances.pop();
@@ -642,23 +674,7 @@ function appendGSV() {
                 var lng = streetViewPanoramaData.location.latLng.lng();
                 var coords = lat + ',' + lng;
                 var heading = getHeading(toRad(lat), toRad(lng), toRad(center.lat()), toRad(center.lng()));
-                var url = "https://www.google.com/maps/embed/v1/streetview?location=" + coords
-                    + "&key=" + googleApiKey + "&heading=" + heading + "&fov=100";
-                var gsvElem = "<iframe width='" + galleryWidth + "' height='" + galleryHeight +
-                    "' frameborder='0' style='border:0'" +
-                    " src='" + url + "'></iframe>";
-                _debug(gsvElem);
-                var $gsv = $(gsvElem);
-                $gsv.appendTo($passportCurrentImage);
-                var gsvThumbData = {
-                    src: '/assets/images/passport/gsv_thumb.png',
-                    big: $gsv,
-                    id: 'gsv',
-                    desc: 'gsv'
-                };
-                pushGalleryThumb(gsvThumbData);
-                gsvlock = false;
-                $passportCurrentImage.trigger('galleryready');
+                _appendGSV(coords, heading);
             } else {
                 if (!distances.length) {
                     _debug('street view returned : ' + status);

@@ -9,13 +9,13 @@ package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import models.address.Address;
 import models.internal.ChurchSuggestion;
 import models.internal.UserManager;
 import models.user.User;
 import org.apache.lucene.analysis.charfilter.MappingCharFilterFactory;
 import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
-import org.apache.lucene.analysis.core.StopFilterFactory;
 import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilterFactory;
 import org.apache.lucene.analysis.ngram.EdgeNGramFilterFactory;
 import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
@@ -25,6 +25,8 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.search.annotations.*;
 import org.hibernate.search.annotations.Parameter;
+import utils.serialize.CollectionToCSVBridge;
+import utils.serialize.converters.SynonymConverter;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -95,6 +97,9 @@ public class Church
     @OneToOne
     public Address address;
 
+    @OneToOne
+    public GSV gsv;
+
     @ManyToMany(cascade = CascadeType.MERGE)
     @LazyCollection(LazyCollectionOption.FALSE)
     public Set<Architect> architects;
@@ -125,20 +130,26 @@ public class Church
 
     public String website;
 
+    @Field
     @IndexedEmbedded
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name="synsets")
-    @JsonIgnore
-    public Set<String> synset = new LinkedHashSet<String>();
+    @JsonSerialize(using = SynonymConverter.class)
+//    @FieldBridge(impl=CollectionToCSVBridge.class)
+    @Analyzer(definition = "polish_def_analyzer")
+    public Set<String> synonyms = new LinkedHashSet<String>();
 
     @OneToMany(mappedBy = "relatedChurch")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
     private Set<ChurchSuggestion> requests;
 
-    boolean useUserGSV;
+    boolean useCustomGSV = false;
 
-    boolean useUserAddress;
+    boolean useUserAddress = false;
+
+    @JsonIgnore
+    boolean wasPublished;
 
     // only for internal update!
     public Church(String extID, String name, Address address)
@@ -169,7 +180,7 @@ public class Church
         this.enabled = true;
         this.addedBy = addedBy;
         this.addedDT = new Date();
-        this.synset = new LinkedHashSet<>();
+        this.synonyms = new LinkedHashSet<>();
     }
 
     public Church()
@@ -352,14 +363,14 @@ public class Church
         this.website = website;
     }
 
-    public Set<String> getSynset()
+    public Set<String> getSynonyms()
     {
-        return synset;
+        return synonyms;
     }
 
-    public void setSynset(Set<String> synset)
+    public void setSynonyms(Set<String> synset)
     {
-        this.synset = synset;
+        this.synonyms = synset;
     }
 
     public Set<ChurchSuggestion> getRequests()
@@ -372,14 +383,24 @@ public class Church
         this.requests = requests;
     }
 
-    public boolean isUseUserGSV()
+    public GSV getGsv()
     {
-        return useUserGSV;
+        return gsv;
     }
 
-    public void setUseUserGSV(boolean useUserGSV)
+    public void setGsv(GSV gsv)
     {
-        this.useUserGSV = useUserGSV;
+        this.gsv = gsv;
+    }
+
+    public boolean isUseCustomGSV()
+    {
+        return useCustomGSV;
+    }
+
+    public void setUseCustomGSV(boolean useCustomGSV)
+    {
+        this.useCustomGSV = useCustomGSV;
     }
 
     public boolean isUseUserAddress()
@@ -390,5 +411,32 @@ public class Church
     public void setUseUserAddress(boolean useUserAddress)
     {
         this.useUserAddress = useUserAddress;
+    }
+
+    public void disapprove(User who)
+    {
+        approve(who, null);
+    }
+
+    public void approve(User who)
+    {
+        approve(who, new Date());
+    }
+
+    public void approve(User who, Date when)
+    {
+        setWasPublished(true);
+        setApprovedDT(when);
+        setApprovedBy(who);
+    }
+
+    public boolean isWasPublished()
+    {
+        return wasPublished;
+    }
+
+    public void setWasPublished(boolean wasPublished)
+    {
+        this.wasPublished = wasPublished;
     }
 }

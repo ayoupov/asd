@@ -69,7 +69,7 @@ function initSearch() {
 
 var newChurchInited = false;
 function addNewChurch() {
-    $("input[type=text]",$suggestionWrapper).val('');
+    $("input[type=text],textarea",$suggestionWrapper).val('');
     $suggestionWrapper.modal('show');
     if (!newChurchInited)
         initAddChurch();

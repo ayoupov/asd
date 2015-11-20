@@ -67,11 +67,14 @@ public class SearchManager
                 .buildQueryBuilder()
                 .forEntity( Church.class )
                 .get();
-        Query luceneQuery = queryBuilder.keyword().onFields("name", "address.unfolded").matching(q).createQuery();
+        Query luceneQuery = queryBuilder.keyword().onFields("name", "address.unfolded", "synonyms").matching(q).createQuery();
 
         FullTextQuery query = fullTextSession.createFullTextQuery(luceneQuery);
-        query.setMaxResults(5);
+        query.setMaxResults(15);
         List<Church> result = query.list();
+        if (result == null)
+            return result;
+        result = result.stream().filter(c -> c.getApprovedDT() != null).limit(5).collect(Collectors.toList());
         return result;
     }
 

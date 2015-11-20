@@ -116,27 +116,32 @@ public class MediaContents extends Controller
         Date when = (timestamp == 0) ? null : new Date(timestamp);
         beginTransaction();
         User user = getLocalUser(session());
+        result.put("entity", ctype);
+        result.put("id", id);
         long approvedTS = 0;
         if (!"image".equals(ctype)) {
             MediaContent c;
             c = (MediaContent) get(MediaContent.class, id);
-            if (when != null) {
-                if (!c.isWasPublished() && request() != null) {
-                    EmailUnsubscription eu = UserManager.findUnsubscription(user);
-                    sendApproveEmail(c, eu, when, request());
-                }
-                c.approve(user, when);
-                approvedTS = c.getApprovedDT().getTime();
-            } else c.disapprove(user);
+            if (c != null) {
+                if (when != null) {
+                    if (!c.isWasPublished() && request() != null) {
+                        EmailUnsubscription eu = UserManager.findUnsubscription(user);
+                        sendApproveEmail(c, eu, when, request());
+                    }
+                    c.approve(user, when);
+                    approvedTS = c.getApprovedDT().getTime();
+                } else c.disapprove(user);
+            } else {
+                commitTransaction();
+                return badRequest(result.put("success", false));
+            }
         } else {
             Image i = (Image) get(Image.class, id);
             i.approve(user, when);
             approvedTS = i.getApprovedTS().getTime();
         }
-        result.put("entity", ctype);
         commitTransaction();
         result.put("success", true);
-        result.put("id", id);
         result.put("approveDT", approvedTS + "");
         return ok(result);
 
