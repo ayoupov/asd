@@ -52,7 +52,7 @@ public class Churches extends Controller
     public static Result requestsById(String id)
     {
         beginTransaction();
-        Church church = ContentManager.getChurch(id);
+        Church church = ContentManager.getChurch(id, true);
         if (church != null) {
             Set<ChurchSuggestion> requests = church.getRequests();
             commitTransaction();
@@ -70,6 +70,18 @@ public class Churches extends Controller
     {
         beginTransaction();
         Church church = ContentManager.getChurch(id);
+        commitTransaction();
+        if (church != null) {
+            Json.setObjectMapper(Serializer.emptyMapper);
+            return ok(Json.toJson(church));
+        } else
+            return notFound(String.format("Church with id {%s}", id));
+    }
+
+    public static Result byIdAdmin(String id)
+    {
+        beginTransaction();
+        Church church = ContentManager.getChurch(id, true);
         commitTransaction();
         if (church != null) {
             Json.setObjectMapper(Serializer.emptyMapper);
@@ -406,7 +418,7 @@ public class Churches extends Controller
 
         beginTransaction();
         User user = getLocalUser(session());
-        Church c = ContentManager.getChurch(extID);
+        Church c = ContentManager.getChurch(extID, true);
         if (c == null)
         {
             commitTransaction();
@@ -416,17 +428,29 @@ public class Churches extends Controller
         try {
             // gsv data
 
-            GSV gsv = Form.form(GSV.class).bindFromRequest(request()).get();
-            int gsvId = safeInt((map.get("gsv.id") != null) ? map.get("gsv.id")[0] : null, 0);
-            if (gsvId == 0) {
-                gsv.setId(null);
-                saveOrUpdate(gsv);
-                c.setGsv(gsv);
-            } else
+            GSV gsv;
+            try {
+                Form<GSV> gsvForm = Form.form(GSV.class).bindFromRequest(request());
+                if (!gsvForm.hasErrors()) {
+                    gsv = gsvForm.get();
+
+                    int gsvId = safeInt((map.get("gsv.id") != null) ? map.get("gsv.id")[0] : null, 0);
+                    if (gsvId == 0) {
+                        gsv.setId(null);
+                        saveOrUpdate(gsv);
+                        c.setGsv(gsv);
+                    } else {
+                        GSV original = c.getGsv();
+                        original.updateGSV(gsv);
+                        update(original);
+                    }
+                } else
+                {
+                    Logger.warn("gsv form: " + gsvForm.errorsAsJson());
+                }
+            } catch (Exception e)
             {
-                GSV original = c.getGsv();
-                original.updateGSV(gsv);
-                update(original);
+                Logger.info("bad gsv form: " + e.getMessage());
             }
 
 
@@ -464,8 +488,14 @@ public class Churches extends Controller
                 architect.setChurches(churches);
             }
 
-            c.setConstructionStart(safeInt(jconstructionStart, 0));
-            c.setConstructionEnd(safeInt(jconstructionEnd, 0));
+            int constructionStart = safeInt(jconstructionStart, -1);
+            if (constructionStart > 0)
+                c.setConstructionStart(constructionStart);
+
+            int constructionEnd = safeInt(jconstructionEnd, -1);
+            if (constructionEnd > 0)
+                c.setConstructionEnd(constructionEnd);
+
             if (jname != null && !"".equals(jname))
                 c.setName(jname);
             if (jwebsite != null && !"".equals(jwebsite))

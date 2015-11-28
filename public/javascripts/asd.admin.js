@@ -21,6 +21,7 @@ var apiExtension =
     'post update story': '/story/update',
     'preview story': '/preview/story',
 
+    'get church admin passport': '/church/admin/passport/{id}',
     'star article': '/article/star/{id}',
     'star story': '/story/star/{id}',
     'approve article': '/article/approve/{id}/{timestamp}',

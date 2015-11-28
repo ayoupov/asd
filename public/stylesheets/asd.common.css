@@ -578,3 +578,16 @@ td.passport-data-filler {
     float: right;
     cursor: pointer;
 }
+
+.fb-comment {
+    width: 68px;
+}
+
+.fb-comment:hover {
+    opacity: 0.9;
+}
+
+#contentmenu-bottom .fb-comment {
+    margin-top: 4px;
+    margin-left: 10px;
+}

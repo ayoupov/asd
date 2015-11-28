@@ -1,4 +1,9 @@
-@(contentType: String, id: Long)
+@(contentType: String, id: Long, fbPostLink : String)
+@if(fbPostLink != null){
+    <div class="right aligned item">
+        <a href="@fbPostLink" target="_blank"><img class="fb-comment" src="@routes.Assets.at("images/fb_comment.png")"></a>
+    </div>
+}
 <div class="fb-like right aligned item" data-href="@routes.MediaContents.byTypeAndId(contentType, "" + id, "html").absoluteURL()" data-layout="button_count"
 data-action="like" data-show-faces="true" data-share="false"></div>
 <div class="right aligned item">

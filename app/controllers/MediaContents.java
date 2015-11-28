@@ -21,6 +21,7 @@ import play.libs.Json;
 import play.mvc.*;
 import play.twirl.api.Html;
 import utils.DataUtils;
+import utils.HibernateUtils;
 import utils.ServerProperties;
 import utils.media.images.Thumber;
 import utils.serialize.Serializer;
@@ -268,93 +269,113 @@ public class MediaContents extends Controller
         Map<String, String[]> map = body.asFormUrlEncoded();
         MediaContentType mct = MediaContentType.fromString(ctype);
 
-        beginTransaction();
-        User user = getLocalUser(session());
+        MediaContent c = null;
         long id = safeLong(map.get("id"), 0);
         boolean isNew = id == 0;
-        MediaContent c;
-        if (!isNew)
-            c = (MediaContent) get(MediaContent.class, id);
-        else {
-            c = new MediaContent(mct);
-            c.setAddedBy(user);
-            c.setAddedDT(new Date());
-        }
         result.put("entity", ctype);
+        boolean success = true;
 
-        if (mct != c.getContentType()) {
-            commitTransaction();
-            result.put("error", "wrong entity type");
-            return badRequest(result);
-        }
+        beginTransaction();
+        try {
+            User user = getLocalUser(session());
 
-        // possible changeable fields
-        String jtext = (map.get("text") != null) ? map.get("text")[0] : null,
-                jlead = (map.get("lead") != null) ? map.get("lead")[0] : null,
-                jcover = (map.get("cover") != null) ? map.get("cover")[0] : null,
-                jalt = (map.get("alt") != null) ? map.get("alt")[0] : null,
-                jdesc = (map.get("coverDescription") != null) ? map.get("coverDescription")[0] : null,
-                jtitle = (map.get("title") != null) ? map.get("title")[0] : null,
-                churches = (map.get("churches") != null) ? map.get("churches")[0] : null;
-        Boolean jstarred = (map.get("starred") != null) ? safeBool(map.get("starred")) : false;
-        Date jpublishDate = (map.get("approvedDT") != null) ? DataUtils.dateFromReqString(map.get("approvedDT")) : null;
-        Set<User> jauthors = (map.get("authors") != null) ? ContentManager.parseUserList(map.get("authors")) : null;
-        if (jauthors == null)
-            jauthors = (map.get("authors[]") != null) ? ContentManager.parseUserList(map.get("authors[]")) : null;
-        if (jtext != null)
-            c.setText(jtext);
-        if (jlead != null)
-            c.setLead(jlead);
-        if (jalt != null)
-            c.setAlt(jalt);
-        if (jdesc != null)
-            c.setCoverDescription(jdesc);
-        if (jcover != null && !"".equals(jcover)) {
-            Logger.info("updating cover with " + jcover);
-            Image coverImage = findImage(null, jcover);
-            Logger.info("found: " + coverImage);
-            c.setCover(coverImage);
-            if (coverImage == null)
-                c.setCoverThumbPath(null);
+            if (!isNew)
+                c = (MediaContent) get(MediaContent.class, id);
             else {
-                String coverThumbPath = thumbNameWeb(new File(jcover), Thumber.ThumbType.ISOTOPE);
-                c.setCoverThumbPath(coverThumbPath);
-//                System.out.println("coverThumbPath = " + coverThumbPath);
-                String hoverThumbPath = thumbNameWeb(new File(jcover), Thumber.ThumbType.HOVER);
-//                System.out.println("hoverThumbPath = " + hoverThumbPath);
-                c.setHoverThumbPath(hoverThumbPath);
+                c = new MediaContent(mct);
+                c.setAddedBy(user);
+                c.setAddedDT(new Date());
             }
-        }
-        if (jtitle != null)
-            c.setTitle(jtitle);
-        if (jstarred != null)
-            c.setStarred(jstarred);
-        if (jauthors != null)
-            c.setAuthors(jauthors);
-        if (jpublishDate != null) {
-            c.setApprovedDT(jpublishDate);
-            c.setApprovedBy(user);
-        }
-        if (churches != null) {
-            c.setChurches(parseChurchList(churches, c));
-        }
+            if (mct != c.getContentType()) {
+                commitTransaction();
+                result.put("error", "wrong entity type");
+                return badRequest(result);
+            }
 
-        if (isNew)
-            c.setId((Long) save(c));
-        else {
-            saveOrUpdate(c);
+            // possible changeable fields
+            String jtext = (map.get("text") != null) ? map.get("text")[0] : null,
+                    jlead = (map.get("lead") != null) ? map.get("lead")[0] : null,
+                    jcover = (map.get("cover") != null) ? map.get("cover")[0] : null,
+                    jalt = (map.get("alt") != null) ? map.get("alt")[0] : null,
+                    jfblink = (map.get("fbPostLink") != null) ? map.get("fbPostLink")[0] : null,
+                    jdesc = (map.get("coverDescription") != null) ? map.get("coverDescription")[0] : null,
+                    jtitle = (map.get("title") != null) ? map.get("title")[0] : null,
+                    jchurch = (map.get("church") != null) ? map.get("church")[0] : null,
+                    churches = (map.get("churches") != null) ? map.get("churches")[0] : null;
+            Boolean jstarred = (map.get("starred") != null) ? safeBool(map.get("starred")) : false;
+            Date jpublishDate = (map.get("approvedDT") != null) ? DataUtils.dateFromReqString(map.get("approvedDT")) : null;
+            Set<User> jauthors = (map.get("authors") != null) ? ContentManager.parseUserList(map.get("authors")) : null;
+            if (jauthors == null)
+                jauthors = (map.get("authors[]") != null) ? ContentManager.parseUserList(map.get("authors[]")) : null;
+            if (jtext != null)
+                c.setText(jtext);
+            if (jlead != null)
+                c.setLead(jlead);
+            if (jalt != null)
+                c.setAlt(jalt);
+            if (jfblink != null)
+                c.setFbPostLink(jfblink);
+            if (jdesc != null)
+                c.setCoverDescription(jdesc);
+            if (jcover != null && !"".equals(jcover)) {
+                Logger.info("updating cover with " + jcover);
+                Image coverImage = findImage(null, jcover);
+                Logger.info("found: " + coverImage);
+                c.setCover(coverImage);
+                if (coverImage == null)
+                    c.setCoverThumbPath(null);
+                else {
+                    String coverThumbPath = thumbNameWeb(new File(jcover), Thumber.ThumbType.ISOTOPE);
+                    c.setCoverThumbPath(coverThumbPath);
+//                System.out.println("coverThumbPath = " + coverThumbPath);
+                    String hoverThumbPath = thumbNameWeb(new File(jcover), Thumber.ThumbType.HOVER);
+//                System.out.println("hoverThumbPath = " + hoverThumbPath);
+                    c.setHoverThumbPath(hoverThumbPath);
+                }
+            }
+            if (jtitle != null)
+                c.setTitle(jtitle);
+            if (jstarred != null)
+                c.setStarred(jstarred);
+            if (jauthors != null)
+                c.setAuthors(jauthors);
+            if (jpublishDate != null) {
+                c.setApprovedDT(jpublishDate);
+                c.setApprovedBy(user);
+            }
+            if (churches != null) {
+                c.setChurches(parseChurchList(churches, c));
+            }
+
+            if (jchurch != null) {
+                Logger.info("changing church dedication to " + jchurch);
+                Church church = ContentManager.getChurch(jchurch, true);
+                c.setDedicatedChurch(church);
+                addMediaToChurch(c, church);
+            }
+
+            if (isNew)
+                c.setId((Long) save(c));
+            else {
+                saveOrUpdate(c);
+            }
+
+        } catch (Exception e) {
+            Logger.error("while update mc: ", e);
+            rollbackTransaction();
+            success = false;
         }
         Logger.info("c = " + c);
         commitTransaction();
 
-        File dir = new File(publicPath + ctype);
-        File mediaFile = new File(dir, c.getId() + ".html");
-        if (mediaFile.exists())
-            mediaFile.delete();
+//        File dir = new File(publicPath + ctype);
+//        File mediaFile = new File(dir, c.getId() + ".html");
+//        if (mediaFile.exists())
+//            mediaFile.delete();
 
         result.put("entity", ctype);
-        result.put("success", true);
-        result.put("id", c.getId());
+        result.put("success", success);
+        result.put("id", c == null ? null : c.getId());
         return ok(result);
     }
 
@@ -363,18 +384,23 @@ public class MediaContents extends Controller
         String[] split = churches.split(",");
         Set<Church> res = new LinkedHashSet<>();
         for (String churchId : split) {
-            Church c = ContentManager.getChurch(churchId.trim());
+            Church c = ContentManager.getChurch(churchId.trim(), true);
             if (c != null) {
                 res.add(c);
-                Set<MediaContent> media = c.getMedia();
-                if (media == null)
-                    media = new LinkedHashSet<>();
-                media.add(mc);
-                c.setMedia(media);
-                save(c);
+                addMediaToChurch(mc, c);
             }
         }
         return res;
+    }
+
+    private static void addMediaToChurch(MediaContent mc, Church c)
+    {
+        Set<MediaContent> media = c.getMedia();
+        if (media == null)
+            media = new LinkedHashSet<>();
+        media.add(mc);
+        c.setMedia(media);
+        saveOrUpdate(c);
     }
 
     @Security.Authenticated(Secured.class)
@@ -504,5 +530,50 @@ public class MediaContents extends Controller
         commitTransaction();
         Json.setObjectMapper(Serializer.emptyMapper);
         return ok(Json.toJson(res));
+    }
+
+    public static Result removeImage(long id)
+    {
+        ObjectNode resNode = Json.newObject();
+        resNode.put("entity", "image");
+        resNode.put("id", id);
+        beginTransaction();
+        Image image = (Image) get(Image.class, id);
+        if (image == null) {
+            commitTransaction();
+            resNode.put("success", false);
+            return badRequest(resNode);
+        }
+        List<Church> churches = ContentManager.getChurchesWithImage(image);
+        Logger.info("image found in churches: " + churches);
+        if (churches != null) {
+            for (Church c : churches) {
+                Logger.info("got church: " + c);
+                List<Image> images = c.getImages();
+                if (images != null) {
+                    if (images.remove(image)) {
+                        Logger.info("successful removal of " + image);
+                        c.setImages(images);
+                    } else {
+                        Logger.warn("not found! " + image);
+                    }
+                    HibernateUtils.update(c);
+                }
+            }
+        }
+        File raw = new File(image.getPath());
+
+        File imageFile = new File(ServerProperties.getValue("asd.upload.path") + "/" + raw.getParentFile().getName() + "/" + raw.getName());
+
+        Logger.info("got imageFile: " + imageFile);
+        for (Thumber.ThumbType tt : Thumber.ThumbType.values()) {
+            String thumbName = Thumber.thumbName(imageFile, tt);
+            Logger.info("deleting image with path: " + thumbName);
+            new File(thumbName).delete();
+        }
+        delete(image);
+        commitTransaction();
+        resNode.put("success", true);
+        return ok(resNode);
     }
 }

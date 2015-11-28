@@ -26,7 +26,7 @@ var churchEditClick = function () {
     $churchForm.appendTo($churchWrapper);
     $(".church-visible").show();
     if (id) {
-        $churchForm.api({on: 'now', action: "get church passport", urlData: {id: id}, onSuccess: fillChurch});
+        $churchForm.api({on: 'now', action: "get church admin passport", urlData: {id: id}, onSuccess: fillChurch});
         $requestForm.api({on: 'now', action: "get json requests", urlData: {id: id}, onSuccess: fillRequests});
     }
 };
@@ -111,8 +111,8 @@ function fillChurch(data) {
         if (data.synonyms)
             $("#synonyms", $churchForm).val(data.synonyms.join(","));
         fillAddress(data);
-        fillImages(data.images);
-        fillLinks(data.media);
+        fillImages(data);
+        fillLinks(data);
     }
     $churchWrapper.show();
 }
@@ -268,22 +268,33 @@ function pushMarker(marker) {
     markers.push(marker);
 }
 
-function fillImages(images) {
-    if (images)
+function fillImages(data) {
+    var images = data.images;
+    if (images && images.length && !($(".church-images", $churchWrapper).length)) {
+        var $imageDiv = $("<div class='church-images'></div>");
         $.each(images, function (a, item) {
-
+            var $elem = $("<a href='/admin/?images_church=" + data.extID + "#images'><img src='" + getThumb(item.path) + "'></a>");
+            $elem.appendTo($imageDiv);
+            $("<br>").appendTo($imageDiv);
         });
+        $imageDiv.appendTo($churchWrapper);
+    }
 }
 
-function fillLinks(media) {
-    if (media && !$(".related-media", $churchWrapper).length) {
+function fillLinks(data) {
+    var media = data.media;
+    if (media && media.length && !$(".related-media", $churchWrapper).length) {
         $churchWrapper.append($("<div class='related-media'>Related media:</div>"));
         $.each(media, function (a, item) {
             var $entry = $("<a href='/" + item.contentType.toLowerCase() + "/" + item.id + "' >" + item.title + "</a><br>");
             $entry.appendTo($churchWrapper);
         });
     }
-
+    if (!$(".church-link", $churchWrapper).length) {
+        var id = data.extID;
+        var link = '/church/' + id;
+        $churchWrapper.append($("<div class='church-link'>Church link:<a target='_blank' href='" + link + "'>" + link + "</a></div>"));
+    }
 }
 
 var $newChurchAdminForm;

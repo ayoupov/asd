@@ -3,7 +3,6 @@ package models.internal;
 import com.feth.play.module.pa.user.AuthUser;
 import models.*;
 import models.address.Address;
-import models.address.Diocese;
 import models.internal.email.EmailTemplate;
 import models.internal.email.EmailUnsubscription;
 import models.internal.identities.MockIdentity;
@@ -24,7 +23,6 @@ import play.mvc.Http;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static utils.DataUtils.safeInt;
 import static utils.DataUtils.safeLong;
 import static utils.HibernateUtils.*;
 
@@ -48,11 +46,15 @@ public class ContentManager
         try {
             String[] split = ids.split(",");
             for (String rawId : split) {
-                Long id = Long.parseLong(rawId);
-                MediaContent content = (MediaContent) session.get(MediaContent.class, id);
-                if (content != null) {
-                    if (content.getApprovedDT() != null || skipApproval)
-                        res.add(content); // todo: more verbose in case of unapproved request?
+                try {
+                    Long id = Long.parseLong(rawId);
+                    MediaContent content = (MediaContent) session.get(MediaContent.class, id);
+                    if (content != null) {
+                        if (content.getApprovedDT() != null || skipApproval)
+                            res.add(content); // todo: more verbose in case of unapproved request?
+                    }
+                } catch (Exception e) {
+                    throw new RequestException(e);
                 }
             }
         } catch (Exception e) {
@@ -140,16 +142,21 @@ public class ContentManager
     {
         Session session = getSession();
         Query query = session.createQuery(
-                "select distinct c " +
+                "select distinct c, count(cs) as reqs " +
                         "from Church c, ChurchSuggestion cs where " +
-                        "c.name like :fname or c.extID like :fname " +
+                        "(c.name like :fname or c.extID like :fname) and " +
+                        "(cs.relatedChurch = c or cs.relatedChurch is null) " +
+                        "and cs.fixed = false and cs.ignored = false " +
+                        "group by " +
+                        "c.id " +
                         "order by " +
                         "(CASE WHEN c.approvedDT IS NULL THEN 1 ELSE 0 END) DESC, " +
-                        "c.requests.size desc, c.approvedDT desc, c.extID asc")
+                        "reqs desc, c.approvedDT desc, c.extID asc")
                 .setParameter("fname", "%" + filter.getNameFilter() + "%")
                 .setMaxResults(filter.getMaxResults())
                 .setFirstResult(filter.getPage() * filter.getMaxResults());
-        List<Church> churches = query.list();
+        List churches = query.list();
+//        Logger.debug("got churches: " + churches);
         return churches;
     }
 
@@ -308,12 +315,7 @@ public class ContentManager
             ).setParameter("fname", "%" + filter.getNameFilter() + "%")
                     .uniqueResult();
         else
-            return (long) getSession().createQuery(
-                    "select distinct count(c) " +
-                            "from Church c "
-//                            "where " +
-//                            "and c.approvedDT is not null "
-            ).setCacheable(true).uniqueResult();
+            return getChurchCount(true);
     }
 
     public static long getTotalUsers()
@@ -530,9 +532,20 @@ public class ContentManager
                 .uniqueResult();
     }
 
+    public static long getTotalFullImages()
+    {
+        return (long) getSession().createQuery(
+                "select distinct count(i) " +
+                        "from Image i "
+        ).setCacheable(true).uniqueResult();
+    }
+
     public static long getTotalImages(ImageFilter filter)
     {
+        if (filter == null)
+            return getTotalFullImages();
         String nameFilter = filter.getNameFilter();
+        String churchFilter = filter.getChurchFilter();
         if (nameFilter != null && !"".equals(nameFilter))
             return (long) getSession().createQuery(
                     "select distinct count(i) " +
@@ -541,24 +554,47 @@ public class ContentManager
                             "i.description like :fname"
             ).setParameter("fname", "%" + filter.getNameFilter() + "%")
                     .uniqueResult();
-        else
+        else if (churchFilter != null && !"".equals(churchFilter)) {
             return (long) getSession().createQuery(
                     "select distinct count(i) " +
-                            "from Image i "
-//                            "where " +
-//                            "i.approvedTS is not null "
-            ).setCacheable(true).uniqueResult();
+                            "from Image i, Church c " +
+                            "where " +
+                            "i in elements(c.images) and " +
+                            "c.extID like :clike "
+
+            ).setParameter("clike", "%" + churchFilter + "%")
+                    .uniqueResult();
+        } else
+            return getTotalFullImages();
     }
 
     public static List<Image> getImages(ImageFilter filter)
     {
         Session session = getSession();
-        Query query = session.createQuery(
+        Query query;
+        String churchFilter = filter.getChurchFilter();
+        if (churchFilter != null && !"".equals(churchFilter))
+            query = session.createQuery(
+                    "select distinct i " +
+                            "from Church c, Image i where " +
+                            "i in elements(c.images) and " +
+                            "c.extID like :clike " +
+                            "order by " +
+                            "(CASE WHEN i.approvedTS IS NULL THEN 1 ELSE 0 END) DESC," +
+                            "i.approvedTS desc")
+                    .setParameter("clike", "%" + filter.getChurchFilter() + "%")
+                    .setMaxResults(filter.getMaxResults())
+                    .setFirstResult(filter.getPage() * filter.getMaxResults());
+        else
+        query = session.createQuery(
                 "select distinct i " +
-                        "from Image i where " +
-                        "i.description like :fname " +
-                        "order by i.approvedTS")
-                .setParameter("fname", "%" + filter.getNameFilter() + "%")
+                        "from Image i " +
+//                        "where " +
+//                        "i.description like :fname " +
+                        "order by " +
+                        "(CASE WHEN i.approvedTS IS NULL THEN 1 ELSE 0 END) DESC, " +
+                        "i.approvedTS desc")
+//                .setParameter("fname", "%" + filter.getNameFilter() + "%")
                 .setMaxResults(filter.getMaxResults())
                 .setFirstResult(filter.getPage() * filter.getMaxResults());
         List<Image> images = query.list();
@@ -575,14 +611,16 @@ public class ContentManager
                 if (id > -1)
                     res.add((Architect) getSession().get(Architect.class, id));
                 else {
-                    Logger.warn("Warning! Searching for an architect: " + s);
-                    Architect architect = ContentManager.getArchitectByName(s);
-                    if (architect == null) {
-                        architect = new Architect();
-                        architect.setName(s);
-                        architect.setId((Long) save(architect));
+                    if (!"".equals(s)) {
+                        Logger.warn("Warning! Searching for an architect: " + s);
+                        Architect architect = ContentManager.getArchitectByName(s);
+                        if (architect == null) {
+                            architect = new Architect();
+                            architect.setName(s);
+                            architect.setId((Long) save(architect));
+                        }
+                        res.add(architect);
                     }
-                    res.add(architect);
                 }
             }
         }
@@ -611,4 +649,8 @@ public class ContentManager
         return getSession().createQuery("select d.id from Diocese d order by d.id asc").setCacheable(true).list();
     }
 
+    public static List<Church> getChurchesWithImage(Image image)
+    {
+        return getSession().createQuery("from Church c where :i in elements(c.images)").setParameter("i", image).list();
+    }
 }

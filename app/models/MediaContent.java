@@ -63,11 +63,15 @@ public class MediaContent
 
     private String alt;
 
+    @Column(name="fb_post_link")
+    @Type(type = "text")
+    private String fbPostLink;
+
     private String year;
 
     public Boolean starred;
 
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cover_image_id")
     private Image cover;
 
@@ -392,5 +396,15 @@ public class MediaContent
         if (this.getStarred() == null)
             setStarred(false);
         setStarred(!getStarred());
+    }
+
+    public String getFbPostLink()
+    {
+        return fbPostLink;
+    }
+
+    public void setFbPostLink(String fbPostLink)
+    {
+        this.fbPostLink = fbPostLink;
     }
 }

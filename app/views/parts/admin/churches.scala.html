@@ -17,60 +17,65 @@
         admin.getId
     }
 }
-@if(newChurches != null && newChurches.size() > 0) {
-    <b>New churches:</b>
-    <table class="ui celled table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Address</th>
-                <th>Comment</th>
-                <th>Suggested by</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        @for(cs <- newChurches) {
-            <tr>
-                <td>@cs.getName</td>
-                <td>@cs.getAddress</td>
-                <td>@cs.getComment</td>
-                <td>@suggestedByName(cs)</td>
-                <td><a href="javascript:addChurchAdmin('@cs.getName', '@cs.getAddress', @suggestedById(cs), @cs.getId);">add</a>
-                    <br>
-                    <a href="javascript:apiIgnoreSuggestion(@cs.getId);">ignore</a>
-                    @*<br>*@
-                    @*<a href="javascript:removeContent('suggestion', @cs.getId);">remove</a>*@
-                </td>
-            </tr>
-        }
-    </table>
-    <div class="new-church-admin-form ui modal">
-        <form class="nc-form ui form">
-            <div class="ui selection dropdown">
-                <input type="hidden" name="dioceseId">
-                <i class="dropdown icon"></i>
-                <div class="default text">Choose diocese</div>
-                <div class="menu">
-                @for(dioId <- dioceseIds) {
-                    <div class="item" data-value="@dioId">@dioId</div>
-                }
-                </div>
-            </div>
-            <br>
-            <label for="nc-ext-id">Church ID</label>
-            <input id="nc-ext-id" type="text" name="extId" placeholder="church id">
-            <label for="nc-name">Church Name</label>
-            <input id="nc-name" type="text" name="name" placeholder="name">
-            <label for="nc-address">Address</label>
-            <input id="nc-address" type="text" name="address" placeholder="address">
-            <input id="nc-user-id" type="hidden" name="userId">
-            <input id="nc-suggestion-id" type="hidden" name="suggestionId">
-            <input class="ui submit button" value="add church" type="button">
-        </form>
-    </div>
+@hasIssuesClass(c: Church) = @{
+    if(c.getApprovedDT == null || c.getRequests.exists(cs => !cs.isFixed && !cs.isIgnored)) {
+        "class=bold-thing"
+    } else
+    ""
 }
-
 <div id="churches" class="admin-page">
+    @if(newChurches != null && newChurches.size() > 0) {
+        <b>New churches:</b>
+        <table class="ui celled table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Comment</th>
+                    <th>Suggested by</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            @for(cs <- newChurches) {
+                <tr class="bold-thing">
+                    <td class="noedit">@cs.getName</td>
+                    <td class="noedit">@cs.getAddress</td>
+                    <td class="noedit">@cs.getComment</td>
+                    <td class="noedit">@suggestedByName(cs)</td>
+                    <td class="noedit"><a href="javascript:addChurchAdmin('@cs.getName', '@cs.getAddress', @suggestedById(cs), @cs.getId);">add</a>
+                        <br>
+                        <a href="javascript:apiIgnoreSuggestion(@cs.getId);">ignore</a>
+                        @*<br>*@
+                        @*<a href="javascript:removeContent('suggestion', @cs.getId);">remove</a>*@
+                    </td>
+                </tr>
+            }
+        </table>
+        <div class="new-church-admin-form ui modal">
+            <form class="nc-form ui form">
+                <div class="ui selection dropdown">
+                    <input type="hidden" name="dioceseId">
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Choose diocese</div>
+                    <div class="menu">
+                    @for(dioId <- dioceseIds) {
+                        <div class="item" data-value="@dioId">@dioId</div>
+                    }
+                    </div>
+                </div>
+                <br>
+                <label for="nc-ext-id">Church ID</label>
+                <input id="nc-ext-id" type="text" name="extId" placeholder="church id">
+                <label for="nc-name">Church Name</label>
+                <input id="nc-name" type="text" name="name" placeholder="name">
+                <label for="nc-address">Address</label>
+                <input id="nc-address" type="text" name="address" placeholder="address">
+                <input id="nc-user-id" type="hidden" name="userId">
+                <input id="nc-suggestion-id" type="hidden" name="suggestionId">
+                <input class="ui submit button" value="add church" type="button">
+            </form>
+        </div>
+    }
     <table class="ui celled table">
         <thead>
             <tr>
@@ -84,7 +89,7 @@
             </tr>
         </thead>
         @for(c <- churches) {
-        <tr id="church_@c.getExtID">
+        <tr id="church_@c.getExtID" @hasIssuesClass(c)>
             <td>@c.getExtID</td>
             <td>@c.getName</td>
             <td class="noedit"><input type='checkbox' @{if(c.getAddress != null){"checked='checked'"}} ></td>
@@ -103,7 +108,7 @@
         }
         <tfoot>
             <tr>
-                <th colspan="7">
+                <th colspan="8">
                     <div class="ui left floated search input">
                         <input type="text" placeholder="Filter by name" class="filter-like text-filter" value="@filter.getNameFilter">
                     </div>

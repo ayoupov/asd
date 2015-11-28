@@ -10,8 +10,29 @@ import play.mvc.Http;
  */
 public class ImageFilter extends QueryFilter
 {
+
+    protected String churchFilter;
+
     public ImageFilter(Http.Request request)
     {
         super(request, "images");
+        applyExtra(request);
+    }
+
+    public String getChurchFilter()
+    {
+        return churchFilter;
+    }
+
+    public void setChurchFilter(String churchFilter)
+    {
+        this.churchFilter = churchFilter;
+    }
+
+    public void applyExtra(Http.Request request)
+    {
+        String churchString = request.getQueryString("images_church");
+        if (churchString != null)
+            churchFilter = churchString;
     }
 }

@@ -1,8 +1,13 @@
-@(needMistakes: Boolean)
+@(needMistakes: Boolean, fbPostLink: String)
 <div class="left item social-wrapper">
     <div class="fb-like" data-href="" data-layout="button_count" data-action="like"
     data-show-faces="true" data-share="false"></div>
     <a href="https://twitter.com/share" class="twitter-share-button" data-lang="pl">Tweetnij</a>
+    @if(fbPostLink != null){
+        <div class="right aligned item">
+            <a href="@fbPostLink" target="_blank"><img class="fb-comment" src="@routes.Assets.at("images/fb_comment.png")"></a>
+        </div>
+    }
 </div>
 @if(needMistakes) {
     <div class="center aligned item report-mistakes-wrapper">

@@ -171,8 +171,10 @@ public class Admin extends Controller
             ImageFilter imageFilter = (ImageFilter) SessionCache.get(session(), "imageFilter");
             if (imageFilter == null)
                 imageFilter = new ImageFilter(request());
-            else
+            else {
                 imageFilter.apply(request(), "images");
+                imageFilter.applyExtra(request());
+            }
             long totalImages = ContentManager.getTotalImages(imageFilter);
             imageFilter.setTotalResults(totalImages);
             SessionCache.put(session(), "imageFilter", imageFilter);
@@ -180,7 +182,8 @@ public class Admin extends Controller
             List<User> users = ContentManager.getUsers(userFilter);
             List<MediaContent> articles = ContentManager.getMediaContent(articleFilter, MediaContentType.Article);
             List<MediaContent> stories = ContentManager.getMediaContent(storyFilter, MediaContentType.Story);
-            List<Church> churches = ContentManager.getChurches(churchFilter);
+            List churchObj = ContentManager.getChurches(churchFilter);
+            List<Church> churches = (List<Church>) churchObj.stream().map(row -> ((Object[])row)[0]).collect(Collectors.toList());
             churches = churches.stream().sorted(ChurchIssueComparator.instance()).collect(Collectors.toList());
 
             List<Image> images = ContentManager.getImages(imageFilter);
@@ -206,8 +209,11 @@ public class Admin extends Controller
             Map<String, Long> totals = new HashMap<>();
             totals.put("articles", totalArticles);
             totals.put("stories", totalStories);
-            totals.put("churches", totalChurches);
-            totals.put("images", totalImages);
+            Long totalFullChurches = ContentManager.getChurchCount(true);
+            Long totalFullImages = ContentManager.getTotalImages(null);
+
+            totals.put("churches", totalFullChurches);
+            totals.put("images", totalFullImages);
             totals.put("feedbacks", totalFeedbacks);
 
             Html content = admin.render(

@@ -97,12 +97,12 @@
                 </div>
                 <div class="content-header-social-wrapper">
                 @if(!preview) {
-                    @parts.likes(content.getContentType.toString.toLowerCase, content.getId)
+                    @parts.likes(content.getContentType.toString.toLowerCase, content.getId, content.getFbPostLink)
                 }
                 </div>
             </div>
         </div>
-            @if(content.getLead != null && "" != content.getLead.trim) {
+            @if(content.getLead != null && !"".equals(content.getLead.trim)) {
                 <div class='content-lead-wrapper'><div class='content-lead'>
                 @content.getLead</div></div>
             }
@@ -117,7 +117,7 @@
             <div class="content-main-wrapper">
                 <div class="content-main">
                     <nav id="contentmenu-bottom" class="ui secondary pointing menu blurred">
-                        @parts.social_bands(false)
+                        @parts.social_bands(false, content.getFbPostLink)
                     </nav>
                 </div>
             </div>

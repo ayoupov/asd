@@ -25,7 +25,7 @@
             </tr>
         </thead>
         @for(f <- feedbacks) {
-            <tr id="@f.getId">
+            <tr id="@f.getId" @if(!f.isHidden) {class='bold-thing'}>
                 <td>@feedbackName(f)</td>
                 <td>@f.getComment</td>
                 <td>@feedbackEmail(f)</td>

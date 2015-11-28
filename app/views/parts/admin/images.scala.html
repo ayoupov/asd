@@ -18,6 +18,20 @@
     } else
     ServerProperties.getValue("asd.editor.nosrc.image")
 }
+@getOriginal(path:String) = @{
+    val slash = path.lastIndexOf('/')
+    val fname = path.substring(slash + 1)
+    val dot = fname.lastIndexOf('.')
+    if (dot > 0) {
+        val glLI = fname.lastIndexOf(Thumber.THUMB_GL)
+        val prepath = path.substring(0, slash + 1)
+        if(glLI > 0) {
+            prepath + fname.substring(0, glLI) + '.' + fname.substring(dot + 1)
+        } else
+            path
+    } else
+    ServerProperties.getValue("asd.editor.nosrc.image")
+}
 <div id="images" class="admin-page">
     <table class="ui celled table">
         <thead>
@@ -31,10 +45,10 @@
             </tr>
         </thead>
         @for(i <- images) {
-            <tr id="image_@i.getId">
+            <tr id="image_@i.getId" @if(i.getApprovedTS == null) {class='bold-thing'}>
                 <td style="max-width : 150px;">@i.getDescription</td>
-                <td class="noedit"><a href="@i.getPath" target="_blank"><img src="@getThumb(i.getPath)" class="ui image"></a></td>
-                <td>@i.getUploadedBy</td>
+                <td class="noedit"><a href="@getOriginal(i.getPath)" target="_blank"><img src="@getThumb(i.getPath)" class="ui image"></a></td>
+                <td>@{if (i.getUploadedBy != null) i.getUploadedBy.getName else "Unknown"}</td>
                 <td class="noedit"><input type="datetime" value="@{
                     if(i.getApprovedTS != null) {
                         DateTimeConverter.sdf.format(i.getApprovedTS)
@@ -44,20 +58,20 @@
                 <td>@{if(i.getApprovedBy != null){i.getApprovedBy.getName} else {""}}</td>
                 <td class="noedit" style="min-width: 110px;">
                     <a href="javascript: flipApprove('image', @i.getId, @{i.getApprovedTS == null});">@{if(i.getApprovedTS == null)  "approve" else "disapprove"} </a>
-                    <a href="javascript: removeContent('image', @i.getId);"><img src="@routes.Assets.at("images/close_button.png")"></a>
+                    <br><br>
+                    <a href="javascript: removeContent('image', @i.getId);">remove</a>
                 </td>
             </tr>
         }
             <tfoot>
                 <tr>
-                    <th colspan="5">
-                            <!--<div class="ui left floated search input">-->
-                            <!--<input type="text" placeholder="Filter by">-->
-                            <!--</div>-->
+                    <th colspan="6">
+                        <div class="ui left floated search input">
+                            <input type="text" placeholder="Filter by church" class="filter-church text-filter" value="@filter.getChurchFilter">
+                        </div>
                         @parts.admin.paginator(filter, "images")
-    </th>
-    </tr>
-    </tfoot>
-
+                    </th>
+                </tr>
+            </tfoot>
     </table>
 </div>

@@ -93,3 +93,7 @@ span.editor-tool
 #cagsv-link, #ca-coords {
     width: 100%;
 }
+
+.bold-thing {
+    font-weight: bold;
+}

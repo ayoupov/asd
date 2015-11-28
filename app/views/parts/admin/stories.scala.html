@@ -14,7 +14,7 @@
             </tr>
         </thead>
         @for(s <- stories) {
-        <tr id="story_@s.getId">
+        <tr id="story_@s.getId" @if(s.getApprovedDT == null) {class='bold-thing'}>
             <td>@s.getTitle</td>
             <td>@{if(s.getAddedBy != null) s.getAddedBy.getName}</td>
             <td class="noedit"><input type="datetime" value="@{
@@ -38,7 +38,7 @@
         }
         <tfoot>
             <tr>
-                <th colspan="4">
+                <th colspan="6">
                     @parts.admin.paginator(filter, "stories")
                 </th>
             </tr>

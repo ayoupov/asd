@@ -50,7 +50,8 @@ function newStoryForm() {
         "<label for='desc'>Cover description</label><textarea id='desc' placeholder='Text on cover' name='coverDescription'/>" +
         //"<label for='cover'>Cover image path</label><input id='cover' placeholder='Path to image' name='cover'/>" +
         "<label for='alternativeId'>Alternative id</label><input id='alternativeId' placeholder='alternative id' name='alt'/>" +
-        "<label for='church'>Dedicated church</label><input id='church' placeholder='church of story'/>" +
+        "<label for='fbPostLink'>FB Link</label><input id='fbPostLink' placeholder='fb link (for comments)' name='fbPostLink'/>" +
+        "<label for='church'>Dedicated church</label><input id='church' placeholder='church of story' name='church' />" +
         //"<label for='starred'>Starred</label><input type='checkbox' name='starred' id='starred' class='ui checkbox'/>" +
         //"<br>" +
         //"<label for='approvedDT'>Publish on</label><input type='datetime' class='ui datetime' name='approvedDT' id='approvedDT' value='" + datenow() + "'/>" +
@@ -77,7 +78,9 @@ function fillStory(data) {
         $("#desc", $storyForm).html(data.coverDescription).on('keyup', changeThumb);
         //$("#cover", $storyForm).val((data.cover) ? data.cover.path : "");
         $("#alternativeId", $storyForm).val(data.alt);
-        $("#church", $storyForm).val(church).attr('disabled', 'disabled');
+        $("#fbPostLink", $storyForm).val(data.fbPostLink);
+        //$("#church", $storyForm).val(church).attr('disabled', 'disabled');
+        $("#church", $storyForm).val(church);
         //if (data.starred)
         //    $("#starred", $storyForm).attr("checked", "checked");
         //else $("#starred", $storyForm).removeAttr("checked");

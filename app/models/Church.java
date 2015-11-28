@@ -105,6 +105,7 @@ public class Church
     public Set<Architect> architects;
 
     @ManyToMany(cascade = CascadeType.ALL)
+//    @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
     @OrderBy("uploadedTS")
     public List<Image> images;

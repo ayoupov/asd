@@ -561,20 +561,6 @@ function thumbscroll() {
     $passportGalleryThumbs.find('div').eq(2).trigger('click');
 }
 
-function getThumb(resourceName) {
-    var splitURI = resourceName.split('/');
-    var name = splitURI.pop();
-    var thumbSplit = name.split('.');
-    var ext = thumbSplit.pop();
-    var thumbName = thumbSplit.join('.');
-    var thumbIdx = thumbName.lastIndexOf("_thumb_gl");
-    if (thumbIdx > 0)
-        thumbName = thumbName.substr(0, thumbIdx);
-    thumbName += '_thumb_ed.' + ext;
-    splitURI.push(thumbName);
-    return splitURI.join('/');
-}
-
 function getDescription(image)
 {
     if (image.description)

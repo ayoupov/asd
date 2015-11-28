@@ -116,8 +116,9 @@ public class GeographyManager
             return "";
         Session session = getSession();
 
-        return (String) session.createQuery("select c.extID from Diocese d, Church c " +
-                "where c.extID like concat(d.id, '-%') order by c.extID desc")
+        return (String) session.createQuery("select c.extID from Church c " +
+                "where c.extID like :idpat order by c.extID desc")
+                .setParameter("idpat", diocese.getId() + "-%")
                 .setMaxResults(1)
                 .uniqueResult();
     }
@@ -243,9 +244,10 @@ public class GeographyManager
         if (diocese == null)
             return null;
         String maxChurchId = GeographyManager.getMaxChurchId(diocese);
+        System.out.println("maxChurchId = " + maxChurchId);
         int numId = safeInt(maxChurchId.substring(3), DEFAULT_USER_CHURCH_ID);
-        if (numId < 500)
-            numId = 500;
+        if (numId < DEFAULT_USER_CHURCH_ID)
+            numId = DEFAULT_USER_CHURCH_ID;
         return dioid + "-" + String.format("%03d", numId + 1);
 
     }
