@@ -83,7 +83,8 @@ function changeRow(data) {
                     )
                 )
             );
-            $("td:not(.noedit)", $row).on('click', articleEditClick);
+            //if (asdAdminUserRole == 'Administrator')
+                $("td:not(.noedit)", $row).on('click', articleEditClick);
             if (isNew)
                 $row.hover(function () {
                     $(this).toggleClass('active');
@@ -185,7 +186,6 @@ $(document).ready(function () {
     $("td:not(.noedit)", $("#stories")).off('click').on('click', storyEditClick);
     $("td:not(.noedit)", $("#emails")).off('click').on('click', emailEditClick);
     $("td:not(.noedit)", $("#churches")).off('click').on('click', churchEditClick);
-
     $("tr").hover(function () {
         $(this).toggleClass('active');
     }, function () {

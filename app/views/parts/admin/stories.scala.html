@@ -1,6 +1,8 @@
 @import models.internal.search.filters.StoryFilter
 @import utils.serialize.converters.DateTimeConverter
-@(stories: List[MediaContent], filter : StoryFilter)
+@import models.user.User
+@import models.user.UserRole
+@(stories: List[MediaContent], filter : StoryFilter, user: User)
 <div id="stories" class="admin-page">
     <table class="ui celled table">
         <thead>
@@ -9,8 +11,10 @@
                 <th>Author</th>
                 <th>PublishOn</th>
                 <th>ApprovedBy</th>
+                @if(user.getRole == UserRole.Administrator) {
                 <th>Star</th>
                 <th>Actions</th>
+                }
             </tr>
         </thead>
         @for(s <- stories) {
@@ -24,6 +28,7 @@
             }" disabled="disabled">
             </td>
             <td>@{if(s.getApprovedBy != null){s.getApprovedBy.getName} else {""}}</td>
+            @if(user.getRole == UserRole.Administrator) {
             <td class="noedit"><input type="checkbox" @{
                 if (s.getStarred == true) "checked"
             } onchange="flipStar('story', @s.getId);">
@@ -33,7 +38,7 @@
                 @*<a href="javascript: removeContent('story', @s.getId);" style="margin-left:20px;"><img src="@routes.Assets.at("images/close_button.png")"></a>*@
                 <a href="javascript: removeContent('story', @s.getId);"> remove </a>
             </td>
-
+            }
         </tr>
         }
         <tfoot>

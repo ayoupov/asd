@@ -1,6 +1,8 @@
 @import models.internal.search.filters.ArticleFilter
 @import utils.serialize.converters.DateTimeConverter
-@(articles: List[MediaContent], filter: ArticleFilter)
+@import models.user.User
+@import models.user.UserRole
+@(articles: List[MediaContent], filter: ArticleFilter, user: User)
 
 <div id="articles" class="admin-page">
     <table class="ui celled table">
@@ -10,13 +12,17 @@
                 <th>Authors</th>
                 <th>PublishOn</th>
                 <th>PublishedBy</th>
-                <th>Star</th>
-                <th>Actions</th>
+                @if(user.getRole == UserRole.Administrator) {
+                    <th>Star</th>
+                    <th>Actions</th>
+                }
             </tr>
         </thead>
-        <tr id="article_0">
-            <td colspan="5">New article</td>
-        </tr>
+        @if(user.getRole == UserRole.Administrator) {
+            <tr id="article_0">
+                <td colspan="5">New article</td>
+            </tr>
+        }
         @for(a <- articles) {
             <tr id="article_@a.getId" @if(a.getApprovedDT == null) {class='bold-thing'}>
                 <td>@a.getTitle</td>
@@ -28,6 +34,7 @@
                 }" disabled="disabled">
                 </td>
             <td>@{if(a.getApprovedBy != null){a.getApprovedBy.getName} else {""}}</td>
+                @if(user.getRole == UserRole.Administrator) {
             <td class="noedit"><input type="checkbox" @{
                     if(a.getStarred == true) "checked"
                 } onchange="flipStar('article', @a.getId);">
@@ -40,6 +47,7 @@
                     <a href="javascript: removeContent('article', @a.getId);"> remove </a>
                 </td>
             </tr>
+            }
         }
             <tfoot>
                 <tr>

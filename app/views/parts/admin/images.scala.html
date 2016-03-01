@@ -2,7 +2,12 @@
 @import utils.serialize.converters.DateTimeConverter
 @import utils.media.images.Thumber
 @import utils.ServerProperties
-@(images: List[Image], filter: ImageFilter)
+@import java.util
+@import scala.collection.JavaConverters._
+
+@import models.user.User
+@import models.user.UserRole
+@(images: Map[Image, java.util.List[Church]], filter: ImageFilter, user: User)
 
 @getThumb(path:String) = @{
     val slash = path.lastIndexOf('/')
@@ -41,10 +46,13 @@
                 <th>UploadedBy</th>
                 <th>ApprovedOn</th>
                 <th>ApprovedBy</th>
-                <th>Actions</th>
+                <th>To churches</th>
+                @if(user.getRole == UserRole.Administrator) {
+                    <th>Actions</th>
+                }
             </tr>
         </thead>
-        @for(i <- images) {
+        @for(i <- images.keySet()) {
             <tr id="image_@i.getId" @if(i.getApprovedTS == null) {class='bold-thing'}>
                 <td style="max-width : 150px;">@i.getDescription</td>
                 <td class="noedit"><a href="@getOriginal(i.getPath)" target="_blank"><img src="@getThumb(i.getPath)" class="ui image"></a></td>
@@ -56,11 +64,18 @@
                 }" disabled="disabled">
                 </td>
                 <td>@{if(i.getApprovedBy != null){i.getApprovedBy.getName} else {""}}</td>
+                <td class="noedit">
+                    @for(c <- images.get(i).asScala) {
+                        <a href="/admin?churches_like=@c.getExtID#churches">@c.getExtID</a>
+                    }
+                </td>
+                @if(user.getRole == UserRole.Administrator) {
                 <td class="noedit" style="min-width: 110px;">
                     <a href="javascript: flipApprove('image', @i.getId, @{i.getApprovedTS == null});">@{if(i.getApprovedTS == null)  "approve" else "disapprove"} </a>
                     <br><br>
                     <a href="javascript: removeContent('image', @i.getId);">remove</a>
                 </td>
+                }
             </tr>
         }
             <tfoot>

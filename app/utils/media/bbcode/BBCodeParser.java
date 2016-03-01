@@ -28,6 +28,7 @@ public class BBCodeParser
     private static Map<SubstitutePriority, Set<Substitute>> prioritizedSubstitutes = new HashMap<>();
 
     static {
+        order.add(SubstitutePriority.ULTRA_HIGH);
         order.add(SubstitutePriority.HIGH);
         order.add(SubstitutePriority.MEDIUM);
         order.add(SubstitutePriority.LOW);
@@ -77,7 +78,8 @@ public class BBCodeParser
                 while (matcher.find()) {
                     String found = matcher.group().trim();
                     if (!"".equals(found) && !"\n".equals(found) && !isInProduction())
-                        Logger.debug("Processing: " + found);
+//                        Logger.debug("Processing: " + found);
+                        Logger.info("Processing: " + found);
                     if (!substitute.isSimple())
                         replacement = substitute.process(sb, matcher, state);
                     matcher.appendReplacement(sb, replacement);

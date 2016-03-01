@@ -186,7 +186,8 @@ public class Admin extends Controller
             List<Church> churches = (List<Church>) churchObj.stream().map(row -> ((Object[])row)[0]).collect(Collectors.toList());
             churches = churches.stream().sorted(ChurchIssueComparator.instance()).collect(Collectors.toList());
 
-            List<Image> images = ContentManager.getImages(imageFilter);
+//            List<Image> images = ContentManager.getImages(imageFilter);
+            Map<Image, List<Church>> images = ContentManager.getImages(imageFilter);
             List<EmailTemplate> emails = ContentManager.getEmails();
             List<UserFeedback> feedbacks = ContentManager.getFeedbacks();
 

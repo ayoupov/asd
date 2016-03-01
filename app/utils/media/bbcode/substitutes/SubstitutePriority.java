@@ -8,6 +8,7 @@ package utils.media.bbcode.substitutes;
  */
 public enum SubstitutePriority
 {
+    ULTRA_HIGH,
     HIGH,
     MEDIUM,
     LOW

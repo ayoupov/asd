@@ -1,4 +1,8 @@
 var toolData = {
+    raw: {
+        tooltip: 'insert raw html',
+        insert: '[raw]![/raw]'
+    },
     header: {
         tooltip: 'header, header2, header3',
         insert: '[header]![/header]'
@@ -90,6 +94,7 @@ var $currentEditor = null;
 function newToolbar(editor) {
     $currentEditor = $(editor);
     return "<div class='editor-toolbar'>" +
+        "<span class='editor-tool' data-ref='raw'>raw</span>" +
         "<span class='editor-tool' data-ref='header'>header</span>" +
         "<span class='editor-tool' data-ref='padder'>padder</span>" +
         "<span class='editor-tool' data-ref='bold'><b>bold</b></span>" +

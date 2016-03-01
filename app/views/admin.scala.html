@@ -12,7 +12,7 @@
 @(
         admin: User,
         users: java.util.List[User], articles: java.util.List[MediaContent], stories: java.util.List[MediaContent], churches: java.util.List[Church],
-        images : java.util.List[Image],
+        images : java.util.Map[Image, java.util.List[Church]],
         feedbacks : java.util.List[UserFeedback],
         emails : java.util.List[EmailTemplate],
         newChurches: java.util.List[ChurchSuggestion], dioIds : java.util.List[String],
@@ -59,6 +59,9 @@
         <script src="@routes.Assets.at("javascripts/isotope.pkgd.2.2.1.min.js")"></script>
     </head>
     <body>
+        <script>
+            var asdAdminUserRole = '@admin.getRole';
+        </script>
         <div class="wrapper">
             <nav id="menu" class="ui fixed secondary pointing menu blurred">
                 <div class="left item logo-wrapper">
@@ -120,9 +123,9 @@
                         @parts.admin.stats()
                         <!-- content -->
                         @parts.admin.users(users.asScala.toList, SessionCache.get(session, "userFilter").asInstanceOf[UserFilter])
-                        @parts.admin.articles(articles.asScala.toList, SessionCache.get(session, "articleFilter").asInstanceOf[ArticleFilter])
-                        @parts.admin.stories(stories.asScala.toList, SessionCache.get(session, "storyFilter").asInstanceOf[StoryFilter])
-                        @parts.admin.images(images.asScala.toList, SessionCache.get(session, "imageFilter").asInstanceOf[ImageFilter])
+                        @parts.admin.articles(articles.asScala.toList, SessionCache.get(session, "articleFilter").asInstanceOf[ArticleFilter], admin)
+                        @parts.admin.stories(stories.asScala.toList, SessionCache.get(session, "storyFilter").asInstanceOf[StoryFilter], admin)
+                        @parts.admin.images(images, SessionCache.get(session, "imageFilter").asInstanceOf[ImageFilter],admin)
                         @parts.admin.feedbacks(feedbacks.asScala.toList)
                         @parts.admin.churches(churches.asScala.toList, SessionCache.get(session, "churchFilter").asInstanceOf[ChurchFilter], newChurches, dioIds, admin)
                         <!-- static -->

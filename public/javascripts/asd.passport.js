@@ -443,7 +443,7 @@ function doPassportGallery(galldata) {
         $(galldata).each(function (a, image) {
             pushGalleryThumb({
                 src: getThumb(image.path),
-                big: image.path,
+                big: normalizeThumb(image.path),
                 id: image.id,
                 desc: getDescription(image)
             });
@@ -579,7 +579,7 @@ function pushGalleryThumb(thumbData) {
         if (thumbData.id == null) {
             $thisThumb.addClass('empty inactive')
                 .appendTo($passportGalleryThumbs)
-                .css('background', 'transparent url(' + thumbData.src + ') no-repeat center center');
+                .css('background', 'transparent url(\'' + thumbData.src + '\') no-repeat center center');
         }
         else if (thumbData.id == 'gsv') {
             $thisThumb.addClass('gsv')
@@ -599,11 +599,11 @@ function pushGalleryThumb(thumbData) {
         else {
             $galleryItems[thumbData.id] = $("<div class='passport-gallery-large-image'/>")
                 .css({
-                    background: 'black url(' + big + ') center center no-repeat ',
+                    background: 'black url(\'' + big + '\') center center no-repeat ',
                     'background-size': 'contain'
                 });
             $thisThumb
-                .css('background', 'transparent url(' + thumbData.src + ') no-repeat center center')
+                .css('background', 'transparent url(\'' + thumbData.src + '\') no-repeat center center')
                 .data({id: thumbData.id, description: thumbData.desc})
                 .addClass('normal')
                 .appendTo($passportGalleryThumbs);

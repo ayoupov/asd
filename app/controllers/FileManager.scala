@@ -1,10 +1,11 @@
 package controllers
 
 import java.io.File
+import java.util.Date
 
 import models.Image
 import models.internal.UserManager
-import models.user.User
+import models.user.{UserRole, User}
 import play.api.mvc.{Action, Controller}
 import utils.media.images.Thumber
 import utils.{HibernateUtils, ServerProperties}
@@ -42,6 +43,11 @@ object FileManager extends Controller {
           Thumber.rethumb(outFile)
           val image = new Image(desc, webPath)
           image.setUploadedBy(localUser)
+          if (localUser.getRole == UserRole.Administrator)
+            {
+              image.setApprovedBy(localUser)
+              image.setApprovedTS(new Date())
+            }
           HibernateUtils.beginTransaction()
           HibernateUtils.save(image)
           HibernateUtils.commitTransaction()

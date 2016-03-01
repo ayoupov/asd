@@ -44,7 +44,7 @@ public class Escapes
         @Override
         public SubstitutePriority getPriority()
         {
-            return SubstitutePriority.HIGH;
+            return SubstitutePriority.ULTRA_HIGH;
         }
     }
 
@@ -76,7 +76,7 @@ public class Escapes
         @Override
         public SubstitutePriority getPriority()
         {
-            return SubstitutePriority.HIGH;
+            return SubstitutePriority.ULTRA_HIGH;
         }
     }
     @SubstituteAnnotation
@@ -107,7 +107,7 @@ public class Escapes
         @Override
         public SubstitutePriority getPriority()
         {
-            return SubstitutePriority.HIGH;
+            return SubstitutePriority.ULTRA_HIGH;
         }
     }
 //    @SubstituteAnnotation

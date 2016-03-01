@@ -227,7 +227,7 @@ function updateScrapeStatus(url, callback) {
 
 function getThumb(resourceName) {
     var splitURI = resourceName.split('/');
-    var name = splitURI.pop();
+    var name = encodeURIComponent(splitURI.pop());
     var thumbSplit = name.split('.');
     var ext = thumbSplit.pop();
     var thumbName = thumbSplit.join('.');
@@ -236,5 +236,12 @@ function getThumb(resourceName) {
         thumbName = thumbName.substr(0, thumbIdx);
     thumbName += '_thumb_ed.' + ext;
     splitURI.push(thumbName);
+    return splitURI.join('/');
+}
+
+function normalizeThumb(resourceName) {
+    var splitURI = resourceName.split('/');
+    var name = encodeURIComponent(splitURI.pop());
+    splitURI.push(name);
     return splitURI.join('/');
 }

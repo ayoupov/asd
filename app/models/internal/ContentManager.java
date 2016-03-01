@@ -568,7 +568,7 @@ public class ContentManager
             return getTotalFullImages();
     }
 
-    public static List<Image> getImages(ImageFilter filter)
+    public static Map<Image, List<Church>> getImages(ImageFilter filter)
     {
         Session session = getSession();
         Query query;
@@ -597,8 +597,21 @@ public class ContentManager
 //                .setParameter("fname", "%" + filter.getNameFilter() + "%")
                 .setMaxResults(filter.getMaxResults())
                 .setFirstResult(filter.getPage() * filter.getMaxResults());
+        Map<Image, List<Church>> res = new LinkedHashMap<>();
         List<Image> images = query.list();
-        return images;
+        for (Image image : images)
+        {
+            ArrayList churches = new ArrayList();
+            churches.addAll(getChurchesFromImage(image));
+            res.put(image, churches);
+        }
+        return res;
+    }
+
+    private static Collection getChurchesFromImage(Image image)
+    {
+        return getSession().createQuery("select distinct c from Church c, Image i " +
+                "where :image in elements(c.images)").setParameter("image", image).list();
     }
 
     public static Set<Architect> parseArchitectsList(String[] architectsRaw)

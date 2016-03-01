@@ -36,11 +36,13 @@ public class Exporter
             int i = 0;
             StringBuilder s = new StringBuilder();
             for (E e : iterable) {
-                if (i != 0) {
-                    s.append(delimiter);
+                if (e != null) {
+                    if (i != 0) {
+                        s.append(delimiter);
+                    }
+                    s.append(stringify.apply(e));
+                    i++;
                 }
-                s.append(stringify.apply(e));
-                i++;
             }
             return s.toString();
         }

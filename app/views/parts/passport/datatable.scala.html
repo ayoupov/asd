@@ -6,7 +6,7 @@
 @namelink() = @{Html(s"<a href='${routes.Application.index(church.getExtID)}#passport'>${church.getName}</a>")}
 @years() = @{s"${church.getConstructionStart} - ${church.getConstructionEnd}"}
 @architects() = @{church.getArchitects.map(a => a.getName)mkString(", ")}
-@website() = @{s"<a target='_blank' href='${church.getWebsite}'>${church.getWebsite}</a>" }
+@website() = @{Html(s"<a target='_blank' href='${church.getWebsite}'>${church.getWebsite}</a>") }
 <table class="passport-data-wrapper">
     <tr class="passport-table-gap">
         <td class="passport-field-caption"></td>

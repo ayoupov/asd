@@ -2,6 +2,7 @@
 @import utils.serialize.converters.DateTimeConverter
 @import models.internal.ChurchSuggestion
 @import models.user.User
+@import models.user.UserRole
 @(churches : List[Church], filter : ChurchFilter, newChurches : List[ChurchSuggestion], dioceseIds: List[String], admin: User)
 @suggestedByName(cs : ChurchSuggestion) = @{
     if(cs.getSuggestedBy != null) {
@@ -33,7 +34,9 @@
                     <th>Address</th>
                     <th>Comment</th>
                     <th>Suggested by</th>
-                    <th>Actions</th>
+                    @if(admin.getRole == UserRole.Administrator) {
+                        <th>Actions</th>
+                    }
                 </tr>
             </thead>
             @for(cs <- newChurches) {
@@ -42,12 +45,14 @@
                     <td class="noedit">@cs.getAddress</td>
                     <td class="noedit">@cs.getComment</td>
                     <td class="noedit">@suggestedByName(cs)</td>
-                    <td class="noedit"><a href="javascript:addChurchAdmin('@cs.getName', '@cs.getAddress', @suggestedById(cs), @cs.getId);">add</a>
+                    @if(admin.getRole == UserRole.Administrator) {
+                        <td class="noedit"><a href="javascript:addChurchAdmin('@cs.getName', '@cs.getAddress', @suggestedById(cs), @cs.getId);">add</a>
                         <br>
                         <a href="javascript:apiIgnoreSuggestion(@cs.getId);">ignore</a>
                         @*<br>*@
                         @*<a href="javascript:removeContent('suggestion', @cs.getId);">remove</a>*@
                     </td>
+                    }
                 </tr>
             }
         </table>
@@ -85,14 +90,16 @@
                 <th>ApprovedDT</th>
                 <th>ApprovedBy</th>
                 <th>Reqs</th>
-                <th>Actions</th>
+                @if(admin.getRole == UserRole.Administrator) {
+                    <th>Actions</th>
+                }
             </tr>
         </thead>
         @for(c <- churches) {
         <tr id="church_@c.getExtID" @hasIssuesClass(c)>
             <td>@c.getExtID</td>
             <td>@c.getName</td>
-            <td class="noedit"><input type='checkbox' @{if(c.getAddress != null){"checked='checked'"}} ></td>
+            <td class="noedit"><input type='checkbox' @{if(c.getAddress != null && !"".equals(c.getAddress)){"checked='checked'"}} disabled="disabled"></td>
             <td class="noedit"><input type="datetime" value="@{
                 if(c.getApprovedDT != null) {
                     DateTimeConverter.sdf.format(c.getApprovedDT)
@@ -101,9 +108,11 @@
             </td>
             <td>@{if(c.getApprovedBy != null){c.getApprovedBy.getName} else {""}}</td>
             <td>@{if(c.getRequests != null){c.getRequests.count(r => !r.isFixed && !r.isIgnored)}}</td>
+            @if(admin.getRole == UserRole.Administrator) {
             <td class="noedit">
                 <a href="javascript: flipApprove('church', '@c.getExtID', @{c.getApprovedDT == null});"> @{if(c.getApprovedDT == null) "publish" else "unpublish"} </a><br><br>
             </td>
+            }
         </tr>
         }
         <tfoot>
