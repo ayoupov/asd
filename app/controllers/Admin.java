@@ -16,10 +16,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.twirl.api.Html;
 import utils.ServerProperties;
-import utils.map.AdditiveProcessor;
-import utils.map.BadIdsSieve;
-import utils.map.Processor;
-import utils.map.Snapshoter;
+import utils.map.*;
 import utils.media.bbcode.BBCodeTest;
 import utils.seed.Disseminator;
 import models.internal.email.EmailTemplate;
@@ -111,6 +108,16 @@ public class Admin extends Controller
         if (roleCheck()) {
             Snapshoter.snapSome(dataDir + "doc.kml", snapshotPath, dataDir + "churches_snapshot_reexport.txt");
             return ok("some snapshots are in progress");
+        }
+        return forbidden();
+    }
+
+    public static Result snap2() throws IOException, InterruptedException
+    {
+        if (roleCheck()) {
+            Snapshoter2.main(null);
+//            return ok("some snapshots are in progress");
+            return ok();
         }
         return forbidden();
     }
