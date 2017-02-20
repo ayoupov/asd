@@ -25,6 +25,16 @@
     cursor: pointer;
 }
 
+#churches tr.bold-thing td.noedit:nth-child(3)
+{
+    word-break: break-all;
+}
+
+#feedbacks tr.bold-thing td:nth-child(2)
+{
+    word-break: break-all;
+}
+
 body
 {
     height: auto;

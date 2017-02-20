@@ -192,18 +192,24 @@ public class Churches extends Controller
         Form<ChurchSuggestion> suggestionForm = Form.form(ChurchSuggestion.class);
         if (!suggestionForm.hasErrors()) {
             beginTransaction();
-            User user = getLocalUser(session());
-            ChurchSuggestion cs = suggestionForm.bindFromRequest().get();
-            cs.setType(type);
-            cs.setField(field);
-            cs.setSuggestedBy(user);
-            cs.setFixed(false);
-            if (cs.getExtID() != null)
-                cs.setRelatedChurch(ContentManager.getChurch(cs.getExtID()));
-            cs.setSuggestedOn(new Date());
-            saveOrUpdate(cs);
-            commitTransaction();
-            return ok(Json.newObject().put("success", true));
+            try {
+                User user = getLocalUser(session());
+                ChurchSuggestion cs = suggestionForm.bindFromRequest().get();
+                cs.setType(type);
+                cs.setField(field);
+                cs.setSuggestedBy(user);
+                cs.setFixed(false);
+                if (cs.getExtID() != null)
+                    cs.setRelatedChurch(ContentManager.getChurch(cs.getExtID()));
+                cs.setSuggestedOn(new Date());
+                saveOrUpdate(cs);
+                commitTransaction();
+                return ok(Json.newObject().put("success", true));
+            } catch (Exception e) {
+                rollbackTransaction();
+                Logger.error("while processing suggestion: " + type + ", " + field);
+                return ok(Json.newObject().put("success", false));
+            }
         } else
             return badRequest(suggestionForm.errorsAsJson());
 
@@ -261,9 +267,15 @@ public class Churches extends Controller
         String coverThumbPath = coverPath;
         if (jchurch != null)
             church = ContentManager.getChurch(jchurch);
-        else
+        else {
+            commitTransaction();
             return badRequest("church is absent");
-
+        }
+        if (church == null)
+        {
+            commitTransaction();
+            return badRequest("church is absent");
+        }
         MediaContent c = new MediaContent(MediaContentType.Story, text, title, year, null, coverThumbPath, user, church);
         c.setId((Long) save(c));
 
@@ -539,6 +551,11 @@ public class Churches extends Controller
         return res;
     }
 
+    public static Result disapprove(String ctype, String extID)
+    {
+        return approve(ctype, extID, 0);
+    }
+
     public static Result approve(String ctype, String extID, long timestamp)
     {
         ObjectNode result = Json.newObject();
@@ -623,7 +640,8 @@ public class Churches extends Controller
             String juserid = (map.get("userId") != null) ? map.get("userId")[0] : null;
             String jcsid = (map.get("suggestionId") != null) ? map.get("suggestionId")[0] : null;
 
-            ChurchSuggestion cs = (ChurchSuggestion) get(ChurchSuggestion.class, safeInt(jcsid, 0));
+            final int csid = safeInt(jcsid, 0);
+            ChurchSuggestion cs = (ChurchSuggestion) get(ChurchSuggestion.class, csid);
             cs.setExtID(extId);
             cs.setFixed(true);
             saveOrUpdate(cs);

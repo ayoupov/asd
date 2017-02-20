@@ -245,12 +245,12 @@ function geocodeAddress() {
     geocoder.geocode({'address': address}, function (results, status) {
         if (status === google.maps.GeocoderStatus.OK) {
             churchMap.setCenter(results[0].geometry.location);
-            removeMarkers();
-            var marker = new google.maps.Marker({
-                map: churchMap,
-                position: results[0].geometry.location
-            });
-            pushMarker(marker);
+            //removeMarkers();
+            //var marker = new google.maps.Marker({
+            //    map: churchMap,
+            //    position: results[0].geometry.location
+            //});
+            placeMarker(results[0].geometry.location);
         } else {
             alert('Geocode was not successful for the following reason: ' + status);
         }

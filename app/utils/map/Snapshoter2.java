@@ -48,11 +48,16 @@ public class Snapshoter2
                             "https://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=%d&" +
                                     "size=640x640&maptype=satellite&key=%s", lat, lon, zoom, key);
                     BufferedImage img = ImageIO.read(new URL(url));
-                    ImageIO.write(img, "png", outputfile);
-                    Thread.sleep(200l);
-                    if (!logOnce) {
-                        Logger.info("Processed " + id);
-                        logOnce = true;
+                    if (img != null) {
+                        ImageIO.write(img, "png", outputfile);
+                        Thread.sleep(200l);
+                        if (!logOnce) {
+                            Logger.info("Processed " + id);
+                            logOnce = true;
+                        }
+                    } else
+                    {
+                        Logger.info("Couldn't get file: " + url);
                     }
                 }
             }

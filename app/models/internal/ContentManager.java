@@ -47,11 +47,13 @@ public class ContentManager
             String[] split = ids.split(",");
             for (String rawId : split) {
                 try {
-                    Long id = Long.parseLong(rawId);
-                    MediaContent content = (MediaContent) session.get(MediaContent.class, id);
-                    if (content != null) {
-                        if (content.getApprovedDT() != null || skipApproval)
-                            res.add(content); // todo: more verbose in case of unapproved request?
+                    if (!"".equals(rawId)) {
+                        Long id = Long.parseLong(rawId);
+                        MediaContent content = (MediaContent) session.get(MediaContent.class, id);
+                        if (content != null) {
+                            if (content.getApprovedDT() != null || skipApproval)
+                                res.add(content); // todo: more verbose in case of unapproved request?
+                        }
                     }
                 } catch (Exception e) {
                     throw new RequestException(e);

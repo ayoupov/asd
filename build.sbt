@@ -10,6 +10,12 @@ lazy val `asd` = (project in file(".")).enablePlugins(PlayJava)
 
 scalaVersion := "2.11.7"
 
+javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
+
+//javaHome := Some(file("C:/Progra~1/Java/jdk1.8.0_31/"))
+
+scalacOptions ++= Seq("-target:jvm-1.8")
+
 libraryDependencies ++= Seq(javaJdbc , cache , javaWs)
 
 //pipelineStages := Seq(gzip, cssCompress)

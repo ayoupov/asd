@@ -87,8 +87,8 @@ POST          /story/star/:id                          controllers.MediaContents
 POST          /image/approve/:id/:timestamp            controllers.MediaContents.approve(ctype : String = "image", id: Long, timestamp : Long)
 POST          /image/disapprove/:id                    controllers.MediaContents.approve(ctype : String = "image", id: Long, timestamp : Long = 0)
 
+POST          /church/disapprove/:extID                controllers.Churches.disapprove(ctype : String = "church", extID: String)
 POST          /church/approve/:extID/:timestamp        controllers.Churches.approve(ctype : String = "church", extID: String, timestamp : Long)
-POST          /church/disapprove/:extID                controllers.Churches.approve(ctype : String = "church", extID: String, timestamp : Long = 0)
 POST          /church/new/from/request/:extID          controllers.Churches.newFromRequest(extID: String)
 
 GET           /admin/reindex                           controllers.Admin.reindex
